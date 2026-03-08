@@ -19,11 +19,11 @@ body,html{margin:0;padding:0;width:100vw;height:100vh;overflow:hidden;background
 #bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
 #bgLayer{position:fixed;inset:0;z-index:0;pointer-events:none;background-size:cover;background-position:center;opacity:0;transition:opacity .5s;}
 #bgLayer.on{opacity:1;}
-#cur{width:12px;height:12px;background:#fff;border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:2000001;mix-blend-mode:difference;will-change:transform;}
+#cur{width:12px;height:12px;background:#fff;border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999999;mix-blend-mode:difference;will-change:transform;}
 body.g-hover #cur{width:44px;height:44px;margin:-16px 0 0 -16px;background:var(--blue);mix-blend-mode:normal;opacity:.4;transition:width .15s,height .15s;}
 body.r-hover #cur{width:44px;height:44px;margin:-16px 0 0 -16px;background:var(--blue);mix-blend-mode:normal;opacity:.8;}
 #app{display:grid;grid-template-columns:240px 1fr;width:100vw;height:100vh;position:relative;z-index:1;}
-aside{background:rgba(0,0,0,.3);backdrop-filter:blur(30px);border-right:1px solid var(--border);padding:20px 16px;display:flex;flex-direction:column;overflow-y:auto;}
+aside{position:relative;background:rgba(0,0,0,.3);backdrop-filter:blur(30px);border-right:1px solid var(--border);padding:20px 16px;display:flex;flex-direction:column;overflow-y:auto;}
 .logo{font-size:22px;font-weight:800;margin-bottom:8px;padding-left:8px;flex-shrink:0;}
 .sec-label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;margin:14px 0 4px 8px;font-weight:800;flex-shrink:0;}
 .nav{padding:9px 12px;border-radius:10px;margin-bottom:2px;display:flex;align-items:center;gap:9px;font-size:12px;font-weight:500;transition:.15s;color:var(--text2);flex-shrink:0;}
@@ -54,6 +54,14 @@ header input{background:rgba(255,255,255,.08);color:#fff;border:none;border-radi
 .fav-star{position:absolute;top:8px;right:8px;font-size:16px;color:rgba(255,255,255,.2);transition:.15s;z-index:10;line-height:1;}
 .fav-star.on{color:#ffd60a;}
 .featured-badge{position:absolute;top:8px;left:8px;background:rgba(10,132,255,.85);color:#fff;font-size:8px;font-weight:800;padding:2px 6px;border-radius:4px;text-transform:uppercase;}
+/* ── SHELF MODE ── */
+body.shelf-mode .grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px;}
+body.shelf-mode .card{border-radius:10px;border:none;background:none;}
+body.shelf-mode .card:hover{transform:scale(1.05);border-color:transparent;}
+body.shelf-mode .card img{height:140px;border-radius:10px;object-fit:cover;}
+body.shelf-mode .card .info{display:none;}
+body.shelf-mode .card .featured-badge{display:none;}
+body.shelf-mode .fav-star{font-size:14px;top:5px;right:5px;text-shadow:0 1px 4px rgba(0,0,0,.8);}
 .pager{display:flex;align-items:center;justify-content:center;gap:5px;padding:18px 0 6px;flex-wrap:wrap;}
 .pager button{background:rgba(255,255,255,.08);border:1px solid var(--border);color:var(--text2);padding:7px 12px;border-radius:8px;font-size:12px;font-weight:700;transition:.15s;min-width:36px;}
 .pager button:hover{background:rgba(255,255,255,.15);color:#fff;}
@@ -174,6 +182,169 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 #lock-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:var(--text2);padding:5px 11px;border-radius:6px;font-size:11px;font-weight:700;transition:.15s;}
 #lock-btn:hover{background:rgba(255,255,255,.16);color:#fff;}
 #lock-btn.locked{background:rgba(10,132,255,.18);border-color:rgba(10,132,255,.3);color:var(--blue);}
+/* ── LIVE CHAT ── */
+#chat-view{flex-direction:column;padding:0!important;}
+#chat-view.active{display:flex!important;}
+#chat-view header{padding:16px 20px;flex-shrink:0;}
+#chat-messages{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:8px;min-height:0;}
+#chat-bar{padding:10px 16px 14px;flex-shrink:0;border-top:1px solid rgba(255,255,255,.07);}
+#chat-input-row{display:flex;gap:8px;margin-top:6px;}
+#chat-typing-indicator{font-size:11px;color:var(--text2);min-height:16px;display:block;}
+.chat-tabs{display:flex;gap:6px;}
+.chat-tab{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:var(--text2);border-radius:10px;padding:6px 14px;font-size:11px;font-weight:700;cursor:pointer;transition:.15s;}
+.chat-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+.chat-msg{display:flex;gap:10px;align-items:flex-start;animation:fadeIn .2s ease;}
+.chat-msg.me{flex-direction:row-reverse;}
+.chat-av{font-size:20px;flex-shrink:0;width:34px;height:34px;background:rgba(255,255,255,.07);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.chat-bubble{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:8px 12px;max-width:70%;word-break:break-word;}
+.chat-msg.me .chat-bubble{background:rgba(10,132,255,.25);border-color:rgba(10,132,255,.3);}
+.chat-name{font-size:10px;font-weight:800;color:var(--blue);margin-bottom:3px;}
+.chat-msg.me .chat-name{text-align:right;color:rgba(10,132,255,.7);}
+.chat-text{font-size:13px;line-height:1.4;}
+.chat-time{font-size:9px;color:var(--text2);margin-top:3px;opacity:.6;}
+.chat-msg.me .chat-time{text-align:right;}
+.chat-system{text-align:center;font-size:11px;color:var(--text2);opacity:.5;padding:4px 0;}
+/* ── FRIENDS ── */
+.friend-card{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px 14px;margin-bottom:8px;}
+.friend-card .fc-av{font-size:24px;}
+.friend-card .fc-name{font-size:13px;font-weight:700;flex:1;}
+.friend-card .fc-status{font-size:10px;color:var(--text2);}
+.friend-card .fc-btns{display:flex;gap:6px;}
+.fc-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:8px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;transition:.15s;}
+.fc-btn:hover{background:rgba(255,255,255,.15);}
+.fc-btn.accept{background:rgba(48,209,88,.15);border-color:rgba(48,209,88,.3);color:#30d158;}
+.fc-btn.decline{background:rgba(255,55,95,.1);border-color:rgba(255,55,95,.2);color:#ff375f;}
+.fc-btn.add{background:rgba(10,132,255,.15);border-color:rgba(10,132,255,.3);color:var(--blue);}
+.fc-empty{font-size:12px;color:var(--text2);opacity:.5;padding:10px 0;}
+.msg-report-btn{font-size:10px;color:var(--text2);cursor:pointer;margin-left:6px;opacity:.4;transition:.15s;vertical-align:middle;}
+.msg-report-btn:hover{opacity:1;color:#ff375f;}
+/* ── GROUP CHAT ── */
+#group-view{flex-direction:column;padding:0!important;}
+#group-view.active{display:flex!important;}
+#grp-messages{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:8px;min-height:0;}
+.grp-card{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;cursor:pointer;transition:.15s;position:relative;}
+.grp-card:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15);}
+.grp-av{font-size:26px;flex-shrink:0;}
+.grp-info{flex:1;min-width:0;}
+.grp-name{font-size:13px;font-weight:800;}
+.grp-meta{font-size:11px;color:var(--text2);margin-top:1px;}
+.grp-preview{font-size:11px;color:var(--text2);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.grp-unread{background:#ff375f;color:#fff;font-size:9px;font-weight:900;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;}
+.grp-pick-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);cursor:pointer;transition:.15s;}
+.grp-pick-item.sel{background:rgba(10,132,255,.15);border-color:rgba(10,132,255,.35);}
+.grp-pick-av{font-size:18px;}
+.grp-av-opt{font-size:22px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:10px;cursor:pointer;border:2px solid transparent;transition:.15s;}
+.grp-av-opt.sel{border-color:var(--blue);background:rgba(10,132,255,.15);}
+.member-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.member-row:last-child{border-bottom:none;}
+.member-crown{font-size:10px;color:#ffd60a;margin-left:4px;}
+/* ── NOTIFICATIONS ── */
+.notif-bell{position:relative;background:none;border:none;font-size:16px;cursor:pointer;padding:2px 4px;border-radius:7px;transition:.15s;color:#fff;}
+.notif-bell:hover{background:rgba(255,255,255,.1);}
+#notif-badge{position:absolute;top:-3px;right:-3px;background:#ff375f;color:#fff;font-size:8px;font-weight:900;min-width:14px;height:14px;border-radius:7px;display:flex;align-items:center;justify-content:center;padding:0 3px;line-height:1;}
+#notif-panel{position:absolute;top:0;left:100%;margin-left:8px;width:300px;max-height:420px;background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.5);z-index:999999;overflow:hidden;display:flex;flex-direction:column;}
+.notif-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.07);}
+#notif-list{overflow-y:auto;flex:1;max-height:360px;}
+.notif-item{display:flex;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer;transition:.15s;position:relative;}
+.notif-item:hover{background:rgba(255,255,255,.05);}
+.notif-item.unread{background:rgba(10,132,255,.07);}
+.notif-item.unread::before{content:'';position:absolute;left:5px;top:50%;transform:translateY(-50%);width:5px;height:5px;border-radius:50%;background:var(--blue);}
+.notif-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.notif-body{flex:1;min-width:0;}
+.notif-title{font-size:12px;font-weight:700;line-height:1.3;}
+.notif-text{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.notif-time{font-size:9px;color:var(--text2);margin-top:3px;opacity:.6;}
+.notif-empty{padding:24px;text-align:center;color:var(--text2);font-size:12px;}
+/* ── REPORTS ── */
+.report-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;margin-bottom:8px;}
+.report-card.open{border-color:rgba(255,55,95,.25);}
+.report-card.resolved{border-color:rgba(48,209,88,.2);}
+.report-card.dismissed{opacity:.5;}
+.report-type{font-size:9px;font-weight:900;letter-spacing:.5px;padding:2px 7px;border-radius:6px;display:inline-block;margin-bottom:6px;}
+.report-type.user{background:rgba(255,159,10,.2);color:#ff9f0a;}
+.report-type.message{background:rgba(10,132,255,.2);color:var(--blue);}
+.report-type.dm{background:rgba(175,82,222,.2);color:#af52de;}
+.report-reason-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;border-radius:8px;padding:8px 10px;font-size:11px;font-weight:700;cursor:pointer;transition:.15s;text-align:center;}
+.report-reason-btn:hover,.report-reason-btn.sel{background:rgba(255,55,95,.2);border-color:rgba(255,55,95,.4);color:#ff375f;}
+/* ── SPOTLIGHT BANNER ── */
+#spotlight-banner{display:flex;gap:10px;padding:0 16px 10px;flex-wrap:wrap;}
+.spot-card{flex:1;min-width:200px;border-radius:14px;overflow:hidden;position:relative;cursor:pointer;border:2px solid transparent;transition:.2s;}
+.spot-card.gotw{border-color:var(--blue);background:linear-gradient(135deg,rgba(10,132,255,.15),rgba(10,132,255,.05));}
+.spot-card.gotm{border-color:#ff9f0a;background:linear-gradient(135deg,rgba(255,159,10,.15),rgba(255,159,10,.05));}
+.spot-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4);}
+.spot-img{width:100%;height:110px;object-fit:cover;display:block;}
+.spot-body{padding:8px 10px 10px;}
+.spot-badge{font-size:9px;font-weight:900;letter-spacing:.5px;padding:2px 7px;border-radius:6px;display:inline-block;margin-bottom:4px;}
+.spot-badge.week{background:var(--blue);color:#fff;}
+.spot-badge.month{background:#ff9f0a;color:#000;}
+.spot-title{font-size:13px;font-weight:800;line-height:1.2;}
+.spot-sub{font-size:10px;color:var(--text2);margin-top:2px;}
+/* ── OWNER PANEL ── */
+.nav.owner-btn{color:#ffd60a;background:rgba(255,214,10,.08);border:1px solid rgba(255,214,10,.2);}
+.nav.owner-btn:hover{color:#fff;background:rgba(255,214,10,.2);}
+.owner-badge{background:linear-gradient(135deg,#ffd60a,#ff9500);color:#000;font-size:9px;font-weight:900;padding:2px 6px;border-radius:6px;margin-left:5px;vertical-align:middle;}
+.admin-user-card{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 12px;margin-bottom:6px;}
+.admin-user-card.banned{border-color:rgba(255,55,95,.3);background:rgba(255,55,95,.05);}
+.admin-user-card.suspended{border-color:rgba(255,159,10,.3);background:rgba(255,159,10,.05);}
+.auc-info{flex:1;}
+.auc-name{font-size:13px;font-weight:700;}
+.auc-meta{font-size:10px;color:var(--text2);}
+.auc-btns{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;}
+.auc-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:7px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;transition:.15s;}
+.auc-btn:hover{opacity:.8;}
+.auc-btn.red{background:rgba(255,55,95,.15);border-color:rgba(255,55,95,.3);color:#ff375f;}
+.auc-btn.yellow{background:rgba(255,159,10,.15);border-color:rgba(255,159,10,.3);color:#ff9f0a;}
+.auc-btn.green{background:rgba(48,209,88,.15);border-color:rgba(48,209,88,.3);color:#30d158;}
+.auc-btn.blue{background:rgba(10,132,255,.15);border-color:rgba(10,132,255,.3);color:var(--blue);}
+.admin-chat-msg{display:flex;align-items:flex-start;gap:8px;padding:8px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);margin-bottom:6px;}
+.admin-chat-msg .acm-content{flex:1;font-size:12px;}
+.admin-chat-msg .acm-user{font-weight:700;color:var(--blue);}
+.admin-chat-msg .acm-time{font-size:10px;color:var(--text2);}
+/* ── DM VIEW ── */
+#dm-view{flex-direction:column;padding:0!important;}
+#dm-view.active{display:flex!important;}
+#dm-messages{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:8px;min-height:0;}
+.dm-date-sep{text-align:center;font-size:10px;color:var(--text2);opacity:.5;margin:8px 0;}
+.fc-btn.msg{background:rgba(10,132,255,.15);border-color:rgba(10,132,255,.3);color:var(--blue);position:relative;}
+.fc-unread{position:absolute;top:-4px;right:-4px;background:#ff375f;color:#fff;font-size:9px;font-weight:800;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+/* ── WATCH PROGRESS ── */
+.watch-badge{position:absolute;top:8px;left:8px;background:rgba(48,209,88,.85);color:#fff;font-size:8px;font-weight:800;padding:2px 7px;border-radius:4px;text-transform:uppercase;z-index:2;}
+.ep-current{border-color:var(--blue)!important;background:rgba(10,132,255,.08)!important;}
+/* ── TAB CLOAKER ── */
+.cloak-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;}
+.cloak-btn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px 6px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;transition:.15s;cursor:pointer;color:#fff;}
+.cloak-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);transform:translateY(-2px);}
+.cloak-btn.active{border-color:var(--blue);background:rgba(10,132,255,.15);}
+.cloak-btn img{width:24px;height:24px;object-fit:contain;border-radius:4px;}
+.cloak-btn span{font-size:10px;font-weight:700;text-align:center;line-height:1.2;color:var(--text2);}
+/* ── LOGIN SCREEN ── */
+#login-screen{position:fixed;inset:0;background:#000;z-index:3000000;display:flex;align-items:center;justify-content:center;}
+#login-screen.gone{display:none;}
+.lb{background:rgba(18,18,20,.98);border:1px solid rgba(255,255,255,.1);border-radius:28px;padding:38px 34px 34px;width:92%;max-width:380px;text-align:center;}
+.lb-logo{font-size:30px;font-weight:900;letter-spacing:-1px;color:#fff;margin-bottom:4px;}
+.lb-logo span{color:var(--blue);}
+.lb-sub{font-size:12px;color:var(--text2);margin-bottom:26px;}
+.lb-tabs{display:flex;background:rgba(255,255,255,.06);border-radius:12px;padding:3px;gap:3px;margin-bottom:20px;}
+.lb-tab{flex:1;padding:8px;border-radius:9px;font-size:12px;font-weight:700;color:rgba(255,255,255,.5);transition:.15s;border:none;background:none;cursor:pointer;}
+.lb-tab.active{background:var(--blue);color:#fff;}
+.lb-field{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 14px;font-size:13px;color:#fff;outline:none;margin-bottom:10px;box-sizing:border-box;transition:.15s;font-family:inherit;}
+.lb-field:focus{border-color:var(--blue);}
+.lb-field::placeholder{color:rgba(255,255,255,.3);}
+.lb-av-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px;}
+.lb-av{font-size:24px;width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;}
+.lb-av:hover{border-color:rgba(255,255,255,.3);}
+.lb-av.sel{border-color:var(--blue);background:rgba(10,132,255,.2);}
+.lb-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:12px;padding:13px;font-size:13px;font-weight:800;cursor:pointer;transition:.15s;margin-top:4px;}
+.lb-btn:hover{opacity:.88;}
+.lb-btn:disabled{opacity:.4;cursor:not-allowed;}
+.lb-err{font-size:11px;color:#ff375f;margin-bottom:10px;min-height:16px;}
+.lb-ok{font-size:11px;color:#30d158;margin-bottom:10px;min-height:16px;}
+/* sidebar user chip */
+#user-chip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:8px 10px;margin-bottom:10px;}
+#user-chip .uc-av{font-size:20px;}
+#user-chip .uc-name{font-size:12px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#user-chip .uc-out{background:none;border:none;color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;padding:2px 6px;border-radius:6px;transition:.15s;}
+#user-chip .uc-out:hover{color:#ff375f;}
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:3px;}
@@ -184,6 +355,32 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 <canvas id="bgCanvas"></canvas>
 <div id="bgLayer"></div>
 <div id="gp-progress"><div id="gp-bar"></div></div>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="lb">
+    <div class="lb-logo">Ad<span>less</span></div>
+    <div class="lb-sub">Sign in to save your progress across devices</div>
+    <div class="lb-tabs">
+      <button class="lb-tab active" onclick="lbTab('login')">Login</button>
+      <button class="lb-tab" onclick="lbTab('signup')">Sign Up</button>
+    </div>
+    <div id="lb-err" class="lb-err"></div>
+    <input id="lb-user" class="lb-field" placeholder="Username" maxlength="20" autocomplete="off" spellcheck="false">
+    <input id="lb-pass" class="lb-field" type="password" placeholder="Password" autocomplete="off">
+    <div id="lb-av-wrap" style="display:none">
+      <div style="font-size:11px;color:var(--text2);margin-bottom:8px;">Pick an avatar</div>
+      <div class="lb-av-row" id="lb-av-row"></div>
+    </div>
+    <button class="lb-btn" id="lb-submit" onclick="lbSubmit()">Login</button>
+    <div style="margin-top:12px;background:rgba(255,193,7,.08);border:1px solid rgba(255,193,7,.2);border-radius:10px;padding:8px 12px;font-size:11px;color:rgba(255,193,7,.8);line-height:1.5;">
+      ⚠️ In-game progress (e.g. GunSpin levels) cannot be saved across devices due to browser security rules. Favorites, settings, and watch progress do sync.
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);">
+      <span style="cursor:pointer;text-decoration:underline;opacity:.6" onclick="lbGuest()">Continue as guest</span>
+    </div>
+  </div>
+</div>
 
 <!-- DEVICE PICKER -->
 <div id="device-pick">
@@ -234,18 +431,37 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 <div id="app">
   <aside>
     <div class="logo">Adless</div>
+    <div id="user-chip" style="display:none">
+      <span class="uc-av" id="uc-av">👤</span>
+      <span class="uc-name" id="uc-name">Guest</span>
+      <button class="notif-bell" id="notif-bell" onclick="toggleNotifPanel()" title="Notifications">
+        🔔<span id="notif-badge" style="display:none"></span>
+      </button>
+      <button class="uc-out" onclick="logout()">Logout</button>
+    </div>
+    <!-- Notification Panel -->
+    <div id="notif-panel" style="display:none">
+      <div class="notif-header">
+        <span style="font-weight:800;font-size:13px">🔔 Notifications</span>
+        <button class="auc-btn" style="font-size:10px;padding:3px 8px" onclick="markAllNotifsRead()">Mark all read</button>
+      </div>
+      <div id="notif-list"></div>
+    </div>
     <div class="sec-label">Hub</div>
     <div class="nav active" data-view="games-view">🎮 Games</div>
     <div class="nav" data-view="movies-view">🎬 Movies</div>
     <div class="nav" data-view="shows-view">📺 Shows &amp; Anime</div>
-    <div class="nav" data-view="chat-view">💬 Chat / Comments</div>
+    <div class="nav" data-view="chat-view">💬 Live Chat</div>
+    <div class="nav" data-view="friends-view">👥 Friends</div>
     <div class="nav" data-view="settings-view">⚙️ Settings</div>
     <div class="nav discord-btn" onclick="window.open('https://discord.gg/gAe83DUFNT','_blank')">🎮 Join Discord</div>
+    <div class="nav owner-btn" id="owner-nav" data-view="owner-view" style="display:none">👑 Owner Panel</div>
     <div id="game-filters">
       <div class="sec-label">Categories</div>
       <div class="nav" data-cat="all">🏠 All Games</div>
       <div class="nav" data-cat="featured">✨ Featured</div>
       <div class="nav" data-cat="favs">⭐ Favorites</div>
+      <div class="nav" data-cat="recent">🕐 Recently Played</div>
       <div class="sec-label">Tools &amp; Apps</div>
       <div class="nav" data-cat="ai">🤖 AI</div>
       <div class="nav" data-cat="apps">📱 Apps</div>
@@ -273,6 +489,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <input id="search" placeholder="🔍 Search games..." oninput="onSearch()">
       <div id="counter" style="font-size:12px;font-weight:600;white-space:nowrap;color:var(--text2)">Loading...</div>
     </header>
+    <div id="spotlight-banner"></div>
     <div class="grid" id="game-grid"></div>
     <div class="pager" id="pager"></div>
   </div>
@@ -299,8 +516,240 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <div id="eps-grid"></div>
   </div>
   <div id="chat-view" class="view">
-    <header><h1>💬 Chat &amp; Comments</h1></header>
-    <iframe id="chat-frame" src="https://padlet.com/dansvarch10/adless-games-chat-bqvilrenyevwy77j" allow="camera;microphone;geolocation" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"></iframe>
+    <header>
+      <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
+        <h1>💬 Live Chat</h1>
+        <div class="chat-tabs">
+          <button class="chat-tab active" onclick="switchChatTab('global')">🌐 Global</button>
+          <button class="chat-tab" onclick="switchChatTab('friends')">👥 Friends Chat</button>
+        </div>
+      </div>
+    </header>
+    <div id="chat-messages"></div>
+    <div id="chat-bar">
+      <span id="chat-typing-indicator"></span>
+      <div id="chat-input-row">
+        <input id="chat-input" class="lb-field" style="margin:0;flex:1" placeholder="Say something…" maxlength="300" onkeydown="if(event.key==='Enter')sendMessage()">
+        <button class="lb-btn" style="width:auto;padding:12px 18px;margin:0" onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+  <div id="friends-view" class="view">
+    <header><h1>👥 Friends</h1></header>
+    <div class="s-section">
+      <div class="s-sec">🔍 Find Friends</div>
+      <div style="display:flex;gap:8px">
+        <input id="friend-search" class="lb-field" style="margin:0;flex:1" placeholder="Search by username…" maxlength="20" onkeydown="if(event.key==='Enter')searchUser()">
+        <button class="lb-btn" style="width:auto;padding:12px 18px;margin:0" onclick="searchUser()">Search</button>
+      </div>
+      <div id="friend-search-result" style="margin-top:10px"></div>
+    </div>
+    <div class="s-section">
+      <div class="s-sec">📬 Pending Requests</div>
+      <div id="friend-requests"></div>
+    </div>
+    <div class="s-section">
+      <div class="s-sec">✅ Friends</div>
+      <div id="friends-list"></div>
+    </div>
+    <div class="s-section">
+      <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
+        <span>💬 Group Chats</span>
+        <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0;font-size:12px" onclick="openCreateGroup()">+ New Group</button>
+      </div>
+      <div id="groups-list"></div>
+    </div>
+  </div>
+
+  <!-- CREATE GROUP MODAL -->
+  <div id="create-group-modal" style="display:none;position:fixed;inset:0;z-index:5000001;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);align-items:center;justify-content:center;" onclick="if(event.target===this)closeCreateGroup()">
+    <div style="background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:24px;width:min(440px,94vw);max-height:85vh;overflow-y:auto;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:17px;font-weight:800">💬 Create Group Chat</div>
+        <button onclick="closeCreateGroup()" style="background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer">✕</button>
+      </div>
+      <!-- Avatar picker -->
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:8px">GROUP ICON</div>
+        <div id="grp-av-row" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+      </div>
+      <!-- Name -->
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:6px">GROUP NAME</div>
+        <input id="grp-name-input" class="lb-field" style="margin:0" placeholder="Enter group name…" maxlength="30">
+      </div>
+      <!-- Add members from friends -->
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:6px">ADD FRIENDS <span id="grp-member-count" style="color:var(--blue)">(0/19)</span></div>
+        <div id="grp-friends-pick" style="display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto"></div>
+      </div>
+      <div id="grp-create-err" style="font-size:11px;color:#ff375f;min-height:14px"></div>
+      <button class="lb-btn" onclick="submitCreateGroup()">💬 Create Group</button>
+    </div>
+  </div>
+
+  <!-- GROUP CHAT VIEW -->
+  <div id="group-view" class="view">
+    <header>
+      <div style="display:flex;align-items:center;gap:10px;width:100%">
+        <button class="back-btn" onclick="closeGroupChat()">← Groups</button>
+        <span id="grp-view-av" style="font-size:22px"></span>
+        <h1 id="grp-view-name" style="margin:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></h1>
+        <button class="auc-btn blue" style="font-size:11px" onclick="openGroupInfo()">👥 Members</button>
+      </div>
+    </header>
+    <div id="grp-messages"></div>
+    <div id="chat-bar">
+      <div id="chat-input-row">
+        <input id="grp-input" class="lb-field" style="margin:0;flex:1" placeholder="Send a message…" maxlength="500" onkeydown="if(event.key==='Enter')sendGroupMsg()">
+        <button class="lb-btn" style="width:auto;padding:12px 18px;margin:0" onclick="sendGroupMsg()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GROUP INFO PANEL -->
+  <div id="group-info-modal" style="display:none;position:fixed;inset:0;z-index:5000001;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);align-items:center;justify-content:center;" onclick="if(event.target===this)closeGroupInfo()">
+    <div style="background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:24px;width:min(400px,94vw);max-height:85vh;overflow-y:auto;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:16px;font-weight:800">👥 Group Members</div>
+        <button onclick="closeGroupInfo()" style="background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer">✕</button>
+      </div>
+      <div id="grp-info-name" style="font-size:13px;color:var(--text2)"></div>
+      <div id="grp-members-list"></div>
+      <div id="grp-info-actions"></div>
+    </div>
+  </div>
+  <div id="dm-view" class="view">
+    <header>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="back-btn" onclick="closeDm()">← Friends</button>
+        <span id="dm-av" style="font-size:22px"></span>
+        <h1 id="dm-name" style="margin:0">DM</h1>
+        <span id="dm-unread-badge" style="display:none;background:#ff375f;color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;margin-left:4px"></span>
+        <button id="dm-report-btn" class="auc-btn yellow" style="margin-left:auto;font-size:11px" onclick="reportDmPeer()">⚑ Report</button>
+      </div>
+    </header>
+    <div id="dm-messages"></div>
+    <div id="chat-bar">
+      <div id="chat-input-row">
+        <input id="dm-input" class="lb-field" style="margin:0;flex:1" placeholder="Send a message…" maxlength="500" onkeydown="if(event.key==='Enter')sendDm()">
+        <button class="lb-btn" style="width:auto;padding:12px 18px;margin:0" onclick="sendDm()">Send</button>
+      </div>
+    </div>
+  </div>
+  <div id="owner-view" class="view">
+    <header><h1>👑 Owner Panel</h1></header>
+
+    <!-- Reports -->
+    <div class="s-section">
+      <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
+        <span>🚨 Reports <span id="report-count-badge" style="display:none;background:#ff375f;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;margin-left:6px"></span></span>
+        <div style="display:flex;gap:6px">
+          <button class="auc-btn" onclick="loadReports('open')" id="rep-tab-open" style="background:rgba(255,55,95,.15);border-color:rgba(255,55,95,.3);color:#ff375f">🔴 Open</button>
+          <button class="auc-btn" onclick="loadReports('resolved')" id="rep-tab-resolved">✅ Resolved</button>
+          <button class="auc-btn" onclick="loadReports('dismissed')" id="rep-tab-dismissed">🗑 Dismissed</button>
+        </div>
+      </div>
+      <div id="reports-list" style="margin-top:10px"></div>
+    </div>
+
+    <!-- Analytics -->
+    <div class="s-section">
+      <div class="s-sec">📊 Analytics</div>
+      <div class="stats-grid" id="owner-stats">
+        <div class="stat-box"><div class="stat-label">Total Users</div><div class="stat-val" id="ow-users">—</div></div>
+        <div class="stat-box"><div class="stat-label">Messages Today</div><div class="stat-val" id="ow-msgs">—</div></div>
+        <div class="stat-box"><div class="stat-label">Banned</div><div class="stat-val" id="ow-banned">—</div></div>
+        <div class="stat-box"><div class="stat-label">Active DMs</div><div class="stat-val" id="ow-dms">—</div></div>
+      </div>
+      <div style="margin-top:10px">
+        <div class="s-lbl" style="margin-bottom:6px">🏆 Most Played Games</div>
+        <div id="ow-top-games"></div>
+      </div>
+      <div style="margin-top:10px">
+        <div class="s-lbl" style="margin-bottom:6px">💬 Most Active Chatters</div>
+        <div id="ow-top-chatters"></div>
+      </div>
+    </div>
+
+    <!-- Game of Week/Month + Featured -->
+    <div class="s-section">
+      <div class="s-sec">🎮 Game Spotlight</div>
+      <div class="s-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+        <div><div class="s-lbl">🗓 Game of the Week</div><div class="s-desc">Pinned at the top of the games list</div></div>
+        <div style="display:flex;gap:8px;width:100%">
+          <input id="gotw-input" class="lb-field" style="margin:0;flex:1" placeholder="Search game title…" oninput="searchSpotlight('gotw')">
+          <button class="auc-btn red" onclick="clearSpotlight('gotw')" title="Remove Game of the Week">✕ Clear</button>
+        </div>
+        <div id="gotw-results" style="width:100%"></div>
+        <div id="gotw-current" style="font-size:12px;color:var(--blue)"></div>
+      </div>
+      <div class="s-row" style="flex-direction:column;align-items:flex-start;gap:8px;margin-top:8px">
+        <div><div class="s-lbl">📅 Game of the Month</div><div class="s-desc">Special badge on the featured game</div></div>
+        <div style="display:flex;gap:8px;width:100%">
+          <input id="gotm-input" class="lb-field" style="margin:0;flex:1" placeholder="Search game title…" oninput="searchSpotlight('gotm')">
+          <button class="auc-btn red" onclick="clearSpotlight('gotm')" title="Remove Game of the Month">✕ Clear</button>
+        </div>
+        <div id="gotm-results" style="width:100%"></div>
+        <div id="gotm-current" style="font-size:12px;color:#ff9f0a"></div>
+      </div>
+      <div class="s-row" style="flex-direction:column;align-items:flex-start;gap:8px;margin-top:8px">
+        <div><div class="s-lbl">⭐ Feature a Game</div><div class="s-desc">Add/remove from Featured category</div></div>
+        <div style="display:flex;gap:8px;width:100%">
+          <input id="feat-input" class="lb-field" style="margin:0;flex:1" placeholder="Search game title…" oninput="searchSpotlight('feat')">
+        </div>
+        <div id="feat-results" style="width:100%"></div>
+        <div id="feat-current"></div>
+      </div>
+    </div>
+
+    <!-- Chat Moderation -->
+    <div class="s-section">
+      <div class="s-sec">💬 Chat Moderation</div>
+      <div class="s-row">
+        <div><div class="s-lbl">Slowmode</div><div class="s-desc">Seconds between messages per user</div></div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="slowmode-val" class="lb-field" type="number" min="0" max="300" style="margin:0;width:70px;text-align:center" placeholder="0">
+          <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0" onclick="saveSlowmode()">Set</button>
+        </div>
+      </div>
+      <div class="s-row" style="flex-direction:column;align-items:flex-start;gap:8px;margin-top:4px">
+        <div><div class="s-lbl">Word Blacklist</div><div class="s-desc">Comma-separated words — auto-deleted from chat</div></div>
+        <div style="display:flex;gap:8px;width:100%">
+          <input id="blacklist-input" class="lb-field" style="margin:0;flex:1" placeholder="word1, word2, word3…">
+          <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0" onclick="saveBlacklist()">Save</button>
+        </div>
+      </div>
+      <div style="margin-top:10px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div class="s-lbl">Recent Messages</div>
+          <button class="auc-btn" onclick="loadAdminChatLog()">↻ Refresh</button>
+        </div>
+        <div id="admin-chat-log"></div>
+      </div>
+    </div>
+
+    <!-- Announcement -->
+    <div class="s-section">
+      <div class="s-sec">📢 Broadcast Announcement</div>
+      <textarea id="ann-text" class="lb-field" style="height:70px;resize:none" placeholder="Message to all users…" maxlength="300"></textarea>
+      <button class="lb-btn" style="margin-top:8px" onclick="sendAnnouncement()">📢 Send Announcement</button>
+      <div style="margin-top:10px"><div class="s-lbl" style="margin-bottom:6px">📋 Past Announcements</div><div id="ann-history"></div></div>
+    </div>
+
+    <!-- User Management -->
+    <div class="s-section">
+      <div class="s-sec">👤 User Management</div>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <input id="admin-search" class="lb-field" style="margin:0;flex:1" placeholder="Search username…" onkeydown="if(event.key==='Enter')adminSearchUser()">
+        <button class="lb-btn" style="width:auto;padding:12px 18px;margin:0" onclick="adminSearchUser()">Search</button>
+      </div>
+      <div id="admin-user-result"></div>
+    </div>
+    <div class="s-section">
+      <div class="s-sec">👥 All Users <span id="user-count" style="color:var(--text2);font-weight:400"></span></div>
+      <div id="admin-all-users"></div>
+    </div>
   </div>
   <div id="settings-view" class="view">
     <header><h1>⚙️ Settings</h1></header>
@@ -314,6 +763,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <div class="s-section">
       <div class="s-sec">🎨 Display</div>
       <div class="s-row"><div><div class="s-lbl">Remove Animations</div><div class="s-desc">Disables CSS animations &amp; particles</div></div><label class="tog"><input type="checkbox" id="tog-anim" onchange="applyAnim(this.checked)"><span class="tog-sl"></span></label></div>
+      <div class="s-row"><div><div class="s-lbl">Shelf Mode</div><div class="s-desc">Big thumbnails only — no titles or tags</div></div><label class="tog"><input type="checkbox" id="tog-shelf" onchange="applyShelf(this.checked)"><span class="tog-sl"></span></label></div>
       <div class="s-row"><div><div class="s-lbl">System Cursor</div><div class="s-desc">Restores the default cursor</div></div><label class="tog"><input type="checkbox" id="tog-cursor" onchange="applyCursor(this.checked)"><span class="tog-sl"></span></label></div>
       <div class="s-row"><div><div class="s-lbl">Disable Particles</div><div class="s-desc">Stops background animation</div></div><label class="tog"><input type="checkbox" id="tog-bg" onchange="applyBgAnim(this.checked)"><span class="tog-sl"></span></label></div>
       <div class="s-row"><div><div class="s-lbl">Color Inversion</div><div class="s-desc">Inverts UI colors</div></div><label class="tog"><input type="checkbox" id="tog-invert" onchange="applyInvert(this.checked)"><span class="tog-sl"></span></label></div>
@@ -336,6 +786,51 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       </div>
     </div>
     <div class="s-section">
+      <div class="s-sec">🎭 Tab Cloaker</div>
+      <div class="stat-box">
+        <div class="stat-label" style="margin-bottom:10px">Choose a disguise</div>
+        <div class="cloak-grid" id="cloak-grid"></div>
+        <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
+          <input id="cloak-custom-title" class="lb-field" style="flex:1;margin:0" placeholder="Custom title…" maxlength="60">
+          <input id="cloak-custom-icon" class="lb-field" style="width:160px;margin:0" placeholder="Icon URL (optional)">
+          <button class="s-danger" style="background:rgba(10,132,255,.15);color:var(--blue);border-color:rgba(10,132,255,.3);white-space:nowrap" onclick="applyCustomCloak()">Apply</button>
+        </div>
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <button class="bg-reset" style="flex:1" onclick="openAboutBlank()">🔲 Open about:blank</button>
+          <button class="bg-reset" style="flex:1" onclick="resetCloak()">✕ Reset Tab</button>
+        </div>
+      </div>
+    </div>
+    <div class="s-section" id="account-section">
+      <div class="s-sec">👤 Account</div>
+      <!-- Display Name -->
+      <div class="s-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+        <div><div class="s-lbl">Display Name</div><div class="s-desc" id="dn-cooldown-desc">Shown in chat and on your profile · Changeable every 7 days</div></div>
+        <div style="display:flex;gap:8px;width:100%">
+          <input id="new-display-name" class="lb-field" style="margin:0;flex:1" placeholder="New display name…" maxlength="30">
+          <button class="lb-btn" style="width:auto;padding:10px 16px;margin:0" onclick="changeDisplayName()">Save</button>
+        </div>
+      </div>
+      <!-- Username -->
+      <div class="s-row" style="flex-direction:column;align-items:flex-start;gap:8px;margin-top:4px">
+        <div><div class="s-lbl">Username</div><div class="s-desc" id="un-cooldown-desc">Used to log in · Changeable once every 30 days</div></div>
+        <div style="display:flex;gap:8px;width:100%">
+          <input id="new-username" class="lb-field" style="margin:0;flex:1" placeholder="New username…" maxlength="20">
+          <button class="lb-btn" style="width:auto;padding:10px 16px;margin:0" onclick="changeUsername()">Save</button>
+        </div>
+      </div>
+      <!-- Password -->
+      <div class="s-row" style="flex-direction:column;align-items:flex-start;gap:8px;margin-top:4px">
+        <div><div class="s-lbl">Password</div><div class="s-desc">Enter current password then new password</div></div>
+        <div style="display:flex;gap:8px;width:100%;flex-wrap:wrap">
+          <input id="cur-password" class="lb-field" type="password" style="margin:0;flex:1;min-width:120px" placeholder="Current password…">
+          <input id="new-password" class="lb-field" type="password" style="margin:0;flex:1;min-width:120px" placeholder="New password…">
+          <button class="lb-btn" style="width:auto;padding:10px 16px;margin:0" onclick="changePassword()">Save</button>
+        </div>
+      </div>
+      <div id="account-msg" style="font-size:11px;min-height:16px;margin-top:4px"></div>
+    </div>
+    <div class="s-section">
       <div class="s-sec">💾 Data</div>
       <div class="s-row"><div><div class="s-lbl">Clear Favorites</div><div class="s-desc">Remove all starred games</div></div><button class="s-danger" onclick="askConfirm('Clear favorites?','All starred games will be removed.',clearFavs)">🗑️ Clear</button></div>
       <div class="s-row"><div><div class="s-lbl">Reset All Settings</div><div class="s-desc">Restore defaults</div></div><button class="s-danger" onclick="askConfirm('Reset all settings?','Display, theme and background will be reset.',resetAll)">↩️ Reset</button></div>
@@ -344,6 +839,22 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <div class="s-sec">ℹ️ About</div>
       <div class="s-row"><div><div class="s-lbl">Adless OS</div><div class="s-desc">Ad-free hub • Zones + GamePix • Paginated for speed</div></div><span style="font-size:20px">🛡️</span></div>
     </div>
+  </div>
+</div>
+<!-- REPORT MODAL -->
+<div id="report-modal" style="display:none;position:fixed;inset:0;z-index:5000000;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);align-items:center;justify-content:center;" onclick="if(event.target===this)closeReportModal()">
+  <div style="background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:24px;width:min(420px,92vw);max-height:80vh;overflow-y:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:18px;font-weight:800">🚨 Report</div>
+      <button onclick="closeReportModal()" style="background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer">✕</button>
+    </div>
+    <div id="report-target-info" style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(255,255,255,.05);border-radius:10px;margin-bottom:16px"></div>
+    <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px">REASON</div>
+    <div id="report-reason-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px"></div>
+    <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px">DETAILS <span style="font-weight:400">(optional)</span></div>
+    <textarea id="report-details" class="lb-field" style="height:70px;resize:none;margin-bottom:14px" placeholder="Any extra details…" maxlength="300"></textarea>
+    <div id="report-err" style="font-size:11px;color:#ff375f;min-height:14px;margin-bottom:8px"></div>
+    <button class="lb-btn" onclick="submitReport()">🚨 Submit Report</button>
   </div>
 </div>
 <div id="player">
@@ -439,19 +950,186 @@ function tagsHtml(cats){return cats.map(c=>`<span class="tag ${TAG_TC[c]||'tag-z
 function guessGenre(n,s){return detectTags(n,(s||[]).join(' '))[0];}
 const MOVIES=[{title:'Big Buck Bunny',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Big_buck_bunny_poster_big.jpg/640px-Big_buck_bunny_poster_big.jpg',url:'https://www.youtube.com/embed/aqz-KE-bpKQ?autoplay=1'},{title:'Cars',img:'https://i0.wp.com/deo.vvg.mybluehost.me/website_b13042cd/wp-content/uploads/2023/06/cars-dvd-Stn7.jpeg?resize=1200%2C689&ssl=1',url:'https://drive.google.com/file/d/1PHbwDSv_nzy9KVoRn9561Le-6-C2uUQa/preview'},{title:'Superman (2025)',img:'https://i.ytimg.com/vi/uhUht6vAsMY/maxresdefault.jpg',url:'https://drive.google.com/file/d/1uFvxKNVe_IgiAlGBBl7cU9drIhqk9sZZ/preview'},{title:'South Park Movie',img:'https://thumbnails.cbsig.net/CBS_Production_Entertainment_VMS/2021/11/10/1972863555958/SPBLU_SAlone_16_9_1920x1080_1040472_1920x1080.jpg',url:'https://drive.google.com/file/d/1ItNeNH0BprkhyVBUDP_JWrXS-TyJUYbj/preview'},{title:'Deadpool',img:'https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/8aafac1e-c525-485a-8c6a-c50d10c518ae/compose?aspectRatio=1.78&format=webp&width=1200',url:'https://drive.google.com/file/d/1bwsdEKIuVL8KM601xQ6sdi8-8g2G4TXN/preview'},{title:'Deadpool 2',img:'https://media.gq-magazine.co.uk/photos/5d138edd7fcc8e622b81f559/16:9/w_2560%2Cc_limit/deadpool-01-gq-1may18_b.jpg',url:'https://drive.google.com/file/d/1U-OCd-8xnP0YSUgOSrk1309HRh97w4Ao/preview'},{title:'Deadpool & Wolverine',img:'https://deadline.com/wp-content/uploads/2024/01/Deadpool.jpg?w=681&h=383&crop=1',url:'https://drive.google.com/file/d/1D5VAupqKSlgiQuCm-c9sHg9AmpX-DdmY/preview'},{title:"Child's Play",img:'https://m.media-amazon.com/images/M/MV5BODRiOWRmYWQtYTcxOS00YmEyLWIzODYtN2RhZmI4NDkwZmVlXkEyXkFqcGdeQXVyNzU1NzE3NTg@._V1_QL75_UX500_CR0,47,500,281_.jpg',url:'https://drive.google.com/file/d/1FPO2K8Oqb1O3qm1qb57NhZHhaGCvQjAz/preview'},{title:'Avengers: Endgame',img:'https://m.media-amazon.com/images/I/81ExhpBEbHL._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/1lPd4YUt6wqWXHHGg5KaFiKsOFT2OjPtU/preview'},{title:'Avengers: Infinity War',img:'https://m.media-amazon.com/images/I/81XOndDaoCL._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/1P-f1NWBZ_lJ2U2V-Q1GRTMaK-V_HHJZ8/preview'},{title:'Spider-Man: No Way Home',img:'https://m.media-amazon.com/images/I/71KNDpH0rML._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/1AGGpFGnk7kJoRRbT2dFX-MeULqiN11bQ/preview'},{title:'John Wick',img:'https://m.media-amazon.com/images/M/MV5BMTU2NjA1ODgzMF5BMl5BanBnXkFtZTgwMTM2MTI4MjE@._V1_FMjpg_UX1000_.jpg',url:'https://drive.google.com/file/d/1X9Kflcg0LuRjceV6JghCzs49px8cRTIk/preview'},{title:'John Wick: Chapter 2',img:'https://m.media-amazon.com/images/I/81yQppFs6kL._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/1gzsZEVTNEb93tSa0nuzlpR2n20D4Dyx9/preview'},{title:'The Super Mario Bros. Movie',img:'https://m.media-amazon.com/images/I/91zqGNzwk5L.jpg',url:'https://drive.google.com/file/d/1kliJw8luDNdGGnEbqjQgPCkfDzpC0wTq/preview'},{title:'Coco',img:'https://m.media-amazon.com/images/I/61rCC9HzCNL._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/194M4dGCwh1hTxVM1-_axnLSdt4trnbK2/preview'},{title:'Zootopia',img:'https://m.media-amazon.com/images/M/MV5BOTMyMjEyNzIzMV5BMl5BanBnXkFtZTgwNzIyNjU0NzE@._V1_FMjpg_UX1000_.jpg',url:'https://drive.google.com/file/d/1HYeIrbf8A-vfvJsvYP59AQzG9l8nt03h/preview'},{title:'Wreck-It Ralph',img:'https://m.media-amazon.com/images/M/MV5BNzMxNTExOTkyMF5BMl5BanBnXkFtZTcwMzEyNDc0OA@@._V1_.jpg',url:'https://drive.google.com/file/d/11NQ1_ecO2FTIhofVPIfakshgSBnR6ngC/preview'},{title:'Oppenheimer',img:'https://m.media-amazon.com/images/S/pv-target-images/5a3b8d94ae9ceae5f4ddcef359d4f97f3122c07d4c677db2a5e23e6a91e75c5d._SX780_.jpg',url:'https://drive.google.com/file/d/1GLqywDPqfZSLmLAiKC8j2l0o52cAGP8S/preview'},{title:'Wicked',img:'https://m.media-amazon.com/images/I/81cmJpAKEVL._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/1X8CRJUMX0ItgIUNbEUMok2sX9vd61rvt/preview'},{title:'Barbie',img:'https://s3.us-east-1.amazonaws.com/product-image-bucket-prod-us/656191-Product-0-I-638324993407195372.jpg',url:'https://drive.google.com/file/d/1K88LvZ6q9KRwsdiVQ72Wrh5DQqWVLkd3/preview'},{title:'The Black Phone',img:'https://m.media-amazon.com/images/I/61v5wu6Z4UL._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/1ibOSQ1uTdu7_VaEZ0X7KKFpXqB9Rsuzo/preview'},{title:'Home Alone',img:'https://lumiere-a.akamaihd.net/v1/images/image_ed8d7a4e.jpeg?region=0%2C0%2C800%2C1200',url:'https://drive.google.com/file/d/18YKNCTokG3B7ZWzCE3thunyDJMktLxnm/preview'},{title:'The Mitchells vs. The Machines',img:'https://i.scdn.co/image/ab67616d0000b273730ed87b6bb3bb39665504fb',url:'https://drive.google.com/file/d/1Ze0x8ryFdKcKClEWJ7i6ALBPwnzjznFB/preview'},{title:'Black Adam',img:'https://m.media-amazon.com/images/M/MV5BYmM3OTM4NDktMmI2NS00OWU0LTg4OTQtNjZhMmFkYjhmOGY1XkEyXkFqcGc@._V1_.jpg',url:'https://drive.google.com/file/d/1B-Kb1tedWlkMlBWpDj8S42HfjLFUUVR0/preview'},{title:'Captain America: Brave New World',img:'https://m.media-amazon.com/images/I/71IgPTlki7L._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/1pJ5N0z8bQFpqeMx2UrZqrU1526ygzxDm/preview'},{title:'The Flash',img:'https://m.media-amazon.com/images/M/MV5BYmE2NzBjNGUtNTJiMy00N2UxLWEyYzMtYzFjODFhMGZlOTgzXkEyXkFqcGc@._V1_.jpg',url:'https://drive.google.com/file/d/18P394XXdY1k_JX4oBTkZubBWERxZ-blz/preview'},{title:'Hotel Transylvania',img:'https://m.media-amazon.com/images/M/MV5BZjcyM2JmMGYtZWVjZC00YjljLWJjNzktYTU5ZjBhMjMwYjQzXkEyXkFqcGc@._V1_.jpg',url:'https://drive.google.com/file/d/1gZ4FVX5GLCSv2-i_sabXWhgl9u_3FeOB/preview'},{title:'Happy Gilmore',img:'https://m.media-amazon.com/images/I/71kHI+fUlPL._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/0B_gF_cJaMa7FZ1ZJYnp6NnN0NXM/preview'},{title:'Mufasa: The Lion King',img:'https://m.media-amazon.com/images/I/81ETY9fq1YL._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/1fpkFiPnyvjxCtN6a89i-U2H1cr5_Y_HC/preview'},{title:'Avatar: The Way of Water',img:'https://lh4.googleusercontent.com/proxy/jTL6IVbQ8pwKvriiE3zj_ua7Dem8b6Tn5B06I82jPKSzpT8ZV0R34dOFqAIGFiB_wbC0BhOiE8lDN4qytsOHCmsE3pys6CKJhuuesBqgq1PM28HF',url:'https://drive.google.com/file/d/1JttHmQ0nz7UhvgK0QDUJP5vBQUPGkfTX/preview'}];
 const SHOWS=[{title:'South Park',img:'https://upload.wikimedia.org/wikipedia/en/5/59/South_Park.png',seasons:[{name:'Pilots',img:'https://www.sling.com/whatson/entertainment/animation/media_10ac90be9a4010ad5553034af903ad659fad96df8.jpg?width=1200&format=pjpg&optimize=medium',episodes:[{title:'Jesus vs. Frosty',url:'https://drive.google.com/file/d/1wQt39GBY_xlsC-1OM095hHTZc2e3Hwti/preview'},{title:'Jesus vs. Santa',url:'https://drive.google.com/file/d/1r6Q7qENTnGZG7BeU_sJtNHhnCJwN1zAG/preview'},{title:'The Unaired Pilot',url:'https://drive.google.com/file/d/1ld1Dc2Mf1gJrQUpEEOSB4bFysJfFir80/preview'}]},{name:'Season 1',img:'https://www.sling.com/whatson/entertainment/animation/media_10ac90be9a4010ad5553034af903ad659fad96df8.jpg?width=1200&format=pjpg&optimize=medium',episodes:[{title:"Cartman Gets an Anal Probe",url:'https://drive.google.com/file/d/1z9D2z36uRaKPVzA6adfMsr3vDgRoRL4e/preview'},{title:'Weight Gain 4000',url:'https://drive.google.com/file/d/13uEDz-xD_mVygP2gLQOsvn1x1XRn5Z_T/preview'},{title:'Volcano',url:'https://drive.google.com/file/d/1g_RYiGjBWNnfGcKUolc-IRrqUMZT9hx-/preview'},{title:"Big Gay Al's Big Gay Boat Ride",url:'https://drive.google.com/file/d/1nSW4LUNBH1Idkx4cv5lv__bY5ZlK0fqJ/preview'},{title:'An Elephant Makes Love to a Pig',url:'https://drive.google.com/file/d/1rjeZCvcGI8w__X29uFChkP7V8QwDMXOK/preview'},{title:'Death',url:'https://drive.google.com/file/d/1tdFCEmtS_oRvn-ZLktUU1KHXjuc-gsuW/preview'},{title:'Pinkeye',url:'https://drive.google.com/file/d/13VG3rUGLJpASJa_1TN9oPyBo11S6L_kR/preview'},{title:"Starvin' Marvin",url:'https://drive.google.com/file/d/14jmlzRYjKWV1I8uAM0b20FeJnHIpe4lr/preview'},{title:'Mr. Hankey, the Christmas Poo',url:'https://drive.google.com/file/d/1lseKSk2Ivob-z9CYKL93hb0W8DK_aCZo/preview'},{title:'Damien',url:'https://drive.google.com/file/d/1MKA1w3Lm5vMsDFAitlhFanud8bX_TaSD/preview'},{title:"Tom's Rhinoplasty",url:'https://drive.google.com/file/d/1VVunOY9r6ZX4NBIl1JAFnFNDJowc1c0H/preview'},{title:'Mecha-Streisand',url:'https://drive.google.com/file/d/1fdd-3dWLCtcEQqfiTHswUlVTGT21ytD1/preview'},{title:"Cartman's Mom is a Dirty Slut",url:'https://drive.google.com/file/d/1y4LUMC8LCUPWPIzUr5LPxcSjehpC9wFL/preview'}]}]},{title:'Legends of Chamberlain Heights',img:'https://images.justwatch.com/backdrop/16476583/s640/legends-of-chamberlain-heights',seasons:[{name:'Season 1',img:'https://i.ytimg.com/vi/Arf_gU2eesg/maxresdefault.jpg',episodes:[{title:'Jamallies',url:'https://drive.google.com/file/d/1FjbFbW3QH4p57tJ9Ds3ASC6I5rQB3sKT/preview'},{title:'Child Please',url:'https://drive.google.com/file/d/1mq2P4tj_PP6LP3CZfoIuJCrTcdanCo9o/preview'},{title:'Come Out to Play',url:'https://drive.google.com/file/d/1J1tbb8lV28a62LM9I1iDkVtCC0dM2IKM/preview'},{title:'Inspired by Isis',url:'https://drive.google.com/file/d/1xYk8DkQxhP28Y0iTtCyxPI8n2-wmRzdZ/preview'},{title:'The Legend of Tupaquia',url:'https://drive.google.com/file/d/1J-vLP-3z8sz0I_X1Wyp8mMmTtdcr6VEi/preview'},{title:'Class President',url:'https://drive.google.com/file/d/12fhBFP3gyDB5wO-1-B5dpiuZJVMe5gDY/preview'},{title:'Cane and Disabled',url:'https://drive.google.com/file/d/10OFFm8E0P2FXWphbw2UqU5cA_S_T9AAv/preview'},{title:'End of Days',url:'https://drive.google.com/file/d/1h7weCXsQ78j4a22Uj2cYt-3fWUTm4v1z/preview'},{title:'More than a Videogame',url:'https://drive.google.com/file/d/1pPvoFgTlLrTqQttpuINMhzfRsdpoh14C/preview'},{title:'25th Hour',url:'https://drive.google.com/file/d/1WlolKpCcZXnrIZ3bzQwPMpZNPd5jeY58/preview'}]}]},{title:'Death Note',img:'https://m.media-amazon.com/images/I/61k3qe5zitL._AC_UF894,1000_QL80_.jpg',seasons:[{name:'Season 1',img:'https://m.media-amazon.com/images/I/61k3qe5zitL._AC_UF894,1000_QL80_.jpg',episodes:["1K105qCMt6ZfvmL5C93gVFqhIyTUOa-Pd","1WM8EsBaHfsPUX-dTJaWBWX36sB-TBSGh","1urqp5FB98tPtfwbHLm1uNKuQEkmARpJK","1m317hzYib_At1EFS30cI_KUEIVhvs4Kf","1QPyCQWXXD_fpLMvYMvJJaZyUqOD7Xp6_","1RjLVjMuoGMvchl3bH2ApeUMvD9g36syh","1G8ojkjTllEmQifBl6Sm9KgpuBv_jrs1x","1zcxf4GiC--tRE38SdVek92XNnh1yRrAb","1p6vaJjEJRLJvvKmNddymbPDHwzvtwkY3","1rwyQb5zpWNvgfLDVDrUuKn03aXqGmgS7","1sdus11t1EvVMv300QIfCMv6EtX2WxaRw","1RLEuL8aqVSgNryoy-tIATLF94WyYpqM5","1QwFnYn-m2t3QP44ztOH8vODm-NNk2gVy","1tbFLHq3sGTi79sJv77xMglzlLkWiVDF5","1OkdFJpDMd8iKzfBwtCW08DKEeHBM5F7A","1s4uYyO5Y7l7JoHn2NQttoDBUfvLQaaH0","1i76OExrUlztOWZdeCIuQTgMLjtTgXGDp","1B6OFquNnGZZIbJqBvbpqq3o2VzOOltlt","1CLjLog7ZJabUiILKS-KPzil0U5A1Hkui","1ZzH44zPaWlE5QsNlZ4dQeuwkG_l68u5k","1SogVvJoENVKskhgSFp7IdRUT5Q9Hdj0C","1SF7hZ_yOj-94V1Z_gOxmu5D5YgiAO-YB","1sSRMJWQz4W4hn2Iwf1GrtaNHJRtzWDge","14S1rJn0Tm4CAuV1_d-kZXhr3CiG4pAtE","1l1uucyr_IgGrzBU2C-2oTWhpb-l5RaXQ","1D6wIPLcB-icS8o7iJPXww4EqBd9E7m6O","1xc6AxJztA11JUH8vKxvDTD2TV8eCC1tv","1pNwQvCDs2Jda-fv4_d0dHQncX_MfvRpD","1uT3zoLTON-rAvyzPheDTxIIcep-Jx7Is","1UItK1v18ivuoicbxz-1VnbMi7Vh1IifI","1whMYOykC2se0PUyggrPmKd78NaD36EJU","1Gf6FdZR29AxRLL0-hBapITJv2jBgO0Ex","1iQpQaWZHzVuKkQpRvDnwdvGgqNPIOaWv","1kdZ7yWX1JSin3uFhHKT-kth38dws4J0B","1OG49KoxrL47vq5l55u95SKlQhazjQ6RY","1G32eo8AnULmkizmUz_6XERkEErXgiPF8","1Jd2eEtz2kK2jNwqwoiZyO_6USL0ibm9r"].map((id,i)=>({title:'Episode '+(i+1),url:`https://drive.google.com/file/d/${id}/preview`}))}]},{title:'Invincible',img:'https://m.media-amazon.com/images/I/71A4CV+GciL._AC_UF894,1000_QL80_.jpg',seasons:[{name:'Season 1',img:'https://m.media-amazon.com/images/I/71A4CV+GciL._AC_UF894,1000_QL80_.jpg',episodes:[{title:"It's About Time",url:'https://drive.google.com/file/d/19iBD4LWH0kL5kmdWz5HGMtQk9VUFCY0B/preview'},{title:'Here Goes Nothing',url:'https://drive.google.com/file/d/1NX4ggLN3xufKl1RTfJFqscXLQo28Sjoo/preview'},{title:"Who You Calling Ugly?",url:'https://drive.google.com/file/d/1k0XoE97ebTZQIxWSeIbUuukWGHRhgoLg/preview'},{title:"That Actually Hurt",url:'https://drive.google.com/file/d/1KONmjVdobgu6QEEHtgN8viDiTX9cxG5Y/preview'},{title:"We Need to Talk",url:'https://drive.google.com/file/d/1mlO3fFTvsmHeJ28kP79r28v_VpKj26Iz/preview'},{title:'Where I Really Come From',url:'https://drive.google.com/file/d/1GMXFaYwDC_QujDjOQVXLn3PQ2qLwVNXH/preview'}]},{name:'Season 2',img:'https://m.media-amazon.com/images/I/71A4CV+GciL._AC_UF894,1000_QL80_.jpg',episodes:[{title:'A Lesson For Your Next Life',url:'https://drive.google.com/file/d/1MVfbtAh0Uv-EKwyafE-hAU3nRvDGuJYS/preview'},{title:'In About Six Hours...',url:'https://drive.google.com/file/d/120WaQ6r2qGIcyycoGbFkneEffbFyPg9C/preview'},{title:"It's Been A While",url:'https://drive.google.com/file/d/1AVz5vwFbGXBcHDeB-PdcmOMh1YyfGFBx/preview'}]}]},{title:'Wednesday',img:'https://m.media-amazon.com/images/M/MV5BMDE1NjNmZjgtZTg0OC00NjkxLWEzYzItMDNkMTc3YjgxZWQyXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg',seasons:[{name:'Season 1',img:'https://m.media-amazon.com/images/M/MV5BMDE1NjNmZjgtZTg0OC00NjkxLWEzYzItMDNkMTc3YjgxZWQyXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg',episodes:[{title:"Wednesday's Child Is Full of Woe",url:'https://drive.google.com/file/d/1GD7dmbbwf0tgmc_0Bt6Rq4qXV7KSTCMD/preview'},{title:'Woe Is the Loneliest Number',url:'https://drive.google.com/file/d/1uq1jm6pM1e1QcAFVcepLeTEzUsSRaa9E/preview'},{title:'Friend or Woe',url:'https://drive.google.com/file/d/1Sv4hMQIoO3CZ7WbzuXOWa5c_NTv6wSLM/preview'},{title:'Woe What a Night',url:'https://drive.google.com/file/d/1uw2PCLsJ0DjfGi_-_VERVsqyY_hhkzQ6/preview'},{title:'You Reap What You Woe',url:'https://drive.google.com/file/d/1HbBi8TcyeRkBvqBk5xSO9PSL3l7ZqNwE/preview'},{title:'A Murder of Woes',url:'https://drive.google.com/file/d/13-JQKH6qDYi9tBMY1v_mHnfh_sMDDNxS/preview'}]}]},{title:'Sakamoto Days',img:'https://m.media-amazon.com/images/M/MV5BNTM4MmZiNjEtOGY0MC00MGM0LTkxZjEtODUxMmJmZWEwOWU3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg',seasons:[{name:'Season 1',img:'https://m.media-amazon.com/images/M/MV5BNTM4MmZiNjEtOGY0MC00MGM0LTkxZjEtODUxMmJmZWEwOWU3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg',episodes:[{title:'The Greatest Hitman',url:'https://drive.google.com/file/d/1iouyFvGPLQQG390X1yxpYOnfZCFlk5rI/preview'},{title:"Shin's Misfortune",url:'https://drive.google.com/file/d/1lAE_nJje_Mssglei0Hml1qlINGiTnETj/preview'},{title:'The Quiet Life',url:'https://drive.google.com/file/d/15xW8LtrA2Sf7nKWAmBfdPSY3dDNtdCx7/preview'},{title:'The Order',url:'https://drive.google.com/file/d/15KAJ3X2-YNXFEEY8mlqcG9Bt5bjldsFH/preview'}]}]},{title:'Cobra Kai',img:'https://m.media-amazon.com/images/M/MV5BMjQwNzM0ODcyNV5BMl5BanBnXkFtZTgwMTU5MDU2NzM@._V1_.jpg',seasons:[{name:'Season 1',img:'https://m.media-amazon.com/images/M/MV5BMjQwNzM0ODcyNV5BMl5BanBnXkFtZTgwMTU5MDU2NzM@._V1_.jpg',episodes:[{title:'Ace Degenerate',url:'https://drive.google.com/file/d/1creJ_0fa7pU0Y--FQEiJLMoAOjehXOGK/preview'},{title:'Strike First',url:'https://drive.google.com/file/d/1xFxMrl46i_e13CBHMiAiyhHtaj4_YiL_/preview'},{title:'Esqueleto',url:'https://drive.google.com/file/d/1iwEfqnbTiJWny1z5PGKfRwE7cvGPGE2w/preview'},{title:'Cobra Kai Never Dies',url:'https://drive.google.com/file/d/1P5eP81RSciD-ak0uo6yg1ENGF0CGpVJN/preview'},{title:'Mercy',url:'https://drive.google.com/file/d/19uOsaq1o7g_HR5Ige8sCE3O4Lq3zqFzp/preview'}]}]},{title:'One-Punch Man',img:'https://m.media-amazon.com/images/I/81s5qTz80SL._UF1000,1000_QL80_.jpg',seasons:[{name:'Season 1',img:'https://m.media-amazon.com/images/I/81s5qTz80SL._UF1000,1000_QL80_.jpg',episodes:[{title:'The Strongest Man',url:'https://drive.google.com/file/d/1DarTqiJ4GWvKnkuDGEixFjh3iFJjMJ7B/preview'},{title:'The Lone Cyborg',url:'https://drive.google.com/file/d/1LknLsS1zJMFiFHgIcnbFsFJaYtA_g0kE/preview'},{title:'The Obsessive Scientist',url:'https://drive.google.com/file/d/1IIFirlsBKtVs2XPGUiVlQc0wnSz0SaeK/preview'}]}]}];
-// STATE
+// ── SUPABASE CONFIG ──────────────────────────────────────────────
+const SB_URL='https://nxlfwxuqvvhesczodjng.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54bGZ3eHVxdnZoZXNjem9kam5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5NDM0NDQsImV4cCI6MjA4ODUxOTQ0NH0.r94sUhPC9piwx0jz-d3jXKWlyOVPzijzcF1K5XYlOx8';
+async function sbReq(path,method='GET',body=null,extra={}){
+  const opts={method,headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json',...(extra.headers||{})}};
+  if(body)opts.body=JSON.stringify(body);
+  const r=await fetch(SB_URL+path,opts);
+  const t=await r.text();
+  if(!r.ok)throw new Error(t);
+  return t?JSON.parse(t):null;
+}
+async function sha256(str){
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+// ── AUTH STATE ───────────────────────────────────────────────────
+let currentUser=null;
+const AVATARS=['🎮','🕹️','👾','🦊','🐉','🔥','⚡','🌙','🦄','💀','🤖','🎯','🏆','🦁','🐺'];
+
+// ── RECENTLY PLAYED ──────────────────────────────────────────────
+const RP_MAX=20;
+function loadRecent(){return JSON.parse(localStorage.getItem(userKey('adless_recent'))||'[]');}
+function saveRecent(r){localStorage.setItem(userKey('adless_recent'),JSON.stringify(r));syncUserData();}
+function addRecent(game){
+  let r=loadRecent().filter(x=>x.id!==game.id);
+  r.unshift({id:game.id,title:game.title,img:game.img,url:game.url,ts:Date.now()});
+  if(r.length>RP_MAX)r=r.slice(0,RP_MAX);
+  saveRecent(r);
+}
+
+// ── STORAGE ──────────────────────────────────────────────────────
 const SK='adless_settings_v3',BK='adless_bg_v3',TK='adless_theme_v3',FK='adless_favs_v3';
-let favs=JSON.parse(localStorage.getItem(FK)||'[]');
+let favs=[];
 let currentCat='all',currentView='games-view',selectedShow=null,selectedSeason=null;
 let zones=[],gpGames=[];
 let filteredList=[],currentPage=1;
 const PER_PAGE=500;
-function loadS(){try{return JSON.parse(localStorage.getItem(SK))||{};}catch(e){return{};}}
-function saveS(s){localStorage.setItem(SK,JSON.stringify(s));}
-function loadBg(){try{return JSON.parse(localStorage.getItem(BK))||{};}catch(e){return{};}}
-function saveBg(b){localStorage.setItem(BK,JSON.stringify(b));}
-function loadTheme(){return localStorage.getItem(TK)||'#0a84ff';}
-function saveTheme(c){localStorage.setItem(TK,c);}
+
+function userKey(k){return currentUser&&!currentUser.guest?`u_${currentUser.id}_${k}`:k;}
+function loadS(){try{return JSON.parse(localStorage.getItem(userKey(SK)))||{};}catch(e){return{};}}
+function saveS(s){localStorage.setItem(userKey(SK),JSON.stringify(s));syncUserData();}
+function loadBg(){try{return JSON.parse(localStorage.getItem(userKey(BK)))||{};}catch(e){return{};}}
+function saveBg(b){localStorage.setItem(userKey(BK),JSON.stringify(b));syncUserData();}
+function loadTheme(){return localStorage.getItem(userKey(TK))||'#0a84ff';}
+function saveTheme(c){localStorage.setItem(userKey(TK),c);syncUserData();}
+function loadFavs(){return JSON.parse(localStorage.getItem(userKey(FK))||'[]');}
+function saveFavs(f){localStorage.setItem(userKey(FK),JSON.stringify(f));syncUserData();}
+
+let syncTimer=null;
+function syncUserData(){
+  if(!currentUser||currentUser.guest)return;
+  clearTimeout(syncTimer);
+  syncTimer=setTimeout(async()=>{
+    const data={settings:loadS(),bg:loadBg(),theme:loadTheme(),favs:loadFavs(),recent:loadRecent(),progress:loadProgress()};
+    const body=JSON.stringify({user_id:currentUser.id,data:JSON.stringify(data)});
+    try{
+      // Check if row exists
+      const existing=await sbReq(`/rest/v1/user_data?user_id=eq.${currentUser.id}&select=id`);
+      if(existing&&existing.length){
+        await fetch(SB_URL+`/rest/v1/user_data?user_id=eq.${currentUser.id}`,{
+          method:'PATCH',
+          headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+          body:JSON.stringify({data:JSON.stringify(data)})
+        });
+      }else{
+        await fetch(SB_URL+'/rest/v1/user_data',{
+          method:'POST',
+          headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+          body
+        });
+      }
+    }catch(e){console.warn('Sync failed',e);}
+  },1200);
+}
+
+async function loadUserData(){
+  if(!currentUser||currentUser.guest)return;
+  try{
+    const rows=await sbReq(`/rest/v1/user_data?user_id=eq.${currentUser.id}&select=data`);
+    if(!rows||!rows.length)return;
+    const d=JSON.parse(rows[0].data);
+    if(d.settings)localStorage.setItem(userKey(SK),JSON.stringify(d.settings));
+    if(d.bg)localStorage.setItem(userKey(BK),JSON.stringify(d.bg));
+    if(d.theme)localStorage.setItem(userKey(TK),d.theme);
+    if(d.favs){localStorage.setItem(userKey(FK),JSON.stringify(d.favs));favs=d.favs;}
+    if(d.recent)localStorage.setItem(userKey('adless_recent'),JSON.stringify(d.recent));
+    if(d.progress)localStorage.setItem(userKey('adless_progress'),JSON.stringify(d.progress));
+  }catch(e){console.warn('Load data failed',e);}
+}
+
+// ── LOGIN UI ─────────────────────────────────────────────────────
+let lbMode='login',lbSelAv=AVATARS[0];
+function lbTab(mode){
+  lbMode=mode;
+  document.querySelectorAll('.lb-tab').forEach((t,i)=>t.classList.toggle('active',(mode==='login'?i===0:i===1)));
+  document.getElementById('lb-submit').textContent=mode==='login'?'Login':'Create Account';
+  document.getElementById('lb-av-wrap').style.display=mode==='signup'?'block':'none';
+  document.getElementById('lb-err').textContent='';
+}
+function lbInitAvatars(){
+  const row=document.getElementById('lb-av-row');
+  row.innerHTML=AVATARS.map((a,i)=>`<div class="lb-av${i===0?' sel':''}" onclick="lbPickAv(this,'${a}')">${a}</div>`).join('');
+}
+function lbPickAv(el,av){
+  document.querySelectorAll('.lb-av').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');lbSelAv=av;
+}
+async function lbSubmit(){
+  const un=document.getElementById('lb-user').value.trim();
+  const pw=document.getElementById('lb-pass').value;
+  const err=document.getElementById('lb-err');
+  const btn=document.getElementById('lb-submit');
+  if(!un||!pw){err.textContent='Please fill in all fields.';return;}
+  if(un.length<3){err.textContent='Username must be at least 3 characters.';return;}
+  if(pw.length<4){err.textContent='Password must be at least 4 characters.';return;}
+  btn.disabled=true;err.textContent='Loading…';
+  try{
+    const hash=await sha256(pw+un);
+    if(lbMode==='signup'){
+      // Check username taken
+      const existing=await sbReq(`/rest/v1/profiles?username=eq.${encodeURIComponent(un)}&select=id`);
+      if(existing&&existing.length){err.textContent='Username already taken.';btn.disabled=false;return;}
+      // Insert and return new row
+      const res=await fetch(SB_URL+'/rest/v1/profiles',{
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
+        body:JSON.stringify({username:un,password_hash:hash,avatar:lbSelAv})
+      });
+      const rows=await res.json();
+      if(!res.ok||!rows||!rows.length){err.textContent='Signup failed: '+(rows?.message||res.status);btn.disabled=false;return;}
+      currentUser={id:rows[0].id,username:un,avatar:lbSelAv,role:'user'};
+    }else{
+      const rows=await sbReq(`/rest/v1/profiles?username=eq.${encodeURIComponent(un)}&select=id,username,avatar,password_hash,role,banned,suspended_until,ban_reason,display_name`);
+      if(!rows||!rows.length){err.textContent='Username not found.';btn.disabled=false;return;}
+      if(rows[0].password_hash!==hash){err.textContent='Incorrect password.';btn.disabled=false;return;}
+      if(rows[0].banned){err.textContent=`🚫 Account banned: ${rows[0].ban_reason||'Contact admin'}`;btn.disabled=false;return;}
+      if(rows[0].suspended_until&&new Date(rows[0].suspended_until)>new Date()){err.textContent=`⏸ Account suspended until ${new Date(rows[0].suspended_until).toLocaleDateString()}`;btn.disabled=false;return;}
+      currentUser={id:rows[0].id,username:rows[0].username,avatar:rows[0].avatar,role:rows[0].role||'user',display_name:rows[0].display_name||null};
+    }
+    localStorage.setItem('adless_session',JSON.stringify(currentUser));
+    await loadUserData();
+    lbEnter();
+  }catch(e){err.textContent='Connection error. Try again.';console.error(e);}
+  btn.disabled=false;
+}
+function lbGuest(){
+  currentUser={id:'guest',username:'Guest',avatar:'👤',guest:true};
+  lbEnter();
+}
+function lbEnter(){
+  document.getElementById('login-screen').classList.add('gone');
+  updateUserChip();
+  favs=loadFavs();
+  applyStoredSettings();
+  loadCloakSetting();
+  cardCache.clear();buildList();renderPage();updateStats();
+  // Bootstrap owner account silently
+  bootstrapOwner();
+  startNotifPoll();
+}
+function logout(){
+  stopNotifPoll();
+  stopDmPoll();
+  stopChatSub();
+  notifPanelOpen=false;
+  const panel=document.getElementById('notif-panel');
+  if(panel)panel.style.display='none';
+  lastNotifCount=0;
+  localStorage.removeItem('adless_session');
+  currentUser=null;
+  favs=[];
+  document.getElementById('user-chip').style.display='none';
+  document.getElementById('login-screen').classList.remove('gone');
+  document.getElementById('lb-user').value='';
+  document.getElementById('lb-pass').value='';
+  document.getElementById('lb-err').textContent='';
+  lbTab('login');
+  cardCache.clear();
+}
 // DEDUP
 function nt(t){return t.toLowerCase().replace(/[^a-z0-9]/g,'');}
 let kTitles=new Set(),kUrls=new Set();
@@ -467,7 +1145,8 @@ function buildCardHtml(g){
   const cats=g.cats||(g.cats=detectTags(g.title,'',g.cat));
   const stitle=g.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   const tags=cats.map(c=>`<span class="tag ${TAG_TC[c]||'tag-zone'}">${c}</span>`).join('');
-  const feat=g.featured?'<div class="featured-badge">⭐ Featured</div>':'';
+  const isFeatured=(g.featured&&!ownerDefeatured.has(g.id))||ownerFeatured.has(g.id);
+  const feat=isFeatured?'<div class="featured-badge">⭐ Featured</div>':'';
   const sid=g.id.toString().replace(/"/g,'&quot;');
   const surl=g.url.replace(/"/g,'&quot;');
   return`<div class="card" data-url="${surl}" data-title="${stitle}" onclick="cardClick(this)">${feat}<div class="fav-star FAV_PLACEHOLDER" data-id="${sid}" onclick="event.stopPropagation();favClick(this)">★</div><img src="${g.img.replace(/"/g,'&quot;')}" loading="lazy" onerror="this.style.opacity='.1'"><div class="info"><div class="title">${stitle}</div><div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:5px">${tags}</div></div></div>`;
@@ -491,8 +1170,12 @@ function buildList(){
   let list;
   if(currentCat==='all')list=all;
   else if(currentCat==='favs')list=all.filter(g=>favs.includes(g.id));
-  else if(currentCat==='featured')list=all.filter(g=>g.featured);
+  else if(currentCat==='featured')list=all.filter(g=>(g.featured&&!ownerDefeatured.has(g.id))||ownerFeatured.has(g.id));
   else if(currentCat==='flash')list=zones.filter(g=>g.isFlash);
+  else if(currentCat==='recent'){
+    const r=loadRecent();
+    list=r.map(x=>all.find(g=>g.id===x.id)||x).filter(Boolean);
+  }
   else list=all.filter(g=>(g.cats||[g.cat]).includes(currentCat));
   if(q)list=list.filter(g=>g.title.toLowerCase().includes(q));
   filteredList=list;
@@ -599,16 +1282,101 @@ async function loadGP(){
   if(bootSt)bootSt.textContent=`✅ ${allGames().length.toLocaleString()} games ready!`;
   setTimeout(bootDone,800);
 }
+// ── WATCH PROGRESS ───────────────────────────────────────────────
+function loadProgress(){try{return JSON.parse(localStorage.getItem(userKey('adless_progress'))||'{}');}catch(e){return{};}}
+function saveProgress(p){localStorage.setItem(userKey('adless_progress'),JSON.stringify(p));syncUserData();}
+function markWatched(showTitle,seasonName,epIdx){
+  const p=loadProgress();
+  if(!p[showTitle])p[showTitle]={};
+  p[showTitle][seasonName]=epIdx;
+  saveProgress(p);
+}
+function markMovieWatched(title){
+  const p=loadProgress();
+  p['__movie__'+title]=true;
+  saveProgress(p);
+}
+function getShowProgress(showTitle,seasonName){
+  const p=loadProgress();
+  return p[showTitle]?.(p[showTitle][seasonName]??-1)??-1;
+}
+function getMovieWatched(title){
+  return !!loadProgress()['__movie__'+title];
+}
+
 // MOVIES
-function renderMovies(){document.getElementById('movie-grid').innerHTML=MOVIES.map(m=>`<div class="card" onclick="play('${m.url.replace(/'/g,"\\'")}','${m.title.replace(/'/g,"\\'")}')"><img src="${m.img}" onerror="this.style.opacity='.1'"><div class="info"><div class="title">${m.title}</div><div class="tag tag-movie">Movie</div></div></div>`).join('');}
+function renderMovies(){
+  const grid=document.getElementById('movie-grid');
+  grid.innerHTML=MOVIES.map(m=>{
+    const watched=getMovieWatched(m.title);
+    const url=m.url.replace(/"/g,'&quot;');
+    const title=m.title.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+    return`<div class="card" data-url="${url}" data-title="${title}" onclick="playMovie(this)">
+      ${watched?'<div class="watch-badge">✓ Watched</div>':''}
+      <img src="${m.img}" onerror="this.style.opacity='.1'">
+      <div class="info"><div class="title">${m.title}</div><div class="tag tag-movie">Movie</div></div>
+    </div>`;
+  }).join('');
+}
+function playMovie(el){
+  const title=el.dataset.title;
+  markMovieWatched(title);
+  play(el.dataset.url,title);
+}
+
 // SHOWS
-function renderShows(){document.getElementById('shows-grid').innerHTML=SHOWS.map((s,i)=>`<div class="card" onclick="openShow(${i})"><img src="${s.img}" onerror="this.style.opacity='.1'"><div class="info"><div class="title">${s.title}</div><div class="tag tag-show">${s.seasons.length} Season${s.seasons.length>1?'s':''} · ${s.seasons.reduce((a,b)=>a+b.episodes.length,0)} eps</div></div></div>`).join('');}
-function openShow(i){selectedShow=SHOWS[i];document.getElementById('show-title-head').textContent=selectedShow.title;switchView('seasons-view');document.getElementById('seasons-grid').innerHTML=selectedShow.seasons.map((s,si)=>`<div class="card" onclick="openSeason(${si})"><img src="${s.img||selectedShow.img}" onerror="this.style.opacity='.1'"><div class="info"><div class="title">${s.name}</div><div class="tag tag-show">${s.episodes.length} Episodes</div></div></div>`).join('');}
-function backToShows(){selectedShow=null;switchView('shows-view');}
-function openSeason(i){selectedSeason=selectedShow.seasons[i];document.getElementById('season-title-head').textContent=selectedShow.title+' · '+selectedSeason.name;switchView('episodes-view');document.getElementById('eps-grid').innerHTML=selectedSeason.episodes.map((ep,ei)=>`<div class="ep-item" onclick="play('${ep.url.replace(/'/g,"\\'")}','${ep.title.replace(/'/g,"\\'")}')"><div><span class="ep-num">EP ${ei+1}</span><span style="font-size:13px">${ep.title}</span></div><div style="color:var(--blue);font-size:18px">▶</div></div>`).join('');}
-function backToSeasons(){selectedSeason=null;switchView('seasons-view');}
-// PLAYER
-function play(url,title){
+let curShowI=-1,curSeasonI=-1;
+function renderShows(){
+  document.getElementById('shows-grid').innerHTML=SHOWS.map((s,i)=>
+    `<div class="card" onclick="openShow(${i})">
+      <img src="${s.img}" onerror="this.style.opacity='.3'">
+      <div class="info"><div class="title">${s.title}</div>
+      <div class="tag tag-show">${s.seasons.length} Season${s.seasons.length>1?'s':''} · ${s.seasons.reduce((a,b)=>a+b.episodes.length,0)} eps</div>
+      </div></div>`
+  ).join('');
+}
+function openShow(si){
+  curShowI=si;curSeasonI=-1;
+  const show=SHOWS[si];
+  document.getElementById('show-title-head').textContent=show.title;
+  switchView('seasons-view');
+  document.getElementById('seasons-grid').innerHTML=show.seasons.map((s,i)=>
+    `<div class="card" onclick="openSeason(${si},${i})">
+      <img src="${s.img||show.img}" onerror="this.style.opacity='.3'">
+      <div class="info"><div class="title">${s.name}</div>
+      <div class="tag tag-show">${s.episodes.length} Episodes</div>
+      </div></div>`
+  ).join('');
+}
+function openSeason(si,sei){
+  curShowI=si;curSeasonI=sei;
+  const show=SHOWS[si];
+  const season=show.seasons[sei];
+  document.getElementById('season-title-head').textContent=show.title+' · '+season.name;
+  switchView('episodes-view');
+  document.getElementById('eps-grid').innerHTML=season.episodes.map((ep,ei)=>
+    `<div class="ep-item" data-si="${si}" data-sei="${sei}" data-ep="${ei}" data-url="${ep.url.replace(/"/g,'&quot;')}" data-title="${ep.title.replace(/"/g,'&quot;')}" onclick="playEp(this)">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="ep-num">▶ EP ${ei+1}</span>
+        <span style="font-size:13px">${ep.title}</span>
+      </div>
+      <div style="color:var(--blue);font-size:18px">▶</div>
+    </div>`
+  ).join('');
+}
+function playEp(el){
+  play(el.dataset.url,el.dataset.title);
+}
+function backToShows(){curShowI=-1;curSeasonI=-1;switchView('shows-view');renderShows();}
+function backToSeasons(){curSeasonI=-1;if(curShowI>=0)openShow(curShowI);else switchView('seasons-view');}// PLAYER
+function play(url,title,gameObj){
+  // Track recently played
+  if(gameObj)addRecent(gameObj);
+  else{
+    // Try to find game by url for recent tracking
+    const g=allGames().find(x=>x.url===url);
+    if(g)addRecent(g);
+  }
   document.getElementById('gl-title').textContent=title||'Loading game…';
   document.getElementById('game-loader').classList.add('on');
   document.getElementById('player-title').textContent=title||'Playing';
@@ -649,6 +1417,8 @@ function closePlayer(){
   document.getElementById('game-frame').src='';
   document.body.classList.remove('player-open');
   releaseLock();
+  // Refresh progress badges
+  if(currentView==='movies-view')renderMovies();
 }
 function fsGame(){const f=document.getElementById('game-frame');if(f.requestFullscreen)f.requestFullscreen();}
 function playRandom(){const all=allGames().filter(g=>g.url&&!/appetize|deepseek|chatgpt|gemini|claude\.ai|perplexity|deepai/.test(g.url));if(!all.length)return;const g=all[Math.floor(Math.random()*all.length)];play(g.url,g.title);}
@@ -699,11 +1469,39 @@ document.getElementById('game-wrap').addEventListener('click',()=>{
   }
 });
 // NAV
-function switchView(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active');currentView=id;document.getElementById('game-filters').style.display=id==='games-view'?'block':'none';}
-document.querySelectorAll('.nav').forEach(btn=>{btn.onclick=()=>{if(btn.dataset.view){document.querySelectorAll('aside .nav').forEach(n=>n.classList.remove('active'));btn.classList.add('active');if(btn.dataset.view==='games-view'){switchView('games-view');buildList();renderPage();}else if(btn.dataset.view==='shows-view'){switchView('shows-view');renderShows();}else if(btn.dataset.view==='movies-view'){switchView('movies-view');renderMovies();}else if(btn.dataset.view==='chat-view'){switchView('chat-view');}else{switchView(btn.dataset.view);if(btn.dataset.view==='settings-view'){buildColorGrid();buildBgSwatches();buildBgGradients();updateStats();}}}else if(btn.dataset.cat){document.querySelectorAll('#game-filters .nav').forEach(n=>n.classList.remove('active'));btn.classList.add('active');currentCat=btn.dataset.cat;currentPage=1;switchView('games-view');buildList();renderPage();}};});
+function switchView(id){
+  if(currentView==='dm-view'&&id!=='dm-view')stopDmPoll();
+  if(currentView==='group-view'&&id!=='group-view')stopGrpPoll();
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  currentView=id;
+  document.getElementById('game-filters').style.display=id==='games-view'?'block':'none';
+}
+document.querySelectorAll('.nav').forEach(btn=>{
+  if(btn.classList.contains('discord-btn'))return;
+  btn.onclick=()=>{
+    if(btn.dataset.view){
+      document.querySelectorAll('aside .nav').forEach(n=>n.classList.remove('active'));
+      btn.classList.add('active');
+      if(btn.dataset.view==='games-view'){switchView('games-view');buildList();renderPage();}
+      else if(btn.dataset.view==='shows-view'){selectedShow=null;selectedSeason=null;switchView('shows-view');renderShows();}
+      else if(btn.dataset.view==='movies-view'){switchView('movies-view');renderMovies();}
+      else if(btn.dataset.view==='chat-view'){switchView('chat-view');onChatViewOpen();}
+      else if(btn.dataset.view==='friends-view'){switchView('friends-view');loadFriendRequests();loadGroupsList();}
+      else if(btn.dataset.view==='owner-view'){switchView('owner-view');loadOwnerPanel();}
+      else{switchView(btn.dataset.view);if(btn.dataset.view==='settings-view'){buildColorGrid();buildBgSwatches();buildBgGradients();buildCloakGrid();updateStats();
+        const accSec=document.getElementById('account-section');
+        if(accSec)accSec.style.display=(!currentUser||currentUser.guest)?'none':'block';
+        loadAccountCooldowns();}}
+    }else if(btn.dataset.cat){
+      document.querySelectorAll('#game-filters .nav').forEach(n=>n.classList.remove('active'));
+      btn.classList.add('active');currentCat=btn.dataset.cat;currentPage=1;switchView('games-view');buildList();renderPage();
+    }
+  };
+});
 // FAVS
-function toggleFav(id){id=String(id);favs=favs.includes(id)?favs.filter(f=>f!==id):[...favs,id];localStorage.setItem(FK,JSON.stringify(favs));invalidateCard(id);buildList();renderPage();updateStats();}
-function clearFavs(){favs=[];localStorage.setItem(FK,'[]');cardCache.clear();buildList();renderPage();updateStats();showToast('⭐ Favorites cleared');}
+function toggleFav(id){id=String(id);favs=favs.includes(id)?favs.filter(f=>f!==id):[...favs,id];saveFavs(favs);invalidateCard(id);buildList();renderPage();updateStats();}
+function clearFavs(){favs=[];saveFavs([]);cardCache.clear();buildList();renderPage();updateStats();showToast('⭐ Favorites cleared');}
 function changeDevice(){
   localStorage.removeItem(DK);
   document.getElementById('device-pick').classList.remove('gone');
@@ -725,12 +1523,13 @@ function buildBgGradients(){const cur=loadBg();document.getElementById('bg-gradi
 function applyBgVal(v){const l=document.getElementById('bgLayer');l.style.background=v;l.classList.add('on');saveBg({v});buildBgSwatches();buildBgGradients();showToast('🖼 Background updated');}
 function applyBgCustom(c){applyBgVal(c);}
 function resetBg(){const l=document.getElementById('bgLayer');l.style.background='';l.classList.remove('on');saveBg({});buildBgSwatches();buildBgGradients();showToast('✕ Background cleared');}
+function applyShelf(on){const s=loadS();s.shelf=on;saveS(s);document.body.classList.toggle('shelf-mode',on);cardCache.clear();buildList();renderPage();showToast(on?'🖼 Shelf mode on':'📋 Normal mode on');}
 function applyAnim(on){const s=loadS();s.noAnim=on;saveS(s);document.body.classList.toggle('no-anim',on);on?stopBg():(!loadS().noBg&&startBg());showToast(on?'⏸ Animations off':'▶ Animations on');}
 function applyCursor(on){const s=loadS();s.sysCursor=on;saveS(s);document.body.classList.toggle('sys-cursor',on);showToast(on?'🖱 System cursor':'✨ Custom cursor');}
 function applyBgAnim(on){const s=loadS();s.noBg=on;saveS(s);on?stopBg():(!loadS().noAnim&&startBg());showToast(on?'🌑 Particles off':'✨ Particles on');}
 function applyInvert(on){const s=loadS();s.invert=on;saveS(s);document.body.classList.toggle('inverted',on);showToast(on?'🔄 Inverted':'🔄 Normal');}
-function resetAll(){saveS({});saveTheme('#0a84ff');saveBg({});document.documentElement.style.setProperty('--blue','#0a84ff');document.body.classList.remove('no-anim','sys-cursor','inverted');['tog-anim','tog-cursor','tog-bg','tog-invert'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});resetBg();startBg();buildColorGrid();showToast('↩️ Reset done');}
-function applyStoredSettings(){const s=loadS(),t=loadTheme(),bg=loadBg();document.documentElement.style.setProperty('--blue',t);if(s.noAnim){document.getElementById('tog-anim').checked=true;document.body.classList.add('no-anim');stopBg();}if(s.sysCursor){document.getElementById('tog-cursor').checked=true;document.body.classList.add('sys-cursor');}if(s.noBg){document.getElementById('tog-bg').checked=true;stopBg();}if(s.invert){document.getElementById('tog-invert').checked=true;document.body.classList.add('inverted');}if(bg.v){const l=document.getElementById('bgLayer');l.style.background=bg.v;l.classList.add('on');}}
+function resetAll(){saveS({});saveTheme('#0a84ff');saveBg({});document.documentElement.style.setProperty('--blue','#0a84ff');document.body.classList.remove('no-anim','sys-cursor','inverted','shelf-mode');['tog-anim','tog-cursor','tog-bg','tog-invert','tog-shelf'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});resetBg();startBg();cardCache.clear();buildList();renderPage();buildColorGrid();showToast('↩️ Reset done');}
+function applyStoredSettings(){const s=loadS(),t=loadTheme(),bg=loadBg();document.documentElement.style.setProperty('--blue',t);if(s.noAnim){document.getElementById('tog-anim').checked=true;document.body.classList.add('no-anim');stopBg();}if(s.sysCursor){document.getElementById('tog-cursor').checked=true;document.body.classList.add('sys-cursor');}if(s.noBg){document.getElementById('tog-bg').checked=true;stopBg();}if(s.invert){document.getElementById('tog-invert').checked=true;document.body.classList.add('inverted');}if(s.shelf){document.getElementById('tog-shelf').checked=true;document.body.classList.add('shelf-mode');}if(bg.v){const l=document.getElementById('bgLayer');l.style.background=bg.v;l.classList.add('on');}}
 // CONFIRM / TOAST
 let _cb=null;
 function askConfirm(title,msg,cb){document.getElementById('conf-title').textContent=title;document.getElementById('conf-msg').textContent=msg;_cb=cb;document.getElementById('confirm').classList.add('on');}
@@ -752,6 +1551,2099 @@ const cur=document.getElementById('cur');
 window.addEventListener('mousemove',e=>{cur.style.transform=`translate(${e.clientX}px,${e.clientY}px)`;},{passive:true});
 document.addEventListener('mouseover',e=>{if(e.target.closest('.rand-btn,.pbtn.rand'))document.body.classList.add('r-hover');else if(e.target.closest('.card,.nav,button,input,.ep-item,.tog,.bg-dot,.bg-grad,.color-dot'))document.body.classList.add('g-hover');});
 document.addEventListener('mouseout',()=>document.body.classList.remove('g-hover','r-hover'));
+// ── SPOTLIGHT (PUBLIC) ───────────────────────────────────────────
+let publicSpotlight={gotw:null,gotm:null,featured:new Set()};
+
+async function loadSpotlightPublic(){
+  // Retry up to 3 times — first load sometimes fails before network is ready
+  for(let attempt=0;attempt<3;attempt++){
+    try{
+      const rows=await sbReq(`/rest/v1/spotlight?select=*`);
+      publicSpotlight.featured=new Set();
+      (rows||[]).forEach(r=>{
+        if(r.id==='gotw'&&r.game_title&&r.game_url)publicSpotlight.gotw=r;
+        else if(r.id==='gotm'&&r.game_title&&r.game_url)publicSpotlight.gotm=r;
+        else if(r.id&&r.id.startsWith('feat_')&&r.game_id){
+          publicSpotlight.featured.add(r.game_id);
+          ownerFeatured.add(r.game_id);
+        }
+      });
+      // Also reload site settings to get defeatured list
+      await loadSiteSettings();
+      renderSpotlightBanner();
+      buildList();renderPage();
+      return;
+    }catch(e){
+      if(attempt<2){await new Promise(r=>setTimeout(r,1500));}
+      else{console.warn('Spotlight load failed',e);}
+    }
+  }
+}
+
+function renderSpotlightBanner(){
+  const el=document.getElementById('spotlight-banner');
+  if(!el)return;
+  const cards=[];
+  if(publicSpotlight.gotw){
+    const g=publicSpotlight.gotw;
+    cards.push(`<div class="spot-card gotw" onclick="play('${g.game_url}','${escAttr(g.game_title)}')">
+      ${g.game_img?`<img class="spot-img" src="${g.game_img}" onerror="this.style.display='none'">`:''}
+      <div class="spot-body">
+        <span class="spot-badge week">🗓 GAME OF THE WEEK</span>
+        <div class="spot-title">${escHtml(g.game_title)}</div>
+        <div class="spot-sub">Tap to play</div>
+      </div>
+    </div>`);
+  }
+  if(publicSpotlight.gotm){
+    const g=publicSpotlight.gotm;
+    cards.push(`<div class="spot-card gotm" onclick="play('${g.game_url}','${escAttr(g.game_title)}')">
+      ${g.game_img?`<img class="spot-img" src="${g.game_img}" onerror="this.style.display='none'">`:''}
+      <div class="spot-body">
+        <span class="spot-badge month">📅 GAME OF THE MONTH</span>
+        <div class="spot-title">${escHtml(g.game_title)}</div>
+        <div class="spot-sub">Tap to play</div>
+      </div>
+    </div>`);
+  }
+  el.innerHTML=cards.join('');
+  el.style.display=cards.length?'flex':'none';
+}
+
+function escAttr(s){return(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');}
+
+// ── ACCOUNT MANAGEMENT ───────────────────────────────────────────
+function accountMsg(txt,ok=false){
+  const el=document.getElementById('account-msg');
+  if(!el)return;
+  el.textContent=txt;
+  el.style.color=ok?'#30d158':'#ff375f';
+  setTimeout(()=>{if(el.textContent===txt)el.textContent='';},4000);
+}
+
+function daysUntil(isoDate){
+  if(!isoDate)return 0;
+  const diff=new Date(isoDate).getTime()+86400000*1-Date.now(); // won't be negative after check
+  return Math.ceil(diff/86400000);
+}
+
+async function loadAccountCooldowns(){
+  if(!currentUser||currentUser.guest)return;
+  try{
+    const rows=await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=display_name,last_username_change,last_display_change`);
+    if(!rows||!rows.length)return;
+    const p=rows[0];
+    // Display name cooldown
+    const dnEl=document.getElementById('dn-cooldown-desc');
+    const unEl=document.getElementById('un-cooldown-desc');
+    const dnInput=document.getElementById('new-display-name');
+    const unInput=document.getElementById('new-username');
+    if(p.display_name&&dnInput)dnInput.placeholder=p.display_name;
+    if(p.last_display_change){
+      const nextDn=new Date(new Date(p.last_display_change).getTime()+7*86400000);
+      const daysLeft=Math.ceil((nextDn-Date.now())/86400000);
+      if(daysLeft>0){
+        if(dnEl)dnEl.textContent=`Next change available in ${daysLeft} day${daysLeft>1?'s':''}`;
+        if(dnInput){dnInput.disabled=true;dnInput.placeholder='Locked for '+daysLeft+' more day(s)';}
+      }
+    }
+    if(p.last_username_change){
+      const nextUn=new Date(new Date(p.last_username_change).getTime()+30*86400000);
+      const daysLeft=Math.ceil((nextUn-Date.now())/86400000);
+      if(daysLeft>0){
+        if(unEl)unEl.textContent=`Next change available in ${daysLeft} day${daysLeft>1?'s':''}`;
+        if(unInput){unInput.disabled=true;unInput.placeholder='Locked for '+daysLeft+' more day(s)';}
+      }
+    }
+  }catch(e){console.warn(e);}
+}
+
+async function changeDisplayName(){
+  if(!currentUser||currentUser.guest){accountMsg('Login required');return;}
+  const val=document.getElementById('new-display-name')?.value.trim();
+  if(!val){accountMsg('Enter a display name');return;}
+  if(val.length<2){accountMsg('Too short (min 2 chars)');return;}
+  try{
+    // Check cooldown
+    const rows=await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=last_display_change`);
+    const last=rows?.[0]?.last_display_change;
+    if(last){
+      const next=new Date(new Date(last).getTime()+7*86400000);
+      if(Date.now()<next){
+        const d=Math.ceil((next-Date.now())/86400000);
+        accountMsg(`⏳ Wait ${d} more day${d>1?'s':''} to change display name`);return;
+      }
+    }
+    await fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({display_name:val,last_display_change:new Date().toISOString()})
+    });
+    currentUser.display_name=val;
+    accountMsg('✓ Display name updated to "'+val+'"',true);
+    showToast('✓ Display name updated');
+    loadAccountCooldowns();
+  }catch(e){accountMsg('Failed: '+e.message);}
+}
+
+async function changeUsername(){
+  if(!currentUser||currentUser.guest){accountMsg('Login required');return;}
+  const val=document.getElementById('new-username')?.value.trim();
+  if(!val){accountMsg('Enter a username');return;}
+  if(val.length<3){accountMsg('Too short (min 3 chars)');return;}
+  if(!/^[a-zA-Z0-9_]+$/.test(val)){accountMsg('Only letters, numbers, underscores');return;}
+  try{
+    const rows=await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=last_username_change`);
+    const last=rows?.[0]?.last_username_change;
+    if(last){
+      const next=new Date(new Date(last).getTime()+30*86400000);
+      if(Date.now()<next){
+        const d=Math.ceil((next-Date.now())/86400000);
+        accountMsg(`⏳ Wait ${d} more day${d>1?'s':''} to change username`);return;
+      }
+    }
+    // Check taken
+    const existing=await sbReq(`/rest/v1/profiles?username=eq.${encodeURIComponent(val)}&select=id`);
+    if(existing&&existing.length){accountMsg('Username already taken');return;}
+    await fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({username:val,last_username_change:new Date().toISOString()})
+    });
+    currentUser.username=val;
+    localStorage.setItem('adless_session',JSON.stringify(currentUser));
+    updateUserChip();
+    accountMsg('✓ Username changed to "'+val+'"',true);
+    showToast('✓ Username updated');
+    document.getElementById('new-username').value='';
+    loadAccountCooldowns();
+  }catch(e){accountMsg('Failed: '+e.message);}
+}
+
+async function changePassword(){
+  if(!currentUser||currentUser.guest){accountMsg('Login required');return;}
+  const cur=document.getElementById('cur-password')?.value;
+  const nw=document.getElementById('new-password')?.value;
+  if(!cur||!nw){accountMsg('Fill in both fields');return;}
+  if(nw.length<4){accountMsg('New password too short (min 4)');return;}
+  if(cur===nw){accountMsg('New password must be different');return;}
+  try{
+    // Verify current password
+    const rows=await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=password_hash,username`);
+    if(!rows||!rows.length){accountMsg('Error fetching account');return;}
+    const curHash=await sha256(cur+rows[0].username);
+    if(curHash!==rows[0].password_hash){accountMsg('❌ Current password incorrect');return;}
+    const newHash=await sha256(nw+rows[0].username);
+    await fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({password_hash:newHash,last_password_change:new Date().toISOString()})
+    });
+    document.getElementById('cur-password').value='';
+    document.getElementById('new-password').value='';
+    accountMsg('✓ Password updated successfully',true);
+    showToast('🔒 Password changed');
+  }catch(e){accountMsg('Failed: '+e.message);}
+}
+
+// ── GROUP CHAT SYSTEM ────────────────────────────────────────────
+const GRP_MAX_MEMBERS=20;
+const GROUP_AVATARS=['👥','🎮','🔥','⚡','🌙','🦄','💀','🤖','🎯','🏆','🦁','🐉','🌟','💎','🚀','🎪','🌈','👾','🎭','🎲'];
+
+let currentGroup=null;
+let grpMessages=[];
+let grpPollTimer=null;
+let grpSelAv=GROUP_AVATARS[0];
+let grpSelMembers=new Set();
+let grpFriendsList=[];
+
+// ── GROUP LIST ───────────────────────────────────────────────────
+async function loadGroupsList(){
+  if(!currentUser||currentUser.guest){
+    document.getElementById('groups-list').innerHTML='<div class="fc-empty">Login to use group chats</div>';
+    return;
+  }
+  try{
+    // Get all groups I'm a member of
+    const memberships=await sbReq(`/rest/v1/group_members?user_id=eq.${currentUser.id}&select=group_id`);
+    if(!memberships||!memberships.length){
+      document.getElementById('groups-list').innerHTML='<div class="fc-empty">No group chats yet — create one!</div>';
+      return;
+    }
+    const gids=memberships.map(m=>`"${m.group_id}"`).join(',');
+    const groups=await sbReq(`/rest/v1/groups?id=in.(${gids})&select=*&order=created_at.desc`);
+    if(!groups||!groups.length){document.getElementById('groups-list').innerHTML='<div class="fc-empty">No group chats yet!</div>';return;}
+    // Get member counts and last message for each
+    const cards=await Promise.all(groups.map(async g=>{
+      const [members,lastMsgs]=await Promise.all([
+        sbReq(`/rest/v1/group_members?group_id=eq.${g.id}&select=user_id`),
+        sbReq(`/rest/v1/group_messages?group_id=eq.${g.id}&order=created_at.desc&limit=1&select=content,username`)
+      ]);
+      const memberCount=(members||[]).length;
+      const last=lastMsgs&&lastMsgs[0]?`${lastMsgs[0].username}: ${lastMsgs[0].content}`:'No messages yet';
+      return{...g,memberCount,lastPreview:last};
+    }));
+    document.getElementById('groups-list').innerHTML=cards.map(g=>`
+      <div class="grp-card" onclick="openGroupChat('${g.id}')">
+        <div class="grp-av">${g.avatar||'👥'}</div>
+        <div class="grp-info">
+          <div class="grp-name">${escHtml(g.name)}</div>
+          <div class="grp-meta">👥 ${g.memberCount} member${g.memberCount!==1?'s':''}</div>
+          <div class="grp-preview">${escHtml(g.lastPreview)}</div>
+        </div>
+      </div>`).join('');
+  }catch(e){console.warn('Groups load failed',e);}
+}
+
+// ── CREATE GROUP ─────────────────────────────────────────────────
+async function openCreateGroup(){
+  if(!currentUser||currentUser.guest){showToast('Login to create groups');return;}
+  grpSelAv=GROUP_AVATARS[0];
+  grpSelMembers=new Set();
+  document.getElementById('grp-name-input').value='';
+  document.getElementById('grp-create-err').textContent='';
+  // Build avatar picker
+  document.getElementById('grp-av-row').innerHTML=GROUP_AVATARS.map((a,i)=>
+    `<div class="grp-av-opt${i===0?' sel':''}" onclick="grpPickAv(this,'${a}')">${a}</div>`
+  ).join('');
+  // Load friends to pick from
+  const fids=await getFriendIds();
+  grpFriendsList=[];
+  if(fids.length){
+    const profiles=await sbReq(`/rest/v1/profiles?id=in.(${fids.map(id=>`"${id}"`).join(',')})&select=id,username,avatar`);
+    grpFriendsList=profiles||[];
+  }
+  renderGrpFriendPicker();
+  document.getElementById('create-group-modal').style.display='flex';
+}
+
+function closeCreateGroup(){document.getElementById('create-group-modal').style.display='none';}
+
+function grpPickAv(el,av){
+  document.querySelectorAll('.grp-av-opt').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');grpSelAv=av;
+}
+
+function renderGrpFriendPicker(){
+  const el=document.getElementById('grp-friends-pick');
+  if(!grpFriendsList.length){el.innerHTML='<div class="fc-empty" style="font-size:11px">No friends to add yet</div>';return;}
+  el.innerHTML=grpFriendsList.map(f=>`
+    <div class="grp-pick-item${grpSelMembers.has(f.id)?' sel':''}" id="gpick-${f.id}" onclick="toggleGrpMember('${f.id}')">
+      <div class="grp-pick-av">${f.avatar}</div>
+      <div style="flex:1;font-size:12px;font-weight:700">${f.username}</div>
+      <div style="font-size:14px">${grpSelMembers.has(f.id)?'✓':''}</div>
+    </div>`).join('');
+  document.getElementById('grp-member-count').textContent=`(${grpSelMembers.size}/19)`;
+}
+
+function toggleGrpMember(uid){
+  if(grpSelMembers.has(uid)){grpSelMembers.delete(uid);}
+  else{
+    if(grpSelMembers.size>=19){showToast('Max 19 friends (20 total with you)');return;}
+    grpSelMembers.add(uid);
+  }
+  renderGrpFriendPicker();
+}
+
+async function submitCreateGroup(){
+  const name=document.getElementById('grp-name-input').value.trim();
+  const err=document.getElementById('grp-create-err');
+  if(!name){err.textContent='Enter a group name';return;}
+  if(name.length<2){err.textContent='Name too short';return;}
+  err.textContent='Creating…';
+  try{
+    // Create group
+    const res=await fetch(SB_URL+'/rest/v1/groups',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
+      body:JSON.stringify({name,avatar:grpSelAv,owner_id:currentUser.id})
+    });
+    const rows=await res.json();
+    if(!res.ok||!rows||!rows.length){err.textContent='Failed to create group';return;}
+    const gid=rows[0].id;
+    // Add owner as admin
+    const memberRows=[{group_id:gid,user_id:currentUser.id,role:'admin'}];
+    // Add selected friends
+    grpSelMembers.forEach(uid=>memberRows.push({group_id:gid,user_id:uid,role:'member'}));
+    await fetch(SB_URL+'/rest/v1/group_members',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify(memberRows)
+    });
+    // Send invites as notifications
+    const senderName=currentUser.display_name||currentUser.username;
+    grpSelMembers.forEach(uid=>{
+      createNotif(uid,'system',`💬 ${senderName} added you to "${name}"`,`You've been added to a group chat`,'friends',null);
+    });
+    // Post system message
+    await fetch(SB_URL+'/rest/v1/group_messages',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({group_id:gid,sender_id:currentUser.id,username:'System',avatar:'🔔',content:`${senderName} created the group "${name}" 🎉`})
+    });
+    closeCreateGroup();
+    showToast('💬 Group "'+name+'" created!');
+    loadGroupsList();
+    openGroupChat(gid);
+  }catch(e){err.textContent='Failed: '+e.message;console.warn(e);}
+}
+
+// ── GROUP CHAT VIEW ───────────────────────────────────────────────
+async function openGroupChat(gid){
+  try{
+    const groups=await sbReq(`/rest/v1/groups?id=eq.${gid}&select=*`);
+    if(!groups||!groups.length)return;
+    currentGroup=groups[0];
+    grpMessages=[];
+    document.getElementById('grp-view-av').textContent=currentGroup.avatar||'👥';
+    document.getElementById('grp-view-name').textContent=currentGroup.name;
+    document.getElementById('grp-messages').innerHTML='';
+    switchView('group-view');
+    await loadGrpMessages();
+    startGrpPoll();
+  }catch(e){showToast('Failed to open group');console.warn(e);}
+}
+
+function closeGroupChat(){
+  stopGrpPoll();
+  currentGroup=null;
+  switchView('friends-view');
+  loadGroupsList();
+}
+
+async function loadGrpMessages(){
+  if(!currentGroup)return;
+  try{
+    const msgs=await sbReq(`/rest/v1/group_messages?group_id=eq.${currentGroup.id}&order=created_at.asc&limit=100&select=*`);
+    grpMessages=msgs||[];
+    renderGrpMessages();
+    scrollGrp();
+  }catch(e){console.warn(e);}
+}
+
+function renderGrpMessages(){
+  const box=document.getElementById('grp-messages');
+  if(!grpMessages.length){box.innerHTML='<div class="chat-system">No messages yet. Say something! 👋</div>';return;}
+  let lastDate='';
+  box.innerHTML=grpMessages.map(m=>{
+    const me=m.sender_id===currentUser?.id;
+    const isSystem=m.username==='System';
+    if(isSystem)return`<div class="chat-system" style="text-align:center;font-size:11px;color:var(--text2);padding:4px 0">${escHtml(m.content)}</div>`;
+    const time=new Date(m.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    const date=new Date(m.created_at).toLocaleDateString([],{month:'short',day:'numeric'});
+    let sep='';
+    if(date!==lastDate){sep=`<div class="dm-date-sep">${date}</div>`;lastDate=date;}
+    return`${sep}<div class="chat-msg${me?' me':''}">
+      <div class="chat-av">${m.avatar||'👤'}</div>
+      <div class="chat-bubble">
+        <div class="chat-name">${me?'You':escHtml(m.username)}</div>
+        <div class="chat-text">${escHtml(m.content)}</div>
+        <div class="chat-time">${time}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function scrollGrp(){
+  const box=document.getElementById('grp-messages');
+  setTimeout(()=>box.scrollTop=box.scrollHeight,50);
+}
+
+async function sendGroupMsg(){
+  if(!currentGroup||!currentUser||currentUser.guest)return;
+  const inp=document.getElementById('grp-input');
+  const content=inp.value.trim();
+  if(!content)return;
+  if(isBlacklisted(content)){showToast('🚫 Message contains blocked content');inp.value='';return;}
+  inp.value='';
+  try{
+    await fetch(SB_URL+'/rest/v1/group_messages',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({group_id:currentGroup.id,sender_id:currentUser.id,username:currentUser.display_name||currentUser.username,avatar:currentUser.avatar,content})
+    });
+    // Notify other members
+    const members=await sbReq(`/rest/v1/group_members?group_id=eq.${currentGroup.id}&user_id=neq.${currentUser.id}&select=user_id`);
+    const senderName=currentUser.display_name||currentUser.username;
+    (members||[]).forEach(m=>{
+      createNotif(m.user_id,'dm',`💬 ${currentGroup.name}`,`${senderName}: ${content.length>50?content.substring(0,50)+'…':content}`,'friends',null);
+    });
+    await loadGrpMessages();
+  }catch(e){showToast('Failed to send');console.warn(e);}
+}
+
+let grpPollTimer2=null;
+function startGrpPoll(){
+  stopGrpPoll();
+  grpPollTimer2=setInterval(async()=>{
+    if(!currentGroup)return;
+    const last=grpMessages.length?grpMessages[grpMessages.length-1].created_at:null;
+    if(!last)return;
+    try{
+      const newMsgs=await sbReq(`/rest/v1/group_messages?group_id=eq.${currentGroup.id}&created_at=gt.${encodeURIComponent(last)}&order=created_at.asc&select=*`);
+      if(newMsgs&&newMsgs.length){grpMessages.push(...newMsgs);renderGrpMessages();scrollGrp();}
+    }catch(e){}
+  },2500);
+}
+function stopGrpPoll(){if(grpPollTimer2){clearInterval(grpPollTimer2);grpPollTimer2=null;}}
+
+// ── GROUP INFO / MEMBERS ──────────────────────────────────────────
+async function openGroupInfo(){
+  if(!currentGroup)return;
+  try{
+    const members=await sbReq(`/rest/v1/group_members?group_id=eq.${currentGroup.id}&select=*`);
+    const uids=(members||[]).map(m=>`"${m.user_id}"`).join(',');
+    const profiles=uids?await sbReq(`/rest/v1/profiles?id=in.(${uids})&select=id,username,avatar`):[];
+    const profMap=Object.fromEntries((profiles||[]).map(p=>[p.id,p]));
+    const roleMap=Object.fromEntries((members||[]).map(m=>[m.user_id,m.role]));
+    const isAdmin=roleMap[currentUser.id]==='admin';
+    document.getElementById('grp-info-name').textContent=`${currentGroup.avatar} ${currentGroup.name} · ${members.length}/20 members`;
+    document.getElementById('grp-members-list').innerHTML=(members||[]).map(m=>{
+      const p=profMap[m.user_id]||{username:'Unknown',avatar:'👤'};
+      const isMe=m.user_id===currentUser.id;
+      const isOwner=m.role==='admin';
+      return`<div class="member-row">
+        <div style="font-size:20px">${p.avatar}</div>
+        <div style="flex:1">
+          <span style="font-size:13px;font-weight:700">${escHtml(p.username)}</span>
+          ${isOwner?'<span class="member-crown">👑 Admin</span>':''}
+          ${isMe?'<span style="font-size:10px;color:var(--text2);margin-left:4px">(you)</span>':''}
+        </div>
+        ${isAdmin&&!isMe?`<button class="auc-btn red" style="font-size:10px" onclick="removeFromGroup('${m.user_id}','${escAttr(p.username)}')">Remove</button>`:''}
+      </div>`;
+    }).join('');
+    // Actions section
+    const canAddMore=(members||[]).length<GRP_MAX_MEMBERS;
+    document.getElementById('grp-info-actions').innerHTML=`
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+        ${isAdmin&&canAddMore?`<button class="lb-btn" style="font-size:12px" onclick="openAddMembersModal()">➕ Add Members</button>`:''}
+        ${isAdmin?`<button class="auc-btn red" onclick="disbandGroup()">🗑 Disband Group</button>`:''}
+        <button class="auc-btn yellow" onclick="leaveGroup()">🚪 Leave Group</button>
+      </div>`;
+    document.getElementById('group-info-modal').style.display='flex';
+  }catch(e){showToast('Failed to load members');console.warn(e);}
+}
+function closeGroupInfo(){document.getElementById('group-info-modal').style.display='none';}
+
+async function removeFromGroup(uid,uname){
+  if(!confirm(`Remove ${uname} from the group?`))return;
+  await fetch(SB_URL+`/rest/v1/group_members?group_id=eq.${currentGroup.id}&user_id=eq.${uid}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  // Post system message
+  await fetch(SB_URL+'/rest/v1/group_messages',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({group_id:currentGroup.id,sender_id:currentUser.id,username:'System',avatar:'🔔',content:`${uname} was removed from the group`})});
+  showToast(`Removed ${uname}`);
+  openGroupInfo();
+  loadGrpMessages();
+}
+
+async function leaveGroup(){
+  if(!confirm(`Leave "${currentGroup.name}"?`))return;
+  // If admin and only member, disband instead
+  const members=await sbReq(`/rest/v1/group_members?group_id=eq.${currentGroup.id}&select=user_id`);
+  if(members&&members.length<=1){await disbandGroup();return;}
+  // If leaving admin, transfer ownership to next member
+  const roleRows=await sbReq(`/rest/v1/group_members?group_id=eq.${currentGroup.id}&user_id=eq.${currentUser.id}&select=role`);
+  if(roleRows&&roleRows[0]&&roleRows[0].role==='admin'){
+    const next=members.find(m=>m.user_id!==currentUser.id);
+    if(next){await fetch(SB_URL+`/rest/v1/group_members?group_id=eq.${currentGroup.id}&user_id=eq.${next.user_id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({role:'admin'})});}
+  }
+  await fetch(SB_URL+`/rest/v1/group_members?group_id=eq.${currentGroup.id}&user_id=eq.${currentUser.id}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  await fetch(SB_URL+'/rest/v1/group_messages',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({group_id:currentGroup.id,sender_id:currentUser.id,username:'System',avatar:'🔔',content:`${currentUser.display_name||currentUser.username} left the group`})});
+  showToast('Left group');
+  closeGroupInfo();
+  closeGroupChat();
+}
+
+async function disbandGroup(){
+  if(!confirm(`Disband "${currentGroup.name}"? This cannot be undone.`))return;
+  await fetch(SB_URL+`/rest/v1/groups?id=eq.${currentGroup.id}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  showToast('Group disbanded');
+  closeGroupInfo();
+  closeGroupChat();
+}
+
+async function openAddMembersModal(){
+  closeGroupInfo();
+  // Reuse create group friend picker but for adding
+  const members=await sbReq(`/rest/v1/group_members?group_id=eq.${currentGroup.id}&select=user_id`);
+  const existingIds=new Set((members||[]).map(m=>m.user_id));
+  const fids=await getFriendIds();
+  const eligible=fids.filter(id=>!existingIds.has(id));
+  if(!eligible.length){showToast('All your friends are already in this group!');return;}
+  const profiles=await sbReq(`/rest/v1/profiles?id=in.(${eligible.map(id=>`"${id}"`).join(',')})&select=id,username,avatar`);
+  grpFriendsList=profiles||[];
+  grpSelMembers=new Set();
+  document.getElementById('grp-name-input').value=currentGroup.name;
+  document.getElementById('grp-name-input').disabled=true;
+  document.getElementById('grp-create-err').textContent='';
+  document.getElementById('grp-av-row').innerHTML='';
+  renderGrpFriendPicker();
+  // Change button text
+  document.querySelector('#create-group-modal .lb-btn').textContent='➕ Add to Group';
+  document.querySelector('#create-group-modal .lb-btn').onclick=submitAddMembers;
+  document.getElementById('create-group-modal').style.display='flex';
+}
+
+async function submitAddMembers(){
+  if(!grpSelMembers.size){showToast('Select at least one friend');return;}
+  const members=await sbReq(`/rest/v1/group_members?group_id=eq.${currentGroup.id}&select=user_id`);
+  if((members||[]).length+grpSelMembers.size>GRP_MAX_MEMBERS){showToast(`Max ${GRP_MAX_MEMBERS} members`);return;}
+  const newRows=Array.from(grpSelMembers).map(uid=>({group_id:currentGroup.id,user_id:uid,role:'member'}));
+  await fetch(SB_URL+'/rest/v1/group_members',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(newRows)});
+  // Notify and system message
+  const senderName=currentUser.display_name||currentUser.username;
+  const profiles=await sbReq(`/rest/v1/profiles?id=in.(${Array.from(grpSelMembers).map(id=>`"${id}"`).join(',')})&select=id,username`);
+  const names=(profiles||[]).map(p=>p.username).join(', ');
+  await fetch(SB_URL+'/rest/v1/group_messages',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({group_id:currentGroup.id,sender_id:currentUser.id,username:'System',avatar:'🔔',content:`${senderName} added ${names} to the group`})});
+  grpSelMembers.forEach(uid=>createNotif(uid,'system',`💬 ${senderName} added you to "${currentGroup.name}"`,'You\'ve been added to a group chat','friends',null));
+  closeCreateGroup();
+  // Reset button
+  document.querySelector('#create-group-modal .lb-btn').textContent='💬 Create Group';
+  document.querySelector('#create-group-modal .lb-btn').onclick=submitCreateGroup;
+  document.getElementById('grp-name-input').disabled=false;
+  showToast(`Added ${grpSelMembers.size} member(s)`);
+  loadGrpMessages();
+}
+
+// ── NOTIFICATION SYSTEM ──────────────────────────────────────────
+let notifPollTimer=null;
+let notifPanelOpen=false;
+let lastNotifCount=0;
+
+async function createNotif(userId,type,title,body,linkType=null,linkData=null){
+  if(!userId)return;
+  try{
+    await fetch(SB_URL+'/rest/v1/notifications',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({user_id:userId,type,title,body:body||null,link_type:linkType,link_data:linkData,read:false})
+    });
+  }catch(e){console.warn('Notif create failed',e);}
+}
+
+async function pollNotifs(){
+  if(!currentUser||currentUser.guest)return;
+  try{
+    const rows=await sbReq(`/rest/v1/notifications?user_id=eq.${currentUser.id}&order=created_at.desc&limit=30&select=*`);
+    const unread=(rows||[]).filter(r=>!r.read).length;
+    const badge=document.getElementById('notif-badge');
+    if(badge){
+      if(unread>0){badge.textContent=unread>9?'9+':unread;badge.style.display='flex';}
+      else{badge.style.display='none';}
+    }
+    // Play sound / show toast for new notifs
+    if(unread>lastNotifCount&&lastNotifCount>=0){
+      const newest=(rows||[]).find(r=>!r.read);
+      if(newest&&lastNotifCount>-1&&unread>lastNotifCount){
+        showToast('🔔 '+newest.title);
+      }
+    }
+    lastNotifCount=unread;
+    if(notifPanelOpen)renderNotifList(rows||[]);
+  }catch(e){}
+}
+
+function startNotifPoll(){
+  stopNotifPoll();
+  lastNotifCount=-1; // -1 so first poll doesn't trigger toast
+  pollNotifs();
+  notifPollTimer=setInterval(pollNotifs,5000);
+}
+function stopNotifPoll(){
+  if(notifPollTimer){clearInterval(notifPollTimer);notifPollTimer=null;}
+}
+
+function toggleNotifPanel(){
+  notifPanelOpen=!notifPanelOpen;
+  const panel=document.getElementById('notif-panel');
+  if(notifPanelOpen){
+    panel.style.display='flex';
+    loadNotifPanel();
+    // Close when clicking outside
+    setTimeout(()=>document.addEventListener('click',notifOutsideClick),10);
+  }else{
+    panel.style.display='none';
+    document.removeEventListener('click',notifOutsideClick);
+  }
+}
+
+function notifOutsideClick(e){
+  const panel=document.getElementById('notif-panel');
+  const bell=document.getElementById('notif-bell');
+  if(panel&&!panel.contains(e.target)&&!bell.contains(e.target)){
+    notifPanelOpen=false;
+    panel.style.display='none';
+    document.removeEventListener('click',notifOutsideClick);
+  }
+}
+
+async function loadNotifPanel(){
+  const list=document.getElementById('notif-list');
+  if(!list)return;
+  list.innerHTML='<div class="notif-empty">Loading…</div>';
+  try{
+    const rows=await sbReq(`/rest/v1/notifications?user_id=eq.${currentUser.id}&order=created_at.desc&limit=30&select=*`);
+    renderNotifList(rows||[]);
+  }catch(e){list.innerHTML='<div class="notif-empty">Failed to load.</div>';}
+}
+
+function renderNotifList(rows){
+  const list=document.getElementById('notif-list');
+  if(!list)return;
+  if(!rows.length){list.innerHTML='<div class="notif-empty">No notifications yet 🎉</div>';return;}
+  list.innerHTML=rows.map(n=>{
+    const icon=notifIcon(n.type);
+    const time=timeAgo(new Date(n.created_at));
+    return`<div class="notif-item${n.read?'':' unread'}" onclick="handleNotifClick('${n.id}','${n.link_type||''}','${escAttr(n.link_data||'')}')">
+      <div class="notif-icon">${icon}</div>
+      <div class="notif-body">
+        <div class="notif-title">${escHtml(n.title)}</div>
+        ${n.body?`<div class="notif-text">${escHtml(n.body)}</div>`:''}
+        <div class="notif-time">${time}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function notifIcon(type){
+  const icons={friend_request:'👥',friend_accepted:'🤝',dm:'💬',warning:'⚠️',announcement:'📢',ban:'🚫',system:'🔔',report_resolved:'✅'};
+  return icons[type]||'🔔';
+}
+
+function timeAgo(date){
+  const s=Math.floor((Date.now()-date)/1000);
+  if(s<60)return 'just now';
+  if(s<3600)return Math.floor(s/60)+'m ago';
+  if(s<86400)return Math.floor(s/3600)+'h ago';
+  return Math.floor(s/86400)+'d ago';
+}
+
+async function handleNotifClick(id,linkType,linkData){
+  // Mark as read
+  await fetch(SB_URL+`/rest/v1/notifications?id=eq.${id}`,{
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({read:true})
+  });
+  // Navigate
+  if(linkType==='dm'&&linkData){
+    try{
+      const peer=JSON.parse(linkData);
+      toggleNotifPanel();
+      openDm(peer.id,peer.username,peer.avatar);
+    }catch(e){}
+  }else if(linkType==='friends'){
+    toggleNotifPanel();
+    switchView('friends-view');
+    loadFriendRequests();
+  }else if(linkType==='chat'){
+    toggleNotifPanel();
+    switchView('chat-view');
+    onChatViewOpen();
+  }
+  // Refresh panel
+  pollNotifs();
+  loadNotifPanel();
+}
+
+async function markAllNotifsRead(){
+  if(!currentUser)return;
+  await fetch(SB_URL+`/rest/v1/notifications?user_id=eq.${currentUser.id}&read=eq.false`,{
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({read:true})
+  });
+  lastNotifCount=0;
+  document.getElementById('notif-badge').style.display='none';
+  loadNotifPanel();
+}
+
+// ── REPORTING SYSTEM ─────────────────────────────────────────────
+const REPORT_REASONS={
+  user:['Harassment','Hate speech','Spam','Inappropriate name','Impersonation','Other'],
+  message:['Hate speech','Spam / flood','NSFW content','Threats','Harassment','Other'],
+  dm:['Harassment','Threats','NSFW content','Spam','Hate speech','Other']
+};
+
+let reportState={type:null,targetId:null,targetName:null,reporterId:null,contentId:null,content:null,selectedReason:null};
+
+function openReportModal(type,contentId,targetName,targetId,content){
+  if(!currentUser||currentUser.guest){showToast('Login to report');return;}
+  if(targetId===currentUser.id){showToast("You can't report yourself");return;}
+  reportState={type,contentId,targetId,targetName,content,selectedReason:null};
+  // Target info
+  document.getElementById('report-target-info').innerHTML=
+    `<div style="font-size:20px">${type==='message'?'💬':type==='dm'?'📨':'👤'}</div>
+     <div><div style="font-weight:800;font-size:13px">${targetName}</div>
+     <div style="font-size:11px;color:var(--text2)">${type==='message'?'Chat message':type==='dm'?'Direct message':'User'}</div>
+     ${content?`<div style="font-size:11px;color:var(--text2);margin-top:2px;font-style:italic">"${content.substring(0,80)}${content.length>80?'…':''}"</div>`:''}
+     </div>`;
+  // Reason buttons
+  document.getElementById('report-reason-grid').innerHTML=
+    REPORT_REASONS[type].map(r=>`<button class="report-reason-btn" onclick="selectReportReason(this,'${r}')">${r}</button>`).join('');
+  document.getElementById('report-details').value='';
+  document.getElementById('report-err').textContent='';
+  const modal=document.getElementById('report-modal');
+  modal.style.display='flex';
+}
+
+function reportDmPeer(){
+  if(!dmPeer)return;
+  openReportModal('dm',null,dmPeer.username,dmPeer.id,null);
+}
+
+function selectReportReason(btn,reason){
+  document.querySelectorAll('.report-reason-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  reportState.selectedReason=reason;
+  document.getElementById('report-err').textContent='';
+}
+
+function closeReportModal(){
+  document.getElementById('report-modal').style.display='none';
+  reportState={type:null,targetId:null,targetName:null,contentId:null,content:null,selectedReason:null};
+}
+
+async function submitReport(){
+  if(!reportState.selectedReason){document.getElementById('report-err').textContent='Please select a reason.';return;}
+  const details=document.getElementById('report-details').value.trim();
+  try{
+    await fetch(SB_URL+'/rest/v1/reports',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({
+        reporter_id:currentUser.id,
+        reporter_name:currentUser.username,
+        target_id:reportState.targetId||null,
+        target_name:reportState.targetName,
+        type:reportState.type,
+        reason:reportState.selectedReason,
+        details:details||null,
+        status:'open'
+      })
+    });
+    closeReportModal();
+    showToast('🚨 Report submitted — thank you');
+  }catch(e){document.getElementById('report-err').textContent='Failed to submit. Try again.';}
+}
+
+// ── OWNER: LOAD REPORTS ──────────────────────────────────────────
+let currentReportTab='open';
+
+async function loadReports(status='open'){
+  currentReportTab=status;
+  // Update tab styles
+  ['open','resolved','dismissed'].forEach(s=>{
+    const btn=document.getElementById('rep-tab-'+s);
+    if(!btn)return;
+    if(s===status){
+      btn.style.background=s==='open'?'rgba(255,55,95,.2)':s==='resolved'?'rgba(48,209,88,.2)':'rgba(255,255,255,.1)';
+      btn.style.borderColor=s==='open'?'rgba(255,55,95,.4)':s==='resolved'?'rgba(48,209,88,.3)':'rgba(255,255,255,.2)';
+      btn.style.color=s==='open'?'#ff375f':s==='resolved'?'#30d158':'#fff';
+    }else{
+      btn.style.background='rgba(255,255,255,.06)';
+      btn.style.borderColor='rgba(255,255,255,.1)';
+      btn.style.color='var(--text2)';
+    }
+  });
+  const list=document.getElementById('reports-list');
+  list.innerHTML='<div class="fc-empty">Loading…</div>';
+  try{
+    const rows=await sbReq(`/rest/v1/reports?status=eq.${status}&select=*&order=created_at.desc&limit=50`);
+    // Update badge
+    if(status==='open'){
+      const badge=document.getElementById('report-count-badge');
+      if(rows&&rows.length){badge.textContent=rows.length;badge.style.display='inline';}
+      else{badge.style.display='none';}
+    }
+    if(!rows||!rows.length){list.innerHTML=`<div class="fc-empty">No ${status} reports 🎉</div>`;return;}
+    list.innerHTML=rows.map(r=>reportCard(r)).join('');
+  }catch(e){list.innerHTML='<div class="fc-empty">Failed to load reports.</div>';console.warn(e);}
+}
+
+function reportCard(r){
+  const time=new Date(r.created_at).toLocaleString();
+  const typeColor=r.type==='user'?'user':r.type==='dm'?'dm':'message';
+  return`<div class="report-card ${r.status}">
+    <div style="display:flex;align-items:flex-start;gap:10px">
+      <div style="flex:1">
+        <span class="report-type ${typeColor}">${r.type.toUpperCase()}</span>
+        <span class="report-type" style="background:rgba(255,55,95,.15);color:#ff375f;margin-left:4px">${r.reason}</span>
+        <div style="margin-top:6px;font-size:13px"><span style="color:var(--text2)">Reported:</span> <strong>${r.target_name||'Unknown'}</strong></div>
+        <div style="font-size:12px;color:var(--text2)">By: ${r.reporter_name||'Unknown'} · ${time}</div>
+        ${r.details?`<div style="font-size:12px;margin-top:4px;padding:6px 8px;background:rgba(255,255,255,.04);border-radius:7px;font-style:italic">"${escHtml(r.details)}"</div>`:''}
+        ${r.status!=='open'?`<div style="font-size:10px;color:var(--text2);margin-top:4px">Reviewed by ${r.reviewed_by||'?'} · ${r.reviewed_at?new Date(r.reviewed_at).toLocaleDateString():''}</div>`:''}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;min-width:90px">
+        ${r.status==='open'?`
+          <button class="auc-btn red" onclick="quickBanFromReport('${r.target_id}','${r.target_name}','${r.id}')">🚫 Ban</button>
+          <button class="auc-btn yellow" onclick="quickWarnFromReport('${r.target_id}','${r.target_name}','${r.id}')">⚠️ Warn</button>
+          <button class="auc-btn green" onclick="resolveReport('${r.id}')">✓ Resolve</button>
+          <button class="auc-btn" onclick="dismissReport('${r.id}')">🗑 Dismiss</button>
+        `:r.status==='resolved'?`
+          <span style="font-size:11px;color:#30d158;font-weight:700">✓ Resolved</span>
+          <button class="auc-btn red" style="font-size:10px" onclick="deleteReport('${r.id}',this)">🗑 Delete</button>
+        `:`
+          <span style="font-size:11px;color:var(--text2);font-weight:700">Dismissed</span>
+          <button class="auc-btn red" style="font-size:10px" onclick="deleteReport('${r.id}',this)">🗑 Delete</button>
+        `}
+      </div>
+    </div>
+  </div>`;
+}
+
+async function resolveReport(id){
+  await fetch(SB_URL+`/rest/v1/reports?id=eq.${id}`,{
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({status:'resolved',reviewed_by:currentUser.username,reviewed_at:new Date().toISOString()})
+  });
+  showToast('✓ Report resolved');
+  loadReports(currentReportTab);
+}
+
+async function dismissReport(id){
+  await fetch(SB_URL+`/rest/v1/reports?id=eq.${id}`,{
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({status:'dismissed',reviewed_by:currentUser.username,reviewed_at:new Date().toISOString()})
+  });
+  showToast('🗑 Report dismissed');
+  loadReports(currentReportTab);
+}
+
+async function deleteReport(id,btn){
+  await fetch(SB_URL+`/rest/v1/reports?id=eq.${id}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  btn.closest('.report-card').remove();
+  showToast('Deleted');
+}
+
+async function quickBanFromReport(uid,uname,reportId){
+  const reason=prompt(`Ban reason for ${uname}:`)||'Reported and banned';
+  if(reason===null)return;
+  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({banned:true,ban_reason:reason})});
+  await resolveReport(reportId);
+  showToast('🚫 '+uname+' banned & report resolved');
+}
+
+async function quickWarnFromReport(uid,uname,reportId){
+  const msg=prompt(`Warning message for ${uname}:`);
+  if(!msg)return;
+  await fetch(SB_URL+'/rest/v1/dms',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({sender_id:currentUser.id,receiver_id:uid,content:`⚠️ WARNING from ADLESS_OWNER: ${msg}`,read:false})});
+  await resolveReport(reportId);
+  showToast('⚠️ '+uname+' warned & report resolved');
+}
+
+// ── OWNER SYSTEM ─────────────────────────────────────────────────
+const OWNER_NAME='ADLESS_OWNER';
+const OWNER_LOGO='data:image/png;base64,'; // set at runtime
+
+async function bootstrapOwner(){
+  // Check if owner account exists
+  try{
+    const existing=await sbReq(`/rest/v1/profiles?username=eq.ADLESS_OWNER&select=id,role`);
+    if(!existing||!existing.length){
+      // Create owner account
+      const hash=await sha256('Adless2025!ADLESS_OWNER');
+      const res=await fetch(SB_URL+'/rest/v1/profiles',{
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
+        body:JSON.stringify({username:'ADLESS_OWNER',password_hash:hash,avatar:'👑',role:'owner'})
+      });
+      console.log('Owner account created');
+    } else if(existing[0].role!=='owner'){
+      // Ensure role is owner
+      await fetch(SB_URL+`/rest/v1/profiles?id=eq.${existing[0].id}`,{
+        method:'PATCH',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({role:'owner'})
+      });
+    }
+  }catch(e){console.warn('Owner bootstrap failed',e);}
+}
+
+function isOwner(){return currentUser&&currentUser.role==='owner';}
+
+function showOwnerNav(){
+  const nav=document.getElementById('owner-nav');
+  if(nav)nav.style.display=isOwner()?'block':'none';
+}
+
+// Add owner badge to username display
+function updateUserChip(){
+  const chip=document.getElementById('user-chip');
+  if(!chip||!currentUser)return;
+  chip.style.display='flex';
+  document.getElementById('uc-av').textContent=currentUser.avatar;
+  const displayName=currentUser.display_name||currentUser.username;
+  document.getElementById('uc-name').innerHTML=displayName+(isOwner()?'<span class="owner-badge">OWNER</span>':'');
+  showOwnerNav();
+}
+
+// ── OWNER PANEL FUNCTIONS ─────────────────────────────────────────
+let ownerFeatured=new Set();
+let ownerDefeatured=new Set(); // games manually un-featured by owner
+let spotlightGotw=null,spotlightGotm=null;
+let siteBlacklist=[],siteSlowmode=0;
+let lastMsgTime={};
+
+async function loadOwnerPanel(){
+  if(!isOwner())return;
+  loadReports('open');
+  loadOwnerAnalytics();
+  loadAllUsers();
+  loadAdminChatLog();
+  loadSpotlight();
+  loadSiteSettings();
+  loadOwnerFeatured();
+  loadAnnouncementHistory();
+}
+
+// ── ANALYTICS ────────────────────────────────────────────────────
+async function loadOwnerAnalytics(){
+  try{
+    const users=await sbReq(`/rest/v1/profiles?select=id,banned`);
+    document.getElementById('ow-users').textContent=(users||[]).length;
+    document.getElementById('ow-banned').textContent=(users||[]).filter(u=>u.banned).length;
+    const today=new Date();today.setHours(0,0,0,0);
+    const msgs=await sbReq(`/rest/v1/messages?created_at=gte.${today.toISOString()}&select=id,username`);
+    document.getElementById('ow-msgs').textContent=(msgs||[]).length;
+    const dms=await sbReq(`/rest/v1/dms?select=id`);
+    document.getElementById('ow-dms').textContent=(dms||[]).length;
+    // Top chatters
+    const chatters={};
+    (msgs||[]).forEach(m=>{chatters[m.username]=(chatters[m.username]||0)+1;});
+    const topC=Object.entries(chatters).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    document.getElementById('ow-top-chatters').innerHTML=topC.length
+      ?topC.map((c,i)=>`<div style="display:flex;gap:8px;align-items:center;padding:4px 0;font-size:12px"><span style="color:var(--text2)">#${i+1}</span><span style="flex:1;font-weight:700">${c[0]}</span><span style="color:var(--blue)">${c[1]} msgs</span></div>`).join('')
+      :'<div class="fc-empty">No messages today</div>';
+    // Top games from recent plays stored in user_data
+    const allData=await sbReq(`/rest/v1/user_data?select=data`);
+    const gameCounts={};
+    (allData||[]).forEach(row=>{
+      try{
+        const d=JSON.parse(row.data);
+        (d.recent||[]).forEach(g=>{gameCounts[g.title]=(gameCounts[g.title]||0)+1;});
+      }catch(e){}
+    });
+    const topG=Object.entries(gameCounts).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    document.getElementById('ow-top-games').innerHTML=topG.length
+      ?topG.map((g,i)=>`<div style="display:flex;gap:8px;align-items:center;padding:4px 0;font-size:12px"><span style="color:var(--text2)">#${i+1}</span><span style="flex:1;font-weight:700">${g[0]}</span><span style="color:#30d158">${g[1]} plays</span></div>`).join('')
+      :'<div class="fc-empty">No play data yet</div>';
+  }catch(e){console.warn('Analytics failed',e);}
+}
+
+// ── SPOTLIGHT (GOTW/GOTM/FEATURED) ───────────────────────────────
+async function loadSpotlight(){
+  try{
+    const rows=await sbReq(`/rest/v1/spotlight?select=*`);
+    (rows||[]).forEach(r=>{
+      if(r.id==='gotw'&&r.game_title){
+        spotlightGotw=r;
+        document.getElementById('gotw-current').textContent='Current: '+r.game_title;
+      }
+      if(r.id==='gotm'&&r.game_title){
+        spotlightGotm=r;
+        document.getElementById('gotm-current').textContent='Current: '+r.game_title;
+      }
+    });
+  }catch(e){console.warn(e);}
+}
+
+async function loadOwnerFeatured(){
+  try{
+    const rows=await sbReq(`/rest/v1/spotlight?id=like.feat_*&select=*`);
+    ownerFeatured=new Set((rows||[]).map(r=>r.game_id));
+    const el=document.getElementById('feat-current');
+    if(el)el.innerHTML=(rows||[]).length
+      ?`<div style="margin-top:6px;font-size:11px;color:var(--text2)">Featured: `+(rows||[]).map(r=>`<span style="color:var(--blue);margin-right:6px">${r.game_title} <span style="cursor:pointer;color:#ff375f" onclick="unfeatureGame('${r.id}','${r.game_title}')">✕</span></span>`).join('')+`</div>`
+      :'';
+  }catch(e){}
+}
+
+function searchSpotlight(type){
+  const q=document.getElementById(type+'-input').value.toLowerCase().trim();
+  const resEl=document.getElementById(type+'-results');
+  if(!q){resEl.innerHTML='';return;}
+  const matches=allGames().filter(g=>g.title.toLowerCase().includes(q)).slice(0,6);
+  resEl.innerHTML=matches.map(g=>{
+    let btnLabel,btnStyle='';
+    if(type==='feat'){
+      if(ownerFeatured.has(g.id)){btnLabel='✓ Remove';btnStyle='background:rgba(255,55,95,.2);border-color:rgba(255,55,95,.4);color:#ff375f';}
+      else if(ownerDefeatured.has(g.id)){btnLabel='↩ Re-feature';btnStyle='background:rgba(48,209,88,.15);border-color:rgba(48,209,88,.3);color:#30d158';}
+      else if(g.featured){btnLabel='✕ Unfeature';btnStyle='background:rgba(255,159,10,.15);border-color:rgba(255,159,10,.3);color:#ff9f0a';}
+      else{btnLabel='+ Feature';}
+    }else{btnLabel='Set';}
+    return`<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:rgba(255,255,255,.04);border-radius:8px;margin-bottom:4px;cursor:pointer" onclick="setSpotlight('${type}','${g.id}',this)">
+      <img src="${g.img}" style="width:32px;height:32px;object-fit:cover;border-radius:6px" onerror="this.style.display='none'">
+      <span style="font-size:12px;font-weight:700;flex:1">${g.title}</span>
+      <button class="auc-btn" style="pointer-events:none;${btnStyle}">${btnLabel}</button>
+    </div>`;
+  }).join('');
+}
+
+async function setSpotlight(type,gameId,el){
+  const g=allGames().find(x=>x.id===gameId);
+  if(!g)return;
+  if(type==='feat'){
+    const isOwnerAdded=ownerFeatured.has(gameId);
+    const isBuiltinFeatured=g.featured&&!ownerDefeatured.has(gameId);
+
+    if(isOwnerAdded){
+      // Remove owner-added featured
+      await fetch(SB_URL+`/rest/v1/spotlight?id=eq.feat_${gameId}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+      ownerFeatured.delete(gameId);
+      publicSpotlight.featured.delete(gameId);
+      showToast('✕ Removed '+g.title+' from Featured');
+    } else if(isBuiltinFeatured){
+      // Defeaturing a built-in game — save to defeatured blocklist
+      ownerDefeatured.add(gameId);
+      const defVal=Array.from(ownerDefeatured).join(',');
+      await upsertSiteSetting('defeatured',defVal);
+      showToast('✕ '+g.title+' removed from Featured');
+    } else if(ownerDefeatured.has(gameId)){
+      // Re-feature a previously defeatured built-in game
+      ownerDefeatured.delete(gameId);
+      const defVal=Array.from(ownerDefeatured).join(',');
+      await upsertSiteSetting('defeatured',defVal);
+      showToast('⭐ '+g.title+' re-featured!');
+    } else {
+      // Add as owner-featured
+      await fetch(SB_URL+'/rest/v1/spotlight',{
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({id:'feat_'+gameId,game_id:gameId,game_title:g.title,game_url:g.url,game_img:g.img||''})
+      });
+      ownerFeatured.add(gameId);
+      publicSpotlight.featured.add(gameId);
+      showToast('⭐ '+g.title+' featured!');
+    }
+    searchSpotlight('feat');
+    loadOwnerFeatured();
+    buildList();renderPage();
+  }else{
+    await fetch(SB_URL+`/rest/v1/spotlight?id=eq.${type}`,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({game_id:gameId,game_title:g.title,game_url:g.url,game_img:g.img||'',updated_at:new Date().toISOString()})
+    });
+    document.getElementById(type+'-current').textContent='✓ Current: '+g.title;
+    document.getElementById(type+'-input').value='';
+    document.getElementById(type+'-results').innerHTML='';
+    if(type==='gotw'){spotlightGotw={game_title:g.title,game_url:g.url,game_img:g.img};publicSpotlight.gotw=spotlightGotw;}
+    if(type==='gotm'){spotlightGotm={game_title:g.title,game_url:g.url,game_img:g.img};publicSpotlight.gotm=spotlightGotm;}
+    renderSpotlightBanner();
+    showToast((type==='gotw'?'🗓':'📅')+' Set as Game of the '+(type==='gotw'?'Week':'Month')+': '+g.title);
+  }
+}
+
+async function clearSpotlight(type){
+  const label=type==='gotw'?'Game of the Week':'Game of the Month';
+  if(!confirm(`Remove the current ${label}?`))return;
+  await fetch(SB_URL+`/rest/v1/spotlight?id=eq.${type}`,{
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({game_id:null,game_title:null,game_url:null,game_img:null,updated_at:new Date().toISOString()})
+  });
+  if(type==='gotw'){spotlightGotw=null;publicSpotlight.gotw=null;document.getElementById('gotw-current').textContent='';}
+  if(type==='gotm'){spotlightGotm=null;publicSpotlight.gotm=null;document.getElementById('gotm-current').textContent='';}
+  renderSpotlightBanner();
+  showToast('✓ '+label+' removed');
+}
+
+async function unfeatureGame(rowId,title){
+  await fetch(SB_URL+`/rest/v1/spotlight?id=eq.${rowId}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  ownerFeatured.delete(rowId.replace('feat_',''));
+  showToast('Removed '+title+' from featured');
+  loadOwnerFeatured();
+}
+
+// ── SITE SETTINGS (SLOWMODE + BLACKLIST) ─────────────────────────
+async function loadSiteSettings(){
+  for(let attempt=0;attempt<3;attempt++){
+    try{
+      const rows=await sbReq(`/rest/v1/site_settings?select=key,value`);
+      (rows||[]).forEach(r=>{
+        if(r.key==='slowmode'){
+          siteSlowmode=parseInt(r.value)||0;
+          const el=document.getElementById('slowmode-val');
+          if(el)el.value=siteSlowmode;
+        }
+        if(r.key==='blacklist'){
+          siteBlacklist=r.value?r.value.split(',').map(w=>w.trim().toLowerCase()).filter(Boolean):[];
+          const el=document.getElementById('blacklist-input');
+          if(el)el.value=r.value||'';
+        }
+        if(r.key==='defeatured'){
+          ownerDefeatured=new Set(r.value?r.value.split(',').filter(Boolean):[]);
+        }
+      });
+      return;
+    }catch(e){
+      if(attempt<2){await new Promise(r=>setTimeout(r,1500));}
+      else{console.warn('Site settings load failed',e);}
+    }
+  }
+}
+
+async function upsertSiteSetting(key,value){
+  // Try PATCH first, then POST if not exists
+  const patch=await fetch(SB_URL+`/rest/v1/site_settings?key=eq.${key}`,{
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({value})
+  });
+  if(!patch.ok){
+    await fetch(SB_URL+'/rest/v1/site_settings',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({key,value})
+    });
+  }
+}
+async function saveSlowmode(){
+  const val=parseInt(document.getElementById('slowmode-val').value)||0;
+  await upsertSiteSetting('slowmode',String(val));
+  siteSlowmode=val;
+  showToast('⏱ Slowmode set to '+val+'s');
+}
+
+async function saveBlacklist(){
+  const val=document.getElementById('blacklist-input').value.trim();
+  await upsertSiteSetting('blacklist',val);
+  siteBlacklist=val?val.split(',').map(w=>w.trim().toLowerCase()).filter(Boolean):[];
+  showToast('🚫 Blacklist saved ('+siteBlacklist.length+' words)');
+}
+
+function isBlacklisted(text){
+  const t=text.toLowerCase();
+  return siteBlacklist.some(w=>w&&t.includes(w));
+}
+
+function checkSlowmode(){
+  if(!siteSlowmode||!currentUser)return true;
+  const last=lastMsgTime[currentUser.id]||0;
+  const diff=(Date.now()-last)/1000;
+  if(diff<siteSlowmode){showToast(`⏱ Slowmode: wait ${Math.ceil(siteSlowmode-diff)}s`);return false;}
+  return true;
+}
+
+// ── ANNOUNCEMENT HISTORY ─────────────────────────────────────────
+async function loadAnnouncementHistory(){
+  try{
+    const rows=await sbReq(`/rest/v1/announcements?select=*&order=created_at.desc&limit=10`);
+    const el=document.getElementById('ann-history');
+    if(!el)return;
+    el.innerHTML=(rows||[]).map(r=>`
+      <div style="display:flex;gap:8px;align-items:flex-start;padding:8px;background:rgba(255,255,255,.04);border-radius:8px;margin-bottom:6px">
+        <div style="flex:1;font-size:12px">${escHtml(r.content)}<div style="font-size:10px;color:var(--text2);margin-top:2px">${new Date(r.created_at).toLocaleString()}</div></div>
+        <button class="auc-btn red" onclick="deleteAnnouncement('${r.id}',this)">🗑</button>
+      </div>`).join('')||'<div class="fc-empty">No announcements yet</div>';
+  }catch(e){}
+}
+
+async function deleteAnnouncement(id,btn){
+  await fetch(SB_URL+`/rest/v1/announcements?id=eq.${id}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  btn.closest('div[style]').remove();
+  showToast('Deleted');
+}
+
+// ── WARN USER ────────────────────────────────────────────────────
+async function warnUser(uid,uname){
+  const reason=prompt(`Warning message for ${uname}:`);
+  if(!reason)return;
+  try{
+    await fetch(SB_URL+'/rest/v1/dms',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({sender_id:currentUser.id,receiver_id:uid,content:`⚠️ WARNING from ADLESS_OWNER: ${reason}`,read:false})
+    });
+    createNotif(uid,'warning','⚠️ You received a warning',reason,'dm',JSON.stringify({id:currentUser.id,username:'ADLESS_OWNER',avatar:'👑'}));
+    showToast('⚠️ Warning sent to '+uname);
+  }catch(e){showToast('Failed');}
+}
+
+async function resetUsernameCooldown(uid,uname){
+  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({last_username_change:null})
+  });
+  showToast('✓ Username cooldown reset for '+uname);
+}
+
+async function forceResetPassword(uid,uname){
+  const newPw=prompt(`Set temporary password for ${uname}:`);
+  if(!newPw||newPw.length<4){showToast('Too short');return;}
+  const hash=await sha256(newPw+uname);
+  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({password_hash:hash})
+  });
+  showToast('🔒 Password reset for '+uname+'. Temp: '+newPw);
+}
+
+async function viewFullProfile(uid,uname){
+  try{
+    const rows=await sbReq(`/rest/v1/profiles?id=eq.${uid}&select=*`);
+    if(!rows||!rows.length)return;
+    const p=rows[0];
+    const info=[
+      `👤 Username: ${p.username}`,
+      `🏷 Display Name: ${p.display_name||'—'}`,
+      `🎭 Avatar: ${p.avatar}`,
+      `🔑 Role: ${p.role||'user'}`,
+      `📅 Joined: ${new Date(p.created_at).toLocaleDateString()}`,
+      `🚫 Banned: ${p.banned?'Yes ('+p.ban_reason+')':'No'}`,
+      `⏸ Suspended: ${p.suspended_until?new Date(p.suspended_until).toLocaleDateString():'No'}`,
+    ].join('\n');
+    alert(info);
+  }catch(e){showToast('Failed');}
+}
+
+async function loadAllUsers(){
+  try{
+    const users=await sbReq(`/rest/v1/profiles?select=id,username,avatar,role,banned,suspended_until,ban_reason&order=created_at.asc`);
+    document.getElementById('user-count').textContent=`(${(users||[]).length} total)`;
+    document.getElementById('admin-all-users').innerHTML=(users||[]).map(u=>adminUserCard(u)).join('');
+  }catch(e){console.warn(e);}
+}
+
+function adminUserCard(u){
+  const isBanned=u.banned;
+  const isSuspended=u.suspended_until&&new Date(u.suspended_until)>new Date();
+  const isOwnerAcc=u.role==='owner';
+  const statusText=isBanned?'🚫 Banned'+(u.ban_reason?' · '+u.ban_reason:''):isSuspended?`⏸ Suspended until ${new Date(u.suspended_until).toLocaleDateString()}`:'✅ Active';
+  return`<div class="admin-user-card${isBanned?' banned':isSuspended?' suspended':''}">
+    <div style="font-size:22px">${u.avatar||'👤'}</div>
+    <div class="auc-info">
+      <div class="auc-name">${u.username}${isOwnerAcc?'<span class="owner-badge">OWNER</span>':''}</div>
+      <div class="auc-meta">${statusText}</div>
+    </div>
+    <div class="auc-btns">
+      ${!isOwnerAcc?`
+        <button class="auc-btn blue" onclick="viewFullProfile('${u.id}','${u.username}')">👁 Profile</button>
+        <button class="auc-btn yellow" onclick="warnUser('${u.id}','${u.username}')">⚠️ Warn</button>
+        ${isBanned
+          ?`<button class="auc-btn green" onclick="unbanUser('${u.id}')">✓ Unban</button>`
+          :`<button class="auc-btn red" onclick="promptBan('${u.id}','${u.username}')">🚫 Ban</button>`}
+        ${isSuspended
+          ?`<button class="auc-btn green" onclick="unsuspendUser('${u.id}')">✓ Unsuspend</button>`
+          :`<button class="auc-btn yellow" onclick="promptSuspend('${u.id}','${u.username}')">⏸ Suspend</button>`}
+        <button class="auc-btn blue" onclick="viewUserDms('${u.id}','${u.username}','${u.avatar||'👤'}')">💬 DMs</button>
+        <button class="auc-btn blue" onclick="viewUserFriends('${u.id}','${u.username}')">👥 Friends</button>
+        <button class="auc-btn red" onclick="deleteUserMsgs('${u.id}','${u.username}')">🗑 Msgs</button>
+        <button class="auc-btn yellow" onclick="resetUsernameCooldown('${u.id}','${u.username}')">🔄 Reset CD</button>
+        <button class="auc-btn red" onclick="forceResetPassword('${u.id}','${u.username}')">🔒 Reset PW</button>
+      `:'<span style="font-size:11px;color:var(--text2)">Owner Account</span>'}
+    </div>
+  </div>`;
+}
+
+async function adminSearchUser(){
+  const q=document.getElementById('admin-search').value.trim();
+  if(!q)return;
+  const res=document.getElementById('admin-user-result');
+  res.innerHTML='<div class="fc-empty">Searching…</div>';
+  try{
+    const users=await sbReq(`/rest/v1/profiles?username=ilike.*${encodeURIComponent(q)}*&select=id,username,avatar,role,banned,suspended_until,ban_reason`);
+    if(!users||!users.length){res.innerHTML='<div class="fc-empty">No users found.</div>';return;}
+    res.innerHTML=users.map(u=>adminUserCard(u)).join('');
+  }catch(e){res.innerHTML='<div class="fc-empty">Error.</div>';}
+}
+
+async function promptBan(uid,uname){
+  const reason=prompt(`Ban reason for ${uname}:`)||'Violation of rules';
+  if(reason===null)return;
+  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({banned:true,ban_reason:reason})});
+  createNotif(uid,'ban','🚫 Your account has been banned',reason,null,null);
+  showToast('🚫 '+uname+' banned');loadAllUsers();
+}
+async function unbanUser(uid){
+  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({banned:false,ban_reason:null})});
+  showToast('✓ User unbanned');loadAllUsers();
+}
+async function promptSuspend(uid,uname){
+  const days=prompt(`Suspend ${uname} for how many days?`,'1');
+  if(!days||isNaN(days))return;
+  const until=new Date(Date.now()+parseInt(days)*86400000).toISOString();
+  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({suspended_until:until})});
+  createNotif(uid,'warning',`⏸ Account suspended for ${days} day${days>1?'s':''}`,`Your account is suspended until ${new Date(until).toLocaleDateString()}`,null,null);
+  showToast('⏸ '+uname+' suspended for '+days+' days');loadAllUsers();
+}
+async function unsuspendUser(uid){
+  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({suspended_until:null})});
+  showToast('✓ User unsuspended');loadAllUsers();
+}
+async function deleteUserMsgs(uid,uname){
+  if(!confirm(`Delete ALL messages from ${uname}?`))return;
+  await fetch(SB_URL+`/rest/v1/messages?user_id=eq.${uid}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  showToast('🗑 Messages deleted');loadAdminChatLog();
+}
+async function viewUserDms(uid,uname,uav){
+  try{
+    const sent=await sbReq(`/rest/v1/dms?sender_id=eq.${uid}&select=*&order=created_at.desc&limit=50`);
+    const recv=await sbReq(`/rest/v1/dms?receiver_id=eq.${uid}&select=*&order=created_at.desc&limit=50`);
+    const all=[...(sent||[]),...(recv||[])].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,50);
+    document.getElementById('admin-user-result').innerHTML=`<div style="margin-bottom:8px;font-weight:700;font-size:13px;">📨 DMs for ${uname}</div>`+
+      (all.length?all.map(m=>{
+        const time=new Date(m.created_at).toLocaleString();
+        return`<div class="admin-chat-msg"><div class="acm-content"><span class="acm-user">${m.sender_id===uid?uname:'→ '+uname}</span> <span class="acm-time">${time}</span><div>${escHtml(m.content)}</div></div><button class="auc-btn red" onclick="adminDeleteDm('${m.id}',this)">🗑</button></div>`;
+      }).join(''):'<div class="fc-empty">No DMs.</div>');
+  }catch(e){showToast('Failed to load DMs');}
+}
+async function adminDeleteDm(id,btn){
+  await fetch(SB_URL+`/rest/v1/dms?id=eq.${id}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  btn.closest('.admin-chat-msg').remove();showToast('🗑 DM deleted');
+}
+async function viewUserFriends(uid,uname){
+  try{
+    const asSender=await sbReq(`/rest/v1/friends?sender_id=eq.${uid}&status=eq.accepted&select=receiver_id`);
+    const asReceiver=await sbReq(`/rest/v1/friends?receiver_id=eq.${uid}&status=eq.accepted&select=sender_id`);
+    const fids=[...(asSender||[]).map(r=>r.receiver_id),...(asReceiver||[]).map(r=>r.sender_id)];
+    if(!fids.length){document.getElementById('admin-user-result').innerHTML=`<div class="fc-empty">${uname} has no friends.</div>`;return;}
+    const profiles=await sbReq(`/rest/v1/profiles?id=in.(${fids.map(id=>`"${id}"`).join(',')})&select=id,username,avatar`);
+    document.getElementById('admin-user-result').innerHTML=`<div style="margin-bottom:8px;font-weight:700;font-size:13px;">👥 Friends of ${uname}</div>`+
+      (profiles||[]).map(p=>`<div class="admin-user-card"><div style="font-size:20px">${p.avatar}</div><div class="auc-info"><div class="auc-name">${p.username}</div></div><button class="auc-btn red" onclick="adminRemoveFriend('${uid}','${p.id}','${uname}','${p.username}')">Remove</button></div>`).join('');
+  }catch(e){showToast('Failed');}
+}
+async function adminRemoveFriend(uid1,uid2,n1,n2){
+  if(!confirm(`Remove friendship between ${n1} and ${n2}?`))return;
+  await fetch(SB_URL+`/rest/v1/friends?sender_id=eq.${uid1}&receiver_id=eq.${uid2}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  await fetch(SB_URL+`/rest/v1/friends?sender_id=eq.${uid2}&receiver_id=eq.${uid1}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  showToast('Friendship removed');viewUserFriends(uid1,n1);
+}
+async function loadAdminChatLog(){
+  try{
+    const msgs=await sbReq(`/rest/v1/messages?select=*&order=created_at.desc&limit=30`);
+    document.getElementById('admin-chat-log').innerHTML=(msgs||[]).map(m=>`
+      <div class="admin-chat-msg">
+        <div style="font-size:18px">${m.avatar||'👤'}</div>
+        <div class="acm-content"><span class="acm-user">${m.username}</span> <span class="acm-time">${new Date(m.created_at).toLocaleString()}</span><div>${escHtml(m.content)}</div></div>
+        <button class="auc-btn red" onclick="adminDeleteMsg('${m.id}',this)">🗑</button>
+      </div>`).join('')||'<div class="fc-empty">No messages.</div>';
+  }catch(e){console.warn(e);}
+}
+async function adminDeleteMsg(id,btn){
+  await fetch(SB_URL+`/rest/v1/messages?id=eq.${id}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  btn.closest('.admin-chat-msg').remove();showToast('🗑 Message deleted');
+}
+async function sendAnnouncement(){
+  const txt=document.getElementById('ann-text').value.trim();
+  if(!txt)return;
+  try{
+    await fetch(SB_URL+'/rest/v1/announcements',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({content:txt})});
+    await fetch(SB_URL+'/rest/v1/messages',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({user_id:currentUser.id,username:'📢 ADLESS',avatar:'📢',content:'[ANNOUNCEMENT] '+txt})});
+    document.getElementById('ann-text').value='';
+    showToast('📢 Announcement sent!');
+    loadAnnouncementHistory();
+  }catch(e){showToast('Failed');}
+}
+async function checkUserStatus(uid){
+  try{const rows=await sbReq(`/rest/v1/profiles?id=eq.${uid}&select=banned,suspended_until,ban_reason,role`);if(!rows||!rows.length)return null;return rows[0];}catch(e){return null;}
+}
+
+async function loadAllUsers(){
+  try{
+    const users=await sbReq(`/rest/v1/profiles?select=id,username,avatar,role,banned,suspended_until,ban_reason&order=created_at.asc`);
+    document.getElementById('user-count').textContent=`(${(users||[]).length} total)`;
+    document.getElementById('admin-all-users').innerHTML=(users||[]).map(u=>adminUserCard(u)).join('');
+  }catch(e){console.warn(e);}
+}
+
+function adminUserCard(u){
+  const isBanned=u.banned;
+  const isSuspended=u.suspended_until&&new Date(u.suspended_until)>new Date();
+  const isOwnerAcc=u.role==='owner';
+  const statusText=isBanned?'🚫 Banned'+(u.ban_reason?' · '+u.ban_reason:''):isSuspended?`⏸ Suspended until ${new Date(u.suspended_until).toLocaleDateString()}`:'✅ Active';
+  return`<div class="admin-user-card${isBanned?' banned':isSuspended?' suspended':''}">
+    <div style="font-size:22px">${u.avatar||'👤'}</div>
+    <div class="auc-info">
+      <div class="auc-name">${u.username}${isOwnerAcc?'<span class="owner-badge">OWNER</span>':''}</div>
+      <div class="auc-meta">${statusText}</div>
+    </div>
+    <div class="auc-btns">
+      ${!isOwnerAcc?`
+        ${isBanned
+          ?`<button class="auc-btn green" onclick="unbanUser('${u.id}')">✓ Unban</button>`
+          :`<button class="auc-btn red" onclick="promptBan('${u.id}','${u.username}')">🚫 Ban</button>`}
+        ${isSuspended
+          ?`<button class="auc-btn green" onclick="unsuspendUser('${u.id}')">✓ Unsuspend</button>`
+          :`<button class="auc-btn yellow" onclick="promptSuspend('${u.id}','${u.username}')">⏸ Suspend</button>`}
+        <button class="auc-btn blue" onclick="viewUserDms('${u.id}','${u.username}','${u.avatar||'👤'}')">👁 DMs</button>
+        <button class="auc-btn blue" onclick="viewUserFriends('${u.id}','${u.username}')">👥 Friends</button>
+        <button class="auc-btn red" onclick="deleteUserMsgs('${u.id}','${u.username}')">🗑 Msgs</button>
+      `:'<span style="font-size:11px;color:var(--text2)">Owner Account</span>'}
+    </div>
+  </div>`;
+}
+
+async function adminSearchUser(){
+  const q=document.getElementById('admin-search').value.trim();
+  if(!q)return;
+  const res=document.getElementById('admin-user-result');
+  res.innerHTML='<div class="fc-empty">Searching…</div>';
+  try{
+    const users=await sbReq(`/rest/v1/profiles?username=ilike.*${encodeURIComponent(q)}*&select=id,username,avatar,role,banned,suspended_until,ban_reason`);
+    if(!users||!users.length){res.innerHTML='<div class="fc-empty">No users found.</div>';return;}
+    res.innerHTML=users.map(u=>adminUserCard(u)).join('');
+  }catch(e){res.innerHTML='<div class="fc-empty">Error.</div>';}
+}
+
+async function promptBan(uid,uname){
+  const reason=prompt(`Ban reason for ${uname}:`)||'Violation of rules';
+  if(reason===null)return;
+  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({banned:true,ban_reason:reason})
+  });
+  showToast('🚫 '+uname+' banned');
+  loadAllUsers();
+}
+
+async function unbanUser(uid){
+  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({banned:false,ban_reason:null})
+  });
+  showToast('✓ User unbanned');
+  loadAllUsers();
+}
+
+async function promptSuspend(uid,uname){
+  const days=prompt(`Suspend ${uname} for how many days?`,'1');
+  if(!days||isNaN(days))return;
+  const until=new Date(Date.now()+parseInt(days)*86400000).toISOString();
+  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({suspended_until:until})
+  });
+  showToast('⏸ '+uname+' suspended for '+days+' days');
+  loadAllUsers();
+}
+
+async function unsuspendUser(uid){
+  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({suspended_until:null})
+  });
+  showToast('✓ User unsuspended');
+  loadAllUsers();
+}
+
+async function deleteUserMsgs(uid,uname){
+  if(!confirm(`Delete ALL messages from ${uname}?`))return;
+  await fetch(SB_URL+`/rest/v1/messages?user_id=eq.${uid}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  showToast('🗑 Messages deleted');
+  loadAdminChatLog();
+}
+
+async function viewUserDms(uid,uname,uav){
+  // Owner views all DMs sent/received by this user
+  try{
+    const sent=await sbReq(`/rest/v1/dms?sender_id=eq.${uid}&select=*,receiver:receiver_id(username,avatar)&order=created_at.desc&limit=50`);
+    const recv=await sbReq(`/rest/v1/dms?receiver_id=eq.${uid}&select=*,sender:sender_id(username,avatar)&order=created_at.desc&limit=50`);
+    const all=[...(sent||[]),...(recv||[])].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,50);
+    const html=all.length?all.map(m=>{
+      const from=m.sender_id===uid?uname:(m.sender?.username||'?');
+      const to=m.receiver_id===uid?uname:(m.receiver?.username||'?');
+      const time=new Date(m.created_at).toLocaleString();
+      return`<div class="admin-chat-msg"><div class="acm-content"><span class="acm-user">${from} → ${to}</span> <span class="acm-time">${time}</span><div>${escHtml(m.content)}</div></div><button class="auc-btn red" onclick="adminDeleteDm('${m.id}',this)">🗑</button></div>`;
+    }).join(''):'<div class="fc-empty">No DMs found.</div>';
+    document.getElementById('admin-user-result').innerHTML=`<div style="margin-bottom:8px;font-weight:700;font-size:13px;">📨 DMs for ${uname}</div>`+html;
+  }catch(e){showToast('Failed to load DMs');}
+}
+
+async function adminDeleteDm(id,btn){
+  await fetch(SB_URL+`/rest/v1/dms?id=eq.${id}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  btn.closest('.admin-chat-msg').remove();
+  showToast('🗑 DM deleted');
+}
+
+async function viewUserFriends(uid,uname){
+  try{
+    const asSender=await sbReq(`/rest/v1/friends?sender_id=eq.${uid}&status=eq.accepted&select=receiver_id`);
+    const asReceiver=await sbReq(`/rest/v1/friends?receiver_id=eq.${uid}&status=eq.accepted&select=sender_id`);
+    const fids=[...(asSender||[]).map(r=>r.receiver_id),...(asReceiver||[]).map(r=>r.sender_id)];
+    if(!fids.length){document.getElementById('admin-user-result').innerHTML=`<div class="fc-empty">${uname} has no friends.</div>`;return;}
+    const profiles=await sbReq(`/rest/v1/profiles?id=in.(${fids.map(id=>`"${id}"`).join(',')})&select=id,username,avatar`);
+    document.getElementById('admin-user-result').innerHTML=`<div style="margin-bottom:8px;font-weight:700;font-size:13px;">👥 Friends of ${uname}</div>`+
+      (profiles||[]).map(p=>`<div class="admin-user-card"><div style="font-size:20px">${p.avatar}</div><div class="auc-info"><div class="auc-name">${p.username}</div></div><button class="auc-btn red" onclick="adminRemoveFriend('${uid}','${p.id}','${uname}','${p.username}')">Remove</button></div>`).join('');
+  }catch(e){showToast('Failed');}
+}
+
+async function adminRemoveFriend(uid1,uid2,n1,n2){
+  if(!confirm(`Remove friendship between ${n1} and ${n2}?`))return;
+  await fetch(SB_URL+`/rest/v1/friends?sender_id=eq.${uid1}&receiver_id=eq.${uid2}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  await fetch(SB_URL+`/rest/v1/friends?sender_id=eq.${uid2}&receiver_id=eq.${uid1}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  showToast('Friendship removed');
+  viewUserFriends(uid1,n1);
+}
+
+async function loadAdminChatLog(){
+  try{
+    const msgs=await sbReq(`/rest/v1/messages?select=*&order=created_at.desc&limit=30`);
+    document.getElementById('admin-chat-log').innerHTML=(msgs||[]).map(m=>`
+      <div class="admin-chat-msg">
+        <div style="font-size:18px">${m.avatar||'👤'}</div>
+        <div class="acm-content">
+          <span class="acm-user">${m.username}</span>
+          <span class="acm-time">${new Date(m.created_at).toLocaleString()}</span>
+          <div>${escHtml(m.content)}</div>
+        </div>
+        <button class="auc-btn red" onclick="adminDeleteMsg('${m.id}',this)">🗑</button>
+      </div>`).join('')||'<div class="fc-empty">No messages.</div>';
+  }catch(e){console.warn(e);}
+}
+
+async function adminDeleteMsg(id,btn){
+  await fetch(SB_URL+`/rest/v1/messages?id=eq.${id}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  btn.closest('.admin-chat-msg').remove();
+  showToast('🗑 Message deleted');
+}
+
+async function sendAnnouncement(){
+  const txt=document.getElementById('ann-text').value.trim();
+  if(!txt)return;
+  try{
+    await fetch(SB_URL+'/rest/v1/announcements',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({content:txt})
+    });
+    await fetch(SB_URL+'/rest/v1/messages',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({user_id:currentUser.id,username:'📢 ADLESS',avatar:'📢',content:'[ANNOUNCEMENT] '+txt})
+    });
+    // Send notification to all users
+    try{
+      const users=await sbReq(`/rest/v1/profiles?select=id&role=neq.owner&banned=eq.false`);
+      const notifRows=(users||[]).map(u=>({user_id:u.id,type:'announcement',title:'📢 Announcement',body:txt,link_type:'chat',read:false}));
+      if(notifRows.length){
+        await fetch(SB_URL+'/rest/v1/notifications',{
+          method:'POST',
+          headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+          body:JSON.stringify(notifRows)
+        });
+      }
+    }catch(e){console.warn('Mass notif failed',e);}
+    document.getElementById('ann-text').value='';
+    showToast('📢 Announcement sent!');
+    loadAnnouncementHistory();
+  }catch(e){showToast('Failed');}
+}
+
+// Check ban/suspend on login
+async function checkUserStatus(uid){
+  try{
+    const rows=await sbReq(`/rest/v1/profiles?id=eq.${uid}&select=banned,suspended_until,ban_reason,role`);
+    if(!rows||!rows.length)return null;
+    return rows[0];
+  }catch(e){return null;}
+}
+
+// TAB CLOAKER
+const CLOAKS=[
+  // Productivity
+  {name:'YouTube',title:'YouTube',icon:'https://www.youtube.com/favicon.ico'},
+  {name:'Google Classroom',title:'Google Classroom',icon:'https://ssl.gstatic.com/classroom/favicon.png'},
+  {name:'Google Docs',title:'Google Docs - Untitled document',icon:'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'},
+  {name:'Google Slides',title:'Google Slides - Untitled presentation',icon:'https://ssl.gstatic.com/docs/presentations/images/favicon5.ico'},
+  {name:'Google Drive',title:'My Drive - Google Drive',icon:'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png'},
+  {name:'Google Sheets',title:'Google Sheets - Untitled spreadsheet',icon:'https://ssl.gstatic.com/docs/spreadsheets/favicon3.ico'},
+  {name:'IXL',title:'IXL | Math & English',icon:'https://www.ixl.com/favicon.ico'},
+  {name:'Khan Academy',title:'Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
+  {name:'Quizlet',title:'Quizlet',icon:'https://quizlet.com/favicon.ico'},
+  {name:'Wikipedia',title:'Wikipedia, the free encyclopedia',icon:'https://en.wikipedia.org/favicon.ico'},
+  {name:'Desmos',title:'Desmos | Graphing Calculator',icon:'https://www.desmos.com/favicon.ico'},
+  {name:'Schoology',title:'Schoology',icon:'https://www.schoology.com/sites/default/themes/schoology_theme/favicon.ico'},
+  {name:'Canvas',title:'Dashboard - Canvas',icon:'https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico'},
+  {name:'Duolingo',title:'Duolingo - The world\'s best way to learn a language',icon:'https://www.duolingo.com/favicon.ico'},
+  {name:'New Tab',title:'New Tab',icon:''},
+  // Math
+  {name:'Algebra',title:'Algebra I - Unit 4 Review | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
+  {name:'Geometry',title:'Geometry - Proofs & Theorems | IXL',icon:'https://www.ixl.com/favicon.ico'},
+  {name:'Pre-Calc',title:'Precalculus - Functions & Graphs | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
+  {name:'Calculus',title:'AP Calculus AB - Derivatives | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
+  {name:'Statistics',title:'Statistics & Probability | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
+  // Science
+  {name:'Biology',title:'Biology - Cell Division Notes - Google Docs',icon:'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'},
+  {name:'Chemistry',title:'Chemistry - Periodic Table & Reactions | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
+  {name:'Physics',title:'AP Physics 1 - Forces & Motion | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
+  {name:'Earth Sci',title:'Earth Science - Plate Tectonics Notes - Google Docs',icon:'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'},
+  {name:'Anatomy',title:'Anatomy & Physiology - Unit 3 | IXL',icon:'https://www.ixl.com/favicon.ico'},
+  // History & Social Studies
+  {name:'World History',title:'World History - WWI & WWII Review - Google Docs',icon:'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'},
+  {name:'US History',title:'US History - Civil War Era Notes | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
+  {name:'Geography',title:'World Geography - Regions & Capitals | IXL',icon:'https://www.ixl.com/favicon.ico'},
+  {name:'Civics',title:'Civics - Government & Constitution Review - Google Docs',icon:'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'},
+  {name:'Econ',title:'Economics - Supply & Demand | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
+  // English
+  {name:'English',title:'English - Essay Draft - Google Docs',icon:'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'},
+  {name:'Lit',title:'AP Literature - The Great Gatsby Analysis - Google Docs',icon:'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'},
+  {name:'Grammar',title:'Grammar & Writing Skills | IXL',icon:'https://www.ixl.com/favicon.ico'},
+  {name:'Spanish',title:'Spanish II - Conjugation Practice | Duolingo',icon:'https://www.duolingo.com/favicon.ico'},
+  {name:'French',title:'French III - Vocabulary Review | Duolingo',icon:'https://www.duolingo.com/favicon.ico'},
+  // Other
+  {name:'CS / Coding',title:'Intro to Computer Science - Python | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
+  {name:'Health',title:'Health - Nutrition & Wellness Notes - Google Docs',icon:'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'},
+  {name:'Art History',title:'Art History - Renaissance Period | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
+  {name:'Psychology',title:'AP Psychology - Memory & Cognition Notes - Google Docs',icon:'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'},
+];
+let activeCloakIdx=-1;
+function buildCloakGrid(){
+  const grid=document.getElementById('cloak-grid');
+  if(!grid)return;
+  const sections=[
+    {label:'📱 Apps & Sites',items:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]},
+    {label:'🔢 Math',items:[15,16,17,18,19]},
+    {label:'🔬 Science',items:[20,21,22,23,24]},
+    {label:'🌍 History & Social Studies',items:[25,26,27,28,29]},
+    {label:'📝 English & Languages',items:[30,31,32,33,34]},
+    {label:'📚 Other Subjects',items:[35,36,37,38]},
+  ];
+  grid.innerHTML=sections.map(sec=>`
+    <div style="width:100%;font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin:10px 0 6px;grid-column:1/-1">${sec.label}</div>
+    ${sec.items.map(i=>{const c=CLOAKS[i];return`
+      <button class="cloak-btn${activeCloakIdx===i?' active':''}" onclick="applyCloak(${i})">
+        ${c.icon?`<img src="${c.icon}" onerror="this.style.display='none'">`:'<span style="font-size:18px">📄</span>'}
+        <span>${c.name}</span>
+      </button>`;}).join('')}
+  `).join('');
+}
+function applyCloak(i){
+  const c=CLOAKS[i];
+  activeCloakIdx=i;
+  setTabCloak(c.title,c.icon);
+  buildCloakGrid();
+  saveCloak(c.title,c.icon);
+  showToast('🎭 Tab disguised as '+c.name);
+}
+function applyCustomCloak(){
+  const title=document.getElementById('cloak-custom-title').value.trim()||'New Tab';
+  const icon=document.getElementById('cloak-custom-icon').value.trim();
+  activeCloakIdx=-1;
+  setTabCloak(title,icon);
+  buildCloakGrid();
+  saveCloak(title,icon);
+  showToast('🎭 Custom tab applied');
+}
+function setTabCloak(title,icon){
+  document.title=title;
+  let link=document.querySelector("link[rel~='icon']");
+  if(!link){link=document.createElement('link');link.rel='icon';document.head.appendChild(link);}
+  link.href=icon||'data:,';
+}
+function resetCloak(){
+  activeCloakIdx=-1;
+  document.title='Adless OS';
+  let link=document.querySelector("link[rel~='icon']");
+  if(link)link.href='data:,';
+  buildCloakGrid();
+  localStorage.removeItem(userKey('adless_cloak'));
+  showToast('✕ Tab reset');
+}
+function saveCloak(title,icon){
+  localStorage.setItem(userKey('adless_cloak'),JSON.stringify({title,icon}));
+}
+function loadCloakSetting(){
+  try{
+    const c=JSON.parse(localStorage.getItem(userKey('adless_cloak')));
+    if(c){setTabCloak(c.title,c.icon);}
+  }catch(e){}
+}
+function openAboutBlank(){
+  const w=window.open('about:blank','_blank');
+  if(w){
+    w.document.write(`<!DOCTYPE html><html><head><title>New Tab</title></head><body style="margin:0;background:#fff"></body></html>`);
+    w.document.close();
+  }
+  showToast('🔲 Opened about:blank');
+}
+// ── LIVE CHAT ────────────────────────────────────────────────────
+let chatTab='global';
+let chatSub=null;
+let chatMessages=[];
+let lastMsgId=null;
+
+function switchChatTab(tab){
+  chatTab=tab;
+  document.querySelectorAll('.chat-tab').forEach((t,i)=>t.classList.toggle('active',(tab==='global'?i===0:i===1)));
+  chatMessages=[];
+  document.getElementById('chat-messages').innerHTML='';
+  stopChatSub();
+  loadMessages();
+}
+
+async function loadMessages(){
+  if(currentUser?.guest){
+    document.getElementById('chat-messages').innerHTML='<div class="chat-system">Login to chat</div>';
+    return;
+  }
+  try{
+    let url=`/rest/v1/messages?select=*&order=created_at.asc&limit=80`;
+    if(chatTab==='friends'){
+      const fids=await getFriendIds();
+      if(!fids.length){document.getElementById('chat-messages').innerHTML='<div class="chat-system">Add friends to see their messages</div>';return;}
+      const ids=[currentUser.id,...fids].map(id=>`"${id}"`).join(',');
+      url+=`&user_id=in.(${ids})`;
+    }
+    const msgs=await sbReq(url);
+    chatMessages=msgs||[];
+    renderMessages();
+    scrollChat();
+    startChatPoll();
+  }catch(e){console.warn('Chat load failed',e);}
+}
+
+function renderMessages(){
+  const box=document.getElementById('chat-messages');
+  if(!chatMessages.length){box.innerHTML='<div class="chat-system">No messages yet. Say hi! 👋</div>';return;}
+  box.innerHTML=chatMessages.map(m=>msgHtml(m)).join('');
+}
+
+function msgHtml(m){
+  const me=m.user_id===currentUser?.id;
+  const time=new Date(m.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const reportBtn=(!me&&currentUser&&!currentUser.guest)
+    ?`<span class="msg-report-btn" onclick="openReportModal('message','${m.id}','${escAttr(m.username)}','${m.user_id}',${JSON.stringify(escHtml(m.content)).replace(/'/g,'&#39;')})" title="Report message">⚑</span>`:'';
+  return`<div class="chat-msg${me?' me':''}">
+    <div class="chat-av">${m.avatar||'👤'}</div>
+    <div class="chat-bubble">
+      <div class="chat-name">${me?'You':m.username}${reportBtn}</div>
+      <div class="chat-text">${escHtml(m.content)}</div>
+      <div class="chat-time">${time}</div>
+    </div>
+  </div>`;
+}
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function scrollChat(){
+  const box=document.getElementById('chat-messages');
+  setTimeout(()=>box.scrollTop=box.scrollHeight,50);
+}
+
+async function sendMessage(){
+  if(currentUser?.guest){showToast('Login to chat');return;}
+  const inp=document.getElementById('chat-input');
+  const content=inp.value.trim();
+  if(!content)return;
+  if(!checkSlowmode())return;
+  if(isBlacklisted(content)){showToast('🚫 Message contains blocked content');inp.value='';return;}
+  inp.value='';
+  lastMsgTime[currentUser.id]=Date.now();
+  try{
+    const msg={user_id:currentUser.id,username:currentUser.display_name||currentUser.username,avatar:currentUser.avatar,content};
+    await sbReq('/rest/v1/messages','POST',msg,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'}});
+    await pollNewMessages();
+  }catch(e){showToast('Failed to send');console.warn(e);}
+}
+
+// Poll for new messages every 3s
+let chatPollTimer=null;
+function startChatPoll(){
+  stopChatSub();
+  chatPollTimer=setInterval(pollNewMessages,3000);
+}
+function stopChatSub(){
+  if(chatPollTimer){clearInterval(chatPollTimer);chatPollTimer=null;}
+}
+async function pollNewMessages(){
+  if(!currentUser||currentUser.guest)return;
+  try{
+    const last=chatMessages.length?chatMessages[chatMessages.length-1].created_at:null;
+    let url=`/rest/v1/messages?select=*&order=created_at.asc`;
+    if(last)url+=`&created_at=gt.${encodeURIComponent(last)}`;
+    else url+=`&limit=80`;
+    if(chatTab==='friends'){
+      const fids=await getFriendIds();
+      if(!fids.length)return;
+      const ids=[currentUser.id,...fids].map(id=>`"${id}"`).join(',');
+      url+=`&user_id=in.(${ids})`;
+    }
+    const newMsgs=await sbReq(url);
+    if(newMsgs&&newMsgs.length){
+      const box=document.getElementById('chat-messages');
+      const atBottom=box.scrollHeight-box.scrollTop-box.clientHeight<60;
+      // Remove "no messages" placeholder
+      if(box.querySelector('.chat-system'))box.innerHTML='';
+      newMsgs.forEach(m=>{chatMessages.push(m);box.insertAdjacentHTML('beforeend',msgHtml(m));});
+      if(atBottom)scrollChat();
+    }
+  }catch(e){}
+}
+
+// Start chat when chat view opens
+document.addEventListener('DOMContentLoaded',()=>{});
+function onChatViewOpen(){
+  if(!chatPollTimer&&currentUser&&!currentUser.guest)loadMessages();
+}
+
+// ── FRIENDS ──────────────────────────────────────────────────────
+async function getFriendIds(){
+  if(!currentUser||currentUser.guest)return[];
+  try{
+    const asSender=await sbReq(`/rest/v1/friends?sender_id=eq.${currentUser.id}&status=eq.accepted&select=receiver_id`);
+    const asReceiver=await sbReq(`/rest/v1/friends?receiver_id=eq.${currentUser.id}&status=eq.accepted&select=sender_id`);
+    const ids=[
+      ...(asSender||[]).map(r=>r.receiver_id),
+      ...(asReceiver||[]).map(r=>r.sender_id)
+    ];
+    return ids;
+  }catch(e){return[];}
+}
+
+async function searchUser(){
+  if(currentUser?.guest){showToast('Login to add friends');return;}
+  const q=document.getElementById('friend-search').value.trim();
+  if(!q)return;
+  const res=document.getElementById('friend-search-result');
+  res.innerHTML='<div class="fc-empty">Searching…</div>';
+  try{
+    const rows=await sbReq(`/rest/v1/profiles?username=ilike.*${encodeURIComponent(q)}*&select=id,username,avatar&limit=5`);
+    if(!rows||!rows.length){res.innerHTML='<div class="fc-empty">No users found.</div>';return;}
+    const filtered=rows.filter(r=>r.id!==currentUser.id);
+    if(!filtered.length){res.innerHTML='<div class="fc-empty">That\'s you!</div>';return;}
+    res.innerHTML=filtered.map(u=>`
+      <div class="friend-card">
+        <div class="fc-av">${u.avatar||'👤'}</div>
+        <div style="flex:1"><div class="fc-name">${u.username}</div></div>
+        <div class="fc-btns">
+          <button class="fc-btn add" onclick="sendFriendReq('${u.id}','${u.username}')">+ Add</button>
+        </div>
+      </div>`).join('');
+  }catch(e){res.innerHTML=`<div class="fc-empty">Error: ${e.message}</div>`;}
+}
+
+async function sendFriendReq(toId,toName){
+  try{
+    const asSender=await sbReq(`/rest/v1/friends?sender_id=eq.${currentUser.id}&receiver_id=eq.${toId}&select=id,status`);
+    const asReceiver=await sbReq(`/rest/v1/friends?sender_id=eq.${toId}&receiver_id=eq.${currentUser.id}&select=id,status`);
+    const existing=[...(asSender||[]),...(asReceiver||[])];
+    if(existing.length){showToast(existing[0].status==='accepted'?'Already friends!':'Request already sent!');return;}
+    const res=await fetch(SB_URL+'/rest/v1/friends',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({sender_id:currentUser.id,receiver_id:toId,status:'pending'})
+    });
+    if(!res.ok){const t=await res.text();throw new Error(t);}
+    showToast('👥 Friend request sent to '+toName+'!');
+    // Notify receiver
+    createNotif(toId,'friend_request','Friend Request',`${currentUser.display_name||currentUser.username} sent you a friend request`,'friends',null);
+    document.getElementById('friend-search-result').innerHTML='';
+    document.getElementById('friend-search').value='';
+    loadFriendRequests();
+  }catch(e){showToast('Failed to send request');console.error(e);}
+}
+
+async function loadFriendRequests(){
+  if(!currentUser||currentUser.guest){
+    document.getElementById('friend-requests').innerHTML='<div class="fc-empty">Login to see requests</div>';
+    document.getElementById('friends-list').innerHTML='';
+    return;
+  }
+  try{
+    // Pending incoming requests
+    const pending=await sbReq(`/rest/v1/friends?receiver_id=eq.${currentUser.id}&status=eq.pending&select=id,sender_id`);
+    const reqDiv=document.getElementById('friend-requests');
+    if(!pending||!pending.length){reqDiv.innerHTML='<div class="fc-empty">No pending requests</div>';}
+    else{
+      const ids=pending.map(r=>`"${r.sender_id}"`).join(',');
+      const profiles=await sbReq(`/rest/v1/profiles?id=in.(${ids})&select=id,username,avatar`);
+      const profileMap=Object.fromEntries((profiles||[]).map(p=>[p.id,p]));
+      reqDiv.innerHTML=pending.map(r=>{
+        const p=profileMap[r.sender_id]||{username:'Unknown',avatar:'👤'};
+        return`<div class="friend-card">
+          <div class="fc-av">${p.avatar}</div>
+          <div style="flex:1"><div class="fc-name">${p.username}</div><div class="fc-status">wants to be friends</div></div>
+          <div class="fc-btns">
+            <button class="fc-btn accept" onclick="respondFriend('${r.id}','accepted','${p.username}')">✓ Accept</button>
+            <button class="fc-btn decline" onclick="respondFriend('${r.id}','declined','${p.username}')">✕</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+    // Accepted friends + unread counts
+    const fids=await getFriendIds();
+    const flDiv=document.getElementById('friends-list');
+    if(!fids.length){flDiv.innerHTML='<div class="fc-empty">No friends yet — search for someone!</div>';return;}
+    const fIdStr=fids.map(id=>`"${id}"`).join(',');
+    const fProfiles=await sbReq(`/rest/v1/profiles?id=in.(${fIdStr})&select=id,username,avatar`);
+    // Get unread counts per friend
+    const unreadCounts={};
+    for(const fp of (fProfiles||[])){
+      const unread=await sbReq(`/rest/v1/dms?sender_id=eq.${fp.id}&receiver_id=eq.${currentUser.id}&read=eq.false&select=id`);
+      unreadCounts[fp.id]=(unread||[]).length;
+    }
+    flDiv.innerHTML=(fProfiles||[]).map(p=>{
+      const unread=unreadCounts[p.id]||0;
+      return`<div class="friend-card">
+        <div class="fc-av">${p.avatar}</div>
+        <div style="flex:1"><div class="fc-name">${p.username}</div></div>
+        <div class="fc-btns">
+          <button class="fc-btn msg" onclick="openDm('${p.id}','${p.username}','${p.avatar}')">
+            💬 DM${unread?`<span class="fc-unread">${unread}</span>`:''}
+          </button>
+          <button class="fc-btn decline" style="background:rgba(255,159,10,.1);border-color:rgba(255,159,10,.3);color:#ff9f0a" onclick="openReportModal('user',null,'${p.username}','${p.id}',null)">⚑</button>
+          <button class="fc-btn decline" onclick="removeFriend('${p.id}','${p.username}')">Remove</button>
+        </div>
+      </div>`;
+    }).join('');
+  }catch(e){console.warn('Friends load failed',e);}
+}
+
+// ── DIRECT MESSAGES ──────────────────────────────────────────────
+let dmPeer=null; // {id, username, avatar}
+let dmPollTimer=null;
+let dmMessages=[];
+
+async function openDm(peerId,peerName,peerAvatar){
+  dmPeer={id:peerId,username:peerName,avatar:peerAvatar};
+  dmMessages=[];
+  document.getElementById('dm-av').textContent=peerAvatar;
+  document.getElementById('dm-name').textContent=peerName;
+  document.getElementById('dm-messages').innerHTML='';
+  switchView('dm-view');
+  await loadDmMessages();
+  // Mark all as read
+  await fetch(SB_URL+`/rest/v1/dms?sender_id=eq.${peerId}&receiver_id=eq.${currentUser.id}&read=eq.false`,{
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({read:true})
+  });
+  startDmPoll();
+}
+
+function closeDm(){
+  stopDmPoll();
+  dmPeer=null;
+  switchView('friends-view');
+  loadFriendRequests();
+}
+
+async function loadDmMessages(){
+  if(!dmPeer)return;
+  try{
+    // Get all messages between me and peer
+    const sent=await sbReq(`/rest/v1/dms?sender_id=eq.${currentUser.id}&receiver_id=eq.${dmPeer.id}&select=*&order=created_at.asc`);
+    const recv=await sbReq(`/rest/v1/dms?sender_id=eq.${dmPeer.id}&receiver_id=eq.${currentUser.id}&select=*&order=created_at.asc`);
+    dmMessages=[...(sent||[]),...(recv||[])].sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+    renderDmMessages();
+    scrollDm();
+  }catch(e){console.warn('DM load failed',e);}
+}
+
+function renderDmMessages(){
+  const box=document.getElementById('dm-messages');
+  if(!dmMessages.length){box.innerHTML='<div class="chat-system">No messages yet. Say hi! 👋</div>';return;}
+  let lastDate='';
+  box.innerHTML=dmMessages.map(m=>{
+    const me=m.sender_id===currentUser.id;
+    const time=new Date(m.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    const date=new Date(m.created_at).toLocaleDateString([],{month:'short',day:'numeric'});
+    let sep='';
+    if(date!==lastDate){sep=`<div class="dm-date-sep">${date}</div>`;lastDate=date;}
+    const av=me?currentUser.avatar:dmPeer.avatar;
+    return`${sep}<div class="chat-msg${me?' me':''}">
+      <div class="chat-av">${av}</div>
+      <div class="chat-bubble">
+        <div class="chat-name">${me?'You':dmPeer.username}</div>
+        <div class="chat-text">${escHtml(m.content)}</div>
+        <div class="chat-time">${time}${me?(m.read?' · ✓✓':' · ✓'):''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function scrollDm(){
+  const box=document.getElementById('dm-messages');
+  setTimeout(()=>box.scrollTop=box.scrollHeight,50);
+}
+
+async function sendDm(){
+  if(!dmPeer){return;}
+  const inp=document.getElementById('dm-input');
+  const content=inp.value.trim();
+  if(!content)return;
+  inp.value='';
+  try{
+    await fetch(SB_URL+'/rest/v1/dms',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({sender_id:currentUser.id,receiver_id:dmPeer.id,content,read:false})
+    });
+    // Notify receiver
+    const senderName=currentUser.display_name||currentUser.username;
+    const peerData=JSON.stringify({id:dmPeer.id,username:dmPeer.username,avatar:dmPeer.avatar});
+    createNotif(dmPeer.id,'dm',`💬 ${senderName}`,content.length>60?content.substring(0,60)+'…':content,'dm',peerData);
+    await pollDmMessages();
+  }catch(e){showToast('Failed to send');console.warn(e);}
+}
+
+let dmPollTimer2=null;
+function startDmPoll(){
+  stopDmPoll();
+  dmPollTimer2=setInterval(async()=>{
+    if(!dmPeer)return;
+    const last=dmMessages.length?dmMessages[dmMessages.length-1].created_at:null;
+    try{
+      const sentNew=last?await sbReq(`/rest/v1/dms?sender_id=eq.${currentUser.id}&receiver_id=eq.${dmPeer.id}&created_at=gt.${encodeURIComponent(last)}&select=*&order=created_at.asc`):[];
+      const recvNew=last?await sbReq(`/rest/v1/dms?sender_id=eq.${dmPeer.id}&receiver_id=eq.${currentUser.id}&created_at=gt.${encodeURIComponent(last)}&select=*&order=created_at.asc`):[];
+      const newMsgs=[...(sentNew||[]),...(recvNew||[])].sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+      if(newMsgs.length){
+        dmMessages.push(...newMsgs);
+        renderDmMessages();
+        scrollDm();
+        // Mark incoming as read
+        const unread=newMsgs.filter(m=>m.sender_id===dmPeer.id&&!m.read);
+        if(unread.length){
+          await fetch(SB_URL+`/rest/v1/dms?sender_id=eq.${dmPeer.id}&receiver_id=eq.${currentUser.id}&read=eq.false`,{
+            method:'PATCH',
+            headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+            body:JSON.stringify({read:true})
+          });
+        }
+      }
+    }catch(e){}
+  },2500);
+}
+function stopDmPoll(){if(dmPollTimer2){clearInterval(dmPollTimer2);dmPollTimer2=null;}}
+async function pollDmMessages(){await loadDmMessages();}
+
+async function respondFriend(reqId,status,name){
+  try{
+    // Need the sender_id to notify them — fetch the request first
+    const req=await sbReq(`/rest/v1/friends?id=eq.${reqId}&select=sender_id`);
+    const res=await fetch(SB_URL+`/rest/v1/friends?id=eq.${reqId}`,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({status})
+    });
+    if(!res.ok)throw new Error(await res.text());
+    showToast(status==='accepted'?'👥 Now friends with '+name:'Request declined');
+    // Notify original sender if accepted
+    if(status==='accepted'&&req&&req[0]){
+      createNotif(req[0].sender_id,'friend_accepted','Friend Request Accepted',`${currentUser.display_name||currentUser.username} accepted your friend request`,'friends',null);
+    }
+    loadFriendRequests();
+  }catch(e){showToast('Failed');console.warn(e);}
+}
+
+async function removeFriend(friendId,name){
+  try{
+    await sbReq(`/rest/v1/friends?sender_id=eq.${currentUser.id}&receiver_id=eq.${friendId}`,'DELETE');
+    await sbReq(`/rest/v1/friends?sender_id=eq.${friendId}&receiver_id=eq.${currentUser.id}`,'DELETE');
+    showToast('Removed '+name);
+    loadFriendRequests();
+  }catch(e){showToast('Failed');console.warn(e);}
+}
+
 // DEVICE MODE
 const DK='adless_device_v1';
 function setDevice(type){
@@ -782,11 +3674,36 @@ if(savedDevice){
   document.getElementById('device-pick').classList.add('gone');
   applyDevice(savedDevice);
 }
-applyStoredSettings();
-bootStep('Loading games…',20);
-buildList();renderPage();updateStats();
-bootStep('Fetching game library…',40);
-loadZones();
+// Init avatar picker
+lbInitAvatars();
+// Check saved session — auto login if valid
+(async()=>{
+  const sess=localStorage.getItem('adless_session');
+  if(sess){
+    try{
+      const u=JSON.parse(sess);
+      if(u.guest){currentUser=u;lbEnter();}
+      else{
+        // Verify still exists in DB
+        const rows=await sbReq(`/rest/v1/profiles?id=eq.${u.id}&select=id,username,avatar,role,banned,suspended_until,display_name`);
+        if(rows&&rows.length&&!rows[0].banned&&!(rows[0].suspended_until&&new Date(rows[0].suspended_until)>new Date())){
+          currentUser={id:rows[0].id,username:rows[0].username,avatar:rows[0].avatar,role:rows[0].role||'user',display_name:rows[0].display_name||null};
+          localStorage.setItem('adless_session',JSON.stringify(currentUser));
+          await loadUserData();
+          lbEnter();
+        }else{localStorage.removeItem('adless_session');}
+      }
+    }catch(e){localStorage.removeItem('adless_session');}
+  }
+  // Start loading games regardless
+  bootStep('Loading games…',20);
+  buildList();renderPage();updateStats();
+  bootStep('Fetching game library…',40);
+  loadZones();
+  // Load spotlight + site settings for all users
+  loadSpotlightPublic();
+  loadSiteSettings();
+})();
 </script>
 </body>
 </html>
