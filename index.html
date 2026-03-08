@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Adless OS</title>
+<style>
+:root{--blue:#0a84ff;--red:#ff3b30;--text:#f5f5f7;--text2:#86868b;--glass:rgba(28,28,30,0.75);--border:rgba(255,255,255,0.1);}
+body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!important;transition:none!important;}
+body.sys-cursor *{cursor:auto!important;}
+body.sys-cursor #cur{display:none!important;}
+body.player-open #cur{display:none!important;}
+body.player-open{cursor:none;}
+body.inverted #app,body.inverted #player{filter:invert(1) hue-rotate(180deg);}
+body.inverted #bgCanvas{filter:invert(1);}
+body.inverted img{filter:invert(1) hue-rotate(180deg);}
+*{box-sizing:border-box;cursor:none!important;}
+body,html{margin:0;padding:0;width:100vw;height:100vh;overflow:hidden;background:#000;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,sans-serif;}
+#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+#bgLayer{position:fixed;inset:0;z-index:0;pointer-events:none;background-size:cover;background-position:center;opacity:0;transition:opacity .5s;}
+#bgLayer.on{opacity:1;}
+#cur{width:12px;height:12px;background:#fff;border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:2000001;mix-blend-mode:difference;will-change:transform;}
+body.g-hover #cur{width:44px;height:44px;margin:-16px 0 0 -16px;background:var(--blue);mix-blend-mode:normal;opacity:.4;transition:width .15s,height .15s;}
+body.r-hover #cur{width:44px;height:44px;margin:-16px 0 0 -16px;background:var(--blue);mix-blend-mode:normal;opacity:.8;}
+#app{display:grid;grid-template-columns:240px 1fr;width:100vw;height:100vh;position:relative;z-index:1;}
+aside{background:rgba(0,0,0,.3);backdrop-filter:blur(30px);border-right:1px solid var(--border);padding:20px 16px;display:flex;flex-direction:column;overflow-y:auto;}
+.logo{font-size:22px;font-weight:800;margin-bottom:8px;padding-left:8px;flex-shrink:0;}
+.sec-label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;margin:14px 0 4px 8px;font-weight:800;flex-shrink:0;}
+.nav{padding:9px 12px;border-radius:10px;margin-bottom:2px;display:flex;align-items:center;gap:9px;font-size:12px;font-weight:500;transition:.15s;color:var(--text2);flex-shrink:0;}
+.nav:hover{color:#fff;background:rgba(255,255,255,.05);}
+.nav.active{background:var(--blue);color:#fff;}
+.rand-btn{background:rgba(10,132,255,.15);color:var(--blue);border:1px solid rgba(10,132,255,.3);padding:11px;border-radius:12px;font-weight:700;text-align:center;font-size:12px;transition:.15s;flex-shrink:0;margin-top:12px;}
+.rand-btn:hover{background:var(--blue);color:#fff;}
+.view{display:none;height:100vh;overflow-y:auto;padding:22px;}
+.view.active{display:block;}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+header h1{margin:0;font-size:20px;font-weight:800;}
+header input{background:rgba(255,255,255,.08);color:#fff;border:none;border-radius:12px;padding:10px 14px;font-size:13px;outline:0;width:260px;}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));}
+.card{background:var(--glass);border-radius:16px;overflow:hidden;border:1px solid var(--border);transition:transform .15s,border-color .15s;position:relative;contain:layout style;}
+.card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.25);}
+.card img{width:100%;height:110px;object-fit:cover;pointer-events:none;background:#111;display:block;}
+.card .info{padding:9px 12px 11px;}
+.card .title{font-weight:600;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:85%;}
+.tag{font-size:9px;text-transform:uppercase;font-weight:800;padding:2px 7px;border-radius:5px;margin-top:6px;display:inline-block;}
+.tag-zone{color:#30d158;background:rgba(48,209,88,.12);}
+.tag-builtin{color:#5ac8fa;background:rgba(90,200,250,.12);}
+.tag-ai{color:#bf5af2;background:rgba(191,90,242,.12);}
+.tag-apps{color:#ff9f0a;background:rgba(255,159,10,.12);}
+.tag-movie{color:#ff9f0a;background:rgba(255,159,10,.12);}
+.tag-show{color:#bf5af2;background:rgba(191,90,242,.12);}
+.tag-fnf{color:#ff375f;background:rgba(255,55,95,.12);}
+.tag-emulator{color:#40c8e0;background:rgba(64,200,224,.12);}
+.fav-star{position:absolute;top:8px;right:8px;font-size:16px;color:rgba(255,255,255,.2);transition:.15s;z-index:10;line-height:1;}
+.fav-star.on{color:#ffd60a;}
+.featured-badge{position:absolute;top:8px;left:8px;background:rgba(10,132,255,.85);color:#fff;font-size:8px;font-weight:800;padding:2px 6px;border-radius:4px;text-transform:uppercase;}
+.pager{display:flex;align-items:center;justify-content:center;gap:5px;padding:18px 0 6px;flex-wrap:wrap;}
+.pager button{background:rgba(255,255,255,.08);border:1px solid var(--border);color:var(--text2);padding:7px 12px;border-radius:8px;font-size:12px;font-weight:700;transition:.15s;min-width:36px;}
+.pager button:hover{background:rgba(255,255,255,.15);color:#fff;}
+.pager button.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+.pager button:disabled{opacity:.3;}
+.pager .pg-info{font-size:11px;color:var(--text2);padding:0 4px;}
+.loading-pulse{grid-column:1/-1;text-align:center;padding:40px;color:var(--text2);display:flex;align-items:center;justify-content:center;gap:10px;font-size:13px;}
+.spinner{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.1);border-top-color:var(--blue);animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.empty{grid-column:1/-1;text-align:center;padding:60px;color:var(--text2);font-size:14px;}
+.ep-item{background:rgba(255,255,255,.05);border-radius:12px;padding:13px;border:1px solid var(--border);transition:.15s;display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.ep-item:hover{background:rgba(255,255,255,.1);transform:translateX(3px);}
+.ep-num{color:var(--blue);font-weight:800;font-size:12px;margin-right:10px;}
+.back-btn{background:rgba(255,255,255,.1);border:none;color:#fff;padding:7px 13px;border-radius:8px;font-weight:600;font-size:12px;margin-right:10px;display:inline-flex;align-items:center;gap:4px;}
+.back-btn:hover{background:rgba(255,255,255,.18);}
+#player{position:fixed;inset:0;background:#000;display:none;z-index:9999;flex-direction:column;}
+#player.on{display:flex;}
+#player-bar{height:40px;background:rgba(10,10,10,.95);border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0;}
+#player-title{font-size:13px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pbtn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;padding:5px 11px;border-radius:6px;font-size:11px;font-weight:700;}
+.pbtn:hover{background:rgba(255,255,255,.16);}
+.pbtn.cls{background:rgba(196,43,28,.18);border-color:rgba(196,43,28,.3);}
+.pbtn.cls:hover{background:#c42b1c;}
+.pbtn.rand{background:rgba(10,132,255,.18);border-color:rgba(10,132,255,.3);color:var(--blue);}
+.pbtn.rand:hover{background:var(--blue);color:#fff;}
+#game-wrap{flex:1;display:flex;align-items:center;justify-content:center;background:#000;overflow:hidden;}
+#game-frame{border:none;background:#000;display:block;}
+/* Desktop default: fill full player */
+#game-frame{width:100%;height:100%;}
+/* Mobile portrait: 9:16 pillarboxed */
+body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px) * 9 / 16);max-width:100vw;height:100%;}
+/* Device picker */
+#device-pick{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(24px);z-index:2000000;display:flex;align-items:center;justify-content:center;}
+#device-pick.gone{display:none;}
+.dp-box{background:rgba(28,28,30,.98);border:1px solid rgba(255,255,255,.13);border-radius:26px;padding:38px 32px 32px;max-width:360px;width:92%;text-align:center;}
+.dp-title{font-size:24px;font-weight:900;margin-bottom:6px;}
+.dp-title span{color:var(--blue);}
+.dp-sub{font-size:13px;color:var(--text2);line-height:1.55;margin-bottom:28px;}
+.dp-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.dp-btn{background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.1);border-radius:18px;padding:22px 14px 18px;display:flex;flex-direction:column;align-items:center;gap:7px;transition:.18s;color:#fff;cursor:pointer;}
+.dp-btn:hover{background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.25);transform:translateY(-3px);}
+.dp-icon{font-size:40px;line-height:1;}
+.dp-lbl{font-size:14px;font-weight:800;}
+.dp-hint{font-size:10px;color:var(--text2);margin-top:-2px;}
+.s-sec{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin:0 0 8px 4px;}
+.s-section{margin-bottom:24px;}
+.s-row{background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.s-lbl{font-size:13px;font-weight:600;color:var(--text);}
+.s-desc{font-size:11px;color:var(--text2);margin-top:2px;}
+.tog{position:relative;width:50px;height:28px;flex-shrink:0;}
+.tog input{opacity:0;width:0;height:0;position:absolute;}
+.tog-sl{position:absolute;inset:0;background:rgba(255,255,255,.12);border-radius:28px;transition:.2s;border:1px solid var(--border);}
+.tog-sl::before{content:'';position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.4);}
+.tog input:checked+.tog-sl{background:var(--blue);border-color:var(--blue);}
+.tog input:checked+.tog-sl::before{transform:translateX(22px);}
+.s-danger{background:rgba(255,59,48,.12);color:var(--red);border:1px solid rgba(255,59,48,.3);padding:8px 16px;border-radius:10px;font-weight:700;font-size:12px;transition:.15s;white-space:nowrap;flex-shrink:0;}
+.s-danger:hover{background:var(--red);color:#fff;}
+.stat-box{background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:13px 16px;margin-bottom:7px;}
+.stat-label{font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
+.stat-val{font-size:28px;font-weight:800;color:var(--blue);font-variant-numeric:tabular-nums;}
+.stat-sub{font-size:11px;color:var(--text2);margin-top:2px;}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:7px;margin-bottom:7px;}
+.color-grid{display:flex;flex-wrap:wrap;gap:7px;margin-top:5px;}
+.color-dot{width:36px;height:36px;border-radius:50%;border:3px solid transparent;transition:.12s;flex-shrink:0;position:relative;}
+.color-dot:hover{transform:scale(1.1);}
+.color-dot.on{border-color:#fff;transform:scale(1.1);}
+.color-dot.on::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;}
+.bg-swatches{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px;}
+.bg-dot{width:32px;height:32px;border-radius:50%;border:2px solid transparent;transition:.12s;flex-shrink:0;}
+.bg-dot:hover,.bg-dot.on{transform:scale(1.15);border-color:#fff;}
+.bg-gradients{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px;margin-top:7px;}
+.bg-grad{height:44px;border-radius:10px;border:2px solid transparent;font-size:10px;font-weight:700;color:rgba(255,255,255,.9);text-shadow:0 1px 3px rgba(0,0,0,.6);transition:.15s;display:flex;align-items:center;justify-content:center;}
+.bg-grad:hover,.bg-grad.on{transform:scale(1.03);border-color:#fff;}
+.bg-custom-row{display:flex;align-items:center;gap:10px;margin-top:7px;}
+.bg-pick{width:38px;height:38px;border-radius:10px;border:1px solid var(--border);padding:2px;background:none;}
+.bg-pick::-webkit-color-swatch-wrapper{padding:0;}
+.bg-pick::-webkit-color-swatch{border-radius:8px;border:none;}
+.bg-reset{background:rgba(255,255,255,.07);color:var(--text2);border:1px solid var(--border);padding:6px 12px;border-radius:8px;font-size:11px;font-weight:600;transition:.15s;}
+.bg-reset:hover{background:rgba(255,255,255,.13);color:#fff;}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(70px);background:rgba(28,28,30,.97);border:1px solid var(--border);backdrop-filter:blur(20px);color:#fff;padding:10px 20px;border-radius:30px;font-size:12px;font-weight:600;z-index:99999;transition:transform .25s;pointer-events:none;}
+#toast.on{transform:translateX(-50%) translateY(0);}
+#confirm{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);z-index:99998;display:none;align-items:center;justify-content:center;}
+#confirm.on{display:flex;}
+.confirm-box{background:rgba(28,28,30,.98);border:1px solid var(--border);border-radius:20px;padding:26px;max-width:310px;width:90%;text-align:center;}
+.confirm-box h3{margin:0 0 7px;font-size:16px;}
+.confirm-box p{margin:0 0 16px;font-size:12px;color:var(--text2);line-height:1.5;}
+.confirm-btns{display:flex;gap:8px;justify-content:center;}
+.c-cancel{background:rgba(255,255,255,.1);color:#fff;border:1px solid var(--border);padding:8px 18px;border-radius:10px;font-weight:600;font-size:13px;transition:.15s;}
+.c-cancel:hover{background:rgba(255,255,255,.17);}
+.c-ok{background:var(--red);color:#fff;border:none;padding:8px 18px;border-radius:10px;font-weight:700;font-size:13px;transition:.15s;}
+.c-ok:hover{opacity:.85;}
+.nav.discord-btn{color:#7289da;background:rgba(114,137,218,.08);border:1px solid rgba(114,137,218,.2);}
+.nav.discord-btn:hover{color:#fff;background:#7289da;border-color:#7289da;}
+#chat-frame{width:100%;height:calc(100vh - 100px);border:none;border-radius:16px;overflow:hidden;}
+#gp-progress{position:fixed;bottom:0;left:0;right:0;height:3px;background:transparent;z-index:99997;pointer-events:none;}
+#gp-bar{height:100%;background:var(--blue);width:0%;transition:width .2s;}
+/* ── STARTUP LOADER ── */
+#boot-screen{position:fixed;inset:0;background:#000;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .5s;}
+#boot-screen.fade{opacity:0;pointer-events:none;}
+.boot-logo{font-size:38px;font-weight:900;letter-spacing:-1px;color:#fff;}
+.boot-logo span{color:var(--blue);}
+.boot-sub{font-size:13px;color:var(--text2);font-weight:500;}
+.boot-bar-wrap{width:220px;height:3px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;}
+.boot-bar{height:100%;background:var(--blue);width:0%;transition:width .3s;}
+.boot-status{font-size:11px;color:var(--text2);min-height:16px;}
+/* ── GAME LOADING OVERLAY ── */
+#game-loader{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9998;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;backdrop-filter:blur(10px);}
+#game-loader.on{display:flex;}
+.gl-spinner{width:44px;height:44px;border-radius:50%;border:3px solid rgba(255,255,255,.1);border-top-color:var(--blue);animation:spin .7s linear infinite;}
+.gl-title{font-size:15px;font-weight:700;color:#fff;max-width:300px;text-align:center;}
+.gl-sub{font-size:12px;color:var(--text2);}
+.dp-btn .dp-lbl{font-size:13px;font-weight:700;}
+.dp-btn .dp-sub{font-size:10px;color:var(--text2);}
+.dp-btn.selected{border-color:var(--blue);background:rgba(10,132,255,.15);}
+/* ── POINTER LOCK ── */
+#lock-hint{position:fixed;top:50px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.82);border:1px solid rgba(255,255,255,.15);backdrop-filter:blur(12px);color:#fff;padding:8px 18px;border-radius:20px;font-size:11px;font-weight:600;z-index:10000;pointer-events:none;opacity:0;transition:opacity .3s;white-space:nowrap;}
+#lock-hint.on{opacity:1;}
+#lock-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:var(--text2);padding:5px 11px;border-radius:6px;font-size:11px;font-weight:700;transition:.15s;}
+#lock-btn:hover{background:rgba(255,255,255,.16);color:#fff;}
+#lock-btn.locked{background:rgba(10,132,255,.18);border-color:rgba(10,132,255,.3);color:var(--blue);}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:3px;}
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<canvas id="bgCanvas"></canvas>
+<div id="bgLayer"></div>
+<div id="gp-progress"><div id="gp-bar"></div></div>
+
+<!-- DEVICE PICKER -->
+<div id="device-pick">
+  <div class="dp-box">
+    <div class="dp-title">Welcome to <span>Adless</span> 🛡️</div>
+    <div class="dp-sub">What device are you on?<br>We'll optimise the game player layout for you.</div>
+    <div class="dp-btns">
+      <button class="dp-btn" onclick="setDevice('desktop')">
+        <span class="dp-icon">🖥️</span>
+        <span class="dp-lbl">Computer</span>
+        <span class="dp-hint">Widescreen 16:9</span>
+      </button>
+      <button class="dp-btn" onclick="setDevice('mobile')">
+        <span class="dp-icon">📱</span>
+        <span class="dp-lbl">Mobile</span>
+        <span class="dp-hint">Portrait 9:16</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- BOOT SCREEN -->
+<div id="boot-screen">
+  <div class="boot-logo">Ad<span>less</span></div>
+  <div class="boot-sub">Loading your game hub...</div>
+  <div class="boot-bar-wrap"><div class="boot-bar" id="boot-bar"></div></div>
+  <div class="boot-status" id="boot-status">Initializing…</div>
+</div>
+
+<!-- GAME LOADING OVERLAY -->
+<div id="game-loader">
+  <div class="gl-spinner"></div>
+  <div class="gl-title" id="gl-title">Loading game…</div>
+  <div class="gl-sub">This may take a few seconds</div>
+  <button onclick="document.getElementById('game-loader').classList.remove('on')" style="margin-top:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:8px 20px;border-radius:10px;font-size:12px;font-weight:700;">Skip ›</button>
+</div>
+<div id="confirm">
+  <div class="confirm-box">
+    <h3 id="conf-title">Are you sure?</h3>
+    <p id="conf-msg">This cannot be undone.</p>
+    <div class="confirm-btns">
+      <button class="c-cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="c-ok" id="conf-ok">Confirm</button>
+    </div>
+  </div>
+</div>
+<div id="toast">✓ Done</div>
+<div id="app">
+  <aside>
+    <div class="logo">Adless</div>
+    <div class="sec-label">Hub</div>
+    <div class="nav active" data-view="games-view">🎮 Games</div>
+    <div class="nav" data-view="movies-view">🎬 Movies</div>
+    <div class="nav" data-view="shows-view">📺 Shows &amp; Anime</div>
+    <div class="nav" data-view="chat-view">💬 Chat / Comments</div>
+    <div class="nav" data-view="settings-view">⚙️ Settings</div>
+    <div class="nav discord-btn" onclick="window.open('https://discord.gg/gAe83DUFNT','_blank')">🎮 Join Discord</div>
+    <div id="game-filters">
+      <div class="sec-label">Categories</div>
+      <div class="nav" data-cat="all">🏠 All Games</div>
+      <div class="nav" data-cat="featured">✨ Featured</div>
+      <div class="nav" data-cat="favs">⭐ Favorites</div>
+      <div class="sec-label">Tools &amp; Apps</div>
+      <div class="nav" data-cat="ai">🤖 AI</div>
+      <div class="nav" data-cat="apps">📱 Apps</div>
+      <div class="nav" data-cat="emulator">🖥️ Emulators</div>
+      <div class="sec-label">Games</div>
+      <div class="nav" data-cat="action">💥 Action</div>
+      <div class="nav" data-cat="adventure">🗺️ Adventure</div>
+      <div class="nav" data-cat="arcade">🕹️ Arcade</div>
+      <div class="nav" data-cat="horror">👻 Horror</div>
+      <div class="nav" data-cat="idle">💤 Idle / Clicker</div>
+      <div class="nav" data-cat="minecraft">⛏️ Minecraft</div>
+      <div class="nav" data-cat="multiplayer">👥 Multiplayer</div>
+      <div class="nav" data-cat="fnf">🎤 FNF</div>
+      <div class="nav" data-cat="music">🎵 Music</div>
+      <div class="nav" data-cat="puzzle">🔲 Puzzle</div>
+      <div class="nav" data-cat="racing">🏎️ Racing</div>
+      <div class="nav" data-cat="sports">🏀 Sports</div>
+      <div class="nav" data-cat="strategy">🧠 Strategy</div>
+      <div class="nav" data-cat="flash">⚡ Flash</div>
+    </div>
+    <button class="rand-btn" onclick="playRandom()">🎲 RANDOM GAME</button>
+  </aside>
+  <div id="games-view" class="view active">
+    <header>
+      <input id="search" placeholder="🔍 Search games..." oninput="onSearch()">
+      <div id="counter" style="font-size:12px;font-weight:600;white-space:nowrap;color:var(--text2)">Loading...</div>
+    </header>
+    <div class="grid" id="game-grid"></div>
+    <div class="pager" id="pager"></div>
+  </div>
+  <div id="movies-view" class="view">
+    <header><h1>🎬 Movies</h1></header>
+    <div class="grid" id="movie-grid"></div>
+  </div>
+  <div id="shows-view" class="view">
+    <header><h1>📺 Shows &amp; Anime</h1></header>
+    <div class="grid" id="shows-grid"></div>
+  </div>
+  <div id="seasons-view" class="view">
+    <header><div style="display:flex;align-items:center">
+      <button class="back-btn" onclick="backToShows()">← Back</button>
+      <h1 id="show-title-head">Select Season</h1>
+    </div></header>
+    <div class="grid" id="seasons-grid"></div>
+  </div>
+  <div id="episodes-view" class="view">
+    <header><div style="display:flex;align-items:center">
+      <button class="back-btn" onclick="backToSeasons()">← Seasons</button>
+      <h1 id="season-title-head">Select Episode</h1>
+    </div></header>
+    <div id="eps-grid"></div>
+  </div>
+  <div id="chat-view" class="view">
+    <header><h1>💬 Chat &amp; Comments</h1></header>
+    <iframe id="chat-frame" src="https://padlet.com/dansvarch10/adless-games-chat-bqvilrenyevwy77j" allow="camera;microphone;geolocation" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"></iframe>
+  </div>
+  <div id="settings-view" class="view">
+    <header><h1>⚙️ Settings</h1></header>
+    <div class="s-section">
+      <div class="s-sec">📊 Statistics</div>
+      <div class="stats-grid">
+        <div class="stat-box"><div class="stat-label">Total Games</div><div class="stat-val" id="stat-lib">—</div><div class="stat-sub">in library</div></div>
+        <div class="stat-box"><div class="stat-label">Favorites</div><div class="stat-val" id="stat-favs">0</div><div class="stat-sub">starred</div></div>
+      </div>
+    </div>
+    <div class="s-section">
+      <div class="s-sec">🎨 Display</div>
+      <div class="s-row"><div><div class="s-lbl">Remove Animations</div><div class="s-desc">Disables CSS animations &amp; particles</div></div><label class="tog"><input type="checkbox" id="tog-anim" onchange="applyAnim(this.checked)"><span class="tog-sl"></span></label></div>
+      <div class="s-row"><div><div class="s-lbl">System Cursor</div><div class="s-desc">Restores the default cursor</div></div><label class="tog"><input type="checkbox" id="tog-cursor" onchange="applyCursor(this.checked)"><span class="tog-sl"></span></label></div>
+      <div class="s-row"><div><div class="s-lbl">Disable Particles</div><div class="s-desc">Stops background animation</div></div><label class="tog"><input type="checkbox" id="tog-bg" onchange="applyBgAnim(this.checked)"><span class="tog-sl"></span></label></div>
+      <div class="s-row"><div><div class="s-lbl">Color Inversion</div><div class="s-desc">Inverts UI colors</div></div><label class="tog"><input type="checkbox" id="tog-invert" onchange="applyInvert(this.checked)"><span class="tog-sl"></span></label></div>
+      <div class="s-row"><div><div class="s-lbl">Device Mode</div><div class="s-desc" id="device-mode-lbl">—</div></div><button class="s-danger" style="background:rgba(10,132,255,.15);color:var(--blue);border-color:rgba(10,132,255,.3);" onclick="changeDevice()">Switch</button></div>
+    </div>
+    <div class="s-section">
+      <div class="s-sec">🎨 Accent Color</div>
+      <div class="stat-box"><div class="stat-label">Theme color</div><div class="color-grid" id="color-grid"></div></div>
+    </div>
+    <div class="s-section">
+      <div class="s-sec">🖼 Background</div>
+      <div class="stat-box"><div class="stat-label">Solid Colors</div><div class="bg-swatches" id="bg-swatches"></div></div>
+      <div class="stat-box"><div class="stat-label">Gradients</div><div class="bg-gradients" id="bg-gradients"></div></div>
+      <div class="stat-box"><div class="stat-label">Custom Color</div>
+        <div class="bg-custom-row">
+          <input type="color" class="bg-pick" id="bg-pick" value="#0a84ff" oninput="applyBgCustom(this.value)">
+          <span style="font-size:12px;color:var(--text2)">Pick any color</span>
+          <button class="bg-reset" onclick="askConfirm('Reset background?','Custom background will be removed.',resetBg)">✕ Reset</button>
+        </div>
+      </div>
+    </div>
+    <div class="s-section">
+      <div class="s-sec">💾 Data</div>
+      <div class="s-row"><div><div class="s-lbl">Clear Favorites</div><div class="s-desc">Remove all starred games</div></div><button class="s-danger" onclick="askConfirm('Clear favorites?','All starred games will be removed.',clearFavs)">🗑️ Clear</button></div>
+      <div class="s-row"><div><div class="s-lbl">Reset All Settings</div><div class="s-desc">Restore defaults</div></div><button class="s-danger" onclick="askConfirm('Reset all settings?','Display, theme and background will be reset.',resetAll)">↩️ Reset</button></div>
+    </div>
+    <div class="s-section">
+      <div class="s-sec">ℹ️ About</div>
+      <div class="s-row"><div><div class="s-lbl">Adless OS</div><div class="s-desc">Ad-free hub • Zones + GamePix • Paginated for speed</div></div><span style="font-size:20px">🛡️</span></div>
+    </div>
+  </div>
+</div>
+<div id="player">
+  <div id="player-bar">
+    <span id="player-title">Playing</span>
+    <button class="pbtn rand" onclick="playRandom()">🎲 Random</button>
+    <button id="lock-btn" onclick="toggleLock()" title="Lock mouse to game">🔒 Lock Mouse</button>
+    <button class="pbtn" onclick="fsGame()">⛶ Fullscreen</button>
+    <button class="pbtn cls" onclick="closePlayer()">✕ Close</button>
+  </div>
+  <div id="lock-hint">🔒 Mouse locked — press ESC to unlock</div>
+  <div id="game-wrap" style="flex:1;display:flex;align-items:center;justify-content:center;background:#000;overflow:hidden;">
+    <iframe id="game-frame" allow="autoplay;gamepad;fullscreen" allowfullscreen></iframe>
+  </div>
+</div>
+<script>
+const BUILTIN=[
+  {id:'b-8',title:'Android Emulator',cat:'emulator',img:'https://fabrikbrands.com/wp-content/uploads/Android-Logo-History-1.png',url:'https://appetize.io/embed/dprul2v3lnp2p2okkylszo6tc4?appearance=light&centered=both&channel-name=production&device=pixel7&deviceColor=black&launchUrl=exp://u.expo.dev/933fd9c0-1666-11e7-afca-d980795c5824%253Fruntime-version%3Dexposdk%253A48.0.0&orientation=landscape&params=%7B&snack=fWdRX7Kw7&snack-channel=ZFbeKoK6f2'},
+  {id:'b-7',title:'iOS Emulator',cat:'emulator',img:'https://static.daktilo.com/sites/1689/uploads/2025/04/23/ios-1721717446446-2x-1745411438.png',url:'https://appetize.io/embed/8bnmakzrptf1hv9dq7v7bnteem?autoplay=false&debug=true&device=iphone8+&deviceColor=black&embed=true&orientation=portrait&params=%7B'},
+  {id:'b-6',title:'Kahoot Bots',cat:'apps',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Kahoot_Logo.svg/960px-Kahoot_Logo.svg.png',url:'https://kahootbot.net/'},
+  {id:'b-5',title:'Gemini AI',cat:'ai',img:'https://stage.maaal.com/storage/uploads/photos/news/2026-01/1854102090075582.png',url:'https://gemini.google.com/app'},
+  {id:'b-4',title:'Claude AI',cat:'ai',img:'https://sm.pcmag.com/pcmag_me/review/c/claude/claude_e17j.jpg',url:'https://claude.ai/new'},
+  {id:'b-3',title:'Deep AI',cat:'ai',img:'https://www.fahimai.com/wp-content/uploads/2025/11/Fahim-AI-7-48.png',url:'https://deepai.org/'},
+  {id:'b-2',title:'DeepSeek AI',cat:'ai',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTv42AI3aFfhB6SOcRe9oTl5DxYo6JCb9Lfg&s',url:'https://chat.deepseek.com/'},
+  {id:'b-1',title:'ChatGPT AI',cat:'ai',img:'https://threatconnect.com/wp-content/uploads/2025/02/ChatGpt-logo.png',url:'https://chatgpt.com/'},
+  {id:'b0',title:'Perplexity AI',cat:'ai',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuh2FuORXDUahd7RM2AioEcwxUAI4YvOHp5A&s',url:'https://www.perplexity.ai/'},
+  {id:'b1',title:'Dashmetry',cat:'action',img:'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/322170/capsule_616x353.jpg',url:'https://1games.io/game/dashmetry/'},
+  {id:'b2',title:'Chill Guy Clicker',cat:'idle',img:'https://1games.io/data/image/game/chill-guy-clicker/chill-guy-clicker.png',url:'https://game.azgame.io/chill-guy-clicker/'},
+  {id:'b3',title:'Capybara Clicker',cat:'idle',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDeO2f3JXsMB3bTj1pDdil6-JwGeKSAKmkQA&s',url:'https://capybaragame.io/game/capybara-clicker/'},
+  {id:'b4',title:'Labubu Clicker',cat:'idle',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPZf6amYv_hrmrzfnO14B2eROAWDJTWalWVA&s',url:'https://1games.io/game/labubu-clicker/'},
+  {id:'b5',title:'Slope Xtreme',cat:'arcade',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT91j80gISLYLzB8LUhu7zoST3SNGpNB_nXJw&s',url:'https://1games.io/game/slope-xtreme/'},
+  {id:'b6',title:'Slope 2',cat:'arcade',img:'https://dashmetry.com/cache/data/image/game/slope-2/slope-2-m546x307.webp',url:'https://1games.io/game/slope-2/'},
+  {id:'b7',title:'Slope 3',cat:'arcade',img:'https://slope3.com/upload/imgs/options/slope-3-banner.png',url:'https://html5.101games.io/game/Slope3/index.html'},
+  {id:'b8',title:'Slope Cyber',cat:'arcade',img:'https://i.ytimg.com/vi/T8fb6F1XwqM/hq720.jpg',url:'https://azgames.io/game/slope-cyber/'},
+  {id:'b9',title:'Slope Legacy',cat:'arcade',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQu21VE-0aK8Dt8b5Lw_UrPIbCT1c50kGvQLA&s',url:'https://azgames.io/game/slope-legacy/'},
+  {id:'b10',title:'67 Clicker',cat:'idle',img:'https://zapgames.io/data/image/game/67-clicker.jpg',url:'https://www.hoodamath.com/mobile/games/67-clicker/game.html?nocheckorient=1'},
+  {id:'b11',title:'Slope+',cat:'arcade',img:'https://sloperun.org/data/image/posts/slope-image.jpg',url:'https://nebulaplay.site/storage/Slope.html'},
+  {id:'b12',title:'Chicken Jockey',cat:'idle',img:'https://chickenjockeyclicker.io/data/image/game/chicken-jockey-clicker-banner.png',url:'https://game.azgame.io/chicken-jockey-clicker/'},
+  {id:'b13',title:'Slippery Slope',cat:'racing',img:'https://static.playhop.com/images/2d413_1890793_92da2/4b0576df8/2a0000018748a544_116be46/b705ded35f3a1f67d103_609d64/orig',url:'https://g.vseigru.net/11/igra-skolzkij-cpusk/'},
+  {id:'b14',title:'Tung Sahur',cat:'idle',img:'https://assets.nintendo.com/image/upload/q_auto/f_auto/store/software/switch/70010000098678/3078cbf5b901860b00db096136f51361daa3d873ccdb3f4b346bc4200adf3642',url:'https://game.azgame.io/tung-sahur-clicker/'},
+  {id:'b15',title:'Chicken Combat',cat:'action',img:'https://i.ytimg.com/vi/Bw-K3kE_Vj4/hq720.jpg',url:'https://1games.io/game/chicken-jockey-combat/'},
+  {id:'b16',title:'Stunt Bike',cat:'racing',img:'https://m.media-amazon.com/images/I/81iS4tDkIBL.jpg',url:'https://g.igroutka.ru/games/793/2xTdm6GrXEuN0Kwq/fe831138-3321-40ed-b8cd-f1c482091e04/index.html'},
+  {id:'b17',title:'Deltarune',cat:'adventure',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFbJ6zpawFpZAAUO1UHfgoLBb6liCKV12_mVb4MVio7wIVeQ1k9gSemC9Ar7PYsiFtdYzf_w&s=10',url:'https://ccgstatic.com/games/game_0589_030b0508b5a5e8/index.html'},
+  {id:'b18',title:'Mini Shooters',cat:'action',img:'https://cdn.aptoide.com/imgs/c/9/0/c900b2baaf6cd8de5b159eef8a573687_fgraphic.png',url:'https://db.quackprep.org/html/mini_shooters/'},
+  {id:'b19',title:'Grow Garden',cat:'strategy',img:'https://media.licdn.com/dms/image/v2/D5612AQFTQr4llME_qg/article-cover_image-shrink_720_1280/B56ZfGkC.3GoAI-/0/1751383030029',url:'https://db.quackprep.org/html/grow_a_garden/'},
+  {id:'b20',title:'Deja Boom',cat:'action',img:'https://img.itch.zone/aW1hZ2UvMzc4MzYxOC8yMjU2OTk0MS5wbmc=/original/jnsqEP.png',url:'https://playminigames.net/content/gamebinary/html5/dejaboom/index.html'},
+  {id:'b21',title:'Undertale',cat:'adventure',img:'https://s3.amazonaws.com/gameopedia_covers/covers/504052/afa774e7566c0e592f9a3d958a70d73e.png',url:'https://ccgstatic.com/games/game_f23f_aa7b2677e4e1c8/index.html'},
+  {id:'b22',title:'Gulper.io',cat:'multiplayer',img:'https://tcf.admeen.org/game/17000/16968/400x246/gulper-io.jpg',url:'https://gulper.io/'},
+  {id:'b23',title:'Masked Forces',cat:'action',img:'https://store-images.s-microsoft.com/image/apps.54835.13988955309536926.32d5d34f-ce4d-4226-8a67-b0c47ea3b177.05df84b9-3e53-4841-b500-da564b760f55?q=90&w=480&h=270',url:'https://db.quackprep.org/html/masked_special_forces/'},
+  {id:'b24',title:'Suika Game',cat:'strategy',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmg5ZmhAeBiadA9v5tE83opuZQezOhAUxmsA&s',url:'https://ccgstatic.com/games/game_a857_f1261a87ea8d/index.html'},
+  {id:'b25',title:'Nighttime Visitor',cat:'horror',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpc2po9VtgMuo6rLgCJ7VMbGVci5mqHO0ypQ&s',url:'https://ccgstatic.com/games/game_ebaf_c84839ff543da/index.html'},
+  {id:'b26',title:'Bloxorz',cat:'puzzle',img:'https://www.coolmathgames.com/sites/default/files/Bloxorz_OG-logo.jpg',url:'https://ccgstatic.com/games/game_a87e_24923a4fc7de4/index.html'},
+  {id:'b27',title:'Brookhaven',cat:'multiplayer',img:'https://tr.rbxcdn.com/180DAY-808370c4e617d8ce593b16f54eaf645d/768/432/Image/Webp/noFilter',url:'https://st.8games.net/9/8g/igra-brukkhejven/'},
+];
+const ZONES_URL='https://cdn.jsdelivr.net/gh/gn-math/assets@main/zones.json';
+const COVER='https://cdn.jsdelivr.net/gh/gn-math/covers@main';
+const HTMLB='https://rawcdn.githack.com/gn-math/html/main';
+// ── UNIFIED 3-TAG ENGINE ─────────────────────────────────────────
+const TAG_PAD={arcade:['action','puzzle'],action:['arcade','multiplayer'],puzzle:['arcade','strategy'],sports:['multiplayer','arcade'],racing:['arcade','action'],idle:['puzzle','strategy'],strategy:['puzzle','idle'],multiplayer:['arcade','action'],adventure:['arcade','action'],horror:['action','arcade'],music:['arcade','puzzle'],minecraft:['adventure','strategy'],fnf:['music','arcade'],emulator:['arcade','action'],ai:['apps','arcade'],apps:['ai','arcade'],flash:['arcade','action']};
+const TAG_TC={ai:'tag-ai',apps:'tag-apps',emulator:'tag-emulator',fnf:'tag-fnf',horror:'tag-fnf',racing:'tag-zone',sports:'tag-zone',puzzle:'tag-builtin',idle:'tag-apps',music:'tag-fnf',multiplayer:'tag-builtin',adventure:'tag-zone',action:'tag-builtin',strategy:'tag-apps',minecraft:'tag-zone',arcade:'tag-zone',flash:'tag-emulator'};
+function detectTags(title, extra, fixedCat){
+  const n=(title||'').toLowerCase();
+  const e=(extra||'').toLowerCase();
+  const c=n+' '+e;
+  const all=[];
+  if(fixedCat&&['ai','apps','emulator'].includes(fixedCat)){all.push(fixedCat);}
+  if(/friday night funkin|fnf|funkin/.test(c))all.push('fnf');
+  if(/emulator|gba|n64|nds|snes|gameboy|nes\b/.test(c))all.push('emulator');
+  if(/\bai\b|artificial intelligence/.test(c))all.push('ai');
+  if(/fnaf|five nights|freddy|backroom|granny|baldi|horror|bendy|buckshot|scary|fear/.test(c))all.push('horror');
+  if(/moto x3m|drift|highway|racing|race|road|stunt|hill climb|snow rider|poly track|driving|car game|kart|speed/.test(c))all.push('racing');
+  if(/minecraft|crafting|build|sandbox/.test(c))all.push('minecraft');
+  if(/magic tiles|sprunki|osu|music|rhythm|dance|dj|beat/.test(c))all.push('music');
+  if(/basket|football|soccer|baseball|bowling|tennis|golf|8 ball|pool|retro bowl|sport/.test(c))all.push('sports');
+  if(/clicker|idle|cookie|tycoon|incremental|tap game/.test(c))all.push('idle');
+  if(/puzzle|wordle|2048|sort|slide|tetris|chess|minesweeper|match|maze|tile|brain|logic|solitaire|mahjong/.test(c))all.push('puzzle');
+  if(/tower defense|strategy|state\.io|territorial|plants vs|world box|tactic/.test(c))all.push('strategy');
+  if(/\.io\b|1v1|rooftop|basket bros|boxing|brawl|2player|co-op|versus|pvp|multiplayer/.test(c))all.push('multiplayer');
+  if(/vex|run \d|bitlife|bob the robber|undertale|hollow|deltarune|papers please|adventure|rpg|quest|explore/.test(c))all.push('adventure');
+  if(/slope|ovo|flappy|geometry dash|coreball|tunnel rush|mario|fruit ninja|doom|platform|runner|endless|dash|jump/.test(c))all.push('arcade');
+  if(/stickman|attack|bazooka|war|ninja|shooting|gun|ragdoll|combat|battle|fight|shoot|sniper|fps|bullet/.test(c))all.push('action');
+  const unique=[...new Set(all)];
+  if(unique.length===0)unique.push(fixedCat||'arcade');
+  while(unique.length<3){
+    const extras=TAG_PAD[unique[0]]||['arcade','action'];
+    let pushed=false;
+    for(const e of extras){if(!unique.includes(e)){unique.push(e);pushed=true;break;}}
+    if(!pushed)break;
+  }
+  return unique.slice(0,3);
+}
+function tagsHtml(cats){return cats.map(c=>`<span class="tag ${TAG_TC[c]||'tag-zone'}">${c}</span>`).join('');}
+function guessGenre(n,s){return detectTags(n,(s||[]).join(' '))[0];}
+const MOVIES=[{title:'Big Buck Bunny',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Big_buck_bunny_poster_big.jpg/640px-Big_buck_bunny_poster_big.jpg',url:'https://www.youtube.com/embed/aqz-KE-bpKQ?autoplay=1'},{title:'Cars',img:'https://i0.wp.com/deo.vvg.mybluehost.me/website_b13042cd/wp-content/uploads/2023/06/cars-dvd-Stn7.jpeg?resize=1200%2C689&ssl=1',url:'https://drive.google.com/file/d/1PHbwDSv_nzy9KVoRn9561Le-6-C2uUQa/preview'},{title:'Superman (2025)',img:'https://i.ytimg.com/vi/uhUht6vAsMY/maxresdefault.jpg',url:'https://drive.google.com/file/d/1uFvxKNVe_IgiAlGBBl7cU9drIhqk9sZZ/preview'},{title:'South Park Movie',img:'https://thumbnails.cbsig.net/CBS_Production_Entertainment_VMS/2021/11/10/1972863555958/SPBLU_SAlone_16_9_1920x1080_1040472_1920x1080.jpg',url:'https://drive.google.com/file/d/1ItNeNH0BprkhyVBUDP_JWrXS-TyJUYbj/preview'},{title:'Deadpool',img:'https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/8aafac1e-c525-485a-8c6a-c50d10c518ae/compose?aspectRatio=1.78&format=webp&width=1200',url:'https://drive.google.com/file/d/1bwsdEKIuVL8KM601xQ6sdi8-8g2G4TXN/preview'},{title:'Deadpool 2',img:'https://media.gq-magazine.co.uk/photos/5d138edd7fcc8e622b81f559/16:9/w_2560%2Cc_limit/deadpool-01-gq-1may18_b.jpg',url:'https://drive.google.com/file/d/1U-OCd-8xnP0YSUgOSrk1309HRh97w4Ao/preview'},{title:'Deadpool & Wolverine',img:'https://deadline.com/wp-content/uploads/2024/01/Deadpool.jpg?w=681&h=383&crop=1',url:'https://drive.google.com/file/d/1D5VAupqKSlgiQuCm-c9sHg9AmpX-DdmY/preview'},{title:"Child's Play",img:'https://m.media-amazon.com/images/M/MV5BODRiOWRmYWQtYTcxOS00YmEyLWIzODYtN2RhZmI4NDkwZmVlXkEyXkFqcGdeQXVyNzU1NzE3NTg@._V1_QL75_UX500_CR0,47,500,281_.jpg',url:'https://drive.google.com/file/d/1FPO2K8Oqb1O3qm1qb57NhZHhaGCvQjAz/preview'},{title:'Avengers: Endgame',img:'https://m.media-amazon.com/images/I/81ExhpBEbHL._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/1lPd4YUt6wqWXHHGg5KaFiKsOFT2OjPtU/preview'},{title:'Avengers: Infinity War',img:'https://m.media-amazon.com/images/I/81XOndDaoCL._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/1P-f1NWBZ_lJ2U2V-Q1GRTMaK-V_HHJZ8/preview'},{title:'Spider-Man: No Way Home',img:'https://m.media-amazon.com/images/I/71KNDpH0rML._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/1AGGpFGnk7kJoRRbT2dFX-MeULqiN11bQ/preview'},{title:'John Wick',img:'https://m.media-amazon.com/images/M/MV5BMTU2NjA1ODgzMF5BMl5BanBnXkFtZTgwMTM2MTI4MjE@._V1_FMjpg_UX1000_.jpg',url:'https://drive.google.com/file/d/1X9Kflcg0LuRjceV6JghCzs49px8cRTIk/preview'},{title:'John Wick: Chapter 2',img:'https://m.media-amazon.com/images/I/81yQppFs6kL._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/1gzsZEVTNEb93tSa0nuzlpR2n20D4Dyx9/preview'},{title:'The Super Mario Bros. Movie',img:'https://m.media-amazon.com/images/I/91zqGNzwk5L.jpg',url:'https://drive.google.com/file/d/1kliJw8luDNdGGnEbqjQgPCkfDzpC0wTq/preview'},{title:'Coco',img:'https://m.media-amazon.com/images/I/61rCC9HzCNL._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/194M4dGCwh1hTxVM1-_axnLSdt4trnbK2/preview'},{title:'Zootopia',img:'https://m.media-amazon.com/images/M/MV5BOTMyMjEyNzIzMV5BMl5BanBnXkFtZTgwNzIyNjU0NzE@._V1_FMjpg_UX1000_.jpg',url:'https://drive.google.com/file/d/1HYeIrbf8A-vfvJsvYP59AQzG9l8nt03h/preview'},{title:'Wreck-It Ralph',img:'https://m.media-amazon.com/images/M/MV5BNzMxNTExOTkyMF5BMl5BanBnXkFtZTcwMzEyNDc0OA@@._V1_.jpg',url:'https://drive.google.com/file/d/11NQ1_ecO2FTIhofVPIfakshgSBnR6ngC/preview'},{title:'Oppenheimer',img:'https://m.media-amazon.com/images/S/pv-target-images/5a3b8d94ae9ceae5f4ddcef359d4f97f3122c07d4c677db2a5e23e6a91e75c5d._SX780_.jpg',url:'https://drive.google.com/file/d/1GLqywDPqfZSLmLAiKC8j2l0o52cAGP8S/preview'},{title:'Wicked',img:'https://m.media-amazon.com/images/I/81cmJpAKEVL._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/1X8CRJUMX0ItgIUNbEUMok2sX9vd61rvt/preview'},{title:'Barbie',img:'https://s3.us-east-1.amazonaws.com/product-image-bucket-prod-us/656191-Product-0-I-638324993407195372.jpg',url:'https://drive.google.com/file/d/1K88LvZ6q9KRwsdiVQ72Wrh5DQqWVLkd3/preview'},{title:'The Black Phone',img:'https://m.media-amazon.com/images/I/61v5wu6Z4UL._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/1ibOSQ1uTdu7_VaEZ0X7KKFpXqB9Rsuzo/preview'},{title:'Home Alone',img:'https://lumiere-a.akamaihd.net/v1/images/image_ed8d7a4e.jpeg?region=0%2C0%2C800%2C1200',url:'https://drive.google.com/file/d/18YKNCTokG3B7ZWzCE3thunyDJMktLxnm/preview'},{title:'The Mitchells vs. The Machines',img:'https://i.scdn.co/image/ab67616d0000b273730ed87b6bb3bb39665504fb',url:'https://drive.google.com/file/d/1Ze0x8ryFdKcKClEWJ7i6ALBPwnzjznFB/preview'},{title:'Black Adam',img:'https://m.media-amazon.com/images/M/MV5BYmM3OTM4NDktMmI2NS00OWU0LTg4OTQtNjZhMmFkYjhmOGY1XkEyXkFqcGc@._V1_.jpg',url:'https://drive.google.com/file/d/1B-Kb1tedWlkMlBWpDj8S42HfjLFUUVR0/preview'},{title:'Captain America: Brave New World',img:'https://m.media-amazon.com/images/I/71IgPTlki7L._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/1pJ5N0z8bQFpqeMx2UrZqrU1526ygzxDm/preview'},{title:'The Flash',img:'https://m.media-amazon.com/images/M/MV5BYmE2NzBjNGUtNTJiMy00N2UxLWEyYzMtYzFjODFhMGZlOTgzXkEyXkFqcGc@._V1_.jpg',url:'https://drive.google.com/file/d/18P394XXdY1k_JX4oBTkZubBWERxZ-blz/preview'},{title:'Hotel Transylvania',img:'https://m.media-amazon.com/images/M/MV5BZjcyM2JmMGYtZWVjZC00YjljLWJjNzktYTU5ZjBhMjMwYjQzXkEyXkFqcGc@._V1_.jpg',url:'https://drive.google.com/file/d/1gZ4FVX5GLCSv2-i_sabXWhgl9u_3FeOB/preview'},{title:'Happy Gilmore',img:'https://m.media-amazon.com/images/I/71kHI+fUlPL._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/0B_gF_cJaMa7FZ1ZJYnp6NnN0NXM/preview'},{title:'Mufasa: The Lion King',img:'https://m.media-amazon.com/images/I/81ETY9fq1YL._AC_UF894,1000_QL80_.jpg',url:'https://drive.google.com/file/d/1fpkFiPnyvjxCtN6a89i-U2H1cr5_Y_HC/preview'},{title:'Avatar: The Way of Water',img:'https://lh4.googleusercontent.com/proxy/jTL6IVbQ8pwKvriiE3zj_ua7Dem8b6Tn5B06I82jPKSzpT8ZV0R34dOFqAIGFiB_wbC0BhOiE8lDN4qytsOHCmsE3pys6CKJhuuesBqgq1PM28HF',url:'https://drive.google.com/file/d/1JttHmQ0nz7UhvgK0QDUJP5vBQUPGkfTX/preview'}];
+const SHOWS=[{title:'South Park',img:'https://upload.wikimedia.org/wikipedia/en/5/59/South_Park.png',seasons:[{name:'Pilots',img:'https://www.sling.com/whatson/entertainment/animation/media_10ac90be9a4010ad5553034af903ad659fad96df8.jpg?width=1200&format=pjpg&optimize=medium',episodes:[{title:'Jesus vs. Frosty',url:'https://drive.google.com/file/d/1wQt39GBY_xlsC-1OM095hHTZc2e3Hwti/preview'},{title:'Jesus vs. Santa',url:'https://drive.google.com/file/d/1r6Q7qENTnGZG7BeU_sJtNHhnCJwN1zAG/preview'},{title:'The Unaired Pilot',url:'https://drive.google.com/file/d/1ld1Dc2Mf1gJrQUpEEOSB4bFysJfFir80/preview'}]},{name:'Season 1',img:'https://www.sling.com/whatson/entertainment/animation/media_10ac90be9a4010ad5553034af903ad659fad96df8.jpg?width=1200&format=pjpg&optimize=medium',episodes:[{title:"Cartman Gets an Anal Probe",url:'https://drive.google.com/file/d/1z9D2z36uRaKPVzA6adfMsr3vDgRoRL4e/preview'},{title:'Weight Gain 4000',url:'https://drive.google.com/file/d/13uEDz-xD_mVygP2gLQOsvn1x1XRn5Z_T/preview'},{title:'Volcano',url:'https://drive.google.com/file/d/1g_RYiGjBWNnfGcKUolc-IRrqUMZT9hx-/preview'},{title:"Big Gay Al's Big Gay Boat Ride",url:'https://drive.google.com/file/d/1nSW4LUNBH1Idkx4cv5lv__bY5ZlK0fqJ/preview'},{title:'An Elephant Makes Love to a Pig',url:'https://drive.google.com/file/d/1rjeZCvcGI8w__X29uFChkP7V8QwDMXOK/preview'},{title:'Death',url:'https://drive.google.com/file/d/1tdFCEmtS_oRvn-ZLktUU1KHXjuc-gsuW/preview'},{title:'Pinkeye',url:'https://drive.google.com/file/d/13VG3rUGLJpASJa_1TN9oPyBo11S6L_kR/preview'},{title:"Starvin' Marvin",url:'https://drive.google.com/file/d/14jmlzRYjKWV1I8uAM0b20FeJnHIpe4lr/preview'},{title:'Mr. Hankey, the Christmas Poo',url:'https://drive.google.com/file/d/1lseKSk2Ivob-z9CYKL93hb0W8DK_aCZo/preview'},{title:'Damien',url:'https://drive.google.com/file/d/1MKA1w3Lm5vMsDFAitlhFanud8bX_TaSD/preview'},{title:"Tom's Rhinoplasty",url:'https://drive.google.com/file/d/1VVunOY9r6ZX4NBIl1JAFnFNDJowc1c0H/preview'},{title:'Mecha-Streisand',url:'https://drive.google.com/file/d/1fdd-3dWLCtcEQqfiTHswUlVTGT21ytD1/preview'},{title:"Cartman's Mom is a Dirty Slut",url:'https://drive.google.com/file/d/1y4LUMC8LCUPWPIzUr5LPxcSjehpC9wFL/preview'}]}]},{title:'Legends of Chamberlain Heights',img:'https://images.justwatch.com/backdrop/16476583/s640/legends-of-chamberlain-heights',seasons:[{name:'Season 1',img:'https://i.ytimg.com/vi/Arf_gU2eesg/maxresdefault.jpg',episodes:[{title:'Jamallies',url:'https://drive.google.com/file/d/1FjbFbW3QH4p57tJ9Ds3ASC6I5rQB3sKT/preview'},{title:'Child Please',url:'https://drive.google.com/file/d/1mq2P4tj_PP6LP3CZfoIuJCrTcdanCo9o/preview'},{title:'Come Out to Play',url:'https://drive.google.com/file/d/1J1tbb8lV28a62LM9I1iDkVtCC0dM2IKM/preview'},{title:'Inspired by Isis',url:'https://drive.google.com/file/d/1xYk8DkQxhP28Y0iTtCyxPI8n2-wmRzdZ/preview'},{title:'The Legend of Tupaquia',url:'https://drive.google.com/file/d/1J-vLP-3z8sz0I_X1Wyp8mMmTtdcr6VEi/preview'},{title:'Class President',url:'https://drive.google.com/file/d/12fhBFP3gyDB5wO-1-B5dpiuZJVMe5gDY/preview'},{title:'Cane and Disabled',url:'https://drive.google.com/file/d/10OFFm8E0P2FXWphbw2UqU5cA_S_T9AAv/preview'},{title:'End of Days',url:'https://drive.google.com/file/d/1h7weCXsQ78j4a22Uj2cYt-3fWUTm4v1z/preview'},{title:'More than a Videogame',url:'https://drive.google.com/file/d/1pPvoFgTlLrTqQttpuINMhzfRsdpoh14C/preview'},{title:'25th Hour',url:'https://drive.google.com/file/d/1WlolKpCcZXnrIZ3bzQwPMpZNPd5jeY58/preview'}]}]},{title:'Death Note',img:'https://m.media-amazon.com/images/I/61k3qe5zitL._AC_UF894,1000_QL80_.jpg',seasons:[{name:'Season 1',img:'https://m.media-amazon.com/images/I/61k3qe5zitL._AC_UF894,1000_QL80_.jpg',episodes:["1K105qCMt6ZfvmL5C93gVFqhIyTUOa-Pd","1WM8EsBaHfsPUX-dTJaWBWX36sB-TBSGh","1urqp5FB98tPtfwbHLm1uNKuQEkmARpJK","1m317hzYib_At1EFS30cI_KUEIVhvs4Kf","1QPyCQWXXD_fpLMvYMvJJaZyUqOD7Xp6_","1RjLVjMuoGMvchl3bH2ApeUMvD9g36syh","1G8ojkjTllEmQifBl6Sm9KgpuBv_jrs1x","1zcxf4GiC--tRE38SdVek92XNnh1yRrAb","1p6vaJjEJRLJvvKmNddymbPDHwzvtwkY3","1rwyQb5zpWNvgfLDVDrUuKn03aXqGmgS7","1sdus11t1EvVMv300QIfCMv6EtX2WxaRw","1RLEuL8aqVSgNryoy-tIATLF94WyYpqM5","1QwFnYn-m2t3QP44ztOH8vODm-NNk2gVy","1tbFLHq3sGTi79sJv77xMglzlLkWiVDF5","1OkdFJpDMd8iKzfBwtCW08DKEeHBM5F7A","1s4uYyO5Y7l7JoHn2NQttoDBUfvLQaaH0","1i76OExrUlztOWZdeCIuQTgMLjtTgXGDp","1B6OFquNnGZZIbJqBvbpqq3o2VzOOltlt","1CLjLog7ZJabUiILKS-KPzil0U5A1Hkui","1ZzH44zPaWlE5QsNlZ4dQeuwkG_l68u5k","1SogVvJoENVKskhgSFp7IdRUT5Q9Hdj0C","1SF7hZ_yOj-94V1Z_gOxmu5D5YgiAO-YB","1sSRMJWQz4W4hn2Iwf1GrtaNHJRtzWDge","14S1rJn0Tm4CAuV1_d-kZXhr3CiG4pAtE","1l1uucyr_IgGrzBU2C-2oTWhpb-l5RaXQ","1D6wIPLcB-icS8o7iJPXww4EqBd9E7m6O","1xc6AxJztA11JUH8vKxvDTD2TV8eCC1tv","1pNwQvCDs2Jda-fv4_d0dHQncX_MfvRpD","1uT3zoLTON-rAvyzPheDTxIIcep-Jx7Is","1UItK1v18ivuoicbxz-1VnbMi7Vh1IifI","1whMYOykC2se0PUyggrPmKd78NaD36EJU","1Gf6FdZR29AxRLL0-hBapITJv2jBgO0Ex","1iQpQaWZHzVuKkQpRvDnwdvGgqNPIOaWv","1kdZ7yWX1JSin3uFhHKT-kth38dws4J0B","1OG49KoxrL47vq5l55u95SKlQhazjQ6RY","1G32eo8AnULmkizmUz_6XERkEErXgiPF8","1Jd2eEtz2kK2jNwqwoiZyO_6USL0ibm9r"].map((id,i)=>({title:'Episode '+(i+1),url:`https://drive.google.com/file/d/${id}/preview`}))}]},{title:'Invincible',img:'https://m.media-amazon.com/images/I/71A4CV+GciL._AC_UF894,1000_QL80_.jpg',seasons:[{name:'Season 1',img:'https://m.media-amazon.com/images/I/71A4CV+GciL._AC_UF894,1000_QL80_.jpg',episodes:[{title:"It's About Time",url:'https://drive.google.com/file/d/19iBD4LWH0kL5kmdWz5HGMtQk9VUFCY0B/preview'},{title:'Here Goes Nothing',url:'https://drive.google.com/file/d/1NX4ggLN3xufKl1RTfJFqscXLQo28Sjoo/preview'},{title:"Who You Calling Ugly?",url:'https://drive.google.com/file/d/1k0XoE97ebTZQIxWSeIbUuukWGHRhgoLg/preview'},{title:"That Actually Hurt",url:'https://drive.google.com/file/d/1KONmjVdobgu6QEEHtgN8viDiTX9cxG5Y/preview'},{title:"We Need to Talk",url:'https://drive.google.com/file/d/1mlO3fFTvsmHeJ28kP79r28v_VpKj26Iz/preview'},{title:'Where I Really Come From',url:'https://drive.google.com/file/d/1GMXFaYwDC_QujDjOQVXLn3PQ2qLwVNXH/preview'}]},{name:'Season 2',img:'https://m.media-amazon.com/images/I/71A4CV+GciL._AC_UF894,1000_QL80_.jpg',episodes:[{title:'A Lesson For Your Next Life',url:'https://drive.google.com/file/d/1MVfbtAh0Uv-EKwyafE-hAU3nRvDGuJYS/preview'},{title:'In About Six Hours...',url:'https://drive.google.com/file/d/120WaQ6r2qGIcyycoGbFkneEffbFyPg9C/preview'},{title:"It's Been A While",url:'https://drive.google.com/file/d/1AVz5vwFbGXBcHDeB-PdcmOMh1YyfGFBx/preview'}]}]},{title:'Wednesday',img:'https://m.media-amazon.com/images/M/MV5BMDE1NjNmZjgtZTg0OC00NjkxLWEzYzItMDNkMTc3YjgxZWQyXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg',seasons:[{name:'Season 1',img:'https://m.media-amazon.com/images/M/MV5BMDE1NjNmZjgtZTg0OC00NjkxLWEzYzItMDNkMTc3YjgxZWQyXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg',episodes:[{title:"Wednesday's Child Is Full of Woe",url:'https://drive.google.com/file/d/1GD7dmbbwf0tgmc_0Bt6Rq4qXV7KSTCMD/preview'},{title:'Woe Is the Loneliest Number',url:'https://drive.google.com/file/d/1uq1jm6pM1e1QcAFVcepLeTEzUsSRaa9E/preview'},{title:'Friend or Woe',url:'https://drive.google.com/file/d/1Sv4hMQIoO3CZ7WbzuXOWa5c_NTv6wSLM/preview'},{title:'Woe What a Night',url:'https://drive.google.com/file/d/1uw2PCLsJ0DjfGi_-_VERVsqyY_hhkzQ6/preview'},{title:'You Reap What You Woe',url:'https://drive.google.com/file/d/1HbBi8TcyeRkBvqBk5xSO9PSL3l7ZqNwE/preview'},{title:'A Murder of Woes',url:'https://drive.google.com/file/d/13-JQKH6qDYi9tBMY1v_mHnfh_sMDDNxS/preview'}]}]},{title:'Sakamoto Days',img:'https://m.media-amazon.com/images/M/MV5BNTM4MmZiNjEtOGY0MC00MGM0LTkxZjEtODUxMmJmZWEwOWU3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg',seasons:[{name:'Season 1',img:'https://m.media-amazon.com/images/M/MV5BNTM4MmZiNjEtOGY0MC00MGM0LTkxZjEtODUxMmJmZWEwOWU3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg',episodes:[{title:'The Greatest Hitman',url:'https://drive.google.com/file/d/1iouyFvGPLQQG390X1yxpYOnfZCFlk5rI/preview'},{title:"Shin's Misfortune",url:'https://drive.google.com/file/d/1lAE_nJje_Mssglei0Hml1qlINGiTnETj/preview'},{title:'The Quiet Life',url:'https://drive.google.com/file/d/15xW8LtrA2Sf7nKWAmBfdPSY3dDNtdCx7/preview'},{title:'The Order',url:'https://drive.google.com/file/d/15KAJ3X2-YNXFEEY8mlqcG9Bt5bjldsFH/preview'}]}]},{title:'Cobra Kai',img:'https://m.media-amazon.com/images/M/MV5BMjQwNzM0ODcyNV5BMl5BanBnXkFtZTgwMTU5MDU2NzM@._V1_.jpg',seasons:[{name:'Season 1',img:'https://m.media-amazon.com/images/M/MV5BMjQwNzM0ODcyNV5BMl5BanBnXkFtZTgwMTU5MDU2NzM@._V1_.jpg',episodes:[{title:'Ace Degenerate',url:'https://drive.google.com/file/d/1creJ_0fa7pU0Y--FQEiJLMoAOjehXOGK/preview'},{title:'Strike First',url:'https://drive.google.com/file/d/1xFxMrl46i_e13CBHMiAiyhHtaj4_YiL_/preview'},{title:'Esqueleto',url:'https://drive.google.com/file/d/1iwEfqnbTiJWny1z5PGKfRwE7cvGPGE2w/preview'},{title:'Cobra Kai Never Dies',url:'https://drive.google.com/file/d/1P5eP81RSciD-ak0uo6yg1ENGF0CGpVJN/preview'},{title:'Mercy',url:'https://drive.google.com/file/d/19uOsaq1o7g_HR5Ige8sCE3O4Lq3zqFzp/preview'}]}]},{title:'One-Punch Man',img:'https://m.media-amazon.com/images/I/81s5qTz80SL._UF1000,1000_QL80_.jpg',seasons:[{name:'Season 1',img:'https://m.media-amazon.com/images/I/81s5qTz80SL._UF1000,1000_QL80_.jpg',episodes:[{title:'The Strongest Man',url:'https://drive.google.com/file/d/1DarTqiJ4GWvKnkuDGEixFjh3iFJjMJ7B/preview'},{title:'The Lone Cyborg',url:'https://drive.google.com/file/d/1LknLsS1zJMFiFHgIcnbFsFJaYtA_g0kE/preview'},{title:'The Obsessive Scientist',url:'https://drive.google.com/file/d/1IIFirlsBKtVs2XPGUiVlQc0wnSz0SaeK/preview'}]}]}];
+// STATE
+const SK='adless_settings_v3',BK='adless_bg_v3',TK='adless_theme_v3',FK='adless_favs_v3';
+let favs=JSON.parse(localStorage.getItem(FK)||'[]');
+let currentCat='all',currentView='games-view',selectedShow=null,selectedSeason=null;
+let zones=[],gpGames=[];
+let filteredList=[],currentPage=1;
+const PER_PAGE=500;
+function loadS(){try{return JSON.parse(localStorage.getItem(SK))||{};}catch(e){return{};}}
+function saveS(s){localStorage.setItem(SK,JSON.stringify(s));}
+function loadBg(){try{return JSON.parse(localStorage.getItem(BK))||{};}catch(e){return{};}}
+function saveBg(b){localStorage.setItem(BK,JSON.stringify(b));}
+function loadTheme(){return localStorage.getItem(TK)||'#0a84ff';}
+function saveTheme(c){localStorage.setItem(TK,c);}
+// DEDUP
+function nt(t){return t.toLowerCase().replace(/[^a-z0-9]/g,'');}
+let kTitles=new Set(),kUrls=new Set();
+function rebuildDedup(){kTitles=new Set();kUrls=new Set();[...BUILTIN,...zones].forEach(g=>{kTitles.add(nt(g.title));kUrls.add(g.url);});}
+
+// ── CARD HTML CACHE ──────────────────────────────────────────────
+// Each game gets its card HTML built once. Page switching just slices strings.
+const cardCache=new Map(); // id -> static card HTML (no fav star, added dynamically)
+// Pre-bake cats onto BUILTIN games now
+BUILTIN.forEach(g=>{if(!g.cats)g.cats=detectTags(g.title,'',g.cat);if(!g.cat)g.cat=g.cats[0];});
+
+function buildCardHtml(g){
+  const cats=g.cats||(g.cats=detectTags(g.title,'',g.cat));
+  const stitle=g.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const tags=cats.map(c=>`<span class="tag ${TAG_TC[c]||'tag-zone'}">${c}</span>`).join('');
+  const feat=g.featured?'<div class="featured-badge">⭐ Featured</div>':'';
+  const sid=g.id.toString().replace(/"/g,'&quot;');
+  const surl=g.url.replace(/"/g,'&quot;');
+  return`<div class="card" data-url="${surl}" data-title="${stitle}" onclick="cardClick(this)">${feat}<div class="fav-star FAV_PLACEHOLDER" data-id="${sid}" onclick="event.stopPropagation();favClick(this)">★</div><img src="${g.img.replace(/"/g,'&quot;')}" loading="lazy" onerror="this.style.opacity='.1'"><div class="info"><div class="title">${stitle}</div><div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:5px">${tags}</div></div></div>`;
+}
+function cardClick(el){play(el.dataset.url,el.dataset.title);}
+function favClick(el){toggleFav(el.dataset.id);}
+function getCardHtml(g){
+  if(!cardCache.has(g.id))cardCache.set(g.id,buildCardHtml(g));
+  const fav=favs.includes(g.id);
+  return cardCache.get(g.id).replace('FAV_PLACEHOLDER',fav?' on':'');
+}
+function invalidateCard(id){cardCache.delete(id);}
+
+// FILTER
+let srchTimer=null;
+function onSearch(){clearTimeout(srchTimer);srchTimer=setTimeout(()=>{currentPage=1;buildList();renderPage();},100);}
+function allGames(){return[...BUILTIN,...zones,...gpGames];}
+function buildList(){
+  const q=(document.getElementById('search')?.value||'').toLowerCase().trim();
+  const all=allGames();
+  let list;
+  if(currentCat==='all')list=all;
+  else if(currentCat==='favs')list=all.filter(g=>favs.includes(g.id));
+  else if(currentCat==='featured')list=all.filter(g=>g.featured);
+  else if(currentCat==='flash')list=zones.filter(g=>g.isFlash);
+  else list=all.filter(g=>(g.cats||[g.cat]).includes(currentCat));
+  if(q)list=list.filter(g=>g.title.toLowerCase().includes(q));
+  filteredList=list;
+}
+
+// RENDER — instant: just slice + join pre-built HTML
+function renderPage(){
+  const grid=document.getElementById('game-grid');
+  if(!grid)return;
+  const total=filteredList.length;
+  const totalPgs=Math.max(1,Math.ceil(total/PER_PAGE));
+  if(currentPage>totalPgs)currentPage=totalPgs;
+  document.getElementById('counter').textContent=total+' game'+(total!==1?'s':'')+(!zones.length?' (loading…)':!gpGames.length?' · GP loading…':'');
+  const slice=filteredList.slice((currentPage-1)*PER_PAGE,currentPage*PER_PAGE);
+  if(!slice.length&&!zones.length){grid.innerHTML='<div class="loading-pulse"><div class="spinner"></div> Loading game library...</div>';renderPager(0,1);return;}
+  if(!slice.length){grid.innerHTML='<div class="empty">No games found 🎮</div>';renderPager(0,1);return;}
+  // Join pre-built card strings — extremely fast
+  grid.innerHTML=slice.map(g=>getCardHtml(g)).join('');
+  renderPager(total,totalPgs);
+  document.getElementById('games-view').scrollTop=0;
+}
+function renderPager(total,totalPgs){
+  const p=document.getElementById('pager');if(!p)return;
+  if(totalPgs<=1){p.innerHTML='';return;}
+  let pgs=[];
+  if(totalPgs<=7){for(let i=1;i<=totalPgs;i++)pgs.push(i);}
+  else{pgs=[1];let lo=Math.max(2,currentPage-2),hi=Math.min(totalPgs-1,currentPage+2);if(lo>2)pgs.push('…');for(let i=lo;i<=hi;i++)pgs.push(i);if(hi<totalPgs-1)pgs.push('…');pgs.push(totalPgs);}
+  let h=`<button ${currentPage===1?'disabled':''} onclick="goPage(${currentPage-1})">‹ Prev</button>`;
+  for(const pg of pgs)h+=pg==='…'?`<span class="pg-info">…</span>`:`<button class="${pg===currentPage?'active':''}" onclick="goPage(${pg})">${pg}</button>`;
+  h+=`<button ${currentPage===totalPgs?'disabled':''} onclick="goPage(${currentPage+1})">Next ›</button>`;
+  h+=`<span class="pg-info">${currentPage}/${totalPgs} · ${total} games</span>`;
+  p.innerHTML=h;
+}
+function goPage(n){currentPage=n;renderPage();}
+function render(){buildList();renderPage();}
+// ZONES
+async function loadZones(){
+  try{
+    bootStep('Fetching zones…',50);
+    const r=await fetch(ZONES_URL+'?t='+Date.now());
+    const raw=await r.json();
+    zones=raw.filter(z=>z.id>=0&&!/comment/i.test(z.name)).map(z=>{
+      let url=z.url.replace(/\{COVER_URL\}/g,COVER).replace(/\{HTML_URL\}/g,HTMLB).replace(/https:\/\/cdn\.jsdelivr\.net\/gh\/gn-math\/html@main/g,HTMLB);
+      let img=z.cover.replace(/\{COVER_URL\}/g,COVER).replace(/\{HTML_URL\}/g,HTMLB);
+      const cats=detectTags(z.name,(z.special||[]).join(' '));
+      return{id:'z'+z.id,title:z.name,img,url,cat:cats[0],cats,featured:!!z.featured,isZone:true};
+    });
+    rebuildDedup();buildList();renderPage();updateStats();
+    bootStep('Zones ready! Loading GamePix games…',80);
+    showToast('🎮 '+zones.length+' zones loaded!');
+    loadGP();
+  }catch(e){
+    bootStep('Zones failed, loading GamePix…',80);
+    buildList();renderPage();
+    loadGP();
+  }
+}
+// GAMEPIX TITLE OVERRIDES — rename specific games
+const GP_RENAME={'bloxdhop':'Bloxd.io','bloxd hop':'Bloxd.io'};
+function gpTitle(raw){const t=raw.title||raw.name||'';return GP_RENAME[t.toLowerCase().trim()]||t;}
+let gpTS=new Set(),gpUS=new Set(),gpIdx=0;
+async function loadGP(){
+  gpTS=new Set(kTitles);gpUS=new Set(kUrls);
+  const bar=document.getElementById('gp-bar');
+  const pages=[];for(let i=1;i<=133;i++){if(i!==100)pages.push(i);}
+  const BATCH=6,tot=pages.length;let done=0;
+  for(let i=0;i<pages.length;i+=BATCH){
+    const batch=pages.slice(i,i+BATCH);
+    const res=await Promise.allSettled(batch.map(p=>fetch(`https://feeds.gamepix.com/v2/json?page=${p}&pagination=96`).then(r=>r.ok?r.json():Promise.reject())));
+    let added=0;
+    res.forEach(r=>{
+      if(r.status!=='fulfilled')return;
+      const d=r.value,items=Array.isArray(d)?d:(d.games||d.data||d.items||d.results||[]);
+      items.forEach(raw=>{
+        const title=gpTitle(raw),url=raw.url||raw.gameUrl||raw.embed_url||'',img=raw.image||raw.thumbnail||raw.thumb||raw.cover||'';
+        if(!title||!url)return;
+        const n=nt(title);
+        if(gpTS.has(n)||gpUS.has(url))return;
+        gpTS.add(n);gpUS.add(url);
+        const extra=(Array.isArray(raw.categories)?raw.categories.join(' '):String(raw.categories||raw.category||raw.tags||''));
+        const genres=detectTags(title,extra);
+        gpGames.push({id:'gp_'+(gpIdx++),title,img,url,cat:genres[0],cats:genres,isGamePix:true});
+        added++;
+      });
+    });
+    done+=batch.length;
+    const pct=Math.round((done/tot)*100);
+    if(bar)bar.style.width=pct+'%';
+    // Update boot screen if still visible
+    const bootBar=document.getElementById('boot-bar');
+    const bootSt=document.getElementById('boot-status');
+    if(bootBar)bootBar.style.width=(80+Math.round(pct*0.2))+'%';
+    if(bootSt)bootSt.textContent=`Loading GamePix… ${gpGames.length.toLocaleString()} games (${pct}%)`;
+    if(added>0){updateStats();if(currentView==='games-view'){buildList();renderPage();}}
+    await new Promise(r=>setTimeout(r,0));
+  }
+  if(bar){bar.style.width='100%';setTimeout(()=>{bar.style.width='0%';},500);}
+  showToast('✅ '+gpGames.length.toLocaleString()+' GamePix games added!');
+  updateStats();if(currentView==='games-view'){buildList();renderPage();}
+  // Boot screen finishes here — all games loaded
+  const bootBar=document.getElementById('boot-bar');
+  const bootSt=document.getElementById('boot-status');
+  if(bootBar)bootBar.style.width='100%';
+  if(bootSt)bootSt.textContent=`✅ ${allGames().length.toLocaleString()} games ready!`;
+  setTimeout(bootDone,800);
+}
+// MOVIES
+function renderMovies(){document.getElementById('movie-grid').innerHTML=MOVIES.map(m=>`<div class="card" onclick="play('${m.url.replace(/'/g,"\\'")}','${m.title.replace(/'/g,"\\'")}')"><img src="${m.img}" onerror="this.style.opacity='.1'"><div class="info"><div class="title">${m.title}</div><div class="tag tag-movie">Movie</div></div></div>`).join('');}
+// SHOWS
+function renderShows(){document.getElementById('shows-grid').innerHTML=SHOWS.map((s,i)=>`<div class="card" onclick="openShow(${i})"><img src="${s.img}" onerror="this.style.opacity='.1'"><div class="info"><div class="title">${s.title}</div><div class="tag tag-show">${s.seasons.length} Season${s.seasons.length>1?'s':''} · ${s.seasons.reduce((a,b)=>a+b.episodes.length,0)} eps</div></div></div>`).join('');}
+function openShow(i){selectedShow=SHOWS[i];document.getElementById('show-title-head').textContent=selectedShow.title;switchView('seasons-view');document.getElementById('seasons-grid').innerHTML=selectedShow.seasons.map((s,si)=>`<div class="card" onclick="openSeason(${si})"><img src="${s.img||selectedShow.img}" onerror="this.style.opacity='.1'"><div class="info"><div class="title">${s.name}</div><div class="tag tag-show">${s.episodes.length} Episodes</div></div></div>`).join('');}
+function backToShows(){selectedShow=null;switchView('shows-view');}
+function openSeason(i){selectedSeason=selectedShow.seasons[i];document.getElementById('season-title-head').textContent=selectedShow.title+' · '+selectedSeason.name;switchView('episodes-view');document.getElementById('eps-grid').innerHTML=selectedSeason.episodes.map((ep,ei)=>`<div class="ep-item" onclick="play('${ep.url.replace(/'/g,"\\'")}','${ep.title.replace(/'/g,"\\'")}')"><div><span class="ep-num">EP ${ei+1}</span><span style="font-size:13px">${ep.title}</span></div><div style="color:var(--blue);font-size:18px">▶</div></div>`).join('');}
+function backToSeasons(){selectedSeason=null;switchView('seasons-view');}
+// PLAYER
+function play(url,title){
+  document.getElementById('gl-title').textContent=title||'Loading game…';
+  document.getElementById('game-loader').classList.add('on');
+  document.getElementById('player-title').textContent=title||'Playing';
+  const frame=document.getElementById('game-frame');
+  frame.src='';
+  document.getElementById('player').classList.add('on');
+  document.body.classList.add('player-open');
+  const hide=()=>{document.getElementById('game-loader').classList.remove('on');};
+  // Try to auto-dismiss GamePix splash on load
+  frame.onload=()=>{
+    setTimeout(hide,400);
+    // Attempt to click the "OK, PLAY NOW!" button via postMessage tricks
+    try{
+      // Method 1: send play messages GamePix might listen for
+      frame.contentWindow.postMessage({type:'play'},'*');
+      frame.contentWindow.postMessage('play','*');
+      frame.contentWindow.postMessage({action:'start'},'*');
+    }catch(e){}
+    // Method 2: inject a MutationObserver via srcdoc swap isn't possible cross-origin
+    // so we poll with postMessage broadcasts every 200ms for 3s
+    let attempts=0;
+    const poller=setInterval(()=>{
+      attempts++;
+      try{
+        frame.contentWindow.postMessage({type:'play'},'*');
+        frame.contentWindow.postMessage('start','*');
+        frame.contentWindow.postMessage({event:'click'},'*');
+      }catch(e){}
+      if(attempts>15)clearInterval(poller);
+    },200);
+  };
+  setTimeout(hide,8000);
+  frame.src=url;
+}
+function closePlayer(){
+  document.getElementById('game-loader').classList.remove('on');
+  document.getElementById('player').classList.remove('on');
+  document.getElementById('game-frame').src='';
+  document.body.classList.remove('player-open');
+  releaseLock();
+}
+function fsGame(){const f=document.getElementById('game-frame');if(f.requestFullscreen)f.requestFullscreen();}
+function playRandom(){const all=allGames().filter(g=>g.url&&!/appetize|deepseek|chatgpt|gemini|claude\.ai|perplexity|deepai/.test(g.url));if(!all.length)return;const g=all[Math.floor(Math.random()*all.length)];play(g.url,g.title);}
+// POINTER LOCK
+function requestLock(){
+  const wrap=document.getElementById('game-wrap');
+  if(wrap.requestPointerLock){
+    wrap.requestPointerLock();
+  }
+}
+function releaseLock(){
+  if(document.pointerLockElement){
+    document.exitPointerLock();
+  }
+  updateLockBtn(false);
+}
+function toggleLock(){
+  if(document.pointerLockElement){releaseLock();}
+  else{requestLock();}
+}
+function updateLockBtn(locked){
+  const btn=document.getElementById('lock-btn');
+  const hint=document.getElementById('lock-hint');
+  if(!btn)return;
+  if(locked){
+    btn.textContent='🔓 Unlock Mouse';
+    btn.classList.add('locked');
+    if(hint)hint.classList.add('on');
+    setTimeout(()=>{if(hint)hint.classList.remove('on');},2500);
+  }else{
+    btn.textContent='🔒 Lock Mouse';
+    btn.classList.remove('locked');
+    if(hint)hint.classList.remove('on');
+  }
+}
+document.addEventListener('pointerlockchange',()=>{
+  const locked=!!document.pointerLockElement;
+  updateLockBtn(locked);
+});
+document.addEventListener('pointerlockerror',()=>{
+  showToast('⚠️ Pointer lock failed — click inside the game first');
+});
+// Click on game-wrap also requests lock
+document.getElementById('game-wrap').addEventListener('click',()=>{
+  const player=document.getElementById('player');
+  if(player.classList.contains('on')&&!document.pointerLockElement){
+    requestLock();
+  }
+});
+// NAV
+function switchView(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active');currentView=id;document.getElementById('game-filters').style.display=id==='games-view'?'block':'none';}
+document.querySelectorAll('.nav').forEach(btn=>{btn.onclick=()=>{if(btn.dataset.view){document.querySelectorAll('aside .nav').forEach(n=>n.classList.remove('active'));btn.classList.add('active');if(btn.dataset.view==='games-view'){switchView('games-view');buildList();renderPage();}else if(btn.dataset.view==='shows-view'){switchView('shows-view');renderShows();}else if(btn.dataset.view==='movies-view'){switchView('movies-view');renderMovies();}else if(btn.dataset.view==='chat-view'){switchView('chat-view');}else{switchView(btn.dataset.view);if(btn.dataset.view==='settings-view'){buildColorGrid();buildBgSwatches();buildBgGradients();updateStats();}}}else if(btn.dataset.cat){document.querySelectorAll('#game-filters .nav').forEach(n=>n.classList.remove('active'));btn.classList.add('active');currentCat=btn.dataset.cat;currentPage=1;switchView('games-view');buildList();renderPage();}};});
+// FAVS
+function toggleFav(id){id=String(id);favs=favs.includes(id)?favs.filter(f=>f!==id):[...favs,id];localStorage.setItem(FK,JSON.stringify(favs));invalidateCard(id);buildList();renderPage();updateStats();}
+function clearFavs(){favs=[];localStorage.setItem(FK,'[]');cardCache.clear();buildList();renderPage();updateStats();showToast('⭐ Favorites cleared');}
+function changeDevice(){
+  localStorage.removeItem(DK);
+  document.getElementById('device-pick').classList.remove('gone');
+}
+// SETTINGS
+function updateStats(){
+  document.getElementById('stat-lib').textContent=allGames().length;
+  document.getElementById('stat-favs').textContent=favs.length;
+  const lbl=document.getElementById('device-mode-lbl');
+  if(lbl){const d=localStorage.getItem(DK)||'desktop';lbl.textContent=d==='mobile'?'📱 Mobile — 9:16 portrait':'🖥️ Desktop — 16:9 widescreen';}
+}
+const COLORS=[{l:'Blue',c:'#0a84ff'},{l:'Purple',c:'#bf5af2'},{l:'Green',c:'#30d158'},{l:'Orange',c:'#ff9f0a'},{l:'Pink',c:'#ff375f'},{l:'Cyan',c:'#5ac8fa'},{l:'Yellow',c:'#ffd60a'},{l:'Red',c:'#ff3b30'},{l:'Mint',c:'#63e6be'},{l:'Indigo',c:'#5e5ce6'},{l:'Teal',c:'#40c8e0'},{l:'White',c:'#e0e0e0'}];
+const BGS=['#0a0a0a','#1a1a2e','#0f2027','#1a0533','#0d1b2a','#1b1b1b','#2d1b33','#0a1628','#1a2a1a','#2a1a0a'];
+const BGG=[{l:'Midnight',v:'linear-gradient(135deg,#0f0c29,#302b63,#24243e)'},{l:'Ocean',v:'linear-gradient(135deg,#0f2027,#203a43,#2c5364)'},{l:'Nebula',v:'linear-gradient(135deg,#1a0533,#6a0572,#c71585)'},{l:'Forest',v:'linear-gradient(135deg,#0a2e0a,#1a4a1a,#2d6a2d)'},{l:'Lava',v:'linear-gradient(135deg,#200122,#6f0000,#c00)'},{l:'Aurora',v:'linear-gradient(135deg,#000428,#004e92,#00c6ff)'},{l:'Sunset',v:'linear-gradient(135deg,#1a0000,#6b2737,#ff7043)'},{l:'Galaxy',v:'linear-gradient(135deg,#020111,#191654,#43c6ac)'}];
+function buildColorGrid(){const cur=loadTheme();document.getElementById('color-grid').innerHTML=COLORS.map(t=>`<button class="color-dot${t.c===cur?' on':''}" style="background:${t.c}" title="${t.l}" onclick="setColor('${t.c}','${t.l}')"></button>`).join('');}
+function setColor(c,l){document.documentElement.style.setProperty('--blue',c);saveTheme(c);buildColorGrid();showToast('🎨 '+l);}
+function buildBgSwatches(){const cur=loadBg();document.getElementById('bg-swatches').innerHTML=BGS.map(c=>`<button class="bg-dot${cur.v===c?' on':''}" style="background:${c}" onclick="applyBgVal('${c}')"></button>`).join('');}
+function buildBgGradients(){const cur=loadBg();document.getElementById('bg-gradients').innerHTML=BGG.map(g=>`<button class="bg-grad${cur.v===g.v?' on':''}" style="background:${g.v}" onclick="applyBgVal(\`${g.v}\`)">${g.l}</button>`).join('');}
+function applyBgVal(v){const l=document.getElementById('bgLayer');l.style.background=v;l.classList.add('on');saveBg({v});buildBgSwatches();buildBgGradients();showToast('🖼 Background updated');}
+function applyBgCustom(c){applyBgVal(c);}
+function resetBg(){const l=document.getElementById('bgLayer');l.style.background='';l.classList.remove('on');saveBg({});buildBgSwatches();buildBgGradients();showToast('✕ Background cleared');}
+function applyAnim(on){const s=loadS();s.noAnim=on;saveS(s);document.body.classList.toggle('no-anim',on);on?stopBg():(!loadS().noBg&&startBg());showToast(on?'⏸ Animations off':'▶ Animations on');}
+function applyCursor(on){const s=loadS();s.sysCursor=on;saveS(s);document.body.classList.toggle('sys-cursor',on);showToast(on?'🖱 System cursor':'✨ Custom cursor');}
+function applyBgAnim(on){const s=loadS();s.noBg=on;saveS(s);on?stopBg():(!loadS().noAnim&&startBg());showToast(on?'🌑 Particles off':'✨ Particles on');}
+function applyInvert(on){const s=loadS();s.invert=on;saveS(s);document.body.classList.toggle('inverted',on);showToast(on?'🔄 Inverted':'🔄 Normal');}
+function resetAll(){saveS({});saveTheme('#0a84ff');saveBg({});document.documentElement.style.setProperty('--blue','#0a84ff');document.body.classList.remove('no-anim','sys-cursor','inverted');['tog-anim','tog-cursor','tog-bg','tog-invert'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});resetBg();startBg();buildColorGrid();showToast('↩️ Reset done');}
+function applyStoredSettings(){const s=loadS(),t=loadTheme(),bg=loadBg();document.documentElement.style.setProperty('--blue',t);if(s.noAnim){document.getElementById('tog-anim').checked=true;document.body.classList.add('no-anim');stopBg();}if(s.sysCursor){document.getElementById('tog-cursor').checked=true;document.body.classList.add('sys-cursor');}if(s.noBg){document.getElementById('tog-bg').checked=true;stopBg();}if(s.invert){document.getElementById('tog-invert').checked=true;document.body.classList.add('inverted');}if(bg.v){const l=document.getElementById('bgLayer');l.style.background=bg.v;l.classList.add('on');}}
+// CONFIRM / TOAST
+let _cb=null;
+function askConfirm(title,msg,cb){document.getElementById('conf-title').textContent=title;document.getElementById('conf-msg').textContent=msg;_cb=cb;document.getElementById('confirm').classList.add('on');}
+function closeConfirm(){document.getElementById('confirm').classList.remove('on');_cb=null;}
+document.getElementById('conf-ok').onclick=()=>{if(_cb)_cb();closeConfirm();};
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2000);}
+// CANVAS — 50 particles max
+const canvas=document.getElementById('bgCanvas'),ctx=canvas.getContext('2d');
+let pts=[],w,h,bgRun=true,bgFr=null;
+function res(){w=canvas.width=innerWidth;h=canvas.height=innerHeight;}res();window.onresize=res;
+class Pt{constructor(){this.x=Math.random()*w;this.y=Math.random()*h;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4;this.r=1+Math.random();}upd(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>w)this.vx*=-1;if(this.y<0||this.y>h)this.vy*=-1;}drw(){ctx.fillStyle='rgba(255,255,255,0.2)';ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,6.28);ctx.fill();}}
+for(let i=0;i<50;i++)pts.push(new Pt());
+function bgAnim(){if(!bgRun)return;ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);for(let i=0;i<pts.length;i++){pts[i].upd();pts[i].drw();for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<85){ctx.strokeStyle=`rgba(255,255,255,${.09-d/600})`;ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke();}}}bgFr=requestAnimationFrame(bgAnim);}
+function stopBg(){bgRun=false;if(bgFr)cancelAnimationFrame(bgFr);ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);}
+function startBg(){if(bgRun)return;bgRun=true;bgAnim();}
+bgAnim();
+// CURSOR
+const cur=document.getElementById('cur');
+window.addEventListener('mousemove',e=>{cur.style.transform=`translate(${e.clientX}px,${e.clientY}px)`;},{passive:true});
+document.addEventListener('mouseover',e=>{if(e.target.closest('.rand-btn,.pbtn.rand'))document.body.classList.add('r-hover');else if(e.target.closest('.card,.nav,button,input,.ep-item,.tog,.bg-dot,.bg-grad,.color-dot'))document.body.classList.add('g-hover');});
+document.addEventListener('mouseout',()=>document.body.classList.remove('g-hover','r-hover'));
+// DEVICE MODE
+const DK='adless_device_v1';
+function setDevice(type){
+  localStorage.setItem(DK,type);
+  document.getElementById('device-pick').classList.add('gone');
+  applyDevice(type);
+  showToast(type==='mobile'?'📱 Mobile mode — portrait 9:16':'🖥️ Desktop mode — widescreen 16:9');
+}
+function applyDevice(type){
+  document.body.classList.toggle('mobile-mode',type==='mobile');
+}
+// BOOT
+function bootStep(msg,pct){
+  const s=document.getElementById('boot-status');
+  const b=document.getElementById('boot-bar');
+  if(s)s.textContent=msg;
+  if(b)b.style.width=pct+'%';
+}
+function bootDone(){
+  const bs=document.getElementById('boot-screen');
+  if(!bs)return;
+  bs.classList.add('fade');
+  setTimeout(()=>bs.remove(),600);
+}
+// Check saved device preference — skip picker if already chosen
+const savedDevice=localStorage.getItem(DK);
+if(savedDevice){
+  document.getElementById('device-pick').classList.add('gone');
+  applyDevice(savedDevice);
+}
+applyStoredSettings();
+bootStep('Loading games…',20);
+buildList();renderPage();updateStats();
+bootStep('Fetching game library…',40);
+loadZones();
+</script>
+</body>
+</html>
