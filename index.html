@@ -2381,6 +2381,12 @@ async function createNotif(userId,type,title,body,linkType=null,linkData=null){
 async function pollNotifs(){
   if(!currentUser||currentUser.guest)return;
   try{
+    // Ping last_seen every poll (every 5s)
+    fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({last_seen:new Date().toISOString()})
+    });
     const rows=await sbReq(`/rest/v1/notifications?user_id=eq.${currentUser.id}&order=created_at.desc&limit=30&select=*`);
     const unread=(rows||[]).filter(r=>!r.read).length;
     const badge=document.getElementById('notif-badge');
@@ -2388,7 +2394,6 @@ async function pollNotifs(){
       if(unread>0){badge.textContent=unread>9?'9+':unread;badge.style.display='flex';}
       else{badge.style.display='none';}
     }
-    // Play sound / show toast for new notifs
     if(unread>lastNotifCount&&lastNotifCount>=0){
       const newest=(rows||[]).find(r=>!r.read);
       if(newest&&lastNotifCount>-1&&unread>lastNotifCount){
@@ -2398,6 +2403,30 @@ async function pollNotifs(){
     lastNotifCount=unread;
     if(notifPanelOpen)renderNotifList(rows||[]);
   }catch(e){}
+}
+
+// ── PRESENCE ─────────────────────────────────────────────────────
+// Returns true if last_seen was within 2 minutes
+function isOnline(lastSeen){
+  if(!lastSeen)return false;
+  return(Date.now()-new Date(lastSeen).getTime())<2*60*1000;
+}
+
+function presenceDot(lastSeen){
+  const on=isOnline(lastSeen);
+  return`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${on?'#30d158':'#555'};box-shadow:${on?'0 0 6px #30d158':'none'};flex-shrink:0;margin-right:2px" title="${on?'Online':'Offline'}"></span>`;
+}
+
+function presenceText(lastSeen){
+  if(!lastSeen)return'Never seen';
+  if(isOnline(lastSeen))return'Online';
+  const diff=Date.now()-new Date(lastSeen).getTime();
+  const mins=Math.floor(diff/60000);
+  const hrs=Math.floor(diff/3600000);
+  const days=Math.floor(diff/86400000);
+  if(mins<60)return`${mins}m ago`;
+  if(hrs<24)return`${hrs}h ago`;
+  return`${days}d ago`;
 }
 
 function startNotifPoll(){
@@ -3732,7 +3761,7 @@ async function loadFriendRequests(){
     const flDiv=document.getElementById('friends-list');
     if(!fids.length){flDiv.innerHTML='<div class="fc-empty">No friends yet — search for someone!</div>';return;}
     const fIdStr=fids.map(id=>`"${id}"`).join(',');
-    const fProfiles=await sbReq(`/rest/v1/profiles?id=in.(${fIdStr})&select=id,username,avatar`);
+    const fProfiles=await sbReq(`/rest/v1/profiles?id=in.(${fIdStr})&select=id,username,avatar,last_seen`);
     // Get unread counts per friend
     const unreadCounts={};
     for(const fp of (fProfiles||[])){
@@ -3742,8 +3771,14 @@ async function loadFriendRequests(){
     flDiv.innerHTML=(fProfiles||[]).map(p=>{
       const unread=unreadCounts[p.id]||0;
       return`<div class="friend-card">
-        <div class="fc-av">${p.avatar}</div>
-        <div style="flex:1"><div class="fc-name">${p.username}</div></div>
+        <div class="fc-av" style="position:relative">
+          ${p.avatar}
+          <span style="position:absolute;bottom:0;right:0;width:9px;height:9px;border-radius:50%;background:${isOnline(p.last_seen)?'#30d158':'#555'};box-shadow:${isOnline(p.last_seen)?'0 0 6px #30d158':'none'};border:2px solid var(--card)"></span>
+        </div>
+        <div style="flex:1">
+          <div class="fc-name">${p.username}</div>
+          <div class="fc-status">${presenceText(p.last_seen)}</div>
+        </div>
         <div class="fc-btns">
           <button class="fc-btn msg" onclick="openDm('${p.id}','${p.username}','${p.avatar}')">
             💬 DM${unread?`<span class="fc-unread">${unread}</span>`:''}
