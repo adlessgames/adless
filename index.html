@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="monetag" content="1df82bad195f71079a64922a54c503bc">
 <title>Adless OS</title>
+<!-- MONETAG AD SCRIPT — paste yours here -->
+<!-- <script src="//yourmonetag.cdn/tag.min.js" data-zone="XXXXXXX" async></script> -->
 <style>
 :root{--blue:#0a84ff;--red:#ff3b30;--text:#f5f5f7;--text2:#86868b;--glass:rgba(28,28,30,0.75);--border:rgba(255,255,255,0.1);}
 body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!important;transition:none!important;}
@@ -111,6 +114,27 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .s-row{background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
 .s-lbl{font-size:13px;font-weight:600;color:var(--text);}
 .s-desc{font-size:11px;color:var(--text2);margin-top:2px;}
+/* settings toggle reused for ads */
+.s-toggle{position:relative;width:50px;height:28px;flex-shrink:0;}
+.s-toggle input{opacity:0;width:0;height:0;position:absolute;}
+.s-track{position:absolute;inset:0;background:rgba(255,255,255,.12);border-radius:28px;transition:.2s;border:1px solid var(--border);cursor:pointer;}
+.s-track::before{content:'';position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.4);}
+.s-toggle input:checked+.s-track{background:var(--blue);border-color:var(--blue);}
+.s-toggle input:checked+.s-track::before{transform:translateX(22px);}
+.s-toggle input:disabled+.s-track{opacity:.35;cursor:not-allowed;}
+/* ad banners */
+.ad-slot-inline{width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 16px;margin:4px 0;}
+.ad-slot-inline .ad-inner{min-height:70px;width:100%;max-width:680px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.025);border:1px dashed rgba(255,255,255,.07);border-radius:10px;overflow:hidden;position:relative;}
+.ad-slot-inline .ad-hint{font-size:9px;color:rgba(255,255,255,.18);letter-spacing:.08em;cursor:pointer;background:none;border:none;padding:1px 0;}
+.ad-slot-inline .ad-hint:hover{color:var(--blue);}
+.ad-slot-inline .ad-tag{position:absolute;top:4px;right:6px;font-size:8px;color:rgba(255,255,255,.2);letter-spacing:.06em;pointer-events:none;}
+.ad-banner{width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 16px;background:rgba(255,255,255,.02);border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:8px 0;}
+.ad-inner{min-height:90px;width:100%;max-width:728px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.08);border-radius:10px;overflow:hidden;}
+.ad-placeholder{font-size:10px;color:var(--text2);letter-spacing:.08em;pointer-events:none;}
+.ad-close-hint{font-size:10px;color:var(--text2);background:none;border:none;cursor:pointer;text-decoration:underline;padding:0;}
+.ad-close-hint:hover{color:var(--blue);}
+.ad-side{position:fixed;bottom:80px;right:12px;width:auto;padding:6px;border:1px solid var(--border);border-radius:12px;background:var(--card);box-shadow:0 4px 20px rgba(0,0,0,.4);z-index:100;flex-direction:column;gap:4px;}
+.ad-side .ad-inner{min-height:120px;width:220px;}
 .tog{position:relative;width:50px;height:28px;flex-shrink:0;}
 .tog input{opacity:0;width:0;height:0;position:absolute;}
 .tog-sl{position:absolute;inset:0;background:rgba(255,255,255,.12);border-radius:28px;transition:.2s;border:1px solid var(--border);}
@@ -490,15 +514,18 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <div id="counter" style="font-size:12px;font-weight:600;white-space:nowrap;color:var(--text2)">Loading...</div>
     </header>
     <div id="spotlight-banner"></div>
+    <div id="ad-games-banner"></div>
     <div class="grid" id="game-grid"></div>
     <div class="pager" id="pager"></div>
   </div>
   <div id="movies-view" class="view">
     <header><h1>🎬 Movies</h1></header>
+    <div class="ad-slot-inline" id="ad-movies"></div>
     <div class="grid" id="movie-grid"></div>
   </div>
   <div id="shows-view" class="view">
     <header><h1>📺 Shows &amp; Anime</h1></header>
+    <div class="ad-slot-inline" id="ad-shows"></div>
     <div class="grid" id="shows-grid"></div>
   </div>
   <div id="seasons-view" class="view">
@@ -506,6 +533,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <button class="back-btn" onclick="backToShows()">← Back</button>
       <h1 id="show-title-head">Select Season</h1>
     </div></header>
+    <div class="ad-slot-inline" id="ad-seasons"></div>
     <div class="grid" id="seasons-grid"></div>
   </div>
   <div id="episodes-view" class="view">
@@ -513,6 +541,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <button class="back-btn" onclick="backToSeasons()">← Seasons</button>
       <h1 id="season-title-head">Select Episode</h1>
     </div></header>
+    <div class="ad-slot-inline" id="ad-episodes"></div>
     <div id="eps-grid"></div>
   </div>
   <div id="chat-view" class="view">
@@ -525,6 +554,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
         </div>
       </div>
     </header>
+    <div class="ad-slot-inline" id="ad-chat"></div>
     <div id="chat-messages"></div>
     <div id="chat-bar">
       <span id="chat-typing-indicator"></span>
@@ -544,6 +574,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       </div>
       <div id="friend-search-result" style="margin-top:10px"></div>
     </div>
+    <div class="ad-slot-inline" id="ad-friends"></div>
     <div class="s-section">
       <div class="s-sec">📬 Pending Requests</div>
       <div id="friend-requests"></div>
@@ -598,6 +629,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
         <button class="auc-btn blue" style="font-size:11px" onclick="openGroupInfo()">👥 Members</button>
       </div>
     </header>
+    <div class="ad-slot-inline" id="ad-groupchat"></div>
     <div id="grp-messages"></div>
     <div id="chat-bar">
       <div id="chat-input-row">
@@ -629,6 +661,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
         <button id="dm-report-btn" class="auc-btn yellow" style="margin-left:auto;font-size:11px" onclick="reportDmPeer()">⚑ Report</button>
       </div>
     </header>
+    <div class="ad-slot-inline" id="ad-dm"></div>
     <div id="dm-messages"></div>
     <div id="chat-bar">
       <div id="chat-input-row">
@@ -836,11 +869,62 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <div class="s-row"><div><div class="s-lbl">Reset All Settings</div><div class="s-desc">Restore defaults</div></div><button class="s-danger" onclick="askConfirm('Reset all settings?','Display, theme and background will be reset.',resetAll)">↩️ Reset</button></div>
     </div>
     <div class="s-section">
+      <div class="s-sec">📢 Ads</div>
+      <div class="s-row">
+        <div>
+          <div class="s-lbl">Remove Ads</div>
+          <div class="s-desc" id="ads-toggle-desc">Logged-in members can hide all ads</div>
+        </div>
+        <label class="s-toggle" id="ads-toggle-wrap">
+          <input type="checkbox" id="ads-opt-out" onchange="toggleAdsOptOut(this.checked)">
+          <span class="s-track"></span>
+        </label>
+      </div>
+      <div style="font-size:11px;color:var(--text2);margin-top:6px;line-height:1.6">
+        Ads keep Adless free for guests. If you'd like to <a href="https://ko-fi.com/adless" target="_blank" style="color:var(--blue)">support us on Ko-fi ☕</a> instead, you can disable ads above.
+      </div>
+    </div>
+    <div class="ad-slot-inline" id="ad-settings"></div>
+    <div class="s-section">
       <div class="s-sec">ℹ️ About</div>
       <div class="s-row"><div><div class="s-lbl">Adless OS</div><div class="s-desc">Ad-free hub • Zones + GamePix • Paginated for speed</div></div><span style="font-size:20px">🛡️</span></div>
     </div>
   </div>
 </div>
+<!-- AD OPT-OUT POPUP (shown on login) -->
+<div id="ads-popup" style="display:none;position:fixed;inset:0;z-index:6000000;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
+  <div style="background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px;width:min(400px,92vw);display:flex;flex-direction:column;gap:14px;animation:fadeUp .3s ease">
+    <div style="font-size:24px;text-align:center">📢</div>
+    <div style="font-size:16px;font-weight:800;text-align:center">Heads up about ads</div>
+    <div style="font-size:12px;color:var(--text2);line-height:1.7;text-align:center">
+      Adless shows a few <strong style="color:#fff">small, non-intrusive ads</strong> to keep the site free for everyone.<br><br>
+      As a logged-in member, <strong style="color:var(--blue)">you can remove all ads</strong> in <strong style="color:#fff">Settings → 📢 Ads</strong>.
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button class="lb-btn" onclick="dismissAdsPopup(false)">Got it — keep ads</button>
+      <button class="lb-btn" style="background:rgba(10,132,255,.15);border-color:rgba(10,132,255,.3);color:var(--blue)" onclick="dismissAdsPopup(true)">Remove ads now</button>
+    </div>
+    <div style="font-size:10px;color:var(--text2);text-align:center">
+      Or <a href="https://ko-fi.com/adless" target="_blank" style="color:var(--blue)">support us on Ko-fi ☕</a> — we appreciate it!
+    </div>
+  </div>
+</div>
+
+<!-- AD SLOTS — injected into game grid area -->
+<div id="ad-banner-top" class="ad-banner" style="display:none">
+  <div class="ad-inner">
+    <!-- PASTE AD NETWORK SCRIPT HERE (728x90 leaderboard) -->
+    <span class="ad-placeholder">Advertisement</span>
+  </div>
+  <button class="ad-close-hint" onclick="goToAdSettings()">Remove ads in Settings</button>
+</div>
+<div id="ad-banner-side" class="ad-banner ad-side" style="display:none">
+  <div class="ad-inner">
+    <!-- PASTE AD NETWORK SCRIPT HERE (300x250) -->
+    <span class="ad-placeholder">Advertisement</span>
+  </div>
+</div>
+
 <!-- REPORT MODAL -->
 <div id="report-modal" style="display:none;position:fixed;inset:0;z-index:5000000;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);align-items:center;justify-content:center;" onclick="if(event.target===this)closeReportModal()">
   <div style="background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:24px;width:min(420px,92vw);max-height:80vh;overflow-y:auto">
@@ -1107,13 +1191,26 @@ function lbEnter(){
   applyStoredSettings();
   loadCloakSetting();
   cardCache.clear();buildList();renderPage();updateStats();
-  // Bootstrap owner account silently
   bootstrapOwner();
   startNotifPoll();
+  // Ads: load opt-out state then show popup if first login on this device
+  if(!currentUser.guest){
+    loadAdsOptOut().then(()=>{
+      const popupKey='adless_ads_popup_seen_'+currentUser.id;
+      if(!localStorage.getItem(popupKey)){
+        setTimeout(()=>showAdsPopup(),800);
+      }
+    });
+  } else {
+    // Guests always see ads
+    adsOptedOut=false;
+    applyAdsState();
+  }
 }
 function logout(){
   stopNotifPoll();
   stopDmPoll();
+  stopGrpPoll();
   stopChatSub();
   notifPanelOpen=false;
   const panel=document.getElementById('notif-panel');
@@ -1122,6 +1219,8 @@ function logout(){
   localStorage.removeItem('adless_session');
   currentUser=null;
   favs=[];
+  adsOptedOut=false;
+  applyAdsState();
   document.getElementById('user-chip').style.display='none';
   document.getElementById('login-screen').classList.remove('gone');
   document.getElementById('lb-user').value='';
@@ -1492,7 +1591,18 @@ document.querySelectorAll('.nav').forEach(btn=>{
       else{switchView(btn.dataset.view);if(btn.dataset.view==='settings-view'){buildColorGrid();buildBgSwatches();buildBgGradients();buildCloakGrid();updateStats();
         const accSec=document.getElementById('account-section');
         if(accSec)accSec.style.display=(!currentUser||currentUser.guest)?'none':'block';
-        loadAccountCooldowns();}}
+        loadAccountCooldowns();
+        // Sync ads toggle
+        const adsToggle=document.getElementById('ads-opt-out');
+        const adsWrap=document.getElementById('ads-toggle-wrap');
+        if(adsToggle){
+          const isGuest=!currentUser||currentUser.guest;
+          adsToggle.checked=adsOptedOut&&!isGuest;
+          adsToggle.disabled=isGuest;
+          const desc=document.getElementById('ads-toggle-desc');
+          if(desc)desc.textContent=isGuest?'Login to remove ads':adsOptedOut?'Ads are hidden on your account ✓':'Tap to hide all ads on your account';
+        }
+      }}
     }else if(btn.dataset.cat){
       document.querySelectorAll('#game-filters .nav').forEach(n=>n.classList.remove('active'));
       btn.classList.add('active');currentCat=btn.dataset.cat;currentPage=1;switchView('games-view');buildList();renderPage();
@@ -2102,6 +2212,156 @@ async function submitAddMembers(){
   document.getElementById('grp-name-input').disabled=false;
   showToast(`Added ${grpSelMembers.size} member(s)`);
   loadGrpMessages();
+}
+
+// ── ADS SYSTEM ───────────────────────────────────────────────────
+let adsOptedOut=false;
+
+async function loadAdsOptOut(){
+  if(!currentUser||currentUser.guest){adsOptedOut=false;applyAdsState();return;}
+  try{
+    const rows=await sbReq(`/rest/v1/user_data?user_id=eq.${currentUser.id}&select=ads_opted_out`);
+    adsOptedOut=!!(rows&&rows[0]&&rows[0].ads_opted_out);
+  }catch(e){adsOptedOut=false;}
+  applyAdsState();
+  // Sync toggle in settings if open
+  const tog=document.getElementById('ads-opt-out');
+  if(tog)tog.checked=adsOptedOut;
+}
+
+async function saveAdsOptOut(val){
+  if(!currentUser||currentUser.guest)return;
+  try{
+    const existing=await sbReq(`/rest/v1/user_data?user_id=eq.${currentUser.id}&select=id`);
+    if(existing&&existing.length){
+      await fetch(SB_URL+`/rest/v1/user_data?user_id=eq.${currentUser.id}`,{
+        method:'PATCH',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({ads_opted_out:val})
+      });
+    }else{
+      await fetch(SB_URL+'/rest/v1/user_data',{
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({user_id:currentUser.id,ads_opted_out:val})
+      });
+    }
+  }catch(e){console.warn('Failed to save ads preference',e);}
+}
+
+function applyAdsState(){
+  const hide=adsOptedOut&&currentUser&&!currentUser.guest;
+  // Hide/show all inline slots
+  AD_SLOT_IDS.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.style.display=hide?'none':'';
+  });
+  // Side banner
+  const side=document.getElementById('ad-banner-side');
+  if(side)side.style.display=hide?'none':'flex';
+  // Update settings toggle desc
+  const desc=document.getElementById('ads-toggle-desc');
+  if(desc)desc.textContent=hide?'Ads are hidden on your account ✓':'Tap to hide all ads on your account';
+}
+
+function toggleAdsOptOut(checked){
+  if(!currentUser||currentUser.guest){
+    showToast('Login to remove ads');
+    const tog=document.getElementById('ads-opt-out');
+    if(tog)tog.checked=false;
+    return;
+  }
+  adsOptedOut=checked;
+  saveAdsOptOut(checked);
+  applyAdsState();
+  showToast(checked?'✓ Ads hidden on your account':'Ads re-enabled');
+}
+
+function showAdsPopup(){
+  document.getElementById('ads-popup').style.display='flex';
+}
+
+function dismissAdsPopup(optOut){
+  document.getElementById('ads-popup').style.display='none';
+  // Mark as seen for this user on this device
+  localStorage.setItem('adless_ads_popup_seen_'+currentUser.id,'1');
+  if(optOut){
+    adsOptedOut=true;
+    saveAdsOptOut(true);
+    applyAdsState();
+    const tog=document.getElementById('ads-opt-out');
+    if(tog)tog.checked=true;
+    showToast('✓ Ads hidden — thanks for using Adless!');
+  }
+}
+
+function goToAdSettings(){
+  dismissAdsPopup(false);
+  // Navigate to settings view
+  document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
+  document.querySelector('.nav[data-view="settings-view"]')?.classList.add('active');
+  switchView('settings-view');
+  // Scroll to ads section
+  setTimeout(()=>{
+    const adSec=Array.from(document.querySelectorAll('.s-sec')).find(el=>el.textContent.includes('Ads'));
+    if(adSec)adSec.scrollIntoView({behavior:'smooth',block:'center'});
+  },200);
+}
+
+// All ad slot IDs across every view
+const AD_SLOT_IDS=[
+  'ad-games-banner',  // games view — leaderboard above grid
+  'ad-movies',        // movies view
+  'ad-shows',         // shows view
+  'ad-seasons',       // seasons view
+  'ad-episodes',      // episodes view
+  'ad-chat',          // chat view — above messages
+  'ad-friends',       // friends view
+  'ad-dm',            // DM view — above messages
+  'ad-groupchat',     // group chat view — above messages
+  'ad-settings',      // settings view — between Ads and About
+];
+
+function makeInlineAdHTML(slotId){
+  if(slotId==='ad-games-banner'){
+    return`<div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 16px;border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04);background:rgba(255,255,255,.01);margin:4px 0">
+      <div style="min-height:70px;width:100%;max-width:680px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.025);border:1px dashed rgba(255,255,255,.06);border-radius:10px;overflow:hidden;position:relative;">
+        <!-- AD SLOT: ${slotId} — paste 728×90 leaderboard script here -->
+        <span style="font-size:10px;color:rgba(255,255,255,.2);letter-spacing:.08em;pointer-events:none">Advertisement</span>
+        <span style="position:absolute;top:4px;right:7px;font-size:8px;color:rgba(255,255,255,.15);letter-spacing:.06em;pointer-events:none">AD</span>
+      </div>
+      <button style="font-size:9px;color:rgba(255,255,255,.2);background:none;border:none;cursor:pointer;padding:1px 0;letter-spacing:.05em" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='rgba(255,255,255,.2)'" onclick="goToAdSettings()">Remove ads in Settings →</button>
+    </div>`;
+  }
+  return`<div style="min-height:60px;width:100%;max-width:680px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.05);border-radius:10px;overflow:hidden;position:relative;margin:0 auto;">
+    <!-- AD SLOT: ${slotId} — paste ad script here -->
+    <span style="font-size:9px;color:rgba(255,255,255,.15);letter-spacing:.08em;pointer-events:none">Ad</span>
+    <span style="position:absolute;top:3px;right:6px;font-size:8px;color:rgba(255,255,255,.12);letter-spacing:.06em;pointer-events:none">AD</span>
+    <button style="position:absolute;bottom:3px;right:6px;font-size:8px;color:rgba(255,255,255,.18);background:none;border:none;cursor:pointer;padding:0;letter-spacing:.04em" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='rgba(255,255,255,.18)'" onclick="goToAdSettings()">✕ Remove</button>
+  </div>`;
+}
+
+function renderAdBanners(){
+  AD_SLOT_IDS.forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    if(id==='ad-games-banner'){
+      if(!el.innerHTML.trim())el.innerHTML=makeInlineAdHTML(id);
+    }else{
+      if(!el.innerHTML.trim())el.innerHTML=makeInlineAdHTML(id);
+    }
+  });
+  // Side banner
+  const sideEl=document.getElementById('ad-banner-side');
+  if(sideEl&&!sideEl.innerHTML.trim()){
+    sideEl.innerHTML=`<div class="ad-inner" style="width:160px;min-height:90px;">
+      <!-- AD SLOT: sidebar — paste ad script here -->
+      <span class="ad-placeholder" style="font-size:9px">Ad</span>
+    </div>
+    <button class="ad-close-hint" onclick="goToAdSettings()" style="font-size:9px">Remove ads</button>`;
+    sideEl.style.display='flex';
+  }
+  applyAdsState();
 }
 
 // ── NOTIFICATION SYSTEM ──────────────────────────────────────────
@@ -3700,9 +3960,9 @@ lbInitAvatars();
   buildList();renderPage();updateStats();
   bootStep('Fetching game library…',40);
   loadZones();
-  // Load spotlight + site settings for all users
   loadSpotlightPublic();
   loadSiteSettings();
+  renderAdBanners();
 })();
 </script>
 </body>
