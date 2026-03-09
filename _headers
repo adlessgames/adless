@@ -1,7 +1,0 @@
-/sw.js
-  Service-Worker-Allowed: /
-  Content-Type: application/javascript
-
-/*
-  X-Frame-Options: SAMEORIGIN
-  X-Content-Type-Options: nosniff
