@@ -3,10 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="monetag" content="1df82bad195f71079a64922a54c503bc">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6457339866733979" crossorigin="anonymous"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MNR0G49CZP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-MNR0G49CZP");
+</script>
+<link id="site-favicon" rel="icon" href="data:,">
 <title>Adless OS</title>
 <style>
-:root{--blue:#0a84ff;--red:#ff3b30;--text:#f5f5f7;--text2:#86868b;--glass:rgba(28,28,30,0.75);--border:rgba(255,255,255,0.1);}
+:root{--blue:#0a84ff;--red:#ff3b30;--text:#f5f5f7;--text2:#86868b;--glass:rgba(28,28,30,0.75);--border:rgba(255,255,255,0.1);--card:#1c1c1e;}
 body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!important;transition:none!important;}
 body.sys-cursor *{cursor:auto!important;}
 body.sys-cursor #cur{display:none!important;}
@@ -24,7 +34,14 @@ body,html{margin:0;padding:0;width:100vw;height:100vh;overflow:hidden;background
 body.g-hover #cur{width:44px;height:44px;margin:-16px 0 0 -16px;background:var(--blue);mix-blend-mode:normal;opacity:.4;transition:width .15s,height .15s;}
 body.r-hover #cur{width:44px;height:44px;margin:-16px 0 0 -16px;background:var(--blue);mix-blend-mode:normal;opacity:.8;}
 #app{display:grid;grid-template-columns:240px 1fr;width:100vw;height:100vh;position:relative;z-index:1;}
-aside{position:relative;background:rgba(0,0,0,.3);backdrop-filter:blur(30px);border-right:1px solid var(--border);padding:20px 16px;display:flex;flex-direction:column;overflow-y:auto;}
+#ads-banner{position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,rgba(10,132,255,.18),rgba(48,209,88,.1));border-bottom:1px solid rgba(10,132,255,.3);backdrop-filter:blur(12px);padding:9px 16px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text);transition:transform .35s ease,opacity .35s ease;}
+#ads-banner.banner-hidden{transform:translateY(-100%);opacity:0;pointer-events:none;}
+#ads-banner .ab-text{flex:1;line-height:1.4;}
+#ads-banner .ab-link{color:var(--blue);cursor:pointer;text-decoration:underline;white-space:nowrap;font-weight:600;}
+#ads-banner .ab-close{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:var(--text);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;white-space:nowrap;flex-shrink:0;font-weight:600;}
+#ads-banner .ab-close:hover{background:rgba(255,255,255,.2);}
+body.banner-visible{padding-top:41px;}
+aside{position:relative;background:rgba(0,0,0,.3);backdrop-filter:blur(30px);border-right:1px solid var(--border);padding:20px 16px;display:flex;flex-direction:column;overflow-y:auto;overflow-x:visible;}
 .logo{font-size:22px;font-weight:800;margin-bottom:8px;padding-left:8px;flex-shrink:0;}
 .sec-label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;margin:14px 0 4px 8px;font-weight:800;flex-shrink:0;}
 .nav{padding:9px 12px;border-radius:10px;margin-bottom:2px;display:flex;align-items:center;gap:9px;font-size:12px;font-weight:500;transition:.15s;color:var(--text2);flex-shrink:0;}
@@ -209,8 +226,8 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 #chat-view.active{display:flex!important;}
 #chat-view header{padding:16px 20px;flex-shrink:0;}
 #chat-messages{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:8px;min-height:0;}
-#chat-bar{padding:10px 16px 14px;flex-shrink:0;border-top:1px solid rgba(255,255,255,.07);}
-#chat-input-row{display:flex;gap:8px;margin-top:6px;}
+.chat-bar-wrap{padding:10px 16px 14px;flex-shrink:0;border-top:1px solid rgba(255,255,255,.07);}
+.chat-input-row{display:flex;gap:8px;margin-top:6px;}
 #chat-typing-indicator{font-size:11px;color:var(--text2);min-height:16px;display:block;}
 .chat-tabs{display:flex;gap:6px;}
 .chat-tab{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:var(--text2);border-radius:10px;padding:6px 14px;font-size:11px;font-weight:700;cursor:pointer;transition:.15s;}
@@ -264,10 +281,10 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .notif-bell{position:relative;background:none;border:none;font-size:16px;cursor:pointer;padding:2px 4px;border-radius:7px;transition:.15s;color:#fff;}
 .notif-bell:hover{background:rgba(255,255,255,.1);}
 #notif-badge{position:absolute;top:-3px;right:-3px;background:#ff375f;color:#fff;font-size:8px;font-weight:900;min-width:14px;height:14px;border-radius:7px;display:flex;align-items:center;justify-content:center;padding:0 3px;line-height:1;}
-#notif-panel{position:absolute;top:0;left:100%;margin-left:8px;width:300px;max-height:420px;background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.5);z-index:999999;overflow:hidden;display:flex;flex-direction:column;}
-.notif-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.07);}
-#notif-list{overflow-y:auto;flex:1;max-height:360px;}
-.notif-item{display:flex;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer;transition:.15s;position:relative;}
+#notif-panel{position:fixed;top:60px;left:252px;width:310px;max-height:80vh;background:#1c1c1e;border:1px solid rgba(255,255,255,.15);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.8);z-index:999999;overflow:hidden;display:flex;flex-direction:column;color:#f5f5f7;}
+.notif-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.1);background:#1c1c1e;color:#f5f5f7;flex-shrink:0;}
+#notif-list{overflow-y:auto;flex:1;max-height:360px;min-height:60px;color:#f5f5f7;}
+.notif-item{display:flex;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;transition:.15s;position:relative;color:#f5f5f7;}
 .notif-item:hover{background:rgba(255,255,255,.05);}
 .notif-item.unread{background:rgba(10,132,255,.07);}
 .notif-item.unread::before{content:'';position:absolute;left:5px;top:50%;transform:translateY(-50%);width:5px;height:5px;border-radius:50%;background:var(--blue);}
@@ -314,6 +331,41 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .auc-btns{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;}
 .auc-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:7px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;transition:.15s;}
 .auc-btn:hover{opacity:.8;}
+/* ── LEADERBOARD ── */
+.lb-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:12px;background:var(--glass);border:1px solid var(--border);margin-bottom:7px;transition:.15s;cursor:pointer;}
+.lb-row:hover{border-color:rgba(10,132,255,.3);background:rgba(10,132,255,.05);}
+.lb-rank{font-size:18px;font-weight:900;width:32px;text-align:center;flex-shrink:0;}
+.lb-rank.gold{color:#ffd60a;text-shadow:0 0 12px rgba(255,214,10,.5);}
+.lb-rank.silver{color:#c0c0c0;}
+.lb-rank.bronze{color:#cd7f32;}
+.lb-av{font-size:22px;flex-shrink:0;}
+.lb-info{flex:1;min-width:0;}
+.lb-uname{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lb-game{font-size:11px;color:var(--text2);margin-top:1px;}
+.lb-score{font-size:18px;font-weight:800;color:#ffd60a;flex-shrink:0;}
+.lb-flag{background:none;border:1px solid rgba(255,159,10,.3);color:#ff9f0a;border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;flex-shrink:0;}
+/* ── BADGES ── */
+.badge-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.badge-chip{display:flex;align-items:center;gap:6px;background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:6px 10px;font-size:12px;cursor:default;transition:.15s;}
+.badge-chip:hover{border-color:rgba(255,214,10,.4);background:rgba(255,214,10,.05);}
+.badge-chip .be{font-size:18px;}
+.badge-chip .bn{font-weight:600;}
+.badge-chip.locked{opacity:.35;filter:grayscale(1);}
+/* ── PROFILE MODAL ── */
+.pm-av{font-size:52px;text-align:center;margin-bottom:8px;}
+.pm-name{font-size:20px;font-weight:800;text-align:center;}
+.pm-uname{font-size:13px;color:var(--text2);text-align:center;margin-bottom:16px;}
+.pm-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
+.pm-stat{background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center;}
+.pm-stat-val{font-size:18px;font-weight:800;}
+.pm-stat-lbl{font-size:10px;color:var(--text2);margin-top:2px;}
+/* ── SCORE REVIEW ── */
+.sr-card{background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;}
+.sr-card .sr-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.sr-card .sr-score{font-size:22px;font-weight:900;color:#ffd60a;}
+.sr-card .sr-game{font-size:12px;color:var(--text2);}
+.sr-card .sr-ss{width:100%;border-radius:8px;cursor:pointer;max-height:160px;object-fit:cover;margin-bottom:10px;border:1px solid rgba(255,255,255,.1);}
+.sr-card .sr-btns{display:flex;gap:8px;flex-wrap:wrap;}
 .auc-btn.red{background:rgba(255,55,95,.15);border-color:rgba(255,55,95,.3);color:#ff375f;}
 .auc-btn.yellow{background:rgba(255,159,10,.15);border-color:rgba(255,159,10,.3);color:#ff9f0a;}
 .auc-btn.green{background:rgba(48,209,88,.15);border-color:rgba(48,209,88,.3);color:#30d158;}
@@ -450,6 +502,11 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
   </div>
 </div>
 <div id="toast">✓ Done</div>
+<div id="ads-banner" class="banner-hidden">
+  <span style="font-size:18px;flex-shrink:0">📢</span>
+  <span class="ab-text">We use <strong>optional ads</strong> to help keep Adless OS running smoothly. You can remove them anytime in <span class="ab-link" onclick="dismissAdsBanner(true)">Settings</span>.</span>
+  <button class="ab-close" onclick="dismissAdsBanner(false)">✕ Got it</button>
+</div>
 <div id="app">
   <aside>
     <div class="logo">Adless</div>
@@ -475,9 +532,12 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <div class="nav" data-view="shows-view">📺 Shows &amp; Anime</div>
     <div class="nav" data-view="chat-view">💬 Live Chat</div>
     <div class="nav" data-view="friends-view">👥 Friends</div>
+    <div class="nav" data-view="leaderboard-view">🏆 Leaderboard</div>
+    <div class="nav" data-view="badges-view">🎖️ Badges</div>
     <div class="nav" data-view="settings-view">⚙️ Settings</div>
     <div class="nav discord-btn" onclick="window.open('https://discord.gg/gAe83DUFNT','_blank')">🎮 Join Discord</div>
     <div class="nav owner-btn" id="owner-nav" data-view="owner-view" style="display:none">👑 Owner Panel</div>
+    <div class="nav" id="admin-nav" data-view="admin-view" style="display:none;color:#30d158;background:rgba(48,209,88,.08);border:1px solid rgba(48,209,88,.2)">🛡️ Admin Panel</div>
     <div id="game-filters">
       <div class="sec-label">Categories</div>
       <div class="nav" data-cat="all">🏠 All Games</div>
@@ -554,9 +614,9 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     </header>
     <div class="ad-slot-inline" id="ad-chat"></div>
     <div id="chat-messages"></div>
-    <div id="chat-bar">
+    <div id="global-chat-bar" class="chat-bar-wrap">
       <span id="chat-typing-indicator"></span>
-      <div id="chat-input-row">
+      <div class="chat-input-row">
         <input id="chat-input" class="lb-field" style="margin:0;flex:1" placeholder="Say something…" maxlength="300" onkeydown="if(event.key==='Enter')sendMessage()">
         <button class="lb-btn" style="width:auto;padding:12px 18px;margin:0" onclick="sendMessage()">Send</button>
       </div>
@@ -629,8 +689,8 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     </header>
     <div class="ad-slot-inline" id="ad-groupchat"></div>
     <div id="grp-messages"></div>
-    <div id="chat-bar">
-      <div id="chat-input-row">
+    <div id="grp-chat-bar" class="chat-bar-wrap">
+      <div class="chat-input-row">
         <input id="grp-input" class="lb-field" style="margin:0;flex:1" placeholder="Send a message…" maxlength="500" onkeydown="if(event.key==='Enter')sendGroupMsg()">
         <button class="lb-btn" style="width:auto;padding:12px 18px;margin:0" onclick="sendGroupMsg()">Send</button>
       </div>
@@ -661,13 +721,43 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     </header>
     <div class="ad-slot-inline" id="ad-dm"></div>
     <div id="dm-messages"></div>
-    <div id="chat-bar">
-      <div id="chat-input-row">
+    <div id="dm-chat-bar" class="chat-bar-wrap">
+      <div class="chat-input-row">
         <input id="dm-input" class="lb-field" style="margin:0;flex:1" placeholder="Send a message…" maxlength="500" onkeydown="if(event.key==='Enter')sendDm()">
         <button class="lb-btn" style="width:auto;padding:12px 18px;margin:0" onclick="sendDm()">Send</button>
       </div>
     </div>
   </div>
+  <!-- ADMIN PANEL VIEW -->
+  <div id="admin-view" class="view">
+    <header><h1>🛡️ Admin Panel</h1></header>
+    <!-- Warn/Ban/Suspend users -->
+    <div class="s-section">
+      <div class="s-sec">👤 User Moderation</div>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <input id="admin-search-input" class="lb-field" style="margin:0;flex:1" placeholder="Search username…" maxlength="20" onkeydown="if(event.key==='Enter')adminSearchUser()">
+        <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0" onclick="adminSearchUser()">Search</button>
+      </div>
+      <div id="admin-user-result"></div>
+    </div>
+    <!-- Chat moderation — view & delete messages only -->
+    <div class="s-section">
+      <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
+        <span>💬 Recent Messages</span>
+        <button class="auc-btn blue" style="font-size:11px" onclick="loadAdminChatLog()">Refresh</button>
+      </div>
+      <div id="admin-chat-log2" style="max-height:300px;overflow-y:auto"></div>
+    </div>
+    <!-- Reports — view only, can resolve -->
+    <div class="s-section">
+      <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
+        <span>🚨 Open Reports</span>
+        <button class="auc-btn blue" style="font-size:11px" onclick="loadAdminReports()">Refresh</button>
+      </div>
+      <div id="admin-reports-list"></div>
+    </div>
+  </div>
+
   <div id="owner-view" class="view">
     <header><h1>👑 Owner Panel</h1></header>
 
@@ -781,6 +871,59 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <div class="s-sec">👥 All Users <span id="user-count" style="color:var(--text2);font-weight:400"></span></div>
       <div id="admin-all-users"></div>
     </div>
+    <!-- Score Review -->
+    <div class="s-section">
+      <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
+        <span>📸 Score Review <span id="score-review-badge" style="display:none;background:#ff375f;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;margin-left:6px"></span></span>
+        <div style="display:flex;gap:6px">
+          <button class="auc-btn" onclick="loadScoreReview('pending')" id="sr-tab-pending" style="background:rgba(255,159,10,.15);border-color:rgba(255,159,10,.3);color:#ff9f0a">⏳ Pending</button>
+          <button class="auc-btn" onclick="loadScoreReview('approved')" id="sr-tab-approved">✅ Approved</button>
+          <button class="auc-btn" onclick="loadScoreReview('rejected')" id="sr-tab-rejected">❌ Rejected</button>
+        </div>
+      </div>
+      <div id="score-review-list" style="margin-top:10px"></div>
+    </div>
+    <!-- Badge Manager -->
+    <div class="s-section">
+      <div class="s-sec">🎖️ Badge Manager</div>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <input id="badge-mgr-search" class="lb-field" style="margin:0;flex:1" placeholder="Search username..." onkeydown="if(event.key==='Enter')loadBadgeMgr()">
+        <button class="lb-btn" style="width:auto;padding:12px 18px;margin:0" onclick="loadBadgeMgr()">Search</button>
+      </div>
+      <div id="badge-mgr-result"></div>
+    </div>
+  </div>
+  <!-- LEADERBOARD VIEW -->
+  <div id="leaderboard-view" class="view">
+    <header><h1>🏆 Leaderboard</h1></header>
+    <div class="s-section">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+        <button class="auc-btn" id="lb-tab-global" onclick="setLbTab('global')" style="background:rgba(10,132,255,.2);border-color:rgba(10,132,255,.4);color:var(--blue)">🌐 Global</button>
+        <button class="auc-btn" id="lb-tab-game" onclick="setLbTab('game')">🎮 By Game</button>
+        <select id="lb-time-filter" class="lb-field" style="margin:0;width:auto;padding:8px 12px;font-size:12px" onchange="loadLeaderboard()">
+          <option value="all">All Time</option>
+          <option value="week">This Week</option>
+          <option value="today">Today</option>
+        </select>
+      </div>
+      <div id="lb-game-picker" style="display:none;margin-bottom:12px">
+        <input id="lb-game-search" class="lb-field" style="margin:0" placeholder="Search game..." oninput="filterLbGames()">
+        <div id="lb-game-list" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px"></div>
+      </div>
+      <div id="lb-content"></div>
+    </div>
+  </div>
+  <!-- BADGES VIEW -->
+  <div id="badges-view" class="view">
+    <header><h1>🎖️ Badges</h1></header>
+    <div class="s-section">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+        <button class="auc-btn" id="bdg-tab-earned" onclick="setBadgeTab('earned')" style="background:rgba(10,132,255,.2);border-color:rgba(10,132,255,.4);color:var(--blue)">🏅 My Badges</button>
+        <button class="auc-btn" id="bdg-tab-all" onclick="setBadgeTab('all')">📋 All Badges</button>
+      </div>
+      <div id="badges-stats" style="margin-bottom:16px"></div>
+      <div id="badges-content"></div>
+    </div>
   </div>
   <div id="settings-view" class="view">
     <header><h1>⚙️ Settings</h1></header>
@@ -866,7 +1009,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <div class="s-row"><div><div class="s-lbl">Clear Favorites</div><div class="s-desc">Remove all starred games</div></div><button class="s-danger" onclick="askConfirm('Clear favorites?','All starred games will be removed.',clearFavs)">🗑️ Clear</button></div>
       <div class="s-row"><div><div class="s-lbl">Reset All Settings</div><div class="s-desc">Restore defaults</div></div><button class="s-danger" onclick="askConfirm('Reset all settings?','Display, theme and background will be reset.',resetAll)">↩️ Reset</button></div>
     </div>
-    <div class="s-section">
+    <div class="s-section" id="settings-ads-section">
       <div class="s-sec">📢 Ads</div>
       <div class="s-row">
         <div>
@@ -945,6 +1088,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <button class="pbtn rand" onclick="playRandom()">🎲 Random</button>
     <button id="lock-btn" onclick="toggleLock()" title="Lock mouse to game">🔒 Lock Mouse</button>
     <button class="pbtn" onclick="fsGame()">⛶ Fullscreen</button>
+    <button class="pbtn" onclick="openScoreSubmit()" id="score-submit-btn" style="background:rgba(255,214,10,.15);border:1px solid rgba(255,214,10,.3);color:#ffd60a">🏆 Submit Score</button>
     <button class="pbtn cls" onclick="closePlayer()">✕ Close</button>
   </div>
   <div id="lock-hint">🔒 Mouse locked — press ESC to unlock</div>
@@ -1191,6 +1335,7 @@ function lbEnter(){
   cardCache.clear();buildList();renderPage();updateStats();
   bootstrapOwner();
   startNotifPoll();
+  postLoginBadgeCheck();
   // Ads: load opt-out state then show popup if first login on this device
   if(!currentUser.guest){
     loadAdsOptOut().then(()=>{
@@ -1318,7 +1463,7 @@ async function loadZones(){
       let url=z.url.replace(/\{COVER_URL\}/g,COVER).replace(/\{HTML_URL\}/g,HTMLB).replace(/https:\/\/cdn\.jsdelivr\.net\/gh\/gn-math\/html@main/g,HTMLB);
       let img=z.cover.replace(/\{COVER_URL\}/g,COVER).replace(/\{HTML_URL\}/g,HTMLB);
       const cats=detectTags(z.name,(z.special||[]).join(' '));
-      return{id:'z'+z.id,title:z.name,img,url,cat:cats[0],cats,featured:!!z.featured,isZone:true};
+      return{id:'z'+z.id,title:z.name,img,url,cat:cats[0],cats:[cats[0]],featured:!!z.featured,isZone:true};
     });
     rebuildDedup();buildList();renderPage();updateStats();
     bootStep('Zones ready! Loading GamePix games…',80);
@@ -1347,14 +1492,18 @@ async function loadGP(){
       if(r.status!=='fulfilled')return;
       const d=r.value,items=Array.isArray(d)?d:(d.games||d.data||d.items||d.results||[]);
       items.forEach(raw=>{
-        const title=gpTitle(raw),url=raw.url||raw.gameUrl||raw.embed_url||'',img=raw.image||raw.thumbnail||raw.thumb||raw.cover||'';
+        const title=gpTitle(raw),url=raw.url||raw.gameUrl||raw.embed_url||'';
+        // Prefer larger image fields for better quality
+        const img=raw.image_large||raw.image_hd||raw.image||raw.thumbnail||raw.thumb||raw.cover||'';
         if(!title||!url)return;
         const n=nt(title);
         if(gpTS.has(n)||gpUS.has(url))return;
         gpTS.add(n);gpUS.add(url);
         const extra=(Array.isArray(raw.categories)?raw.categories.join(' '):String(raw.categories||raw.category||raw.tags||''));
         const genres=detectTags(title,extra);
-        gpGames.push({id:'gp_'+(gpIdx++),title,img,url,cat:genres[0],cats:genres,isGamePix:true});
+        // Fix: only 1 genre per game (cat only, no cats array multi-tag)
+        const primaryCat=genres[0]||'arcade';
+        gpGames.push({id:'gp_'+(gpIdx++),title,img,url,cat:primaryCat,cats:[primaryCat],isGamePix:true});
         added++;
       });
     });
@@ -1466,11 +1615,15 @@ function playEp(el){
 }
 function backToShows(){curShowI=-1;curSeasonI=-1;switchView('shows-view');renderShows();}
 function backToSeasons(){curSeasonI=-1;if(curShowI>=0)openShow(curShowI);else switchView('seasons-view');}// PLAYER
+let currentGameTitle="", currentGameId="", currentGameObj=null, scoreFile=null;
 function play(url,title,gameObj){
   // Track recently played
+  // Track current game for score submission
+  currentGameTitle=title||"Unknown Game";
+  currentGameObj=gameObj||(allGames?allGames().find(g=>g.url===url):null)||null;
+  currentGameId=currentGameObj?.id||btoa(url||"").slice(0,16);
   if(gameObj)addRecent(gameObj);
   else{
-    // Try to find game by url for recent tracking
     const g=allGames().find(x=>x.url===url);
     if(g)addRecent(g);
   }
@@ -1478,35 +1631,51 @@ function play(url,title,gameObj){
   document.getElementById('game-loader').classList.add('on');
   document.getElementById('player-title').textContent=title||'Playing';
   const frame=document.getElementById('game-frame');
+  // Remove any previous error banner
+  const prev=document.getElementById('game-error-bar');
+  if(prev)prev.remove();
   frame.src='';
   document.getElementById('player').classList.add('on');
   document.body.classList.add('player-open');
   const hide=()=>{document.getElementById('game-loader').classList.remove('on');};
-  // Try to auto-dismiss GamePix splash on load
+  let loadOk=false;
   frame.onload=()=>{
+    loadOk=true;
     setTimeout(hide,400);
-    // Attempt to click the "OK, PLAY NOW!" button via postMessage tricks
     try{
-      // Method 1: send play messages GamePix might listen for
       frame.contentWindow.postMessage({type:'play'},'*');
       frame.contentWindow.postMessage('play','*');
       frame.contentWindow.postMessage({action:'start'},'*');
     }catch(e){}
-    // Method 2: inject a MutationObserver via srcdoc swap isn't possible cross-origin
-    // so we poll with postMessage broadcasts every 200ms for 3s
     let attempts=0;
     const poller=setInterval(()=>{
       attempts++;
       try{
         frame.contentWindow.postMessage({type:'play'},'*');
         frame.contentWindow.postMessage('start','*');
-        frame.contentWindow.postMessage({event:'click'},'*');
       }catch(e){}
       if(attempts>15)clearInterval(poller);
     },200);
   };
-  setTimeout(hide,8000);
+  frame.onerror=()=>{
+    hide();
+    showGameError(url,title);
+  };
+  // If game doesn't trigger onload in 12s, show open-in-tab fallback
+  setTimeout(()=>{
+    hide();
+    if(!loadOk)showGameError(url,title);
+  },12000);
   frame.src=url;
+}
+function showGameError(url,title){
+  const existing=document.getElementById('game-error-bar');
+  if(existing)return;
+  const bar=document.createElement('div');
+  bar.id='game-error-bar';
+  bar.style.cssText='position:absolute;bottom:56px;left:50%;transform:translateX(-50%);background:rgba(30,30,30,.97);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:10px 18px;display:flex;align-items:center;gap:12px;z-index:10;font-size:13px;color:#fff;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.5)';
+  bar.innerHTML=`<span>⚠️ Game may not load in iframe</span><button onclick="window.open('${url.replace(/'/g,"\\'")}','_blank')" style="background:#0a84ff;border:none;color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600">↗ Open in New Tab</button><button onclick="document.getElementById('game-error-bar').remove()" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:16px;line-height:1">✕</button>`;
+  document.getElementById('player').appendChild(bar);
 }
 function closePlayer(){
   document.getElementById('game-loader').classList.remove('on');
@@ -1573,6 +1742,8 @@ function switchView(id){
   document.getElementById(id).classList.add('active');
   currentView=id;
   document.getElementById('game-filters').style.display=id==='games-view'?'block':'none';
+  if(id==="leaderboard-view")setTimeout(()=>loadLeaderboard(),50);
+  if(id==="badges-view")setTimeout(()=>loadBadgesPage(),50);
 }
 document.querySelectorAll('.nav').forEach(btn=>{
   if(btn.classList.contains('discord-btn'))return;
@@ -1584,8 +1755,11 @@ document.querySelectorAll('.nav').forEach(btn=>{
       else if(btn.dataset.view==='shows-view'){selectedShow=null;selectedSeason=null;switchView('shows-view');renderShows();}
       else if(btn.dataset.view==='movies-view'){switchView('movies-view');renderMovies();}
       else if(btn.dataset.view==='chat-view'){switchView('chat-view');onChatViewOpen();}
+      else if(btn.dataset.view==='leaderboard-view'){switchView('leaderboard-view');setLbTab('global');}
+      else if(btn.dataset.view==='badges-view'){switchView('badges-view');setBadgeTab('earned');}
       else if(btn.dataset.view==='friends-view'){switchView('friends-view');loadFriendRequests();loadGroupsList();}
       else if(btn.dataset.view==='owner-view'){switchView('owner-view');loadOwnerPanel();}
+      else if(btn.dataset.view==='admin-view'){switchView('admin-view');loadAdminPanel();}
       else{switchView(btn.dataset.view);if(btn.dataset.view==='settings-view'){buildColorGrid();buildBgSwatches();buildBgGradients();buildCloakGrid();updateStats();
         const accSec=document.getElementById('account-section');
         if(accSec)accSec.style.display=(!currentUser||currentUser.guest)?'none':'block';
@@ -2370,17 +2544,33 @@ let lastNotifCount=0;
 async function createNotif(userId,type,title,body,linkType=null,linkData=null){
   if(!userId)return;
   try{
-    await fetch(SB_URL+'/rest/v1/notifications',{
+    const res=await fetch(SB_URL+'/rest/v1/notifications',{
       method:'POST',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body:JSON.stringify({user_id:userId,type,title,body:body||null,link_type:linkType,link_data:linkData,read:false})
+      body:JSON.stringify({user_id:userId,type:type,title:title,message:body||null,link_type:linkType,link_data:linkData,read:false})
     });
+    if(!res.ok){const err=await res.text();console.error('Notif create failed:',res.status,err);}
   }catch(e){console.warn('Notif create failed',e);}
 }
 
 async function pollNotifs(){
   if(!currentUser||currentUser.guest)return;
   try{
+    // Check if user has been banned or suspended since login
+    const profile=await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=banned,suspended_until,ban_reason`);
+    if(profile&&profile[0]){
+      const p=profile[0];
+      if(p.banned){
+        showToast('🚫 Your account has been banned: '+(p.ban_reason||'Contact admin'));
+        setTimeout(()=>logout(),2000);
+        return;
+      }
+      if(p.suspended_until&&new Date(p.suspended_until)>new Date()){
+        showToast('⏸ Your account has been suspended until '+new Date(p.suspended_until).toLocaleDateString());
+        setTimeout(()=>logout(),2000);
+        return;
+      }
+    }
     // Ping last_seen every poll (every 5s)
     fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{
       method:'PATCH',
@@ -2480,15 +2670,31 @@ function renderNotifList(rows){
   list.innerHTML=rows.map(n=>{
     const icon=notifIcon(n.type);
     const time=timeAgo(new Date(n.created_at));
-    return`<div class="notif-item${n.read?'':' unread'}" onclick="handleNotifClick('${n.id}','${n.link_type||''}','${escAttr(n.link_data||'')}')">
+    return`<div class="notif-item${n.read?'':' unread'}" data-notif-id="${n.id}" onclick="handleNotifClick('${n.id}','${n.link_type||''}','${escAttr(n.link_data||'')}')">
       <div class="notif-icon">${icon}</div>
       <div class="notif-body">
         <div class="notif-title">${escHtml(n.title)}</div>
-        ${n.body?`<div class="notif-text">${escHtml(n.body)}</div>`:''}
+        ${(n.message||n.body)?`<div class="notif-text">${escHtml(n.message||n.body)}</div>`:''}
         <div class="notif-time">${time}</div>
       </div>
+      <button onclick="event.stopPropagation();dismissNotif('${n.id}')" style="background:none;border:none;color:rgba(255,255,255,.25);font-size:14px;cursor:pointer;padding:2px 4px;flex-shrink:0;line-height:1" title="Dismiss">✕</button>
     </div>`;
   }).join('');
+}
+
+async function dismissNotif(id){
+  try{
+    await fetch(SB_URL+`/rest/v1/notifications?id=eq.${id}`,{
+      method:'DELETE',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+    });
+  }catch(e){}
+  // Immediately remove from UI
+  const el=document.querySelector(`[data-notif-id="${id}"]`);
+  if(el)el.remove();
+  // Refresh count
+  pollNotifs();
+  if(notifPanelOpen)loadNotifPanel();
 }
 
 function notifIcon(type){
@@ -2746,24 +2952,218 @@ async function bootstrapOwner(){
       });
     }
   }catch(e){console.warn('Owner bootstrap failed',e);}
+  // Bootstrap WinterAG admin account
+  bootstrapAdmin();
+}
+
+async function bootstrapAdmin(){
+  try{
+    const existing=await sbReq(`/rest/v1/profiles?username=eq.WinterAG&select=id,role`);
+    if(!existing||!existing.length){
+      const hash=await sha256('WinterAG2025!WinterAG');
+      await fetch(SB_URL+'/rest/v1/profiles',{
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({username:'WinterAG',password_hash:hash,avatar:'🛡️',role:'admin'})
+      });
+      console.log('WinterAG admin account created');
+    } else if(existing[0].role!=='admin'&&existing[0].role!=='owner'){
+      await fetch(SB_URL+`/rest/v1/profiles?id=eq.${existing[0].id}`,{
+        method:'PATCH',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({role:'admin'})
+      });
+    }
+  }catch(e){console.warn('Admin bootstrap failed',e);}
 }
 
 function isOwner(){return currentUser&&currentUser.role==='owner';}
+function isAdmin(){return currentUser&&(currentUser.role==='admin'||currentUser.role==='owner');}
 
 function showOwnerNav(){
   const nav=document.getElementById('owner-nav');
   if(nav)nav.style.display=isOwner()?'block':'none';
+  const anav=document.getElementById('admin-nav');
+  if(anav)anav.style.display=(isAdmin()&&!isOwner())?'block':'none';
 }
 
-// Add owner badge to username display
 function updateUserChip(){
   const chip=document.getElementById('user-chip');
   if(!chip||!currentUser)return;
   chip.style.display='flex';
   document.getElementById('uc-av').textContent=currentUser.avatar;
   const displayName=currentUser.display_name||currentUser.username;
-  document.getElementById('uc-name').innerHTML=displayName+(isOwner()?'<span class="owner-badge">OWNER</span>':'');
+  const badge=isOwner()?'<span class="owner-badge">OWNER</span>':isAdmin()?'<span class="owner-badge" style="background:rgba(48,209,88,.15);color:#30d158;border-color:rgba(48,209,88,.3)">ADMIN</span>':'';
+  document.getElementById('uc-name').innerHTML=displayName+badge;
   showOwnerNav();
+}
+
+// ── ADMIN PANEL FUNCTIONS ────────────────────────────────────────
+async function loadAdminPanel(){
+  if(!isAdmin())return;
+  adminSearchUser();
+  loadAdminChatLog2();
+  loadAdminReports();
+}
+
+async function adminSearchUser(){
+  if(!isAdmin())return;
+  const q=(document.getElementById('admin-search-input')||document.getElementById('admin-search'))?.value.trim();
+  const res=document.getElementById('admin-user-result');
+  if(!res)return;
+  try{
+    const users=q
+      ?await sbReq(`/rest/v1/profiles?username=ilike.*${encodeURIComponent(q)}*&select=id,username,avatar,role,banned,suspended_until,ban_reason,last_seen`)
+      :await sbReq(`/rest/v1/profiles?select=id,username,avatar,role,banned,suspended_until,ban_reason,last_seen&order=created_at.desc&limit=20`);
+    if(!users||!users.length){res.innerHTML='<div class="fc-empty">No users found</div>';return;}
+    res.innerHTML=users.map(u=>{
+      const isBanned=u.banned;
+      const isSuspended=u.suspended_until&&new Date(u.suspended_until)>new Date();
+      const isOwnerAcc=u.role==='owner';
+      if(isOwnerAcc)return''; // can't touch owner
+      return`<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 14px;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <span style="font-size:18px">${u.avatar}</span>
+          <span style="font-size:13px;font-weight:700;flex:1">${escHtml(u.username)}</span>
+          <span style="font-size:10px;color:${isBanned?'#ff375f':isSuspended?'#ff9f0a':'#30d158'}">${isBanned?'🚫 Banned':isSuspended?'⏸ Suspended':'✅ Active'}</span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          ${!isBanned?`<button class="auc-btn yellow" onclick="adminWarnUser('${u.id}','${escAttr(u.username)}')">⚠️ Warn</button>`:''}
+          ${!isBanned?`<button class="auc-btn red" onclick="adminBanUser('${u.id}','${escAttr(u.username)}')">🚫 Ban</button>`:`<button class="auc-btn" onclick="adminUnbanUser('${u.id}','${escAttr(u.username)}')">✓ Unban</button>`}
+          ${!isSuspended?`<button class="auc-btn yellow" onclick="adminSuspendUser('${u.id}','${escAttr(u.username)}')">⏸ Suspend</button>`:`<button class="auc-btn" onclick="adminUnsuspendUser('${u.id}')">↩ Unsuspend</button>`}
+          <button class="auc-btn red" onclick="adminDeleteMsgs('${u.id}','${escAttr(u.username)}')">🗑 Del Msgs</button>
+        </div>
+      </div>`;
+    }).join('');
+  }catch(e){res.innerHTML='<div class="fc-empty">Error loading users</div>';}
+}
+
+async function adminWarnUser(uid,uname){
+  const reason=prompt(`Warn ${uname} — enter reason:`);
+  if(!reason)return;
+  const senderName=currentUser.display_name||currentUser.username;
+  // Send DM warning
+  await fetch(SB_URL+'/rest/v1/dms',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({sender_id:currentUser.id,receiver_id:uid,content:`⚠️ Warning from Admin ${senderName}: ${reason}`,read:false})});
+  createNotif(uid,'warning','⚠️ You received a warning',reason,'dm',JSON.stringify({id:currentUser.id,username:uname,avatar:'🛡️'}));
+  showToast(`⚠️ Warned ${uname}`);
+}
+async function adminBanUser(uid,uname){
+  const reason=prompt(`Ban reason for ${uname}:`);
+  if(!reason)return;
+  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({banned:true,ban_reason:reason})});
+  createNotif(uid,'ban','🚫 Account Banned',`Reason: ${reason}`,null,null);
+  showToast(`🚫 Banned ${uname}`);adminSearchUser();
+}
+async function adminUnbanUser(uid,uname){
+  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({banned:false,ban_reason:null})});
+  showToast(`✓ Unbanned ${uname}`);adminSearchUser();
+}
+async function adminSuspendUser(uid,uname){
+  const days=parseInt(prompt(`Suspend ${uname} for how many days?`));
+  if(!days||isNaN(days))return;
+  const until=new Date(Date.now()+days*86400000).toISOString();
+  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({suspended_until:until})});
+  createNotif(uid,'system',`⏸ Suspended for ${days} day${days>1?'s':''}`,`Until ${new Date(until).toLocaleDateString()}`,null,null);
+  showToast(`⏸ Suspended ${uname} for ${days}d`);adminSearchUser();
+}
+async function adminUnsuspendUser(uid){
+  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({suspended_until:null})});
+  showToast('↩ Unsuspended');adminSearchUser();
+}
+async function adminDeleteMsgs(uid,uname){
+  if(!confirm(`Delete all messages from ${uname}?`))return;
+  await fetch(SB_URL+`/rest/v1/messages?user_id=eq.${uid}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  showToast(`🗑 Deleted messages from ${uname}`);loadAdminChatLog2();
+}
+
+// ── ALIASES so owner panel card buttons & loadOwnerPanel work ──────
+async function promptBan(uid,uname){return adminBanUser(uid,uname);}
+async function unbanUser(uid,uname){return adminUnbanUser(uid,uname||'');}
+async function promptSuspend(uid,uname){return adminSuspendUser(uid,uname);}
+async function unsuspendUser(uid){return adminUnsuspendUser(uid);}
+async function deleteUserMsgs(uid,uname){return adminDeleteMsgs(uid,uname);}
+async function viewUserDms(uid,uname,uav){
+  try{
+    const sent=await sbReq(`/rest/v1/dms?sender_id=eq.${uid}&select=*&order=created_at.desc&limit=50`);
+    const recv=await sbReq(`/rest/v1/dms?receiver_id=eq.${uid}&select=*&order=created_at.desc&limit=50`);
+    const all=[...(sent||[]),...(recv||[])].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,50);
+    const res=document.getElementById('admin-user-result')||document.getElementById('owner-user-result');
+    if(!res)return;
+    res.innerHTML=`<div style="margin-bottom:8px;font-weight:700;font-size:13px;">📨 DMs for ${uname}</div>`+
+      (all.length?all.map(m=>{
+        const time=new Date(m.created_at).toLocaleString();
+        return`<div class="admin-chat-msg"><div class="acm-content"><span class="acm-user">${m.sender_id===uid?uname:'→ '+uname}</span> <span class="acm-time">${time}</span><div>${escHtml(m.content)}</div></div></div>`;
+      }).join(''):'<div class="fc-empty">No DMs.</div>');
+  }catch(e){showToast('Failed to load DMs');}
+}
+async function viewUserFriends(uid,uname){
+  try{
+    const asSender=await sbReq(`/rest/v1/friends?sender_id=eq.${uid}&status=eq.accepted&select=receiver_id`);
+    const asReceiver=await sbReq(`/rest/v1/friends?receiver_id=eq.${uid}&status=eq.accepted&select=sender_id`);
+    const fids=[...(asSender||[]).map(r=>r.receiver_id),...(asReceiver||[]).map(r=>r.sender_id)];
+    const res=document.getElementById('admin-user-result')||document.getElementById('owner-user-result');
+    if(!res)return;
+    if(!fids.length){res.innerHTML=`<div class="fc-empty">${uname} has no friends.</div>`;return;}
+    const profiles=await sbReq(`/rest/v1/profiles?id=in.(${fids.map(id=>`"${id}"`).join(',')})&select=id,username,avatar`);
+    res.innerHTML=`<div style="margin-bottom:8px;font-weight:700;font-size:13px;">👥 Friends of ${uname}</div>`+
+      (profiles||[]).map(p=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06)"><span style="font-size:18px">${p.avatar}</span><span>${p.username}</span></div>`).join('');
+  }catch(e){showToast('Failed to load friends');}
+}
+// loadAdminChatLog — targets the owner panel's #admin-chat-log div
+async function loadAdminChatLog(){
+  const box=document.getElementById('admin-chat-log');
+  if(!box)return loadAdminChatLog2(); // fallback to admin panel version
+  try{
+    const msgs=await sbReq(`/rest/v1/messages?order=created_at.desc&limit=30&select=*`);
+    box.innerHTML=(msgs||[]).map(m=>{
+      const time=new Date(m.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+      return`<div class="admin-chat-msg"><div style="font-size:18px">${m.avatar||'👤'}</div><div class="acm-content"><span class="acm-user">${escHtml(m.username)}</span> <span class="acm-time">${time}</span><div>${escHtml(m.content)}</div></div><button class="auc-btn red" onclick="ownerDelMsg('${m.id}',this)">🗑</button></div>`;
+    }).join('')||'<div class="fc-empty">No messages</div>';
+  }catch(e){box.innerHTML='<div class="fc-empty">Failed to load</div>';}
+}
+async function ownerDelMsg(id,btn){
+  await fetch(SB_URL+`/rest/v1/messages?id=eq.${id}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  btn.closest('.admin-chat-msg').remove();showToast('🗑 Deleted');
+}
+async function loadAdminChatLog2(){
+  const box=document.getElementById('admin-chat-log2');
+  if(!box)return;
+  try{
+    const msgs=await sbReq(`/rest/v1/messages?order=created_at.desc&limit=30&select=*`);
+    box.innerHTML=(msgs||[]).map(m=>{
+      const time=new Date(m.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+      return`<div class="admin-chat-msg"><div class="acm-content"><span class="acm-user">${escHtml(m.username)}</span> <span class="acm-time">${time}</span><div>${escHtml(m.content)}</div></div><button class="auc-btn red" onclick="adminDelMsg2('${m.id}',this)">🗑</button></div>`;
+    }).join('')||'<div class="fc-empty">No messages</div>';
+  }catch(e){box.innerHTML='<div class="fc-empty">Failed to load</div>';}
+}
+async function adminDelMsg2(id,btn){
+  await fetch(SB_URL+`/rest/v1/messages?id=eq.${id}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+  btn.closest('.admin-chat-msg').remove();showToast('🗑 Deleted');
+}
+
+async function loadAdminReports(){
+  const box=document.getElementById('admin-reports-list');
+  if(!box)return;
+  try{
+    const rows=await sbReq(`/rest/v1/reports?status=eq.open&order=created_at.desc&limit=20&select=*`);
+    if(!rows||!rows.length){box.innerHTML='<div class="fc-empty">No open reports 🎉</div>';return;}
+    box.innerHTML=rows.map(r=>`
+      <div class="report-card open" style="margin-bottom:8px">
+        <div style="font-size:11px;font-weight:700">${r.type} · ${r.reason}</div>
+        <div style="font-size:11px;color:var(--text2);margin:2px 0">By ${r.reporter_name} against <strong>${r.target_name}</strong></div>
+        ${r.details?`<div style="font-size:11px;color:var(--text2)">"${escHtml(r.details)}"</div>`:''}
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button class="auc-btn" onclick="adminResolveReport('${r.id}',this)">✓ Resolve</button>
+          <button class="auc-btn yellow" onclick="adminWarnUser('${r.target_id}','${escAttr(r.target_name)}')">⚠️ Warn</button>
+          <button class="auc-btn red" onclick="adminBanUser('${r.target_id}','${escAttr(r.target_name)}')">🚫 Ban</button>
+        </div>
+      </div>`).join('');
+  }catch(e){box.innerHTML='<div class="fc-empty">Failed to load</div>';}
+}
+async function adminResolveReport(id,btn){
+  const senderName=currentUser.display_name||currentUser.username;
+  await fetch(SB_URL+`/rest/v1/reports?id=eq.${id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({status:'resolved',reviewed_by:senderName,reviewed_at:new Date().toISOString()})});
+  btn.closest('.report-card')?.remove();showToast('✓ Report resolved');
 }
 
 // ── OWNER PANEL FUNCTIONS ─────────────────────────────────────────
@@ -2783,6 +3183,7 @@ async function loadOwnerPanel(){
   loadSiteSettings();
   loadOwnerFeatured();
   loadAnnouncementHistory();
+  loadScoreReview("pending");
 }
 
 // ── ANALYTICS ────────────────────────────────────────────────────
@@ -3003,7 +3404,11 @@ async function saveBlacklist(){
 
 function isBlacklisted(text){
   const t=text.toLowerCase();
-  return siteBlacklist.some(w=>w&&t.includes(w));
+  return siteBlacklist.some(w=>{
+    if(!w)return false;
+    try{return new RegExp("\\b"+w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\b").test(t);}
+    catch(e){return t.includes(w);}
+  });
 }
 
 function checkSlowmode(){
@@ -3090,7 +3495,7 @@ async function viewFullProfile(uid,uname){
 
 async function loadAllUsers(){
   try{
-    const users=await sbReq(`/rest/v1/profiles?select=id,username,avatar,role,banned,suspended_until,ban_reason&order=created_at.asc`);
+    const users=await sbReq(`/rest/v1/profiles?select=id,username,avatar,role,banned,suspended_until,ban_reason,last_seen&order=created_at.asc`);
     document.getElementById('user-count').textContent=`(${(users||[]).length} total)`;
     document.getElementById('admin-all-users').innerHTML=(users||[]).map(u=>adminUserCard(u)).join('');
   }catch(e){console.warn(e);}
@@ -3106,6 +3511,7 @@ function adminUserCard(u){
     <div class="auc-info">
       <div class="auc-name">${u.username}${isOwnerAcc?'<span class="owner-badge">OWNER</span>':''}</div>
       <div class="auc-meta">${statusText}</div>
+      <div style="font-size:11px;margin-top:2px;color:${isOnline(u.last_seen)?'#30d158':'var(--text2)'}">● ${presenceText(u.last_seen)}</div>
     </div>
     <div class="auc-btns">
       ${!isOwnerAcc?`
@@ -3127,271 +3533,6 @@ function adminUserCard(u){
   </div>`;
 }
 
-async function adminSearchUser(){
-  const q=document.getElementById('admin-search').value.trim();
-  if(!q)return;
-  const res=document.getElementById('admin-user-result');
-  res.innerHTML='<div class="fc-empty">Searching…</div>';
-  try{
-    const users=await sbReq(`/rest/v1/profiles?username=ilike.*${encodeURIComponent(q)}*&select=id,username,avatar,role,banned,suspended_until,ban_reason`);
-    if(!users||!users.length){res.innerHTML='<div class="fc-empty">No users found.</div>';return;}
-    res.innerHTML=users.map(u=>adminUserCard(u)).join('');
-  }catch(e){res.innerHTML='<div class="fc-empty">Error.</div>';}
-}
-
-async function promptBan(uid,uname){
-  const reason=prompt(`Ban reason for ${uname}:`)||'Violation of rules';
-  if(reason===null)return;
-  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({banned:true,ban_reason:reason})});
-  createNotif(uid,'ban','🚫 Your account has been banned',reason,null,null);
-  showToast('🚫 '+uname+' banned');loadAllUsers();
-}
-async function unbanUser(uid){
-  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({banned:false,ban_reason:null})});
-  showToast('✓ User unbanned');loadAllUsers();
-}
-async function promptSuspend(uid,uname){
-  const days=prompt(`Suspend ${uname} for how many days?`,'1');
-  if(!days||isNaN(days))return;
-  const until=new Date(Date.now()+parseInt(days)*86400000).toISOString();
-  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({suspended_until:until})});
-  createNotif(uid,'warning',`⏸ Account suspended for ${days} day${days>1?'s':''}`,`Your account is suspended until ${new Date(until).toLocaleDateString()}`,null,null);
-  showToast('⏸ '+uname+' suspended for '+days+' days');loadAllUsers();
-}
-async function unsuspendUser(uid){
-  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({suspended_until:null})});
-  showToast('✓ User unsuspended');loadAllUsers();
-}
-async function deleteUserMsgs(uid,uname){
-  if(!confirm(`Delete ALL messages from ${uname}?`))return;
-  await fetch(SB_URL+`/rest/v1/messages?user_id=eq.${uid}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-  showToast('🗑 Messages deleted');loadAdminChatLog();
-}
-async function viewUserDms(uid,uname,uav){
-  try{
-    const sent=await sbReq(`/rest/v1/dms?sender_id=eq.${uid}&select=*&order=created_at.desc&limit=50`);
-    const recv=await sbReq(`/rest/v1/dms?receiver_id=eq.${uid}&select=*&order=created_at.desc&limit=50`);
-    const all=[...(sent||[]),...(recv||[])].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,50);
-    document.getElementById('admin-user-result').innerHTML=`<div style="margin-bottom:8px;font-weight:700;font-size:13px;">📨 DMs for ${uname}</div>`+
-      (all.length?all.map(m=>{
-        const time=new Date(m.created_at).toLocaleString();
-        return`<div class="admin-chat-msg"><div class="acm-content"><span class="acm-user">${m.sender_id===uid?uname:'→ '+uname}</span> <span class="acm-time">${time}</span><div>${escHtml(m.content)}</div></div><button class="auc-btn red" onclick="adminDeleteDm('${m.id}',this)">🗑</button></div>`;
-      }).join(''):'<div class="fc-empty">No DMs.</div>');
-  }catch(e){showToast('Failed to load DMs');}
-}
-async function adminDeleteDm(id,btn){
-  await fetch(SB_URL+`/rest/v1/dms?id=eq.${id}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-  btn.closest('.admin-chat-msg').remove();showToast('🗑 DM deleted');
-}
-async function viewUserFriends(uid,uname){
-  try{
-    const asSender=await sbReq(`/rest/v1/friends?sender_id=eq.${uid}&status=eq.accepted&select=receiver_id`);
-    const asReceiver=await sbReq(`/rest/v1/friends?receiver_id=eq.${uid}&status=eq.accepted&select=sender_id`);
-    const fids=[...(asSender||[]).map(r=>r.receiver_id),...(asReceiver||[]).map(r=>r.sender_id)];
-    if(!fids.length){document.getElementById('admin-user-result').innerHTML=`<div class="fc-empty">${uname} has no friends.</div>`;return;}
-    const profiles=await sbReq(`/rest/v1/profiles?id=in.(${fids.map(id=>`"${id}"`).join(',')})&select=id,username,avatar`);
-    document.getElementById('admin-user-result').innerHTML=`<div style="margin-bottom:8px;font-weight:700;font-size:13px;">👥 Friends of ${uname}</div>`+
-      (profiles||[]).map(p=>`<div class="admin-user-card"><div style="font-size:20px">${p.avatar}</div><div class="auc-info"><div class="auc-name">${p.username}</div></div><button class="auc-btn red" onclick="adminRemoveFriend('${uid}','${p.id}','${uname}','${p.username}')">Remove</button></div>`).join('');
-  }catch(e){showToast('Failed');}
-}
-async function adminRemoveFriend(uid1,uid2,n1,n2){
-  if(!confirm(`Remove friendship between ${n1} and ${n2}?`))return;
-  await fetch(SB_URL+`/rest/v1/friends?sender_id=eq.${uid1}&receiver_id=eq.${uid2}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-  await fetch(SB_URL+`/rest/v1/friends?sender_id=eq.${uid2}&receiver_id=eq.${uid1}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-  showToast('Friendship removed');viewUserFriends(uid1,n1);
-}
-async function loadAdminChatLog(){
-  try{
-    const msgs=await sbReq(`/rest/v1/messages?select=*&order=created_at.desc&limit=30`);
-    document.getElementById('admin-chat-log').innerHTML=(msgs||[]).map(m=>`
-      <div class="admin-chat-msg">
-        <div style="font-size:18px">${m.avatar||'👤'}</div>
-        <div class="acm-content"><span class="acm-user">${m.username}</span> <span class="acm-time">${new Date(m.created_at).toLocaleString()}</span><div>${escHtml(m.content)}</div></div>
-        <button class="auc-btn red" onclick="adminDeleteMsg('${m.id}',this)">🗑</button>
-      </div>`).join('')||'<div class="fc-empty">No messages.</div>';
-  }catch(e){console.warn(e);}
-}
-async function adminDeleteMsg(id,btn){
-  await fetch(SB_URL+`/rest/v1/messages?id=eq.${id}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-  btn.closest('.admin-chat-msg').remove();showToast('🗑 Message deleted');
-}
-async function sendAnnouncement(){
-  const txt=document.getElementById('ann-text').value.trim();
-  if(!txt)return;
-  try{
-    await fetch(SB_URL+'/rest/v1/announcements',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({content:txt})});
-    await fetch(SB_URL+'/rest/v1/messages',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({user_id:currentUser.id,username:'📢 ADLESS',avatar:'📢',content:'[ANNOUNCEMENT] '+txt})});
-    document.getElementById('ann-text').value='';
-    showToast('📢 Announcement sent!');
-    loadAnnouncementHistory();
-  }catch(e){showToast('Failed');}
-}
-async function checkUserStatus(uid){
-  try{const rows=await sbReq(`/rest/v1/profiles?id=eq.${uid}&select=banned,suspended_until,ban_reason,role`);if(!rows||!rows.length)return null;return rows[0];}catch(e){return null;}
-}
-
-async function loadAllUsers(){
-  try{
-    const users=await sbReq(`/rest/v1/profiles?select=id,username,avatar,role,banned,suspended_until,ban_reason&order=created_at.asc`);
-    document.getElementById('user-count').textContent=`(${(users||[]).length} total)`;
-    document.getElementById('admin-all-users').innerHTML=(users||[]).map(u=>adminUserCard(u)).join('');
-  }catch(e){console.warn(e);}
-}
-
-function adminUserCard(u){
-  const isBanned=u.banned;
-  const isSuspended=u.suspended_until&&new Date(u.suspended_until)>new Date();
-  const isOwnerAcc=u.role==='owner';
-  const statusText=isBanned?'🚫 Banned'+(u.ban_reason?' · '+u.ban_reason:''):isSuspended?`⏸ Suspended until ${new Date(u.suspended_until).toLocaleDateString()}`:'✅ Active';
-  return`<div class="admin-user-card${isBanned?' banned':isSuspended?' suspended':''}">
-    <div style="font-size:22px">${u.avatar||'👤'}</div>
-    <div class="auc-info">
-      <div class="auc-name">${u.username}${isOwnerAcc?'<span class="owner-badge">OWNER</span>':''}</div>
-      <div class="auc-meta">${statusText}</div>
-    </div>
-    <div class="auc-btns">
-      ${!isOwnerAcc?`
-        ${isBanned
-          ?`<button class="auc-btn green" onclick="unbanUser('${u.id}')">✓ Unban</button>`
-          :`<button class="auc-btn red" onclick="promptBan('${u.id}','${u.username}')">🚫 Ban</button>`}
-        ${isSuspended
-          ?`<button class="auc-btn green" onclick="unsuspendUser('${u.id}')">✓ Unsuspend</button>`
-          :`<button class="auc-btn yellow" onclick="promptSuspend('${u.id}','${u.username}')">⏸ Suspend</button>`}
-        <button class="auc-btn blue" onclick="viewUserDms('${u.id}','${u.username}','${u.avatar||'👤'}')">👁 DMs</button>
-        <button class="auc-btn blue" onclick="viewUserFriends('${u.id}','${u.username}')">👥 Friends</button>
-        <button class="auc-btn red" onclick="deleteUserMsgs('${u.id}','${u.username}')">🗑 Msgs</button>
-      `:'<span style="font-size:11px;color:var(--text2)">Owner Account</span>'}
-    </div>
-  </div>`;
-}
-
-async function adminSearchUser(){
-  const q=document.getElementById('admin-search').value.trim();
-  if(!q)return;
-  const res=document.getElementById('admin-user-result');
-  res.innerHTML='<div class="fc-empty">Searching…</div>';
-  try{
-    const users=await sbReq(`/rest/v1/profiles?username=ilike.*${encodeURIComponent(q)}*&select=id,username,avatar,role,banned,suspended_until,ban_reason`);
-    if(!users||!users.length){res.innerHTML='<div class="fc-empty">No users found.</div>';return;}
-    res.innerHTML=users.map(u=>adminUserCard(u)).join('');
-  }catch(e){res.innerHTML='<div class="fc-empty">Error.</div>';}
-}
-
-async function promptBan(uid,uname){
-  const reason=prompt(`Ban reason for ${uname}:`)||'Violation of rules';
-  if(reason===null)return;
-  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{
-    method:'PATCH',
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-    body:JSON.stringify({banned:true,ban_reason:reason})
-  });
-  showToast('🚫 '+uname+' banned');
-  loadAllUsers();
-}
-
-async function unbanUser(uid){
-  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{
-    method:'PATCH',
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-    body:JSON.stringify({banned:false,ban_reason:null})
-  });
-  showToast('✓ User unbanned');
-  loadAllUsers();
-}
-
-async function promptSuspend(uid,uname){
-  const days=prompt(`Suspend ${uname} for how many days?`,'1');
-  if(!days||isNaN(days))return;
-  const until=new Date(Date.now()+parseInt(days)*86400000).toISOString();
-  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{
-    method:'PATCH',
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-    body:JSON.stringify({suspended_until:until})
-  });
-  showToast('⏸ '+uname+' suspended for '+days+' days');
-  loadAllUsers();
-}
-
-async function unsuspendUser(uid){
-  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{
-    method:'PATCH',
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-    body:JSON.stringify({suspended_until:null})
-  });
-  showToast('✓ User unsuspended');
-  loadAllUsers();
-}
-
-async function deleteUserMsgs(uid,uname){
-  if(!confirm(`Delete ALL messages from ${uname}?`))return;
-  await fetch(SB_URL+`/rest/v1/messages?user_id=eq.${uid}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-  showToast('🗑 Messages deleted');
-  loadAdminChatLog();
-}
-
-async function viewUserDms(uid,uname,uav){
-  // Owner views all DMs sent/received by this user
-  try{
-    const sent=await sbReq(`/rest/v1/dms?sender_id=eq.${uid}&select=*,receiver:receiver_id(username,avatar)&order=created_at.desc&limit=50`);
-    const recv=await sbReq(`/rest/v1/dms?receiver_id=eq.${uid}&select=*,sender:sender_id(username,avatar)&order=created_at.desc&limit=50`);
-    const all=[...(sent||[]),...(recv||[])].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,50);
-    const html=all.length?all.map(m=>{
-      const from=m.sender_id===uid?uname:(m.sender?.username||'?');
-      const to=m.receiver_id===uid?uname:(m.receiver?.username||'?');
-      const time=new Date(m.created_at).toLocaleString();
-      return`<div class="admin-chat-msg"><div class="acm-content"><span class="acm-user">${from} → ${to}</span> <span class="acm-time">${time}</span><div>${escHtml(m.content)}</div></div><button class="auc-btn red" onclick="adminDeleteDm('${m.id}',this)">🗑</button></div>`;
-    }).join(''):'<div class="fc-empty">No DMs found.</div>';
-    document.getElementById('admin-user-result').innerHTML=`<div style="margin-bottom:8px;font-weight:700;font-size:13px;">📨 DMs for ${uname}</div>`+html;
-  }catch(e){showToast('Failed to load DMs');}
-}
-
-async function adminDeleteDm(id,btn){
-  await fetch(SB_URL+`/rest/v1/dms?id=eq.${id}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-  btn.closest('.admin-chat-msg').remove();
-  showToast('🗑 DM deleted');
-}
-
-async function viewUserFriends(uid,uname){
-  try{
-    const asSender=await sbReq(`/rest/v1/friends?sender_id=eq.${uid}&status=eq.accepted&select=receiver_id`);
-    const asReceiver=await sbReq(`/rest/v1/friends?receiver_id=eq.${uid}&status=eq.accepted&select=sender_id`);
-    const fids=[...(asSender||[]).map(r=>r.receiver_id),...(asReceiver||[]).map(r=>r.sender_id)];
-    if(!fids.length){document.getElementById('admin-user-result').innerHTML=`<div class="fc-empty">${uname} has no friends.</div>`;return;}
-    const profiles=await sbReq(`/rest/v1/profiles?id=in.(${fids.map(id=>`"${id}"`).join(',')})&select=id,username,avatar`);
-    document.getElementById('admin-user-result').innerHTML=`<div style="margin-bottom:8px;font-weight:700;font-size:13px;">👥 Friends of ${uname}</div>`+
-      (profiles||[]).map(p=>`<div class="admin-user-card"><div style="font-size:20px">${p.avatar}</div><div class="auc-info"><div class="auc-name">${p.username}</div></div><button class="auc-btn red" onclick="adminRemoveFriend('${uid}','${p.id}','${uname}','${p.username}')">Remove</button></div>`).join('');
-  }catch(e){showToast('Failed');}
-}
-
-async function adminRemoveFriend(uid1,uid2,n1,n2){
-  if(!confirm(`Remove friendship between ${n1} and ${n2}?`))return;
-  await fetch(SB_URL+`/rest/v1/friends?sender_id=eq.${uid1}&receiver_id=eq.${uid2}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-  await fetch(SB_URL+`/rest/v1/friends?sender_id=eq.${uid2}&receiver_id=eq.${uid1}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-  showToast('Friendship removed');
-  viewUserFriends(uid1,n1);
-}
-
-async function loadAdminChatLog(){
-  try{
-    const msgs=await sbReq(`/rest/v1/messages?select=*&order=created_at.desc&limit=30`);
-    document.getElementById('admin-chat-log').innerHTML=(msgs||[]).map(m=>`
-      <div class="admin-chat-msg">
-        <div style="font-size:18px">${m.avatar||'👤'}</div>
-        <div class="acm-content">
-          <span class="acm-user">${m.username}</span>
-          <span class="acm-time">${new Date(m.created_at).toLocaleString()}</span>
-          <div>${escHtml(m.content)}</div>
-        </div>
-        <button class="auc-btn red" onclick="adminDeleteMsg('${m.id}',this)">🗑</button>
-      </div>`).join('')||'<div class="fc-empty">No messages.</div>';
-  }catch(e){console.warn(e);}
-}
-
-async function adminDeleteMsg(id,btn){
-  await fetch(SB_URL+`/rest/v1/messages?id=eq.${id}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-  btn.closest('.admin-chat-msg').remove();
-  showToast('🗑 Message deleted');
-}
 
 async function sendAnnouncement(){
   const txt=document.getElementById('ann-text').value.trim();
@@ -3410,7 +3551,7 @@ async function sendAnnouncement(){
     // Send notification to all users
     try{
       const users=await sbReq(`/rest/v1/profiles?select=id&role=neq.owner&banned=eq.false`);
-      const notifRows=(users||[]).map(u=>({user_id:u.id,type:'announcement',title:'📢 Announcement',body:txt,link_type:'chat',read:false}));
+      const notifRows=(users||[]).map(u=>({user_id:u.id,type:'announcement',title:'📢 Announcement',message:txt,link_type:'chat',read:false}));
       if(notifRows.length){
         await fetch(SB_URL+'/rest/v1/notifications',{
           method:'POST',
@@ -3522,14 +3663,13 @@ function applyCustomCloak(){
 }
 function setTabCloak(title,icon){
   document.title=title;
-  let link=document.querySelector("link[rel~='icon']");
-  if(!link){link=document.createElement('link');link.rel='icon';document.head.appendChild(link);}
-  link.href=icon||'data:,';
+  const link=document.getElementById('site-favicon');
+  if(link)link.href=icon||'data:,';
 }
 function resetCloak(){
   activeCloakIdx=-1;
   document.title='Adless OS';
-  let link=document.querySelector("link[rel~='icon']");
+  const link=document.getElementById('site-favicon');
   if(link)link.href='data:,';
   buildCloakGrid();
   localStorage.removeItem(userKey('adless_cloak'));
@@ -3602,7 +3742,7 @@ function msgHtml(m){
   return`<div class="chat-msg${me?' me':''}">
     <div class="chat-av">${m.avatar||'👤'}</div>
     <div class="chat-bubble">
-      <div class="chat-name">${me?'You':m.username}${reportBtn}</div>
+      <div class="chat-name">${me?"You":`<span style="cursor:pointer;text-decoration:underline" onclick="openProfile('${m.user_id}')">${m.username}</span>`}${reportBtn}</div>
       <div class="chat-text">${escHtml(m.content)}</div>
       <div class="chat-time">${time}</div>
     </div>
@@ -3617,6 +3757,7 @@ function scrollChat(){
 }
 
 async function sendMessage(){
+  if(currentView!=='chat-view')return; // guard: only send to chat when in chat view
   if(currentUser?.guest){showToast('Login to chat');return;}
   const inp=document.getElementById('chat-input');
   const content=inp.value.trim();
@@ -3864,6 +4005,7 @@ async function sendDm(){
   const inp=document.getElementById('dm-input');
   const content=inp.value.trim();
   if(!content)return;
+  if(isBlacklisted(content)){showToast("🚫 Message contains blocked content");inp.value=content;return;}
   inp.value='';
   try{
     await fetch(SB_URL+'/rest/v1/dms',{
@@ -3996,7 +4138,835 @@ lbInitAvatars();
   loadSpotlightPublic();
   loadSiteSettings();
   renderAdBanners();
+  initAdsBanner();
 })();
+
+// ── ADS BANNER ────────────────────────────────────────────────────
+function initAdsBanner(){
+  if(localStorage.getItem("adless_ads_banner_dismissed"))return;
+  const banner=document.getElementById("ads-banner");
+  if(!banner)return;
+  setTimeout(()=>{
+    banner.classList.remove("banner-hidden");
+    document.body.classList.add("banner-visible");
+  },800);
+}
+function dismissAdsBanner(goToSettings){
+  localStorage.setItem("adless_ads_banner_dismissed","1");
+  const banner=document.getElementById("ads-banner");
+  if(banner)banner.classList.add("banner-hidden");
+  document.body.classList.remove("banner-visible");
+  if(goToSettings){
+    switchView("settings-view");
+    setTimeout(()=>{
+      const el=document.getElementById("settings-ads-section");
+      if(el)el.scrollIntoView({behavior:"smooth",block:"start"});
+    },200);
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════
+// BADGE DEFINITIONS
+// ══════════════════════════════════════════════════════════════════
+const BADGE_DEFS = {
+  // Gaming
+  'first_score':    {e:'🎮',n:'First Score',    d:'Submit your first score'},
+  'grinder':        {e:'🔟',n:'Grinder',        d:'Submit 10 scores'},
+  'no_life':        {e:'💀',n:'No Life',         d:'Submit 50 scores'},
+  'century':        {e:'💯',n:'Century',         d:'Submit 100 scores'},
+  'gold':           {e:'🥇',n:'Gold',            d:'Reach #1 on a leaderboard'},
+  'silver':         {e:'🥈',n:'Silver',          d:'Reach #2 on a leaderboard'},
+  'bronze':         {e:'🥉',n:'Bronze',          d:'Reach #3 on a leaderboard'},
+  'champion':       {e:'🏆',n:'Champion',        d:'Hold #1 on any game'},
+  'arcade_king':    {e:'👾',n:'Arcade King',     d:'Top 3 on 3 different games'},
+  'gamer':          {e:'🕹️',n:'Gamer',           d:'Submit scores on 5 different games'},
+  'legend':         {e:'🌟',n:'Legend',          d:'Top 3 on 10 different games'},
+  'speedrunner':    {e:'⚡',n:'Speedrunner',     d:'Submit within 5 min of opening a game'},
+  'hot_streak':     {e:'🔥',n:'Hot Streak',      d:'Approved scores 3 days in a row'},
+  'wild_card':      {e:'🃏',n:'Wild Card',       d:'Submit on 10 different games'},
+  'sharpshooter':   {e:'🎯',n:'Sharpshooter',   d:'Submit a perfect score (owner verified)'},
+  'photographer':   {e:'📸',n:'Photographer',   d:'Submit 10 screenshots'},
+  // Social
+  'first_word':     {e:'💬',n:'First Word',      d:'Send your first chat message'},
+  'chatterbox':     {e:'🗣️',n:'Chatterbox',     d:'Send 100 chat messages'},
+  'loud':           {e:'📢',n:'Loud',            d:'Send 500 chat messages'},
+  'broadcaster':    {e:'📻',n:'Broadcaster',     d:'Send 1000 chat messages'},
+  'friendly':       {e:'👋',n:'Friendly',        d:'Add your first friend'},
+  'social':         {e:'🤝',n:'Social',          d:'Reach 5 friends'},
+  'popular':        {e:'🌐',n:'Popular',         d:'Reach 20 friends'},
+  'pen_pal':        {e:'💌',n:'Pen Pal',         d:'Send 50 DMs'},
+  'lover':          {e:'💘',n:'Lover',           d:'Send 200 DMs'},
+  'group_leader':   {e:'👥',n:'Group Leader',    d:'Create a group chat'},
+  'party_host':     {e:'🎉',n:'Party Host',      d:'Have a group with 10+ members'},
+  'community':      {e:'🫂',n:'Community',       d:'Be in 3 groups simultaneously'},
+  // Loyalty
+  'newcomer':       {e:'📅',n:'Newcomer',        d:'Account 1 day old'},
+  'regular':        {e:'🌱',n:'Regular',         d:'Account 7 days old'},
+  'veteran':        {e:'✨',n:'Veteran',          d:'Account 30 days old'},
+  'elder':          {e:'💎',n:'Elder',            d:'Account 6 months old'},
+  'og':             {e:'🧓',n:'OG',               d:'Account 1 year old'},
+  'loyal':          {e:'❤️',n:'Loyal',           d:'Log in 7 days in a row'},
+  'dedicated':      {e:'🔁',n:'Dedicated',       d:'Log in 30 days in a row'},
+  'night_owl':      {e:'🌙',n:'Night Owl',       d:'Active after midnight'},
+  'early_bird':     {e:'☀️',n:'Early Bird',      d:'Active before 6am'},
+  'early_adopter':  {e:'🏗️',n:'Early Adopter',  d:'One of the first 100 users'},
+  // Special/Owner
+  'royalty':        {e:'👑',n:'Royalty',          d:'Owner only'},
+  'trusted':        {e:'🛡️',n:'Trusted',         d:'Manually granted by owner'},
+  'vip':            {e:'⭐',n:'VIP',              d:'Manually granted'},
+  'bug_hunter':     {e:'🐛',n:'Bug Hunter',      d:'Reported a real bug'},
+  'creator':        {e:'🎨',n:'Creator',          d:'Contributed to the site'},
+  'mod':            {e:'🤖',n:'Mod',              d:'Moderator role'},
+  'gifted':         {e:'🎁',n:'Gifted',           d:"Owner's pick"},
+  'mystic':         {e:'🔮',n:'Mystic',           d:'Secret badge'},
+  'rainbow':        {e:'🌈',n:'Rainbow',          d:'Secret badge'},
+  'cursed':         {e:'☠️',n:'Cursed',           d:'Secret badge (joke)'},
+  // Misc/Hidden
+  'ghost':          {e:'👻',n:'Ghost',            d:"Hasn't been online in 30 days"},
+  'silent_type':    {e:'🤐',n:'Silent Type',     d:'0 chat messages after 7 days'},
+  'explorer':       {e:'🔍',n:'Explorer',        d:'Visited every section of the site'},
+  'lucky':          {e:'🎲',n:'Lucky',            d:'Submitted a score ending in 777'},
+  'butterfly':      {e:'🦋',n:'Butterfly',       d:'Changed your username'},
+  'actor':          {e:'🎭',n:'Actor',            d:'Changed avatar 5 times'},
+  'completionist':  {e:'🧩',n:'Completionist',  d:'Earned 25 badges'},
+  'galaxy_brain':   {e:'🌌',n:'Galaxy Brain',    d:'Earned all non-secret badges'},
+};
+
+const OWNER_ONLY_BADGES=['royalty','trusted','vip','bug_hunter','creator','mod','gifted','mystic','rainbow','cursed'];
+
+// ══════════════════════════════════════════════════════════════════
+// BLACKLIST PRESET (slurs + dan + bypass patterns)
+// ══════════════════════════════════════════════════════════════════
+const SLUR_PRESET = [
+  // Racial/ethnic slurs
+  'nigger','nigga','nigg3r','n1gger','n!gger','ni99er','nig','negro','spic','spick','chink','gook','wetback','towelhead','raghead','sandnigger','kike','hymie','cracker','honky','coon','jigaboo','porch monkey','zipperhead','slope','beaner','greaser','jungle bunny','tar baby','cotton picker',
+  // Homophobic/transphobic
+  'faggot','fag','f4ggot','f@ggot','dyke','tranny','shemale','he-she','queer','homo',
+  // Sexist/misogynistic
+  'cunt','c*nt','sl*t','slut','wh0re','whore','b1tch','bitch',
+  // Ableist
+  'retard','ret4rd','r3tard','tard',
+  // Religious slurs
+  'infidel','heathen',
+  // The name dan and variants
+  'dan','d4n','d@n',
+  // Common bypasses (leet speak + spacing tricks)
+  'n i g g e r','n-i-g-g-e-r','f a g g o t','f-a-g-g-o-t',
+  // Repeated char bypasses
+  'niggger','niiiigger','faaaaggot',
+].join(', ');
+
+// ══════════════════════════════════════════════════════════════════
+// CURRENT GAME TRACKING (for score submission)
+// ══════════════════════════════════════════════════════════════════
+
+// Patch play() to track current game
+
+// ══════════════════════════════════════════════════════════════════
+// SCORE SUBMISSION
+// ══════════════════════════════════════════════════════════════════
+function openScoreSubmit(){
+  if(!currentUser||currentUser.guest){showToast('Login to submit scores');return;}
+  if(!currentGameTitle){showToast('No game is open');return;}
+  document.getElementById('score-game-name').textContent='Game: '+currentGameTitle;
+  document.getElementById('score-value').value='';
+  document.getElementById('score-comment').value='';
+  document.getElementById('score-preview').style.display='none';
+  document.getElementById('score-drop-label').style.display='block';
+  document.getElementById('score-submit-status').textContent='';
+  scoreFile=null;
+  const m=document.getElementById('score-modal');
+  m.style.display='flex';
+}
+function closeScoreModal(){
+  document.getElementById('score-modal').style.display='none';
+  scoreFile=null;
+}
+function onScoreFileSelect(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  if(file.size>5*1024*1024){showToast('File too large (max 5MB)');return;}
+  scoreFile=file;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=document.getElementById('score-preview');
+    img.src=ev.target.result;
+    img.style.display='block';
+    document.getElementById('score-drop-label').style.display='none';
+  };
+  reader.readAsDataURL(file);
+}
+async function submitScore(){
+  const scoreVal=parseInt(document.getElementById('score-value').value);
+  if(isNaN(scoreVal)||scoreVal<0){showToast('Enter a valid score');return;}
+  if(!scoreFile){showToast('Screenshot required');return;}
+  const status=document.getElementById('score-submit-status');
+  status.textContent='Uploading screenshot…';
+  status.style.color='var(--text2)';
+  try{
+    // Upload screenshot to Supabase storage
+    const ext=scoreFile.name.split('.').pop()||'png';
+    const path=`${currentUser.id}/${Date.now()}.${ext}`;
+    const uploadRes=await fetch(`${SB_URL}/storage/v1/object/screenshots/${path}`,{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':scoreFile.type,'x-upsert':'true'},
+      body:scoreFile
+    });
+    if(!uploadRes.ok)throw new Error('Upload failed');
+    const ssUrl=`${SB_URL}/storage/v1/object/public/screenshots/${path}`;
+    status.textContent='Submitting score…';
+    const comment=document.getElementById('score-comment').value.trim();
+    await sbReq('/rest/v1/scores','POST',{
+      user_id:currentUser.id,
+      username:currentUser.display_name||currentUser.username,
+      game_id:currentGameId,
+      game_name:currentGameTitle,
+      score:scoreVal,
+      screenshot_url:ssUrl,
+      status:'pending',
+      comment:comment||null
+    },{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'}});
+    status.textContent='✅ Submitted! Pending owner review.';
+    status.style.color='#30d158';
+    setTimeout(closeScoreModal,2000);
+    // Check badges
+    checkScoreBadges();
+    // Lucky badge
+    if(String(scoreVal).endsWith('777'))awardBadge('lucky');
+  }catch(e){
+    status.textContent='❌ Failed to submit. Try again.';
+    status.style.color='#ff3b30';
+    console.warn(e);
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════
+// LEADERBOARD
+// ══════════════════════════════════════════════════════════════════
+let lbActiveTab="global", lbGameFilter=null, lbGames=[];
+function setLbTab(tab){
+  lbActiveTab=tab;
+  lbGameFilter=null;
+  document.getElementById('lb-tab-global').style.background=tab==='global'?'rgba(10,132,255,.2)':'';
+  document.getElementById('lb-tab-global').style.color=tab==='global'?'var(--blue)':'';
+  document.getElementById('lb-tab-game').style.background=tab==='game'?'rgba(10,132,255,.2)':'';
+  document.getElementById('lb-tab-game').style.color=tab==='game'?'var(--blue)':'';
+  document.getElementById('lb-game-picker').style.display=tab==='game'?'block':'none';
+  if(tab==='game')loadLbGames();
+  else loadLeaderboard();
+}
+async function loadLbGames(){
+  try{
+    const rows=await sbReq('/rest/v1/scores?status=eq.approved&select=game_id,game_name');
+    const map={};
+    (rows||[]).forEach(r=>{if(r.game_id&&!map[r.game_id])map[r.game_id]=r.game_name;});
+    lbGames=Object.entries(map).map(([id,name])=>({id,name}));
+    renderLbGames(lbGames);
+  }catch(e){}
+}
+function renderLbGames(games){
+  document.getElementById('lb-game-list').innerHTML=games.map(g=>`
+    <button class="auc-btn" style="${lbGameFilter===g.id?'background:rgba(10,132,255,.2);border-color:rgba(10,132,255,.4);color:var(--blue)':''}" onclick="selectLbGame('${g.id}','${g.name.replace(/'/g,"\\'")}')">🎮 ${g.name}</button>
+  `).join('');
+}
+function filterLbGames(){
+  const q=document.getElementById('lb-game-search').value.toLowerCase();
+  renderLbGames(lbGames.filter(g=>g.name.toLowerCase().includes(q)));
+}
+function selectLbGame(id,name){
+  lbGameFilter=id;
+  renderLbGames(lbGames);
+  loadLeaderboard();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// BADGES PAGE
+// ══════════════════════════════════════════════════════════════════
+let badgePageTab="earned";
+function setBadgeTab(tab){
+  badgePageTab=tab;
+  document.getElementById("bdg-tab-earned").style.background=tab==="earned"?"rgba(10,132,255,.2)":"";
+  document.getElementById("bdg-tab-earned").style.color=tab==="earned"?"var(--blue)":"";
+  document.getElementById("bdg-tab-earned").style.borderColor=tab==="earned"?"rgba(10,132,255,.4)":"";
+  document.getElementById("bdg-tab-all").style.background=tab==="all"?"rgba(10,132,255,.2)":"";
+  document.getElementById("bdg-tab-all").style.color=tab==="all"?"var(--blue)":"";
+  document.getElementById("bdg-tab-all").style.borderColor=tab==="all"?"rgba(10,132,255,.4)":"";
+  loadBadgesPage();
+}
+async function loadBadgesPage(){
+  const content=document.getElementById("badges-content");
+  const stats=document.getElementById("badges-stats");
+  if(!currentUser||currentUser.guest){
+    content.innerHTML='<div style="text-align:center;padding:40px;color:var(--text2)">Login to view your badges</div>';
+    stats.innerHTML="";
+    return;
+  }
+  content.innerHTML='<div style="color:var(--text2);text-align:center;padding:20px">Loading…</div>';
+  try{
+    const rows=await sbReq(`/rest/v1/badges?user_id=eq.${currentUser.id}&select=badge_key,awarded_at`);
+    const earned=new Map((rows||[]).map(r=>[r.badge_key,r.awarded_at]));
+    const total=Object.keys(BADGE_DEFS).length;
+    const earnedCount=earned.size;
+    const nonSecretTotal=Object.keys(BADGE_DEFS).filter(k=>!["mystic","rainbow","cursed"].includes(k)).length;
+    stats.innerHTML=`
+      <div style="display:flex;align-items:center;gap:16px;background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:16px">
+        <div style="font-size:40px">🎖️</div>
+        <div style="flex:1">
+          <div style="font-size:22px;font-weight:900">${earnedCount}<span style="font-size:14px;color:var(--text2);font-weight:400"> / ${total}</span></div>
+          <div style="font-size:12px;color:var(--text2);margin-top:2px">badges earned</div>
+          <div style="margin-top:8px;background:rgba(255,255,255,.08);border-radius:6px;height:6px;overflow:hidden">
+            <div style="background:linear-gradient(90deg,var(--blue),#bf5af2);height:100%;width:${Math.round(earnedCount/total*100)}%;border-radius:6px;transition:width .5s ease"></div>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:20px;font-weight:800;color:#ffd60a">${Math.round(earnedCount/total*100)}%</div>
+          <div style="font-size:11px;color:var(--text2)">complete</div>
+        </div>
+      </div>`;
+    if(badgePageTab==="earned"){
+      if(!earnedCount){content.innerHTML='<div style="text-align:center;padding:40px;color:var(--text2)">No badges yet — play games and chat to earn some!</div>';return;}
+      const categories=[
+        {label:"🎮 Gaming",keys:["first_score","grinder","no_life","century","gold","silver","bronze","champion","arcade_king","gamer","legend","speedrunner","hot_streak","wild_card","sharpshooter","photographer","lucky"]},
+        {label:"💬 Social",keys:["first_word","chatterbox","loud","broadcaster","friendly","social","popular","pen_pal","lover","group_leader","party_host","community"]},
+        {label:"📅 Loyalty",keys:["newcomer","regular","veteran","elder","og","loyal","dedicated","night_owl","early_bird","early_adopter"]},
+        {label:"⭐ Special",keys:["royalty","trusted","vip","bug_hunter","creator","mod","gifted","mystic","rainbow","cursed"]},
+        {label:"🔍 Misc",keys:["ghost","silent_type","explorer","butterfly","actor","completionist","galaxy_brain"]},
+      ];
+      let html="";
+      categories.forEach(cat=>{
+        const catEarned=cat.keys.filter(k=>earned.has(k));
+        if(!catEarned.length)return;
+        html+=`<div style="margin-bottom:20px"><div style="font-size:12px;font-weight:800;color:var(--text2);letter-spacing:1px;margin-bottom:10px">${cat.label}</div><div class="badge-grid">`;
+        catEarned.forEach(k=>{
+          const b=BADGE_DEFS[k];if(!b)return;
+          const date=new Date(earned.get(k)).toLocaleDateString();
+          html+=`<div class="badge-chip" style="flex-direction:column;align-items:center;padding:14px 12px;min-width:90px;text-align:center;background:linear-gradient(135deg,rgba(255,214,10,.08),rgba(191,90,242,.06));border-color:rgba(255,214,10,.2)" title="${b.d}">
+            <span style="font-size:32px;margin-bottom:6px">${b.e}</span>
+            <span style="font-weight:700;font-size:12px">${b.n}</span>
+            <span style="font-size:10px;color:var(--text2);margin-top:3px">${date}</span>
+          </div>`;
+        });
+        html+="</div></div>";
+      });
+      content.innerHTML=html;
+    } else {
+      const categories=[
+        {label:"🎮 Gaming",keys:["first_score","grinder","no_life","century","gold","silver","bronze","champion","arcade_king","gamer","legend","speedrunner","hot_streak","wild_card","sharpshooter","photographer","lucky"]},
+        {label:"💬 Social",keys:["first_word","chatterbox","loud","broadcaster","friendly","social","popular","pen_pal","lover","group_leader","party_host","community"]},
+        {label:"📅 Loyalty",keys:["newcomer","regular","veteran","elder","og","loyal","dedicated","night_owl","early_bird","early_adopter"]},
+        {label:"⭐ Special",keys:["royalty","trusted","vip","bug_hunter","creator","mod","gifted","mystic","rainbow","cursed"]},
+        {label:"🔍 Misc",keys:["ghost","silent_type","explorer","butterfly","actor","completionist","galaxy_brain"]},
+      ];
+      let html="";
+      categories.forEach(cat=>{
+        html+=`<div style="margin-bottom:20px"><div style="font-size:12px;font-weight:800;color:var(--text2);letter-spacing:1px;margin-bottom:10px">${cat.label} <span style="color:var(--blue)">${cat.keys.filter(k=>earned.has(k)).length}/${cat.keys.length}</span></div><div class="badge-grid">`;
+        cat.keys.forEach(k=>{
+          const b=BADGE_DEFS[k];if(!b)return;
+          const has=earned.has(k);
+          html+=`<div class="badge-chip ${has?"":"locked"}" style="flex-direction:column;align-items:center;padding:14px 12px;min-width:90px;text-align:center;${has?"background:linear-gradient(135deg,rgba(255,214,10,.08),rgba(191,90,242,.06));border-color:rgba(255,214,10,.2)":""}" title="${b.d}">
+            <span style="font-size:32px;margin-bottom:6px">${b.e}</span>
+            <span style="font-weight:700;font-size:12px">${b.n}</span>
+            <span style="font-size:10px;color:var(--text2);margin-top:3px">${has?"✓ Earned":b.d.length>25?b.d.slice(0,25)+"…":b.d}</span>
+          </div>`;
+        });
+        html+="</div></div>";
+      });
+      content.innerHTML=html;
+    }
+  }catch(e){content.innerHTML='<div style="color:#ff3b30;text-align:center;padding:20px">Failed to load badges</div>';}
+}
+async function loadLeaderboard(){
+  const content=document.getElementById('lb-content');
+  content.innerHTML='<div style="color:var(--text2);text-align:center;padding:20px">Loading…</div>';
+  try{
+    const time=document.getElementById('lb-time-filter')?.value||'all';
+    let url='/rest/v1/scores?status=eq.approved&order=score.desc&limit=50&select=*';
+    if(lbActiveTab==="game"&&lbGameFilter)url+=`&game_id=eq.${lbGameFilter}`;
+    if(time==='week'){const d=new Date();d.setDate(d.getDate()-7);url+=`&created_at=gte.${d.toISOString()}`;}
+    if(time==='today'){const d=new Date();d.setHours(0,0,0,0);url+=`&created_at=gte.${d.toISOString()}`;}
+    const rows=await sbReq(url);
+    if(!rows||!rows.length){content.innerHTML='<div style="color:var(--text2);text-align:center;padding:30px">No scores yet!</div>';return;}
+    // Get avatars
+    const uids=[...new Set(rows.map(r=>r.user_id))];
+    const profiles=await sbReq(`/rest/v1/profiles?id=in.(${uids.map(id=>`"${id}"`).join(',')})&select=id,avatar,username`);
+    const profMap=Object.fromEntries((profiles||[]).map(p=>[p.id,p]));
+    content.innerHTML=rows.map((r,i)=>{
+      const rank=i+1;
+      const rankClass=rank===1?'gold':rank===2?'silver':rank===3?'bronze':'';
+      const rankDisplay=rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':rank;
+      const p=profMap[r.user_id]||{};
+      const av=p.avatar||'👤';
+      const isMine=currentUser&&!currentUser.guest&&r.user_id===currentUser.id;
+      return`<div class="lb-row" style="${isMine?'border-color:rgba(10,132,255,.4);background:rgba(10,132,255,.06)':''}" onclick="openSsViewer('${r.screenshot_url}')">
+        <div class="lb-rank ${rankClass}">${rankDisplay}</div>
+        <div class="lb-av" onclick="event.stopPropagation();openProfile('${r.user_id}')" style="cursor:pointer" title="View profile">${av}</div>
+        <div class="lb-info">
+          <div class="lb-uname" onclick="event.stopPropagation();openProfile('${r.user_id}')" style="cursor:pointer">${r.username||'Unknown'}${isMine?' <span style="color:var(--blue);font-size:10px">(you)</span>':''}</div>
+          <div class="lb-game">${r.game_name||''} • ${new Date(r.created_at).toLocaleDateString()}</div>
+        </div>
+        <div class="lb-score">${r.score.toLocaleString()}</div>
+        <button class="lb-flag" onclick="event.stopPropagation();openReportModal('score',null,'${(r.username||'').replace(/'/g,"\\'")}','${r.user_id}','${r.id}')" title="Flag this score">⚑</button>
+      </div>`;
+    }).join('');
+  }catch(e){content.innerHTML='<div style="color:#ff3b30;text-align:center;padding:20px">Failed to load</div>';}
+}
+function openSsViewer(url){
+  if(!url)return;
+  const v=document.getElementById('ss-viewer');
+  document.getElementById('ss-viewer-img').src=url;
+  v.style.display='flex';
+}
+function closeSsViewer(){document.getElementById('ss-viewer').style.display='none';}
+
+// ══════════════════════════════════════════════════════════════════
+// PROFILE MODAL
+// ══════════════════════════════════════════════════════════════════
+async function openProfile(userId){
+  const m=document.getElementById('profile-modal');
+  const c=document.getElementById('profile-content');
+  m.style.display='flex';
+  c.innerHTML='<div style="text-align:center;padding:30px;color:var(--text2)">Loading…</div>';
+  try{
+    const [profile,badgeRows,scores,friendCount]=await Promise.all([
+      sbReq(`/rest/v1/profiles?id=eq.${userId}&select=id,username,avatar,display_name,created_at,last_seen`).then(r=>r&&r[0]),
+      sbReq(`/rest/v1/badges?user_id=eq.${userId}&select=badge_key,awarded_at`),
+      sbReq(`/rest/v1/scores?user_id=eq.${userId}&status=eq.approved&order=score.desc&select=game_name,score`),
+      sbReq(`/rest/v1/friends?status=eq.accepted&or=(sender_id.eq.${userId},receiver_id.eq.${userId})&select=id`).then(r=>(r||[]).length)
+    ]);
+    if(!profile){c.innerHTML='<div style="color:var(--text2);text-align:center;padding:30px">User not found</div>';return;}
+    const earned=(badgeRows||[]).map(b=>b.badge_key);
+    const earnedSet=new Set(earned);
+    const isSelf=currentUser&&!currentUser.guest&&currentUser.id===userId;
+    const isFriend=!isSelf&&currentUser&&!currentUser.guest?(await sbReq(`/rest/v1/friends?status=eq.accepted&or=(and(sender_id.eq.${currentUser.id},receiver_id.eq.${userId}),and(sender_id.eq.${userId},receiver_id.eq.${currentUser.id}))&select=id`)||[]).length>0:false;
+    const joinDate=new Date(profile.created_at).toLocaleDateString('en-US',{month:'short',year:'numeric'});
+    const bestScore=scores&&scores.length?scores[0]:null;
+    const gamesPlayed=[...new Set((scores||[]).map(s=>s.game_name))].length;
+    // Top badges (first 8 earned)
+    const topBadges=earned.slice(0,12);
+    c.innerHTML=`
+      <div class="pm-av">${profile.avatar||'👤'}</div>
+      <div class="pm-name">${profile.display_name||profile.username}</div>
+      <div class="pm-uname">@${profile.username} • Joined ${joinDate}</div>
+      <div style="text-align:center;margin-bottom:14px">
+        <span style="font-size:11px;color:${isOnline(profile.last_seen)?'#30d158':'var(--text2)'}">● ${presenceText(profile.last_seen)}</span>
+      </div>
+      <div class="pm-stats">
+        <div class="pm-stat"><div class="pm-stat-val">${friendCount}</div><div class="pm-stat-lbl">Friends</div></div>
+        <div class="pm-stat"><div class="pm-stat-val">${(scores||[]).length}</div><div class="pm-stat-lbl">Scores</div></div>
+        <div class="pm-stat"><div class="pm-stat-val">${gamesPlayed}</div><div class="pm-stat-lbl">Games</div></div>
+      </div>
+      ${bestScore?`<div style="background:rgba(255,214,10,.08);border:1px solid rgba(255,214,10,.2);border-radius:12px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px"><span style="font-size:20px">🏆</span><div><div style="font-size:12px;color:var(--text2)">Best Score</div><div style="font-weight:800">${bestScore.score.toLocaleString()} <span style="font-size:11px;color:var(--text2)">in ${bestScore.game_name}</span></div></div></div>`:''}
+      ${topBadges.length?`<div style="margin-bottom:14px"><div style="font-size:12px;color:var(--text2);font-weight:700;margin-bottom:8px">BADGES (${earned.length})</div><div class="badge-grid">${topBadges.map(k=>{const b=BADGE_DEFS[k];return b?`<div class="badge-chip" title="${b.d}"><span class="be">${b.e}</span><span class="bn">${b.n}</span></div>`:''}).join('')}${earned.length>12?`<div class="badge-chip" style="color:var(--text2)">+${earned.length-12} more</div>`:''}</div></div>`:'<div style="color:var(--text2);font-size:12px;margin-bottom:14px">No badges yet</div>'}
+      ${!isSelf?`<div style="display:flex;gap:8px;margin-top:4px">
+        ${!isFriend&&currentUser&&!currentUser.guest?`<button class="lb-btn" style="flex:1;padding:10px;font-size:13px;margin:0" onclick="sendFriendFromProfile('${userId}','${(profile.username||'').replace(/'/g,"\\'")}')">👋 Add Friend</button>`:''}
+        ${currentUser&&!currentUser.guest?`<button class="lb-btn" style="flex:1;padding:10px;font-size:13px;margin:0;background:rgba(48,209,88,.15);border-color:rgba(48,209,88,.3);color:#30d158" onclick="closeProfileModal();openDm('${userId}','${(profile.username||'').replace(/'/g,"\\'")}','${profile.avatar||'👤'}')">💬 DM</button>`:''}
+        <button class="auc-btn" onclick="openReportModal('user',null,'${(profile.username||'').replace(/'/g,"\\'")}','${userId}',null)">⚑</button>
+      </div>`:'<div style="color:var(--text2);font-size:12px;text-align:center">Your profile</div>'}
+    `;
+  }catch(e){c.innerHTML='<div style="color:#ff3b30;text-align:center;padding:30px">Failed to load profile</div>';}
+}
+function closeProfileModal(){document.getElementById('profile-modal').style.display='none';}
+async function sendFriendFromProfile(uid,uname){
+  if(!currentUser||currentUser.guest)return;
+  try{
+    await sbReq('/rest/v1/friends','POST',{sender_id:currentUser.id,receiver_id:uid,status:'pending'},{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'}});
+    createNotif(uid,'friend',`👋 Friend Request`,`${currentUser.display_name||currentUser.username} wants to be friends`,'friends',null);
+    showToast('Friend request sent!');
+    closeProfileModal();
+  }catch(e){showToast('Could not send request');}
+}
+
+// Make usernames clickable — patch renderChatMessages, renderDmMessages etc
+function makeUsernameClickable(html, userId){
+  return html; // passthrough; actual clicking done via onclick attrs
+}
+
+// ══════════════════════════════════════════════════════════════════
+// BADGE SYSTEM
+// ══════════════════════════════════════════════════════════════════
+let earnedBadgesCache=new Set();
+async function loadMyBadges(){
+  if(!currentUser||currentUser.guest)return;
+  try{
+    const rows=await sbReq(`/rest/v1/badges?user_id=eq.${currentUser.id}&select=badge_key`);
+    earnedBadgesCache=new Set((rows||[]).map(r=>r.badge_key));
+  }catch(e){}
+}
+async function awardBadge(key){
+  if(!currentUser||currentUser.guest)return;
+  if(earnedBadgesCache.has(key))return;
+  const def=BADGE_DEFS[key];
+  if(!def)return;
+  try{
+    await fetch(SB_URL+'/rest/v1/badges',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({user_id:currentUser.id,badge_key:key})
+    });
+    earnedBadgesCache.add(key);
+    showBadgeUnlock(key,def);
+    // Check completionist
+    if(earnedBadgesCache.size>=25)setTimeout(()=>awardBadge('completionist'),1000);
+    // Galaxy brain = all non-secret
+    const nonSecret=Object.keys(BADGE_DEFS).filter(k=>!OWNER_ONLY_BADGES.includes(k)&&!['mystic','rainbow','cursed','ghost','lucky'].includes(k));
+    if(nonSecret.every(k=>earnedBadgesCache.has(k)))setTimeout(()=>awardBadge('galaxy_brain'),1500);
+  }catch(e){}
+}
+function showBadgeUnlock(key,def){
+  const wrap=document.getElementById('badge-unlock');
+  const inner=document.getElementById('badge-unlock-inner');
+  document.getElementById('badge-unlock-emoji').textContent=def.e;
+  document.getElementById('badge-unlock-name').textContent=def.n;
+  document.getElementById('badge-unlock-desc').textContent=def.d;
+  wrap.style.display='flex';
+  requestAnimationFrame(()=>{inner.style.transform='scale(1)';});
+  launchConfetti();
+  setTimeout(()=>{
+    inner.style.transform='scale(0)';
+    setTimeout(()=>{wrap.style.display='none';},400);
+  },3500);
+}
+function launchConfetti(){
+  const canvas=document.getElementById('confetti-canvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  const pieces=Array.from({length:120},()=>({
+    x:Math.random()*canvas.width,y:-10,
+    vx:(Math.random()-0.5)*4,vy:Math.random()*4+2,
+    color:['#ffd60a','#ff375f','#30d158','#0a84ff','#bf5af2','#ff9f0a'][Math.floor(Math.random()*6)],
+    size:Math.random()*8+4,rot:Math.random()*360,rotV:(Math.random()-0.5)*8
+  }));
+  let frame=0;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color;ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size/2);
+      ctx.restore();
+      p.x+=p.vx;p.y+=p.vy;p.rot+=p.rotV;p.vy+=0.05;
+    });
+    frame++;
+    if(frame<120)requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
+}
+
+// ── Auto-badge checks ──────────────────────────────────────────
+async function checkAllBadges(){
+  if(!currentUser||currentUser.guest)return;
+  await loadMyBadges();
+  checkTimeBadges();
+  checkActivityBadges();
+}
+function checkTimeBadges(){
+  if(!currentUser?.created_at)return;
+  const age=Date.now()-new Date(currentUser.created_at).getTime();
+  const day=86400000;
+  if(age>=day)awardBadge('newcomer');
+  if(age>=7*day)awardBadge('regular');
+  if(age>=30*day)awardBadge('veteran');
+  if(age>=180*day)awardBadge('elder');
+  if(age>=365*day)awardBadge('og');
+  const h=new Date().getHours();
+  if(h>=0&&h<4)awardBadge('night_owl');
+  if(h>=4&&h<6)awardBadge('early_bird');
+}
+async function checkActivityBadges(){
+  if(!currentUser||currentUser.guest)return;
+  try{
+    // Friend badges
+    const friends=await sbReq(`/rest/v1/friends?status=eq.accepted&or=(sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id})&select=id`);
+    const fc=(friends||[]).length;
+    if(fc>=1)awardBadge('friendly');
+    if(fc>=5)awardBadge('social');
+    if(fc>=20)awardBadge('popular');
+    // Message badges
+    const msgs=await sbReq(`/rest/v1/messages?user_id=eq.${currentUser.id}&select=id`);
+    const mc=(msgs||[]).length;
+    if(mc>=1)awardBadge('first_word');
+    if(mc>=100)awardBadge('chatterbox');
+    if(mc>=500)awardBadge('loud');
+    if(mc>=1000)awardBadge('broadcaster');
+    // DM badges
+    const dms=await sbReq(`/rest/v1/dms?sender_id=eq.${currentUser.id}&select=id`);
+    const dc=(dms||[]).length;
+    if(dc>=50)awardBadge('pen_pal');
+    if(dc>=200)awardBadge('lover');
+    // Score badges
+    const myScores=await sbReq(`/rest/v1/scores?user_id=eq.${currentUser.id}&select=id,game_id`);
+    const sc=(myScores||[]).length;
+    if(sc>=1)awardBadge('first_score');
+    if(sc>=10)awardBadge('grinder');
+    if(sc>=50)awardBadge('no_life');
+    if(sc>=100)awardBadge('century');
+    if(sc>=10)awardBadge('photographer');
+    const uniqueGames=[...new Set((myScores||[]).map(s=>s.game_id))].length;
+    if(uniqueGames>=5)awardBadge('gamer');
+    if(uniqueGames>=10)awardBadge('wild_card');
+    // Groups
+    const grps=await sbReq(`/rest/v1/group_members?user_id=eq.${currentUser.id}&select=group_id`);
+    if((grps||[]).length>=3)awardBadge('community');
+    // Early adopter
+    const allUsers=await sbReq('/rest/v1/profiles?select=id&order=created_at.asc&limit=100');
+    const userIds=(allUsers||[]).map(u=>u.id);
+    if(userIds.indexOf(currentUser.id)<100)awardBadge('early_adopter');
+  }catch(e){}
+}
+async function checkScoreBadges(){
+  if(!currentUser||currentUser.guest)return;
+  try{
+    const scores=await sbReq(`/rest/v1/scores?user_id=eq.${currentUser.id}&select=id,game_id`);
+    const sc=(scores||[]).length;
+    if(sc>=1)awardBadge('first_score');
+    if(sc>=10)awardBadge('grinder');
+    if(sc>=50)awardBadge('no_life');
+    if(sc>=100)awardBadge('century');
+    const ug=[...new Set((scores||[]).map(s=>s.game_id))].length;
+    if(ug>=5)awardBadge('gamer');
+    if(ug>=10)awardBadge('wild_card');
+  }catch(e){}
+}
+
+// ══════════════════════════════════════════════════════════════════
+// OWNER: SCORE REVIEW
+// ══════════════════════════════════════════════════════════════════
+let srTab='pending';
+async function loadScoreReview(tab){
+  srTab=tab||srTab;
+  ['pending','approved','rejected'].forEach(t=>{
+    const el=document.getElementById('sr-tab-'+t);
+    if(el){
+      el.style.background=srTab===t?'rgba(10,132,255,.2)':'';
+      el.style.color=srTab===t?'var(--blue)':'';
+      el.style.borderColor=srTab===t?'rgba(10,132,255,.4)':'';
+    }
+  });
+  const list=document.getElementById('score-review-list');
+  list.innerHTML='<div style="color:var(--text2);padding:10px">Loading…</div>';
+  try{
+    const rows=await sbReq(`/rest/v1/scores?status=eq.${srTab}&order=created_at.desc&select=*`);
+    // Update badge
+    if(srTab==='pending'){
+      const badge=document.getElementById('score-review-badge');
+      if(badge){if((rows||[]).length>0){badge.textContent=(rows||[]).length;badge.style.display='inline';}else badge.style.display='none';}
+    }
+    if(!rows||!rows.length){list.innerHTML='<div style="color:var(--text2);text-align:center;padding:20px">No '+srTab+' scores</div>';return;}
+    list.innerHTML=rows.map(r=>`
+      <div class="sr-card" id="sr-${r.id}">
+        <div class="sr-top">
+          <div style="flex:1">
+            <div style="font-weight:800">${r.username||'Unknown'}</div>
+            <div class="sr-game">${r.game_name||'Unknown game'} • ${new Date(r.created_at).toLocaleString()}</div>
+            ${r.comment?`<div style="font-size:12px;color:var(--text2);margin-top:4px;font-style:italic">"${r.comment}"</div>`:''}
+          </div>
+          <div class="sr-score">${(r.score||0).toLocaleString()}</div>
+        </div>
+        ${r.screenshot_url?`<img class="sr-ss" src="${r.screenshot_url}" onclick="openSsViewer('${r.screenshot_url}')" title="Click to view full screenshot">`:'<div style="color:var(--text2);font-size:12px;margin-bottom:10px">No screenshot</div>'}
+        <div class="sr-btns">
+          ${srTab==='pending'?`
+            <button class="lb-btn" style="margin:0;padding:8px 16px;font-size:12px;background:rgba(48,209,88,.15);border-color:rgba(48,209,88,.3);color:#30d158" onclick="reviewScore('${r.id}','approved','${r.user_id}','${r.game_id}',${r.score})">✅ Approve</button>
+            <button class="lb-btn" style="margin:0;padding:8px 16px;font-size:12px;background:rgba(255,59,48,.15);border-color:rgba(255,59,48,.3);color:#ff3b30" onclick="promptRejectScore('${r.id}')">❌ Reject</button>
+          `:''}
+          ${srTab==='approved'?`<button class="lb-btn" style="margin:0;padding:8px 16px;font-size:12px;background:rgba(255,59,48,.15);border-color:rgba(255,59,48,.3);color:#ff3b30" onclick="reviewScore('${r.id}','rejected','${r.user_id}','','0')">Revoke</button>`:''}
+          <button class="auc-btn" onclick="openProfile('${r.user_id}')">👤 Profile</button>
+        </div>
+        <div id="sr-reject-form-${r.id}" style="display:none;margin-top:10px">
+          <input class="lb-field" style="margin:0 0 8px" placeholder="Rejection reason…" id="sr-reason-${r.id}" maxlength="200">
+          <div style="display:flex;gap:8px">
+            <button class="lb-btn" style="margin:0;flex:1;font-size:12px;background:rgba(255,59,48,.15);border-color:rgba(255,59,48,.3);color:#ff3b30" onclick="confirmRejectScore('${r.id}','${r.user_id}')">Confirm Reject</button>
+            <button class="auc-btn" onclick="document.getElementById('sr-reject-form-${r.id}').style.display='none'">Cancel</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }catch(e){list.innerHTML='<div style="color:#ff3b30;padding:10px">Failed to load</div>';}
+}
+function promptRejectScore(id){
+  document.getElementById('sr-reject-form-'+id).style.display='block';
+}
+async function confirmRejectScore(id,userId){
+  const reason=document.getElementById('sr-reason-'+id)?.value||'';
+  await reviewScore(id,'rejected',userId,'','0',reason);
+}
+async function reviewScore(id,status,userId,gameId,score,reason){
+  try{
+    await fetch(SB_URL+`/rest/v1/scores?id=eq.${id}`,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({status,reject_reason:reason||null})
+    });
+    if(status==='approved'){
+      // Check leaderboard position badges
+      checkLeaderboardBadges(userId,gameId,parseInt(score)||0);
+      createNotif(userId,'system','✅ Score Approved!',`Your score was approved and added to the leaderboard!`,'leaderboard',null);
+    } else if(status==='rejected'){
+      createNotif(userId,'system','❌ Score Rejected',reason?`Reason: ${reason}`:'Your score submission was rejected.','leaderboard',null);
+    }
+    document.getElementById('sr-'+id)?.remove();
+    showToast(status==='approved'?'✅ Score approved!':'❌ Score rejected');
+    loadScoreReview(srTab);
+  }catch(e){showToast('Failed to update score');}
+}
+async function checkLeaderboardBadges(userId,gameId,score){
+  try{
+    const rows=await sbReq(`/rest/v1/scores?game_id=eq.${gameId}&status=eq.approved&order=score.desc&select=user_id,score`);
+    const pos=(rows||[]).findIndex(r=>r.user_id===userId&&r.score===score);
+    if(pos===0){createNotifForUser(userId,'gold');awardBadgeForUser(userId,'gold');awardBadgeForUser(userId,'champion');}
+    else if(pos===1){awardBadgeForUser(userId,'silver');}
+    else if(pos===2){awardBadgeForUser(userId,'bronze');}
+    if(pos>=0&&pos<=2){
+      // Check if top 3 on 3 different games
+      const allApproved=await sbReq(`/rest/v1/scores?user_id=eq.${userId}&status=eq.approved&select=game_id,score`);
+      const gamesWithTop3=new Set();
+      (allApproved||[]).forEach(async s=>{
+        const gr=await sbReq(`/rest/v1/scores?game_id=eq.${s.game_id}&status=eq.approved&order=score.desc&limit=3&select=user_id`);
+        if((gr||[]).some(r=>r.user_id===userId))gamesWithTop3.add(s.game_id);
+        if(gamesWithTop3.size>=3)awardBadgeForUser(userId,'arcade_king');
+        if(gamesWithTop3.size>=10)awardBadgeForUser(userId,'legend');
+      });
+    }
+  }catch(e){}
+}
+async function awardBadgeForUser(userId,key){
+  try{
+    await fetch(SB_URL+'/rest/v1/badges',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({user_id:userId,badge_key:key})
+    });
+  }catch(e){}
+}
+
+// ══════════════════════════════════════════════════════════════════
+// OWNER: BADGE MANAGER
+// ══════════════════════════════════════════════════════════════════
+async function loadBadgeMgr(){
+  const q=document.getElementById('badge-mgr-search').value.trim();
+  if(!q)return;
+  const result=document.getElementById('badge-mgr-result');
+  result.innerHTML='<div style="color:var(--text2)">Searching…</div>';
+  try{
+    const users=await sbReq(`/rest/v1/profiles?username=ilike.*${encodeURIComponent(q)}*&select=id,username,avatar&limit=5`);
+    if(!users||!users.length){result.innerHTML='<div style="color:var(--text2)">No users found</div>';return;}
+    result.innerHTML=users.map(u=>`
+      <div style="background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <span style="font-size:24px">${u.avatar||'👤'}</span>
+          <span style="font-weight:700">${u.username}</span>
+          <button class="auc-btn" onclick="openProfile('${u.id}')">👤 Profile</button>
+        </div>
+        <div id="badge-mgr-badges-${u.id}">Loading badges…</div>
+      </div>
+    `).join('');
+    users.forEach(u=>loadUserBadgesForMgr(u.id));
+  }catch(e){result.innerHTML='<div style="color:#ff3b30">Failed</div>';}
+}
+async function loadUserBadgesForMgr(userId){
+  const el=document.getElementById('badge-mgr-badges-'+userId);
+  if(!el)return;
+  try{
+    const rows=await sbReq(`/rest/v1/badges?user_id=eq.${userId}&select=badge_key`);
+    const earned=new Set((rows||[]).map(r=>r.badge_key));
+    el.innerHTML=`<div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:8px">ALL BADGES — click to grant/revoke</div><div style="display:flex;flex-wrap:wrap;gap:6px">`+
+      Object.entries(BADGE_DEFS).map(([k,b])=>{
+        const has=earned.has(k);
+        return`<div class="badge-chip ${has?'':'locked'}" style="cursor:pointer" onclick="toggleBadgeForUser('${userId}','${k}',${has})" title="${has?'Revoke':'Grant'}: ${b.d}">
+          <span class="be">${b.e}</span><span class="bn" style="font-size:10px">${b.n}</span>
+          ${has?'<span style="color:#30d158;font-size:9px">✓</span>':''}
+        </div>`;
+      }).join('')+'</div>';
+  }catch(e){el.textContent='Failed to load badges';}
+}
+async function toggleBadgeForUser(userId,key,has){
+  try{
+    if(has){
+      await fetch(SB_URL+`/rest/v1/badges?user_id=eq.${userId}&badge_key=eq.${key}`,{
+        method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+      });
+      showToast('Badge revoked');
+    }else{
+      await awardBadgeForUser(userId,key);
+      showToast('Badge granted: '+BADGE_DEFS[key]?.n);
+      createNotif(userId,'system','🎖️ Badge Awarded!',`You earned the "${BADGE_DEFS[key]?.n}" badge!`,'friends',null);
+    }
+    loadUserBadgesForMgr(userId);
+  }catch(e){showToast('Failed');}
+}
+
+// ══════════════════════════════════════════════════════════════════
+// PRESET BLACKLIST LOADER — called after loadSiteSettings if empty
+// ══════════════════════════════════════════════════════════════════
+async function ensureBlacklistPreset(){
+  if(siteBlacklist.length>0)return; // already has words
+  // Only auto-load for owner
+  if(!currentUser||currentUser.role!=='owner')return;
+  siteBlacklist=SLUR_PRESET.split(',').map(w=>w.trim().toLowerCase()).filter(Boolean);
+  await upsertSiteSetting('blacklist',SLUR_PRESET);
+  showToast('🚫 Default blacklist loaded ('+siteBlacklist.length+' terms)');
+  const el=document.getElementById('blacklist-input');
+  if(el)el.value=SLUR_PRESET;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// HOOK INTO LOGIN — check badges on login
+// ══════════════════════════════════════════════════════════════════
+const _origOnLogin=typeof onLoginSuccess==='function'?onLoginSuccess:null;
+// Patch post-login to run badge checks
+function postLoginBadgeCheck(){
+  setTimeout(()=>{
+    checkAllBadges();
+    ensureBlacklistPreset();
+  },2000);
+}
 </script>
+
+<!-- SCORE SUBMIT MODAL -->
+<div id="score-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:10000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px)">
+  <div style="background:#1c1c1e;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px;width:min(420px,92vw);max-height:90vh;overflow-y:auto">
+    <div style="font-size:20px;font-weight:800;margin-bottom:4px">🏆 Submit Score</div>
+    <div id="score-game-name" style="color:var(--text2);font-size:13px;margin-bottom:20px"></div>
+    <label style="font-size:12px;color:var(--text2);font-weight:600;display:block;margin-bottom:6px">YOUR SCORE</label>
+    <input id="score-value" type="number" class="lb-field" style="margin:0 0 16px;font-size:24px;font-weight:800;text-align:center" placeholder="0" min="0">
+    <label style="font-size:12px;color:var(--text2);font-weight:600;display:block;margin-bottom:6px">SCREENSHOT <span style="color:#ff9f0a">*Required</span></label>
+    <div id="score-drop-zone" onclick="document.getElementById('score-file').click()" style="border:2px dashed rgba(255,255,255,.2);border-radius:12px;padding:24px;text-align:center;cursor:pointer;margin-bottom:16px;transition:.2s" onmouseover="this.style.borderColor='rgba(10,132,255,.6)'" onmouseout="this.style.borderColor='rgba(255,255,255,.2)'">
+      <div id="score-drop-label" style="color:var(--text2);font-size:13px">📸 Click to upload screenshot<br><span style="font-size:11px">PNG, JPG, WebP — max 5MB</span></div>
+      <img id="score-preview" style="display:none;max-width:100%;border-radius:8px;margin-top:10px">
+    </div>
+    <input id="score-file" type="file" accept="image/*" style="display:none" onchange="onScoreFileSelect(event)">
+    <label style="font-size:12px;color:var(--text2);font-weight:600;display:block;margin-bottom:6px">COMMENT <span style="color:var(--text2)">(optional)</span></label>
+    <input id="score-comment" class="lb-field" style="margin:0 0 20px" placeholder="How did you get this score?" maxlength="200">
+    <div style="display:flex;gap:10px">
+      <button class="lb-btn" style="flex:1;margin:0" onclick="submitScore()">Submit for Review</button>
+      <button class="auc-btn" onclick="closeScoreModal()">Cancel</button>
+    </div>
+    <div id="score-submit-status" style="margin-top:12px;font-size:13px;text-align:center"></div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div id="profile-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:10001;align-items:center;justify-content:center;backdrop-filter:blur(8px)">
+  <div style="background:#1c1c1e;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px;width:min(480px,94vw);max-height:88vh;overflow-y:auto;position:relative">
+    <button onclick="closeProfileModal()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.1);border:none;color:var(--text);border-radius:8px;padding:5px 10px;cursor:pointer;font-size:14px">✕</button>
+    <div id="profile-content"></div>
+  </div>
+</div>
+
+<!-- BADGE UNLOCK ANIMATION -->
+<div id="badge-unlock" style="display:none;position:fixed;inset:0;z-index:99999;pointer-events:none;align-items:center;justify-content:center">
+  <div id="badge-unlock-inner" style="background:linear-gradient(135deg,#1c1c2e,#2a1a3e);border:2px solid rgba(255,214,10,.4);border-radius:24px;padding:32px 40px;text-align:center;transform:scale(0);transition:transform .4s cubic-bezier(.34,1.56,.64,1)">
+    <div style="font-size:13px;color:#ffd60a;font-weight:700;letter-spacing:2px;margin-bottom:8px">BADGE UNLOCKED</div>
+    <div id="badge-unlock-emoji" style="font-size:56px;margin-bottom:8px;filter:drop-shadow(0 0 20px rgba(255,214,10,.6))"></div>
+    <div id="badge-unlock-name" style="font-size:20px;font-weight:800;margin-bottom:4px"></div>
+    <div id="badge-unlock-desc" style="font-size:13px;color:var(--text2)"></div>
+  </div>
+  <canvas id="confetti-canvas" style="position:fixed;inset:0;pointer-events:none"></canvas>
+</div>
+
+<!-- SCREENSHOT VIEWER -->
+<div id="ss-viewer" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:10002;align-items:center;justify-content:center" onclick="closeSsViewer()">
+  <img id="ss-viewer-img" style="max-width:92vw;max-height:92vh;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.8)">
+</div>
 </body>
 </html>
