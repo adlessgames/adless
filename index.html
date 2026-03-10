@@ -24,27 +24,28 @@
 .card ins.adsbygoogle,.card iframe[id*="google"]{display:none!important;}
 :root{--blue:#0a84ff;--red:#ff3b30;--text:#f5f5f7;--text2:#86868b;--glass:rgba(28,28,30,0.75);--border:rgba(255,255,255,0.1);--card:#1c1c1e;}
 body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!important;transition:none!important;}
-body.sys-cursor *{cursor:auto!important;}
+body.sys-cursor,body.sys-cursor *{cursor:auto!important;}
 body.sys-cursor #cur{display:none!important;}
 body.player-open #cur{display:none!important;}
 body.player-open{cursor:none;}
 body.player-open #player-bar,body.player-open #player-bar *{cursor:auto!important;}
+body.player-open #player-bar button{cursor:pointer!important;}
 body.player-open #score-modal,body.player-open #score-modal *{cursor:auto!important;}
 body.player-open #profile-modal,body.player-open #profile-modal *{cursor:auto!important;}
 body.inverted #app,body.inverted #player{filter:invert(1) hue-rotate(180deg);}
 body.inverted #bgCanvas{filter:invert(1);}
 body.inverted img{filter:invert(1) hue-rotate(180deg);}
 *{box-sizing:border-box;cursor:none!important;}
-#login-screen *{cursor:auto!important;}
-#login-screen button{cursor:pointer!important;}
-#device-pick *{cursor:auto!important;}
-#device-pick button{cursor:pointer!important;}
-#score-modal *{cursor:auto!important;}
+#login-screen,#login-screen *{cursor:auto!important;}
+#login-screen button,.lb-btn,.lb-tab{cursor:pointer!important;}
+#device-pick,#device-pick *{cursor:auto!important;}
+#device-pick button,.dp-btn{cursor:pointer!important;}
+#score-modal,#score-modal *{cursor:auto!important;}
 #score-modal button{cursor:pointer!important;}
-#profile-modal *{cursor:auto!important;}
+#profile-modal,#profile-modal *{cursor:auto!important;}
 #profile-modal button{cursor:pointer!important;}
 #ss-viewer{cursor:zoom-out!important;}
-#badge-unlock *{cursor:auto!important;}
+#badge-unlock *{cursor:none!important;}
 body,html{margin:0;padding:0;width:100vw;height:100vh;overflow:hidden;background:#000;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,sans-serif;cursor:none!important;}
 #bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
 #bgLayer{position:fixed;inset:0;z-index:0;pointer-events:none;background-size:cover;background-position:center;opacity:0;transition:opacity .5s;}
@@ -56,8 +57,8 @@ body.r-hover #cur{width:44px;height:44px;margin:-16px 0 0 -16px;background:var(-
 #ads-banner{position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,rgba(10,132,255,.18),rgba(48,209,88,.1));border-bottom:1px solid rgba(10,132,255,.3);backdrop-filter:blur(12px);padding:9px 16px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text);transition:transform .35s ease,opacity .35s ease;}
 #ads-banner.banner-hidden{transform:translateY(-100%);opacity:0;pointer-events:none;}
 #ads-banner .ab-text{flex:1;line-height:1.4;}
-#ads-banner .ab-link{color:var(--blue);cursor:pointer;text-decoration:underline;white-space:nowrap;font-weight:600;}
-#ads-banner .ab-close{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:var(--text);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;white-space:nowrap;flex-shrink:0;font-weight:600;}
+#ads-banner .ab-link{color:var(--blue);cursor:pointer!important;text-decoration:underline;white-space:nowrap;font-weight:600;}
+#ads-banner .ab-close{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:var(--text);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer!important;white-space:nowrap;flex-shrink:0;font-weight:600;}
 #ads-banner .ab-close:hover{background:rgba(255,255,255,.2);}
 body.banner-visible{padding-top:41px;}
 aside{position:relative;background:rgba(0,0,0,.3);backdrop-filter:blur(30px);border-right:1px solid var(--border);padding:20px 16px;display:flex;flex-direction:column;overflow-y:auto;overflow-x:visible;}
@@ -138,7 +139,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .dp-title span{color:var(--blue);}
 .dp-sub{font-size:13px;color:var(--text2);line-height:1.55;margin-bottom:28px;}
 .dp-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.dp-btn{background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.1);border-radius:18px;padding:22px 14px 18px;display:flex;flex-direction:column;align-items:center;gap:7px;transition:.18s;color:#fff;cursor:pointer;}
+.dp-btn{background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.1);border-radius:18px;padding:22px 14px 18px;display:flex;flex-direction:column;align-items:center;gap:7px;transition:.18s;color:#fff;cursor:pointer!important;}
 .dp-btn:hover{background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.25);transform:translateY(-3px);}
 .dp-icon{font-size:40px;line-height:1;}
 .dp-lbl{font-size:14px;font-weight:800;}
@@ -151,21 +152,21 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 /* settings toggle reused for ads */
 .s-toggle{position:relative;width:50px;height:28px;flex-shrink:0;}
 .s-toggle input{opacity:0;width:0;height:0;position:absolute;}
-.s-track{position:absolute;inset:0;background:rgba(255,255,255,.12);border-radius:28px;transition:.2s;border:1px solid var(--border);cursor:pointer;}
+.s-track{position:absolute;inset:0;background:rgba(255,255,255,.12);border-radius:28px;transition:.2s;border:1px solid var(--border);cursor:none;}
 .s-track::before{content:'';position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.4);}
 .s-toggle input:checked+.s-track{background:var(--blue);border-color:var(--blue);}
 .s-toggle input:checked+.s-track::before{transform:translateX(22px);}
-.s-toggle input:disabled+.s-track{opacity:.35;cursor:not-allowed;}
+.s-toggle input:disabled+.s-track{opacity:.35;cursor:none;}
 /* ad banners */
 .ad-slot-inline{width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 16px;margin:4px 0;}
 .ad-slot-inline .ad-inner{min-height:70px;width:100%;max-width:680px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.025);border:1px dashed rgba(255,255,255,.07);border-radius:10px;overflow:hidden;position:relative;}
-.ad-slot-inline .ad-hint{font-size:9px;color:rgba(255,255,255,.18);letter-spacing:.08em;cursor:pointer;background:none;border:none;padding:1px 0;}
+.ad-slot-inline .ad-hint{font-size:9px;color:rgba(255,255,255,.18);letter-spacing:.08em;cursor:none;background:none;border:none;padding:1px 0;}
 .ad-slot-inline .ad-hint:hover{color:var(--blue);}
 .ad-slot-inline .ad-tag{position:absolute;top:4px;right:6px;font-size:8px;color:rgba(255,255,255,.2);letter-spacing:.06em;pointer-events:none;}
 .ad-banner{width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 16px;background:rgba(255,255,255,.02);border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:8px 0;}
 .ad-inner{min-height:90px;width:100%;max-width:728px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.08);border-radius:10px;overflow:hidden;}
 .ad-placeholder{font-size:10px;color:var(--text2);letter-spacing:.08em;pointer-events:none;}
-.ad-close-hint{font-size:10px;color:var(--text2);background:none;border:none;cursor:pointer;text-decoration:underline;padding:0;}
+.ad-close-hint{font-size:10px;color:var(--text2);background:none;border:none;cursor:none;text-decoration:underline;padding:0;}
 .ad-close-hint:hover{color:var(--blue);}
 .ad-side{position:fixed;bottom:80px;right:12px;width:auto;padding:6px;border:1px solid var(--border);border-radius:12px;background:var(--card);box-shadow:0 4px 20px rgba(0,0,0,.4);z-index:100;flex-direction:column;gap:4px;}
 .ad-side .ad-inner{min-height:120px;width:220px;}
@@ -249,7 +250,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .chat-input-row{display:flex;gap:8px;margin-top:6px;}
 #chat-typing-indicator{font-size:11px;color:var(--text2);min-height:16px;display:block;}
 .chat-tabs{display:flex;gap:6px;}
-.chat-tab{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:var(--text2);border-radius:10px;padding:6px 14px;font-size:11px;font-weight:700;cursor:pointer;transition:.15s;}
+.chat-tab{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:var(--text2);border-radius:10px;padding:6px 14px;font-size:11px;font-weight:700;cursor:none;transition:.15s;}
 .chat-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
 .chat-msg{display:flex;gap:10px;align-items:flex-start;animation:fadeIn .2s ease;}
 .chat-msg.me{flex-direction:row-reverse;}
@@ -268,19 +269,19 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .friend-card .fc-name{font-size:13px;font-weight:700;flex:1;}
 .friend-card .fc-status{font-size:10px;color:var(--text2);}
 .friend-card .fc-btns{display:flex;gap:6px;}
-.fc-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:8px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;transition:.15s;}
+.fc-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:8px;padding:5px 12px;font-size:11px;font-weight:700;cursor:none;transition:.15s;}
 .fc-btn:hover{background:rgba(255,255,255,.15);}
 .fc-btn.accept{background:rgba(48,209,88,.15);border-color:rgba(48,209,88,.3);color:#30d158;}
 .fc-btn.decline{background:rgba(255,55,95,.1);border-color:rgba(255,55,95,.2);color:#ff375f;}
 .fc-btn.add{background:rgba(10,132,255,.15);border-color:rgba(10,132,255,.3);color:var(--blue);}
 .fc-empty{font-size:12px;color:var(--text2);opacity:.5;padding:10px 0;}
-.msg-report-btn{font-size:10px;color:var(--text2);cursor:pointer;margin-left:6px;opacity:.4;transition:.15s;vertical-align:middle;}
+.msg-report-btn{font-size:10px;color:var(--text2);cursor:none;margin-left:6px;opacity:.4;transition:.15s;vertical-align:middle;}
 .msg-report-btn:hover{opacity:1;color:#ff375f;}
 /* ── GROUP CHAT ── */
 #group-view{flex-direction:column;padding:0!important;}
 #group-view.active{display:flex!important;}
 #grp-messages{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:8px;min-height:0;}
-.grp-card{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;cursor:pointer;transition:.15s;position:relative;}
+.grp-card{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;cursor:none;transition:.15s;position:relative;}
 .grp-card:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15);}
 .grp-av{font-size:26px;flex-shrink:0;}
 .grp-info{flex:1;min-width:0;}
@@ -288,22 +289,22 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .grp-meta{font-size:11px;color:var(--text2);margin-top:1px;}
 .grp-preview{font-size:11px;color:var(--text2);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .grp-unread{background:#ff375f;color:#fff;font-size:9px;font-weight:900;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;}
-.grp-pick-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);cursor:pointer;transition:.15s;}
+.grp-pick-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);cursor:none;transition:.15s;}
 .grp-pick-item.sel{background:rgba(10,132,255,.15);border-color:rgba(10,132,255,.35);}
 .grp-pick-av{font-size:18px;}
-.grp-av-opt{font-size:22px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:10px;cursor:pointer;border:2px solid transparent;transition:.15s;}
+.grp-av-opt{font-size:22px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:10px;cursor:none;border:2px solid transparent;transition:.15s;}
 .grp-av-opt.sel{border-color:var(--blue);background:rgba(10,132,255,.15);}
 .member-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);}
 .member-row:last-child{border-bottom:none;}
 .member-crown{font-size:10px;color:#ffd60a;margin-left:4px;}
 /* ── NOTIFICATIONS ── */
-.notif-bell{position:relative;background:none;border:none;font-size:16px;cursor:pointer;padding:2px 4px;border-radius:7px;transition:.15s;color:#fff;}
+.notif-bell{position:relative;background:none;border:none;font-size:16px;cursor:none;padding:2px 4px;border-radius:7px;transition:.15s;color:#fff;}
 .notif-bell:hover{background:rgba(255,255,255,.1);}
 #notif-badge{position:absolute;top:-3px;right:-3px;background:#ff375f;color:#fff;font-size:8px;font-weight:900;min-width:14px;height:14px;border-radius:7px;display:flex;align-items:center;justify-content:center;padding:0 3px;line-height:1;}
 #notif-panel{position:fixed;top:60px;left:252px;width:310px;max-height:80vh;background:#1c1c1e;border:1px solid rgba(255,255,255,.15);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.8);z-index:999999;overflow:hidden;display:flex;flex-direction:column;color:#f5f5f7;}
 .notif-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.1);background:#1c1c1e;color:#f5f5f7;flex-shrink:0;}
 #notif-list{overflow-y:auto;flex:1;max-height:360px;min-height:60px;color:#f5f5f7;}
-.notif-item{display:flex;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;transition:.15s;position:relative;color:#f5f5f7;}
+.notif-item{display:flex;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.06);cursor:none;transition:.15s;position:relative;color:#f5f5f7;}
 .notif-item:hover{background:rgba(255,255,255,.05);}
 .notif-item.unread{background:rgba(10,132,255,.07);}
 .notif-item.unread::before{content:'';position:absolute;left:5px;top:50%;transform:translateY(-50%);width:5px;height:5px;border-radius:50%;background:var(--blue);}
@@ -322,11 +323,11 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .report-type.user{background:rgba(255,159,10,.2);color:#ff9f0a;}
 .report-type.message{background:rgba(10,132,255,.2);color:var(--blue);}
 .report-type.dm{background:rgba(175,82,222,.2);color:#af52de;}
-.report-reason-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;border-radius:8px;padding:8px 10px;font-size:11px;font-weight:700;cursor:pointer;transition:.15s;text-align:center;}
+.report-reason-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;border-radius:8px;padding:8px 10px;font-size:11px;font-weight:700;cursor:none;transition:.15s;text-align:center;}
 .report-reason-btn:hover,.report-reason-btn.sel{background:rgba(255,55,95,.2);border-color:rgba(255,55,95,.4);color:#ff375f;}
 /* ── SPOTLIGHT BANNER ── */
 #spotlight-banner{display:flex;gap:10px;padding:0 16px 10px;flex-wrap:wrap;}
-.spot-card{flex:1;min-width:200px;border-radius:14px;overflow:hidden;position:relative;cursor:pointer;border:2px solid transparent;transition:.2s;}
+.spot-card{flex:1;min-width:200px;border-radius:14px;overflow:hidden;position:relative;cursor:none;border:2px solid transparent;transition:.2s;}
 .spot-card.gotw{border-color:var(--blue);background:linear-gradient(135deg,rgba(10,132,255,.15),rgba(10,132,255,.05));}
 .spot-card.gotm{border-color:#ff9f0a;background:linear-gradient(135deg,rgba(255,159,10,.15),rgba(255,159,10,.05));}
 .spot-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4);}
@@ -348,10 +349,10 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .auc-name{font-size:13px;font-weight:700;}
 .auc-meta{font-size:10px;color:var(--text2);}
 .auc-btns{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;}
-.auc-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:7px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;transition:.15s;}
+.auc-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:7px;padding:4px 10px;font-size:10px;font-weight:700;cursor:none;transition:.15s;}
 .auc-btn:hover{opacity:.8;}
 /* ── LEADERBOARD ── */
-.lb-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:12px;background:var(--glass);border:1px solid var(--border);margin-bottom:7px;transition:.15s;cursor:pointer;}
+.lb-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:12px;background:var(--glass);border:1px solid var(--border);margin-bottom:7px;transition:.15s;cursor:none;}
 .lb-row:hover{border-color:rgba(10,132,255,.3);background:rgba(10,132,255,.05);}
 .lb-rank{font-size:18px;font-weight:900;width:32px;text-align:center;flex-shrink:0;}
 .lb-rank.gold{color:#ffd60a;text-shadow:0 0 12px rgba(255,214,10,.5);}
@@ -362,10 +363,10 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .lb-uname{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .lb-game{font-size:11px;color:var(--text2);margin-top:1px;}
 .lb-score{font-size:18px;font-weight:800;color:#ffd60a;flex-shrink:0;}
-.lb-flag{background:none;border:1px solid rgba(255,159,10,.3);color:#ff9f0a;border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;flex-shrink:0;}
+.lb-flag{background:none;border:1px solid rgba(255,159,10,.3);color:#ff9f0a;border-radius:6px;padding:3px 8px;font-size:11px;cursor:none;flex-shrink:0;}
 /* ── BADGES ── */
 .badge-grid{display:flex;flex-wrap:wrap;gap:8px;}
-.badge-chip{display:flex;align-items:center;gap:6px;background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:6px 10px;font-size:12px;cursor:default;transition:.15s;}
+.badge-chip{display:flex;align-items:center;gap:6px;background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:6px 10px;font-size:12px;cursor:none;transition:.15s;}
 .badge-chip:hover{border-color:rgba(255,214,10,.4);background:rgba(255,214,10,.05);}
 .badge-chip .be{font-size:18px;}
 .badge-chip .bn{font-weight:600;}
@@ -383,7 +384,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .sr-card .sr-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
 .sr-card .sr-score{font-size:22px;font-weight:900;color:#ffd60a;}
 .sr-card .sr-game{font-size:12px;color:var(--text2);}
-.sr-card .sr-ss{width:100%;border-radius:8px;cursor:pointer;max-height:160px;object-fit:cover;margin-bottom:10px;border:1px solid rgba(255,255,255,.1);}
+.sr-card .sr-ss{width:100%;border-radius:8px;cursor:none;max-height:160px;object-fit:cover;margin-bottom:10px;border:1px solid rgba(255,255,255,.1);}
 .sr-card .sr-btns{display:flex;gap:8px;flex-wrap:wrap;}
 .auc-btn.red{background:rgba(255,55,95,.15);border-color:rgba(255,55,95,.3);color:#ff375f;}
 .auc-btn.yellow{background:rgba(255,159,10,.15);border-color:rgba(255,159,10,.3);color:#ff9f0a;}
@@ -405,7 +406,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .ep-current{border-color:var(--blue)!important;background:rgba(10,132,255,.08)!important;}
 /* ── TAB CLOAKER ── */
 .cloak-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;}
-.cloak-btn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px 6px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;transition:.15s;cursor:pointer;color:#fff;}
+.cloak-btn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px 6px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;transition:.15s;cursor:none;color:#fff;}
 .cloak-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);transform:translateY(-2px);}
 .cloak-btn.active{border-color:var(--blue);background:rgba(10,132,255,.15);}
 .cloak-btn img{width:24px;height:24px;object-fit:contain;border-radius:4px;}
@@ -418,25 +419,25 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .lb-logo span{color:var(--blue);}
 .lb-sub{font-size:12px;color:var(--text2);margin-bottom:26px;}
 .lb-tabs{display:flex;background:rgba(255,255,255,.06);border-radius:12px;padding:3px;gap:3px;margin-bottom:20px;}
-.lb-tab{flex:1;padding:8px;border-radius:9px;font-size:12px;font-weight:700;color:rgba(255,255,255,.5);transition:.15s;border:none;background:none;cursor:pointer;}
+.lb-tab{flex:1;padding:8px;border-radius:9px;font-size:12px;font-weight:700;color:rgba(255,255,255,.5);transition:.15s;border:none;background:none;cursor:none;}
 .lb-tab.active{background:var(--blue);color:#fff;}
 .lb-field{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 14px;font-size:13px;color:#fff;outline:none;margin-bottom:10px;box-sizing:border-box;transition:.15s;font-family:inherit;}
 .lb-field:focus{border-color:var(--blue);}
 .lb-field::placeholder{color:rgba(255,255,255,.3);}
 .lb-av-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px;}
-.lb-av{font-size:24px;width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;}
+.lb-av{font-size:24px;width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;cursor:none;transition:.15s;}
 .lb-av:hover{border-color:rgba(255,255,255,.3);}
 .lb-av.sel{border-color:var(--blue);background:rgba(10,132,255,.2);}
-.lb-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:12px;padding:13px;font-size:13px;font-weight:800;cursor:pointer;transition:.15s;margin-top:4px;}
+.lb-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:12px;padding:13px;font-size:13px;font-weight:800;cursor:none;transition:.15s;margin-top:4px;}
 .lb-btn:hover{opacity:.88;}
-.lb-btn:disabled{opacity:.4;cursor:not-allowed;}
+.lb-btn:disabled{opacity:.4;cursor:not-allowed!important;}
 .lb-err{font-size:11px;color:#ff375f;margin-bottom:10px;min-height:16px;}
 .lb-ok{font-size:11px;color:#30d158;margin-bottom:10px;min-height:16px;}
 /* sidebar user chip */
 #user-chip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:8px 10px;margin-bottom:10px;}
 #user-chip .uc-av{font-size:20px;}
 #user-chip .uc-name{font-size:12px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-#user-chip .uc-out{background:none;border:none;color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;padding:2px 6px;border-radius:6px;transition:.15s;}
+#user-chip .uc-out{background:none;border:none;color:var(--text2);font-size:11px;font-weight:700;cursor:none;padding:2px 6px;border-radius:6px;transition:.15s;}
 #user-chip .uc-out:hover{color:#ff375f;}
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
@@ -470,7 +471,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       ⚠️ In-game progress (e.g. GunSpin levels) cannot be saved across devices due to browser security rules. Favorites, settings, and watch progress do sync.
     </div>
     <div style="margin-top:10px;font-size:11px;color:var(--text2);">
-      <span style="cursor:pointer;text-decoration:underline;opacity:.6" onclick="lbGuest()">Continue as guest</span>
+      <span style="cursor:none;text-decoration:underline;opacity:.6" onclick="lbGuest()">Continue as guest</span>
     </div>
   </div>
 </div>
@@ -674,7 +675,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <div style="background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:24px;width:min(440px,94vw);max-height:85vh;overflow-y:auto;display:flex;flex-direction:column;gap:14px">
       <div style="display:flex;align-items:center;justify-content:space-between">
         <div style="font-size:17px;font-weight:800">💬 Create Group Chat</div>
-        <button onclick="closeCreateGroup()" style="background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer">✕</button>
+        <button onclick="closeCreateGroup()" style="background:none;border:none;color:var(--text2);font-size:20px;cursor:none">✕</button>
       </div>
       <!-- Avatar picker -->
       <div>
@@ -721,7 +722,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <div style="background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:24px;width:min(400px,94vw);max-height:85vh;overflow-y:auto;display:flex;flex-direction:column;gap:12px">
       <div style="display:flex;align-items:center;justify-content:space-between">
         <div style="font-size:16px;font-weight:800">👥 Group Members</div>
-        <button onclick="closeGroupInfo()" style="background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer">✕</button>
+        <button onclick="closeGroupInfo()" style="background:none;border:none;color:var(--text2);font-size:20px;cursor:none">✕</button>
       </div>
       <div id="grp-info-name" style="font-size:13px;color:var(--text2)"></div>
       <div id="grp-members-list"></div>
@@ -1090,7 +1091,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
   <div style="background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:24px;width:min(420px,92vw);max-height:80vh;overflow-y:auto">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
       <div style="font-size:18px;font-weight:800">🚨 Report</div>
-      <button onclick="closeReportModal()" style="background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer">✕</button>
+      <button onclick="closeReportModal()" style="background:none;border:none;color:var(--text2);font-size:20px;cursor:none">✕</button>
     </div>
     <div id="report-target-info" style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(255,255,255,.05);border-radius:10px;margin-bottom:16px"></div>
     <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px">REASON</div>
@@ -1310,14 +1311,17 @@ async function lbSubmit(){
   const btn=document.getElementById('lb-submit');
   if(!un||!pw){err.textContent='Please fill in all fields.';return;}
   if(un.length<3){err.textContent='Username must be at least 3 characters.';return;}
+  if(lbMode==='signup'&&!/^[a-zA-Z0-9_]+$/.test(un)){err.textContent='Username can only contain letters, numbers and underscores.';return;}
   if(pw.length<4){err.textContent='Password must be at least 4 characters.';return;}
   btn.disabled=true;err.textContent='Loading…';
   try{
     const hash=await sha256(pw+un);
     if(lbMode==='signup'){
       // Check username taken
-      const existing=await sbReq(`/rest/v1/profiles?username=eq.${encodeURIComponent(un)}&select=id`);
+      const existing=await sbReq(`/rest/v1/profiles?username=ilike.${encodeURIComponent(un)}&select=id`);
       if(existing&&existing.length){err.textContent='Username already taken.';btn.disabled=false;return;}
+      const reserved=['adless','adless_owner','admin','administrator','system','mod','moderator','staff','owner','winterag'];
+      if(reserved.includes(un.toLowerCase())){err.textContent='That username is reserved.';btn.disabled=false;return;}
       // Insert and return new row
       const res=await fetch(SB_URL+'/rest/v1/profiles',{
         method:'POST',
@@ -1328,7 +1332,7 @@ async function lbSubmit(){
       if(!res.ok||!rows||!rows.length){err.textContent='Signup failed: '+(rows?.message||res.status);btn.disabled=false;return;}
       currentUser={id:rows[0].id,username:un,avatar:lbSelAv,role:'user'};
     }else{
-      const rows=await sbReq(`/rest/v1/profiles?username=eq.${encodeURIComponent(un)}&select=id,username,avatar,password_hash,role,banned,suspended_until,ban_reason,display_name`);
+      const rows=await sbReq(`/rest/v1/profiles?username=ilike.${encodeURIComponent(un)}&select=id,username,avatar,password_hash,role,banned,suspended_until,ban_reason,display_name`);
       if(!rows||!rows.length){err.textContent='Username not found.';btn.disabled=false;return;}
       if(rows[0].password_hash!==hash){err.textContent='Incorrect password.';btn.disabled=false;return;}
       if(rows[0].banned){err.textContent=`🚫 Account banned: ${rows[0].ban_reason||'Contact admin'}`;btn.disabled=false;return;}
@@ -1693,7 +1697,7 @@ function showGameError(url,title){
   const bar=document.createElement('div');
   bar.id='game-error-bar';
   bar.style.cssText='position:absolute;bottom:56px;left:50%;transform:translateX(-50%);background:rgba(30,30,30,.97);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:10px 18px;display:flex;align-items:center;gap:12px;z-index:10;font-size:13px;color:#fff;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.5)';
-  bar.innerHTML=`<span>⚠️ Game may not load in iframe</span><button onclick="window.open('${url.replace(/'/g,"\\'")}','_blank')" style="background:#0a84ff;border:none;color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600">↗ Open in New Tab</button><button onclick="document.getElementById('game-error-bar').remove()" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:16px;line-height:1">✕</button>`;
+  bar.innerHTML=`<span>⚠️ Game may not load in iframe</span><button onclick="window.open('${url.replace(/'/g,"\\'")}','_blank')" style="background:#0a84ff;border:none;color:#fff;padding:6px 14px;border-radius:8px;cursor:none;font-size:12px;font-weight:600">↗ Open in New Tab</button><button onclick="document.getElementById('game-error-bar').remove()" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:none;font-size:16px;line-height:1">✕</button>`;
   document.getElementById('player').appendChild(bar);
 }
 function closePlayer(){
@@ -2004,7 +2008,7 @@ async function changeUsername(){
       }
     }
     // Check taken
-    const existing=await sbReq(`/rest/v1/profiles?username=eq.${encodeURIComponent(val)}&select=id`);
+    const existing=await sbReq(`/rest/v1/profiles?username=ilike.${encodeURIComponent(val)}&select=id`);
     if(existing&&existing.length){accountMsg('Username already taken');return;}
     await fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{
       method:'PATCH',
@@ -2521,14 +2525,14 @@ function makeInlineAdHTML(slotId){
         <span style="font-size:10px;color:rgba(255,255,255,.2);letter-spacing:.08em;pointer-events:none">Advertisement</span>
         <span style="position:absolute;top:4px;right:7px;font-size:8px;color:rgba(255,255,255,.15);letter-spacing:.06em;pointer-events:none">AD</span>
       </div>
-      <button style="font-size:9px;color:rgba(255,255,255,.2);background:none;border:none;cursor:pointer;padding:1px 0;letter-spacing:.05em" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='rgba(255,255,255,.2)'" onclick="goToAdSettings()">Remove ads in Settings →</button>
+      <button style="font-size:9px;color:rgba(255,255,255,.2);background:none;border:none;cursor:none;padding:1px 0;letter-spacing:.05em" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='rgba(255,255,255,.2)'" onclick="goToAdSettings()">Remove ads in Settings →</button>
     </div>`;
   }
   return`<div style="min-height:60px;width:100%;max-width:680px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.05);border-radius:10px;overflow:hidden;position:relative;margin:0 auto;">
     <!-- AD SLOT: ${slotId} — paste ad script here -->
     <span style="font-size:9px;color:rgba(255,255,255,.15);letter-spacing:.08em;pointer-events:none">Ad</span>
     <span style="position:absolute;top:3px;right:6px;font-size:8px;color:rgba(255,255,255,.12);letter-spacing:.06em;pointer-events:none">AD</span>
-    <button style="position:absolute;bottom:3px;right:6px;font-size:8px;color:rgba(255,255,255,.18);background:none;border:none;cursor:pointer;padding:0;letter-spacing:.04em" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='rgba(255,255,255,.18)'" onclick="goToAdSettings()">✕ Remove</button>
+    <button style="position:absolute;bottom:3px;right:6px;font-size:8px;color:rgba(255,255,255,.18);background:none;border:none;cursor:none;padding:0;letter-spacing:.04em" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='rgba(255,255,255,.18)'" onclick="goToAdSettings()">✕ Remove</button>
   </div>`;
 }
 
@@ -2696,7 +2700,7 @@ function renderNotifList(rows){
         ${(n.message||n.body)?`<div class="notif-text">${escHtml(n.message||n.body)}</div>`:''}
         <div class="notif-time">${time}</div>
       </div>
-      <button onclick="event.stopPropagation();dismissNotif('${n.id}')" style="background:none;border:none;color:rgba(255,255,255,.25);font-size:14px;cursor:pointer;padding:2px 4px;flex-shrink:0;line-height:1" title="Dismiss">✕</button>
+      <button onclick="event.stopPropagation();dismissNotif('${n.id}')" style="background:none;border:none;color:rgba(255,255,255,.25);font-size:14px;cursor:none;padding:2px 4px;flex-shrink:0;line-height:1" title="Dismiss">✕</button>
     </div>`;
   }).join('');
 }
@@ -3262,7 +3266,7 @@ async function loadOwnerFeatured(){
     ownerFeatured=new Set((rows||[]).map(r=>r.game_id));
     const el=document.getElementById('feat-current');
     if(el)el.innerHTML=(rows||[]).length
-      ?`<div style="margin-top:6px;font-size:11px;color:var(--text2)">Featured: `+(rows||[]).map(r=>`<span style="color:var(--blue);margin-right:6px">${r.game_title} <span style="cursor:pointer;color:#ff375f" onclick="unfeatureGame('${r.id}','${r.game_title}')">✕</span></span>`).join('')+`</div>`
+      ?`<div style="margin-top:6px;font-size:11px;color:var(--text2)">Featured: `+(rows||[]).map(r=>`<span style="color:var(--blue);margin-right:6px">${r.game_title} <span style="cursor:none;color:#ff375f" onclick="unfeatureGame('${r.id}','${r.game_title}')">✕</span></span>`).join('')+`</div>`
       :'';
   }catch(e){}
 }
@@ -3280,7 +3284,7 @@ function searchSpotlight(type){
       else if(g.featured){btnLabel='✕ Unfeature';btnStyle='background:rgba(255,159,10,.15);border-color:rgba(255,159,10,.3);color:#ff9f0a';}
       else{btnLabel='+ Feature';}
     }else{btnLabel='Set';}
-    return`<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:rgba(255,255,255,.04);border-radius:8px;margin-bottom:4px;cursor:pointer" onclick="setSpotlight('${type}','${g.id}',this)">
+    return`<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:rgba(255,255,255,.04);border-radius:8px;margin-bottom:4px;cursor:none" onclick="setSpotlight('${type}','${g.id}',this)">
       <img src="${g.img}" style="width:32px;height:32px;object-fit:cover;border-radius:6px" onerror="this.style.display='none'">
       <span style="font-size:12px;font-weight:700;flex:1">${g.title}</span>
       <button class="auc-btn" style="pointer-events:none;${btnStyle}">${btnLabel}</button>
@@ -3761,7 +3765,7 @@ function msgHtml(m){
   return`<div class="chat-msg${me?' me':''}">
     <div class="chat-av">${m.avatar||'👤'}</div>
     <div class="chat-bubble">
-      <div class="chat-name">${me?"You":`<span style="cursor:pointer;text-decoration:underline" onclick="openProfile('${m.user_id}')">${m.username}</span>`}${reportBtn}</div>
+      <div class="chat-name">${me?"You":`<span style="cursor:none;text-decoration:underline" onclick="openProfile('${m.user_id}')">${m.username}</span>`}${reportBtn}</div>
       <div class="chat-text">${escHtml(m.content)}</div>
       <div class="chat-time">${time}</div>
     </div>
@@ -4286,7 +4290,7 @@ const SLUR_PRESET = [
 // ══════════════════════════════════════════════════════════════════
 function openScoreSubmit(){
   if(!currentUser||currentUser.guest){showToast('Login to submit scores');return;}
-  if(!currentGameTitle){showToast('No game is open');return;}
+  // Allow submission even without active game
   document.getElementById('score-game-name').textContent='Game: '+currentGameTitle;
   document.getElementById('score-value').value='';
   document.getElementById('score-comment').value='';
@@ -4335,16 +4339,21 @@ async function submitScore(){
     const ssUrl=`${SB_URL}/storage/v1/object/public/screenshots/${path}`;
     status.textContent='Submitting score…';
     const comment=document.getElementById('score-comment').value.trim();
-    await sbReq('/rest/v1/scores','POST',{
-      user_id:currentUser.id,
-      username:currentUser.display_name||currentUser.username,
-      game_id:currentGameId,
-      game_name:currentGameTitle,
-      score:scoreVal,
-      screenshot_url:ssUrl,
-      status:'pending',
-      comment:comment||null
-    },{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'}});
+    const scoreRes=await fetch(SB_URL+'/rest/v1/scores',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({
+        user_id:currentUser.id,
+        username:currentUser.display_name||currentUser.username,
+        game_id:currentGameId||'unknown',
+        game_name:currentGameTitle||'Unknown Game',
+        score:scoreVal,
+        screenshot_url:ssUrl,
+        status:'pending',
+        comment:comment||null
+      })
+    });
+    if(!scoreRes.ok){const err=await scoreRes.text();throw new Error('Score insert failed: '+err);}
     status.textContent='✅ Submitted! Pending owner review.';
     status.style.color='#30d158';
     setTimeout(closeScoreModal,2000);
@@ -4518,9 +4527,9 @@ async function loadLeaderboard(){
       const isMine=currentUser&&!currentUser.guest&&r.user_id===currentUser.id;
       return`<div class="lb-row" style="${isMine?'border-color:rgba(10,132,255,.4);background:rgba(10,132,255,.06)':''}" onclick="openSsViewer('${r.screenshot_url}')">
         <div class="lb-rank ${rankClass}">${rankDisplay}</div>
-        <div class="lb-av" onclick="event.stopPropagation();openProfile('${r.user_id}')" style="cursor:pointer" title="View profile">${av}</div>
+        <div class="lb-av" onclick="event.stopPropagation();openProfile('${r.user_id}')" style="cursor:none" title="View profile">${av}</div>
         <div class="lb-info">
-          <div class="lb-uname" onclick="event.stopPropagation();openProfile('${r.user_id}')" style="cursor:pointer">${r.username||'Unknown'}${isMine?' <span style="color:var(--blue);font-size:10px">(you)</span>':''}</div>
+          <div class="lb-uname" onclick="event.stopPropagation();openProfile('${r.user_id}')" style="cursor:none">${r.username||'Unknown'}${isMine?' <span style="color:var(--blue);font-size:10px">(you)</span>':''}</div>
           <div class="lb-game">${r.game_name||''} • ${new Date(r.created_at).toLocaleDateString()}</div>
         </div>
         <div class="lb-score">${r.score.toLocaleString()}</div>
@@ -4891,7 +4900,7 @@ async function loadUserBadgesForMgr(userId){
     el.innerHTML=`<div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:8px">ALL BADGES — click to grant/revoke</div><div style="display:flex;flex-wrap:wrap;gap:6px">`+
       Object.entries(BADGE_DEFS).map(([k,b])=>{
         const has=earned.has(k);
-        return`<div class="badge-chip ${has?'':'locked'}" style="cursor:pointer" onclick="toggleBadgeForUser('${userId}','${k}',${has})" title="${has?'Revoke':'Grant'}: ${b.d}">
+        return`<div class="badge-chip ${has?'':'locked'}" style="cursor:none" onclick="toggleBadgeForUser('${userId}','${k}',${has})" title="${has?'Revoke':'Grant'}: ${b.d}">
           <span class="be">${b.e}</span><span class="bn" style="font-size:10px">${b.n}</span>
           ${has?'<span style="color:#30d158;font-size:9px">✓</span>':''}
         </div>`;
@@ -4949,7 +4958,7 @@ function postLoginBadgeCheck(){
     <label style="font-size:12px;color:var(--text2);font-weight:600;display:block;margin-bottom:6px">YOUR SCORE</label>
     <input id="score-value" type="number" class="lb-field" style="margin:0 0 16px;font-size:24px;font-weight:800;text-align:center" placeholder="0" min="0">
     <label style="font-size:12px;color:var(--text2);font-weight:600;display:block;margin-bottom:6px">SCREENSHOT <span style="color:#ff9f0a">*Required</span></label>
-    <div id="score-drop-zone" onclick="document.getElementById('score-file').click()" style="border:2px dashed rgba(255,255,255,.2);border-radius:12px;padding:24px;text-align:center;cursor:pointer;margin-bottom:16px;transition:.2s" onmouseover="this.style.borderColor='rgba(10,132,255,.6)'" onmouseout="this.style.borderColor='rgba(255,255,255,.2)'">
+    <div id="score-drop-zone" onclick="document.getElementById('score-file').click()" style="border:2px dashed rgba(255,255,255,.2);border-radius:12px;padding:24px;text-align:center;cursor:none;margin-bottom:16px;transition:.2s" onmouseover="this.style.borderColor='rgba(10,132,255,.6)'" onmouseout="this.style.borderColor='rgba(255,255,255,.2)'">
       <div id="score-drop-label" style="color:var(--text2);font-size:13px">📸 Click to upload screenshot<br><span style="font-size:11px">PNG, JPG, WebP — max 5MB</span></div>
       <img id="score-preview" style="display:none;max-width:100%;border-radius:8px;margin-top:10px">
     </div>
@@ -4967,7 +4976,7 @@ function postLoginBadgeCheck(){
 <!-- PROFILE MODAL -->
 <div id="profile-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:10001;align-items:center;justify-content:center;backdrop-filter:blur(8px)">
   <div style="background:#1c1c1e;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px;width:min(480px,94vw);max-height:88vh;overflow-y:auto;position:relative">
-    <button onclick="closeProfileModal()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.1);border:none;color:var(--text);border-radius:8px;padding:5px 10px;cursor:pointer;font-size:14px">✕</button>
+    <button onclick="closeProfileModal()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.1);border:none;color:var(--text);border-radius:8px;padding:5px 10px;cursor:none;font-size:14px">✕</button>
     <div id="profile-content"></div>
   </div>
 </div>
