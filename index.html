@@ -4202,9 +4202,9 @@ const BADGE_DEFS = {
   'grinder':        {e:'🔟',n:'Grinder',        d:'Submit 10 scores'},
   'no_life':        {e:'💀',n:'No Life',         d:'Submit 50 scores'},
   'century':        {e:'💯',n:'Century',         d:'Submit 100 scores'},
-  'gold':           {e:'🥇',n:'Gold',            d:'Reach #1 on a leaderboard'},
-  'silver':         {e:'🥈',n:'Silver',          d:'Reach #2 on a leaderboard'},
-  'bronze':         {e:'🥉',n:'Bronze',          d:'Reach #3 on a leaderboard'},
+  'gold':           {e:'🥇',n:'Gold',            d:'Hold the most #1 leaderboard spots'},
+  'silver':         {e:'🥈',n:'Silver',          d:'Hold the most #2 leaderboard spots'},
+  'bronze':         {e:'🥉',n:'Bronze',          d:'Hold the most #3 leaderboard spots'},
   'champion':       {e:'🏆',n:'Champion',        d:'Hold #1 on any game'},
   // Dynamic rank badges are stored as rank_1__gameId etc — see getRankBadgeDef()
   'arcade_king':    {e:'👾',n:'Arcade King',     d:'Top 3 on 3 different games'},
@@ -4835,13 +4835,14 @@ async function checkActivityBadges(){
 async function checkScoreBadges(){
   if(!currentUser||currentUser.guest)return;
   try{
-    const scores=await sbReq(`/rest/v1/scores?user_id=eq.${currentUser.id}&select=id,game_id`);
-    const sc=(scores||[]).length;
+    const scores=await sbReq(`/rest/v1/scores?user_id=eq.${currentUser.id}&select=id,game_id,status`);
+    const all=(scores||[]);
+    const sc=all.length;
     if(sc>=1)awardBadge('first_score');
     if(sc>=10)awardBadge('grinder');
     if(sc>=50)awardBadge('no_life');
     if(sc>=100)awardBadge('century');
-    const ug=[...new Set((scores||[]).map(s=>s.game_id))].length;
+    const ug=[...new Set(all.map(s=>s.game_id))].length;
     if(ug>=5)awardBadge('gamer');
     if(ug>=10)awardBadge('wild_card');
   }catch(e){}
@@ -4920,6 +4921,8 @@ async function reviewScore(id,status,userId,gameId,score,reason){
     if(status==='approved'){
       // Check leaderboard position badges
       checkLeaderboardBadges(userId,gameId,parseInt(score)||0);
+      // Check approved score count badges (bronze/silver/gold)
+      checkApprovedScoreBadgesForUser(userId);
       createNotif(userId,'system','✅ Score Approved!',`Your score was approved and added to the leaderboard!`,'leaderboard',null);
     } else if(status==='rejected'){
       createNotif(userId,'system','❌ Score Rejected',reason?`Reason: ${reason}`:'Your score submission was rejected.','leaderboard',null);
@@ -4931,6 +4934,49 @@ async function reviewScore(id,status,userId,gameId,score,reason){
   }catch(e){showToast('Failed to update score');}
 }
 // Dynamic rank badge helpers
+async function checkApprovedScoreBadgesForUser(userId){
+  // Recalculate who holds the most #1/#2/#3 spots across all games globally
+  try{
+    // Get all approved scores ordered by game + score desc
+    const rows=await sbReq('/rest/v1/scores?status=eq.approved&order=game_id.asc,score.desc&select=user_id,game_id');
+    if(!rows||!rows.length)return;
+    // For each game, find the top 3 distinct users
+    const rankCounts={1:{},2:{},3:{}};
+    const gameMap={};
+    for(const r of rows){
+      if(!gameMap[r.game_id])gameMap[r.game_id]=[];
+      gameMap[r.game_id].push(r.user_id);
+    }
+    for(const gid of Object.keys(gameMap)){
+      const seen=new Set();
+      let rank=0;
+      for(const uid of gameMap[gid]){
+        if(seen.has(uid))continue;
+        seen.add(uid);
+        rank++;
+        if(rank>3)break;
+        rankCounts[rank][uid]=(rankCounts[rank][uid]||0)+1;
+      }
+    }
+    // Find who has the most of each rank
+    const topForRank=(rankObj)=>{
+      let max=0,topUid=null;
+      for(const [uid,cnt] of Object.entries(rankObj)){if(cnt>max){max=cnt;topUid=uid;}}
+      return topUid;
+    };
+    const top1=topForRank(rankCounts[1]);
+    const top2=topForRank(rankCounts[2]);
+    const top3=topForRank(rankCounts[3]);
+    // Get all user IDs involved
+    const allUids=new Set([...Object.keys(rankCounts[1]),...Object.keys(rankCounts[2]),...Object.keys(rankCounts[3])]);
+    // Revoke badges from users who no longer hold the top spot, award to those who do
+    for(const uid of allUids){
+      if(uid===top1)awardBadgeForUser(uid,'gold');
+      if(uid===top2)awardBadgeForUser(uid,'silver');
+      if(uid===top3)awardBadgeForUser(uid,'bronze');
+    }
+  }catch(e){console.warn('checkApprovedScoreBadgesForUser',e);}
+}
 function getRankBadgeDef(key){
   // key format: rank_1__gameId__gameName__score
   const parts=key.split('__');
