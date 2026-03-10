@@ -367,6 +367,11 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 /* ── BADGES ── */
 .badge-grid{display:flex;flex-wrap:wrap;gap:8px;}
 .badge-chip{display:flex;align-items:center;gap:6px;background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:6px 10px;font-size:12px;cursor:none;transition:.15s;}
+.rank-badge-chip{display:inline-flex;align-items:center;gap:7px;border-radius:12px;padding:7px 13px;font-size:12px;font-weight:700;border:1px solid;margin:3px;}
+.rank-badge-chip.rank-1{background:rgba(255,214,10,.12);border-color:rgba(255,214,10,.4);color:#ffd60a;}
+.rank-badge-chip.rank-2{background:rgba(180,180,180,.1);border-color:rgba(180,180,180,.35);color:#c0c0c0;}
+.rank-badge-chip.rank-3{background:rgba(205,127,50,.12);border-color:rgba(205,127,50,.4);color:#cd7f32;}
+.rank-badge-chip .rb-score{font-size:10px;opacity:.75;font-weight:600;}
 .badge-chip:hover{border-color:rgba(255,214,10,.4);background:rgba(255,214,10,.05);}
 .badge-chip .be{font-size:18px;}
 .badge-chip .bn{font-weight:600;}
@@ -4201,6 +4206,7 @@ const BADGE_DEFS = {
   'silver':         {e:'🥈',n:'Silver',          d:'Reach #2 on a leaderboard'},
   'bronze':         {e:'🥉',n:'Bronze',          d:'Reach #3 on a leaderboard'},
   'champion':       {e:'🏆',n:'Champion',        d:'Hold #1 on any game'},
+  // Dynamic rank badges are stored as rank_1__gameId etc — see getRankBadgeDef()
   'arcade_king':    {e:'👾',n:'Arcade King',     d:'Top 3 on 3 different games'},
   'gamer':          {e:'🕹️',n:'Gamer',           d:'Submit scores on 5 different games'},
   'legend':         {e:'🌟',n:'Legend',          d:'Top 3 on 10 different games'},
@@ -4456,6 +4462,9 @@ async function loadBadgesPage(){
           <div style="font-size:11px;color:var(--text2)">complete</div>
         </div>
       </div>`;
+    // Separate dynamic rank badges from static ones
+    const rankBadgeKeys=[...earned.keys()].filter(k=>isRankBadgeKey(k));
+    const staticEarned=new Map([...earned].filter(([k])=>!isRankBadgeKey(k)));
     if(badgePageTab==="earned"){
       if(!earnedCount){content.innerHTML='<div style="text-align:center;padding:40px;color:var(--text2)">No badges yet — play games and chat to earn some!</div>';return;}
       const categories=[
@@ -4466,13 +4475,30 @@ async function loadBadgesPage(){
         {label:"🔍 Misc",keys:["ghost","silent_type","explorer","butterfly","actor","completionist","galaxy_brain"]},
       ];
       let html="";
+      // Show rank badges first if any
+      if(rankBadgeKeys.length){
+        html+=`<div style="margin-bottom:20px"><div style="font-size:12px;font-weight:800;color:var(--text2);letter-spacing:1px;margin-bottom:10px">🏆 Current Rankings</div><div style="display:flex;flex-wrap:wrap;gap:6px">`;
+        rankBadgeKeys.sort().forEach(k=>{
+          const b=getRankBadgeDef(k);if(!b)return;
+          const rank=parseInt(k.split('__')[0].replace('rank_',''));
+          const parts=k.split('__');
+          const gameName=parts[2]?decodeURIComponent(parts[2]):'Unknown Game';
+          const score=parts[3]?parseInt(parts[3]):0;
+          const rankColors=['','#ffd60a','#c0c0c0','#cd7f32'];
+          html+=`<div class="rank-badge-chip rank-${rank}" title="${b.d}">
+            <span style="font-size:20px">${b.e}</span>
+            <div><div>${gameName}</div><div class="rb-score">${score.toLocaleString()} pts</div></div>
+          </div>`;
+        });
+        html+="</div></div>";
+      }
       categories.forEach(cat=>{
-        const catEarned=cat.keys.filter(k=>earned.has(k));
+        const catEarned=cat.keys.filter(k=>staticEarned.has(k));
         if(!catEarned.length)return;
         html+=`<div style="margin-bottom:20px"><div style="font-size:12px;font-weight:800;color:var(--text2);letter-spacing:1px;margin-bottom:10px">${cat.label}</div><div class="badge-grid">`;
         catEarned.forEach(k=>{
           const b=BADGE_DEFS[k];if(!b)return;
-          const date=new Date(earned.get(k)).toLocaleDateString();
+          const date=new Date(staticEarned.get(k)).toLocaleDateString();
           html+=`<div class="badge-chip" style="flex-direction:column;align-items:center;padding:14px 12px;min-width:90px;text-align:center;background:linear-gradient(135deg,rgba(255,214,10,.08),rgba(191,90,242,.06));border-color:rgba(255,214,10,.2)" title="${b.d}">
             <span style="font-size:32px;margin-bottom:6px">${b.e}</span>
             <span style="font-weight:700;font-size:12px">${b.n}</span>
@@ -4523,6 +4549,8 @@ async function loadLeaderboard(){
     const uids=[...new Set(rows.map(r=>r.user_id))];
     const profiles=await sbReq(`/rest/v1/profiles?id=in.(${uids.map(id=>`"${id}"`).join(',')})&select=id,avatar,username`);
     const profMap=Object.fromEntries((profiles||[]).map(p=>[p.id,p]));
+    window._lbScoreCache={};
+    rows.forEach(r=>{const p=profMap[r.user_id]||{};window._lbScoreCache[r.id]={id:r.id,user_id:r.user_id,username:r.username,avatar:p.avatar||'👤',game_name:r.game_name,score:r.score,created_at:r.created_at,comment:r.comment,status:r.status,game_id:r.game_id,screenshot_url:r.screenshot_url};});
     content.innerHTML=rows.map((r,i)=>{
       const rank=i+1;
       const rankClass=rank===1?'gold':rank===2?'silver':rank===3?'bronze':'';
@@ -4530,11 +4558,11 @@ async function loadLeaderboard(){
       const p=profMap[r.user_id]||{};
       const av=p.avatar||'👤';
       const isMine=currentUser&&!currentUser.guest&&r.user_id===currentUser.id;
-      return`<div class="lb-row" style="${isMine?'border-color:rgba(10,132,255,.4);background:rgba(10,132,255,.06)':''}" onclick="openSsViewer('${r.screenshot_url}')">
+      return`<div class="lb-row" style="${isMine?'border-color:rgba(10,132,255,.4);background:rgba(10,132,255,.06)':''}" onclick="openSsViewerById('${r.id}')">
         <div class="lb-rank ${rankClass}">${rankDisplay}</div>
-        <div class="lb-av" onclick="event.stopPropagation();openProfile('${r.user_id}')" style="cursor:none" title="View profile">${av}</div>
+        <div class="lb-av" onclick="event.stopPropagation();openProfile('${r.user_id}')" title="View profile">${av}</div>
         <div class="lb-info">
-          <div class="lb-uname" onclick="event.stopPropagation();openProfile('${r.user_id}')" style="cursor:none">${r.username||'Unknown'}${isMine?' <span style="color:var(--blue);font-size:10px">(you)</span>':''}</div>
+          <div class="lb-uname" onclick="event.stopPropagation();openProfile('${r.user_id}')">${r.username||'Unknown'}${isMine?' <span style="color:var(--blue);font-size:10px">(you)</span>':''}</div>
           <div class="lb-game">${r.game_name||''} • ${new Date(r.created_at).toLocaleDateString()}</div>
         </div>
         <div class="lb-score">${r.score.toLocaleString()}</div>
@@ -4543,11 +4571,66 @@ async function loadLeaderboard(){
     }).join('');
   }catch(e){content.innerHTML='<div style="color:#ff3b30;text-align:center;padding:20px">Failed to load</div>';}
 }
-function openSsViewer(url){
+let ssViewerScoreId=null, ssViewerScoreUserId=null, ssViewerScoreGameId=null, ssViewerScoreVal=null;
+function openSsViewerById(id){
+  const d=window._lbScoreCache&&window._lbScoreCache[id];
+  if(!d)return;
+  openSsViewer(d.screenshot_url,d);
+}
+function openSsViewerByIdSr(id){
+  const d=window._srScoreCache&&window._srScoreCache[id];
+  if(!d)return;
+  openSsViewer(d.screenshot_url,d);
+}
+function openSsViewer(url, scoreData){
   if(!url)return;
   const v=document.getElementById('ss-viewer');
   document.getElementById('ss-viewer-img').src=url;
+  // Populate info bar
+  const info=document.getElementById('ss-viewer-info');
+  if(scoreData){
+    document.getElementById('ss-viewer-av').textContent=scoreData.avatar||'👤';
+    document.getElementById('ss-viewer-username').textContent=scoreData.username||'Unknown';
+    document.getElementById('ss-viewer-game').textContent='🎮 '+(scoreData.game_name||'Unknown Game');
+    document.getElementById('ss-viewer-score').textContent=(scoreData.score||0).toLocaleString()+' pts';
+    document.getElementById('ss-viewer-date').textContent=scoreData.created_at?new Date(scoreData.created_at).toLocaleString():'';
+    info.style.display='flex';
+    // Comment
+    const commentEl=document.getElementById('ss-viewer-comment');
+    if(commentEl)commentEl.textContent=scoreData.comment?'"'+scoreData.comment+'"':'';
+    // Owner verdict buttons
+    ssViewerScoreId=scoreData.id||null;
+    ssViewerScoreUserId=scoreData.user_id||null;
+    ssViewerScoreGameId=scoreData.game_id||null;
+    ssViewerScoreVal=scoreData.score||0;
+    const verdict=document.getElementById('ss-viewer-verdict');
+    if(verdict){
+      if(isOwner()&&scoreData.status==='pending'){
+        verdict.style.display='flex';
+        document.getElementById('ss-approve-btn').style.display='block';
+        document.getElementById('ss-reject-btn').style.display='block';
+      } else if(isOwner()&&scoreData.status==='approved'){
+        verdict.style.display='flex';
+        document.getElementById('ss-approve-btn').style.display='none';
+        document.getElementById('ss-reject-btn').textContent='Revoke';
+        document.getElementById('ss-reject-btn').style.display='block';
+      } else {
+        verdict.style.display='none';
+      }
+    }
+  } else {
+    info.style.display='none';
+    const verdict=document.getElementById('ss-viewer-verdict');
+    if(verdict)verdict.style.display='none';
+  }
   v.style.display='flex';
+  v.onclick=(e)=>{if(e.target===v||e.target.classList.contains('ss-viewer-bg'))closeSsViewer();};
+}
+async function ssViewerVerdict(status){
+  if(!ssViewerScoreId)return;
+  const reason=status==='rejected'?prompt('Rejection reason (optional):'):'';
+  await reviewScore(ssViewerScoreId,status,ssViewerScoreUserId,ssViewerScoreGameId,ssViewerScoreVal,reason||'');
+  closeSsViewer();
 }
 function closeSsViewer(){document.getElementById('ss-viewer').style.display='none';}
 
@@ -4574,8 +4657,9 @@ async function openProfile(userId){
     const joinDate=new Date(profile.created_at).toLocaleDateString('en-US',{month:'short',year:'numeric'});
     const bestScore=scores&&scores.length?scores[0]:null;
     const gamesPlayed=[...new Set((scores||[]).map(s=>s.game_name))].length;
-    // Top badges (first 8 earned)
-    const topBadges=earned.slice(0,12);
+    const rankBadgeKeysProfile=earned.filter(k=>isRankBadgeKey(k));
+    const staticBadgesProfile=earned.filter(k=>!isRankBadgeKey(k));
+    const topStaticBadges=staticBadgesProfile.slice(0,12);
     c.innerHTML=`
       <div class="pm-av">${profile.avatar||'👤'}</div>
       <div class="pm-name">${profile.display_name||profile.username}</div>
@@ -4589,7 +4673,8 @@ async function openProfile(userId){
         <div class="pm-stat"><div class="pm-stat-val">${gamesPlayed}</div><div class="pm-stat-lbl">Games</div></div>
       </div>
       ${bestScore?`<div style="background:rgba(255,214,10,.08);border:1px solid rgba(255,214,10,.2);border-radius:12px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px"><span style="font-size:20px">🏆</span><div><div style="font-size:12px;color:var(--text2)">Best Score</div><div style="font-weight:800">${bestScore.score.toLocaleString()} <span style="font-size:11px;color:var(--text2)">in ${bestScore.game_name}</span></div></div></div>`:''}
-      ${topBadges.length?`<div style="margin-bottom:14px"><div style="font-size:12px;color:var(--text2);font-weight:700;margin-bottom:8px">BADGES (${earned.length})</div><div class="badge-grid">${topBadges.map(k=>{const b=BADGE_DEFS[k];return b?`<div class="badge-chip" title="${b.d}"><span class="be">${b.e}</span><span class="bn">${b.n}</span></div>`:''}).join('')}${earned.length>12?`<div class="badge-chip" style="color:var(--text2)">+${earned.length-12} more</div>`:''}</div></div>`:'<div style="color:var(--text2);font-size:12px;margin-bottom:14px">No badges yet</div>'}
+      ${rankBadgeKeysProfile.length?`<div style="margin-bottom:14px"><div style="font-size:12px;color:var(--text2);font-weight:700;margin-bottom:8px">🏆 RANKINGS</div><div style="display:flex;flex-wrap:wrap;gap:5px">${rankBadgeKeysProfile.map(k=>{const b=getRankBadgeDef(k);if(!b)return'';const rank=parseInt(k.split('__')[0].replace('rank_',''));const parts=k.split('__');const gn=parts[2]?decodeURIComponent(parts[2]):'Unknown';const sc=parts[3]?parseInt(parts[3]):0;return`<div class="rank-badge-chip rank-${rank}" title="${b.d}"><span style="font-size:16px">${b.e}</span><div><div>${gn}</div><div class="rb-score">${sc.toLocaleString()} pts</div></div></div>`;}).join('')}</div></div>`:''}
+      ${topStaticBadges.length?`<div style="margin-bottom:14px"><div style="font-size:12px;color:var(--text2);font-weight:700;margin-bottom:8px">BADGES (${staticBadgesProfile.length})</div><div class="badge-grid">${topStaticBadges.map(k=>{const b=BADGE_DEFS[k];return b?`<div class="badge-chip" title="${b.d}"><span class="be">${b.e}</span><span class="bn">${b.n}</span></div>`:''}).join('')}${staticBadgesProfile.length>12?`<div class="badge-chip" style="color:var(--text2)">+${staticBadgesProfile.length-12} more</div>`:''}</div></div>`:'<div style="color:var(--text2);font-size:12px;margin-bottom:14px">No badges yet</div>'}
       ${!isSelf?`<div style="display:flex;gap:8px;margin-top:4px">
         ${!isFriend&&currentUser&&!currentUser.guest?`<button class="lb-btn" style="flex:1;padding:10px;font-size:13px;margin:0" onclick="sendFriendFromProfile('${userId}','${(profile.username||'').replace(/'/g,"\\'")}')">👋 Add Friend</button>`:''}
         ${currentUser&&!currentUser.guest?`<button class="lb-btn" style="flex:1;padding:10px;font-size:13px;margin:0;background:rgba(48,209,88,.15);border-color:rgba(48,209,88,.3);color:#30d158" onclick="closeProfileModal();openDm('${userId}','${(profile.username||'').replace(/'/g,"\\'")}','${profile.avatar||'👤'}')">💬 DM</button>`:''}
@@ -4786,6 +4871,8 @@ async function loadScoreReview(tab){
       if(badge){if((rows||[]).length>0){badge.textContent=(rows||[]).length;badge.style.display='inline';}else badge.style.display='none';}
     }
     if(!rows||!rows.length){list.innerHTML='<div style="color:var(--text2);text-align:center;padding:20px">No '+srTab+' scores</div>';return;}
+    window._srScoreCache=window._srScoreCache||{};
+    rows.forEach(r=>{window._srScoreCache[r.id]={id:r.id,user_id:r.user_id,username:r.username,avatar:'👤',game_name:r.game_name,score:r.score,created_at:r.created_at,comment:r.comment,status:r.status,game_id:r.game_id,screenshot_url:r.screenshot_url};});
     list.innerHTML=rows.map(r=>`
       <div class="sr-card" id="sr-${r.id}">
         <div class="sr-top">
@@ -4796,7 +4883,7 @@ async function loadScoreReview(tab){
           </div>
           <div class="sr-score">${(r.score||0).toLocaleString()}</div>
         </div>
-        ${r.screenshot_url?`<img class="sr-ss" src="${r.screenshot_url}" onclick="openSsViewer('${r.screenshot_url}')" title="Click to view full screenshot">`:'<div style="color:var(--text2);font-size:12px;margin-bottom:10px">No screenshot</div>'}
+        ${r.screenshot_url?`<img class="sr-ss" src="${r.screenshot_url}" onclick="openSsViewerByIdSr('${r.id}')" title="Click to view full screenshot">`:'<div style="color:var(--text2);font-size:12px;margin-bottom:10px">No screenshot</div>'}
         <div class="sr-btns">
           ${srTab==='pending'?`
             <button class="lb-btn" style="margin:0;padding:8px 16px;font-size:12px;background:rgba(48,209,88,.15);border-color:rgba(48,209,88,.3);color:#30d158" onclick="reviewScore('${r.id}','approved','${r.user_id}','${r.game_id}',${r.score})">✅ Approve</button>
@@ -4836,31 +4923,96 @@ async function reviewScore(id,status,userId,gameId,score,reason){
       createNotif(userId,'system','✅ Score Approved!',`Your score was approved and added to the leaderboard!`,'leaderboard',null);
     } else if(status==='rejected'){
       createNotif(userId,'system','❌ Score Rejected',reason?`Reason: ${reason}`:'Your score submission was rejected.','leaderboard',null);
+      if(gameId)recalcGameRankBadges(gameId);
     }
     document.getElementById('sr-'+id)?.remove();
     showToast(status==='approved'?'✅ Score approved!':'❌ Score rejected');
     loadScoreReview(srTab);
   }catch(e){showToast('Failed to update score');}
 }
-async function checkLeaderboardBadges(userId,gameId,score){
+// Dynamic rank badge helpers
+function getRankBadgeDef(key){
+  // key format: rank_1__gameId__gameName__score
+  const parts=key.split('__');
+  if(parts.length<2)return null;
+  const rank=parseInt(parts[0].replace('rank_',''));
+  const gameName=parts[2]?decodeURIComponent(parts[2]):'Unknown Game';
+  const score=parts[3]?parseInt(parts[3]):null;
+  const medals=['','🥇','🥈','🥉'];
+  const rankLabels=['','1st','2nd','3rd'];
+  if(rank<1||rank>3)return null;
+  return{
+    e:medals[rank],
+    n:`${rankLabels[rank]} in ${gameName}`,
+    d:score!=null?`Ranked #${rank} in ${gameName} with a score of ${score.toLocaleString()}`:`Ranked #${rank} in ${gameName}`,
+    dynamic:true
+  };
+}
+function isRankBadgeKey(key){return key&&key.startsWith('rank_');}
+function makeRankBadgeKey(rank,gameId,gameName,score){
+  return `rank_${rank}__${gameId}__${encodeURIComponent(gameName||'Unknown')}__${score||0}`;
+}
+
+async function recalcGameRankBadges(gameId){
+  // Get top 3 distinct users for this game
   try{
-    const rows=await sbReq(`/rest/v1/scores?game_id=eq.${gameId}&status=eq.approved&order=score.desc&select=user_id,score`);
-    const pos=(rows||[]).findIndex(r=>r.user_id===userId&&r.score===score);
-    if(pos===0){createNotifForUser(userId,'gold');awardBadgeForUser(userId,'gold');awardBadgeForUser(userId,'champion');}
-    else if(pos===1){awardBadgeForUser(userId,'silver');}
-    else if(pos===2){awardBadgeForUser(userId,'bronze');}
-    if(pos>=0&&pos<=2){
-      // Check if top 3 on 3 different games
-      const allApproved=await sbReq(`/rest/v1/scores?user_id=eq.${userId}&status=eq.approved&select=game_id,score`);
-      const gamesWithTop3=new Set();
-      (allApproved||[]).forEach(async s=>{
-        const gr=await sbReq(`/rest/v1/scores?game_id=eq.${s.game_id}&status=eq.approved&order=score.desc&limit=3&select=user_id`);
-        if((gr||[]).some(r=>r.user_id===userId))gamesWithTop3.add(s.game_id);
-        if(gamesWithTop3.size>=3)awardBadgeForUser(userId,'arcade_king');
-        if(gamesWithTop3.size>=10)awardBadgeForUser(userId,'legend');
-      });
+    const rows=await sbReq(`/rest/v1/scores?game_id=eq.${gameId}&status=eq.approved&order=score.desc&select=user_id,score,game_name`);
+    const seen=new Set();
+    const top3=[];
+    for(const r of (rows||[])){
+      if(!seen.has(r.user_id)){seen.add(r.user_id);top3.push(r);}
+      if(top3.length>=3)break;
     }
-  }catch(e){}
+    const gameName=(top3[0]?.game_name)||gameId;
+
+    // Get all users who currently hold a rank badge for this game
+    const existingBadges=await sbReq(`/rest/v1/badges?badge_key=like.rank_1__${gameId}*&select=user_id,badge_key,id`)
+      .catch(()=>[]);
+    const existing2=await sbReq(`/rest/v1/badges?badge_key=like.rank_2__${gameId}*&select=user_id,badge_key,id`)
+      .catch(()=>[]);
+    const existing3=await sbReq(`/rest/v1/badges?badge_key=like.rank_3__${gameId}*&select=user_id,badge_key,id`)
+      .catch(()=>[]);
+    const allExisting=[...(existingBadges||[]),...(existing2||[]),...(existing3||[])];
+
+    // Remove ALL old rank badges for this game
+    for(const b of allExisting){
+      await fetch(SB_URL+`/rest/v1/badges?id=eq.${b.id}`,{
+        method:'DELETE',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+      }).catch(()=>{});
+    }
+
+    // Award new rank badges to top 3
+    for(let i=0;i<top3.length;i++){
+      const rank=i+1;
+      const u=top3[i];
+      const key=makeRankBadgeKey(rank,gameId,gameName,u.score);
+      await fetch(SB_URL+'/rest/v1/badges',{
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({user_id:u.user_id,badge_key:key})
+      }).catch(()=>{});
+      // Notify user of their rank
+      const medals=['','🥇','🥈','🥉'];
+      createNotif(u.user_id,'badge',`${medals[rank]} Ranked #${rank} in ${gameName}!`,`You're #${rank} on the ${gameName} leaderboard with ${u.score.toLocaleString()} points!`,'leaderboard',null);
+      // Also award static gold/silver/bronze/champion for backward compat
+      if(rank===1){awardBadgeForUser(u.user_id,'gold');awardBadgeForUser(u.user_id,'champion');}
+      else if(rank===2)awardBadgeForUser(u.user_id,'silver');
+      else if(rank===3)awardBadgeForUser(u.user_id,'bronze');
+    }
+
+    // Check arcade_king / legend
+    for(const u of top3){
+      const allApproved=await sbReq(`/rest/v1/scores?user_id=eq.${u.user_id}&status=eq.approved&select=game_id`).catch(()=>[]);
+      const uniqueGames=new Set((allApproved||[]).map(s=>s.game_id));
+      if(uniqueGames.size>=3)awardBadgeForUser(u.user_id,'arcade_king');
+      if(uniqueGames.size>=10)awardBadgeForUser(u.user_id,'legend');
+    }
+  }catch(e){console.error('recalcGameRankBadges error',e);}
+}
+
+async function checkLeaderboardBadges(userId,gameId,score){
+  await recalcGameRankBadges(gameId);
 }
 async function awardBadgeForUser(userId,key){
   try{
@@ -4998,8 +5150,34 @@ function postLoginBadgeCheck(){
 </div>
 
 <!-- SCREENSHOT VIEWER -->
-<div id="ss-viewer" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:10002;align-items:center;justify-content:center" onclick="closeSsViewer()">
-  <img id="ss-viewer-img" style="max-width:92vw;max-height:92vh;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.8)">
+<div id="ss-viewer" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:10002;align-items:center;justify-content:center;flex-direction:column;gap:16px;cursor:zoom-out!important">
+  <div style="position:relative;max-width:94vw">
+    <!-- Close button -->
+    <button onclick="closeSsViewer()" style="position:absolute;top:-16px;right:-16px;background:rgba(255,255,255,.15);border:none;color:#fff;border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer!important;z-index:1;display:flex;align-items:center;justify-content:center">✕</button>
+    <!-- Score info bar -->
+    <div id="ss-viewer-info" style="background:rgba(0,0,0,.85);border:1px solid rgba(255,255,255,.12);border-radius:16px 16px 0 0;padding:14px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <div id="ss-viewer-av" style="font-size:28px"></div>
+      <div style="flex:1">
+        <div id="ss-viewer-username" style="font-size:15px;font-weight:800;color:#fff"></div>
+        <div id="ss-viewer-game" style="font-size:12px;color:rgba(255,255,255,.5);margin-top:2px"></div>
+      </div>
+      <div style="text-align:right">
+        <div id="ss-viewer-score" style="font-size:26px;font-weight:900;color:#ffd60a"></div>
+        <div id="ss-viewer-date" style="font-size:11px;color:rgba(255,255,255,.4)"></div>
+      </div>
+    </div>
+    <!-- Screenshot -->
+    <img id="ss-viewer-img" style="display:block;max-width:100%;max-height:65vh;border-radius:0;object-fit:contain;background:#000" onclick="event.stopPropagation()">
+    <!-- Verdict bar (owner only) -->
+    <div id="ss-viewer-verdict" style="display:none;background:rgba(0,0,0,.85);border:1px solid rgba(255,255,255,.12);border-radius:0 0 16px 16px;padding:12px 18px;display:none;align-items:center;gap:10px;flex-wrap:wrap">
+      <div id="ss-viewer-comment" style="flex:1;font-size:12px;color:rgba(255,255,255,.5);font-style:italic"></div>
+      <div style="display:flex;gap:8px">
+        <button id="ss-approve-btn" style="background:rgba(48,209,88,.2);border:1px solid rgba(48,209,88,.4);color:#30d158;border-radius:8px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer!important" onclick="ssViewerVerdict('approved')">✅ Approve</button>
+        <button id="ss-reject-btn" style="background:rgba(255,59,48,.2);border:1px solid rgba(255,59,48,.4);color:#ff3b30;border-radius:8px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer!important" onclick="ssViewerVerdict('rejected')">❌ Reject</button>
+      </div>
+    </div>
+  </div>
+  <div style="font-size:11px;color:rgba(255,255,255,.25)">Click outside to close</div>
 </div>
 </body>
 </html>
