@@ -36,6 +36,7 @@ body.inverted #app,body.inverted #player{filter:invert(1) hue-rotate(180deg);}
 body.inverted #bgCanvas{filter:invert(1);}
 body.inverted img{filter:invert(1) hue-rotate(180deg);}
 *{box-sizing:border-box;cursor:none!important;}
+button,a,[onclick],input,select,textarea,label{cursor:none!important;}
 #login-screen,#login-screen *{cursor:auto!important;}
 #login-screen button,.lb-btn,.lb-tab{cursor:pointer!important;}
 #device-pick,#device-pick *{cursor:auto!important;}
@@ -46,6 +47,7 @@ body.inverted img{filter:invert(1) hue-rotate(180deg);}
 #profile-modal button{cursor:pointer!important;}
 #ss-viewer{cursor:zoom-out!important;}
 #badge-unlock *{cursor:none!important;}
+body.sys-cursor,body.sys-cursor *{cursor:auto!important;}
 body,html{margin:0;padding:0;width:100vw;height:100vh;overflow:hidden;background:#000;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,sans-serif;cursor:none!important;}
 #bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
 #bgLayer{position:fixed;inset:0;z-index:0;pointer-events:none;background-size:cover;background-position:center;opacity:0;transition:opacity .5s;}
@@ -860,11 +862,14 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
         </div>
       </div>
       <div class="s-row" style="flex-direction:column;align-items:flex-start;gap:8px;margin-top:4px">
-        <div><div class="s-lbl">Word Blacklist</div><div class="s-desc">Comma-separated words — auto-deleted from chat</div></div>
+        <div><div class="s-lbl">Word Blacklist</div><div class="s-desc">Messages containing these words are auto-blocked</div></div>
         <div style="display:flex;gap:8px;width:100%">
-          <input id="blacklist-input" class="lb-field" style="margin:0;flex:1" placeholder="word1, word2, word3…">
-          <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0" onclick="saveBlacklist()">Save</button>
+          <input id="blacklist-add-input" class="lb-field" style="margin:0;flex:1" placeholder="Add a word or phrase…" onkeydown="if(event.key==='Enter')addBlacklistWord()">
+          <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0" onclick="addBlacklistWord()">+ Add</button>
+          <button class="auc-btn" onclick="loadBlacklistPreset()" title="Load default slur list">⚡ Preset</button>
         </div>
+        <div id="blacklist-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;max-height:160px;overflow-y:auto;width:100%"></div>
+        <input id="blacklist-input" type="hidden">
       </div>
       <div style="margin-top:10px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
@@ -916,6 +921,48 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
         <button class="lb-btn" style="width:auto;padding:12px 18px;margin:0" onclick="loadBadgeMgr()">Search</button>
       </div>
       <div id="badge-mgr-result"></div>
+    </div>
+
+    <!-- Online Now -->
+    <div class="s-section">
+      <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
+        <span>🟢 Online Now <span id="online-count-badge" style="background:rgba(48,209,88,.2);color:#30d158;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;margin-left:6px">0</span></span>
+        <button class="auc-btn" onclick="loadOnlineUsers()">↻ Refresh</button>
+      </div>
+      <div id="online-users-list" style="margin-top:10px"></div>
+    </div>
+
+    <!-- Clear Chat -->
+    <div class="s-section">
+      <div class="s-sec">🗑️ Chat Tools</div>
+      <div class="s-row">
+        <div><div class="s-lbl">Clear All Chat</div><div class="s-desc">Permanently deletes all messages from global chat</div></div>
+        <button class="s-danger" onclick="askConfirm('Clear all chat messages?','This cannot be undone.',clearAllChat)">🗑️ Clear</button>
+      </div>
+      <div class="s-row" style="margin-top:4px">
+        <div><div class="s-lbl">DM a User</div><div class="s-desc">Send a direct message as owner</div></div>
+        <div style="display:flex;gap:8px">
+          <input id="owner-dm-user" class="lb-field" style="margin:0;width:140px" placeholder="Username…">
+          <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0" onclick="ownerOpenDm()">DM</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mute Manager -->
+    <div class="s-section">
+      <div class="s-sec">🔇 Mute a User</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <input id="mute-user-search" class="lb-field" style="margin:0;flex:1;min-width:120px" placeholder="Username…">
+        <select id="mute-duration" class="lb-field" style="margin:0;width:auto;padding:8px 12px;font-size:12px">
+          <option value="5">5 min</option>
+          <option value="15">15 min</option>
+          <option value="60">1 hour</option>
+          <option value="1440">24 hours</option>
+          <option value="10080">7 days</option>
+        </select>
+        <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0;background:rgba(255,159,10,.15);border-color:rgba(255,159,10,.3);color:#ff9f0a" onclick="muteUser()">🔇 Mute</button>
+      </div>
+      <div id="mute-result" style="margin-top:8px;font-size:12px;color:var(--text2)"></div>
     </div>
   </div>
   <!-- LEADERBOARD VIEW -->
@@ -3212,6 +3259,74 @@ async function loadOwnerPanel(){
   loadOwnerFeatured();
   loadAnnouncementHistory();
   loadScoreReview("pending");
+  loadOnlineUsers();
+}
+
+async function loadOnlineUsers(){
+  if(!isOwner())return;
+  try{
+    const cutoff=new Date(Date.now()-2*60*1000).toISOString();
+    const users=await sbReq(`/rest/v1/profiles?last_seen=gte.${cutoff}&select=id,username,avatar,last_seen&order=last_seen.desc`);
+    const list=document.getElementById('online-users-list');
+    const badge=document.getElementById('online-count-badge');
+    const count=(users||[]).length;
+    if(badge)badge.textContent=count;
+    if(!list)return;
+    if(!count){list.innerHTML='<div class="fc-empty">No users online right now</div>';return;}
+    list.innerHTML=(users||[]).map(u=>`
+      <div class="friend-card">
+        <div class="fc-av" style="position:relative">${u.avatar||'👤'}<span style="position:absolute;bottom:0;right:0;width:9px;height:9px;border-radius:50%;background:#30d158;box-shadow:0 0 6px #30d158;border:2px solid var(--card)"></span></div>
+        <div style="flex:1"><div class="fc-name">${u.username}</div><div class="fc-status">${presenceText(u.last_seen)}</div></div>
+        <div class="fc-btns">
+          <button class="fc-btn msg" onclick="openProfile('${u.id}')">👤 Profile</button>
+        </div>
+      </div>`).join('');
+  }catch(e){console.warn('loadOnlineUsers',e);}
+}
+
+async function clearAllChat(){
+  try{
+    await fetch(SB_URL+'/rest/v1/messages?id=neq.00000000-0000-0000-0000-000000000000',{
+      method:'DELETE',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'return=minimal'}
+    });
+    showToast('🗑️ Chat cleared');
+    loadAdminChatLog();
+  }catch(e){showToast('Failed to clear chat');}
+}
+
+async function ownerOpenDm(){
+  const uname=document.getElementById('owner-dm-user').value.trim();
+  if(!uname){showToast('Enter a username');return;}
+  try{
+    const res=await sbReq(`/rest/v1/profiles?username=ilike.${encodeURIComponent(uname)}&select=id,username,avatar&limit=1`);
+    if(!res||!res.length){showToast('User not found');return;}
+    const u=res[0];
+    openDm(u.id,u.username,u.avatar||'👤');
+    document.getElementById('owner-dm-user').value='';
+  }catch(e){showToast('Failed to open DM');}
+}
+
+async function muteUser(){
+  const uname=document.getElementById('mute-user-search').value.trim();
+  const mins=parseInt(document.getElementById('mute-duration').value)||5;
+  const result=document.getElementById('mute-result');
+  if(!uname){showToast('Enter a username');return;}
+  try{
+    const res=await sbReq(`/rest/v1/profiles?username=ilike.${encodeURIComponent(uname)}&select=id,username&limit=1`);
+    if(!res||!res.length){result.textContent='User not found';result.style.color='#ff3b30';return;}
+    const u=res[0];
+    const until=new Date(Date.now()+mins*60*1000).toISOString();
+    await fetch(SB_URL+`/rest/v1/profiles?id=eq.${u.id}`,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({suspended_until:until,ban_reason:`Muted for ${mins} min by owner`})
+    });
+    createNotif(u.id,'system','🔇 You were muted',`You have been muted for ${mins} minute${mins>1?'s':''}. You cannot send messages until the mute expires.`,null,null);
+    result.textContent=`✅ ${u.username} muted for ${mins} min (until ${new Date(until).toLocaleTimeString()})`;
+    result.style.color='#30d158';
+    document.getElementById('mute-user-search').value='';
+  }catch(e){result.textContent='Failed to mute user';result.style.color='#ff3b30';}
 }
 
 // ── ANALYTICS ────────────────────────────────────────────────────
@@ -3386,8 +3501,7 @@ async function loadSiteSettings(){
         }
         if(r.key==='blacklist'){
           siteBlacklist=r.value?r.value.split(',').map(w=>w.trim().toLowerCase()).filter(Boolean):[];
-          const el=document.getElementById('blacklist-input');
-          if(el)el.value=r.value||'';
+          renderBlacklistChips();
         }
         if(r.key==='defeatured'){
           ownerDefeatured=new Set(r.value?r.value.split(',').filter(Boolean):[]);
@@ -3423,19 +3537,57 @@ async function saveSlowmode(){
   showToast('⏱ Slowmode set to '+val+'s');
 }
 
+function renderBlacklistChips(){
+  const chips=document.getElementById('blacklist-chips');
+  if(!chips)return;
+  chips.innerHTML=siteBlacklist.map((w,i)=>`
+    <div style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,59,48,.12);border:1px solid rgba(255,59,48,.25);border-radius:20px;padding:3px 10px 3px 12px;font-size:12px;color:#ff3b30">
+      <span>${w}</span>
+      <button onclick="removeBlacklistWord(${i})" style="background:none;border:none;color:rgba(255,59,48,.6);font-size:14px;line-height:1;padding:0 0 0 2px">×</button>
+    </div>`).join('');
+}
 async function saveBlacklist(){
-  const val=document.getElementById('blacklist-input').value.trim();
+  const val=siteBlacklist.join(', ');
   await upsertSiteSetting('blacklist',val);
-  siteBlacklist=val?val.split(',').map(w=>w.trim().toLowerCase()).filter(Boolean):[];
   showToast('🚫 Blacklist saved ('+siteBlacklist.length+' words)');
+}
+async function addBlacklistWord(){
+  const inp=document.getElementById('blacklist-add-input');
+  const word=inp.value.trim().toLowerCase();
+  if(!word){showToast('Enter a word first');return;}
+  if(siteBlacklist.includes(word)){showToast('Already in list');inp.value='';return;}
+  siteBlacklist.push(word);
+  inp.value='';
+  renderBlacklistChips();
+  await saveBlacklist();
+}
+async function removeBlacklistWord(idx){
+  siteBlacklist.splice(idx,1);
+  renderBlacklistChips();
+  await saveBlacklist();
+}
+async function loadBlacklistPreset(){
+  const preset=SLUR_PRESET.split(',').map(w=>w.trim().toLowerCase()).filter(Boolean);
+  const added=preset.filter(w=>!siteBlacklist.includes(w));
+  siteBlacklist=[...new Set([...siteBlacklist,...preset])];
+  renderBlacklistChips();
+  await saveBlacklist();
+  showToast('⚡ Preset loaded (+'+added.length+' words)');
 }
 
 function isBlacklisted(text){
-  const t=text.toLowerCase();
+  if(!text||!siteBlacklist.length)return false;
+  const t=text.toLowerCase().replace(/\s+/g,' ');
+  const stripped=t.replace(/[\s\-_.@!]/g,'').replace(/1/g,'i').replace(/3/g,'e').replace(/4/g,'a').replace(/0/g,'o').replace(/5/g,'s').replace(/@/g,'a').replace(/!/g,'i');
   return siteBlacklist.some(w=>{
     if(!w)return false;
-    try{return new RegExp("\\b"+w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\b").test(t);}
-    catch(e){return t.includes(w);}
+    const wl=w.toLowerCase();
+    if(wl.includes(' ')||/[^a-z0-9]/.test(wl)){
+      return t.includes(wl)||stripped.includes(wl.replace(/[\s\-_.@!]/g,''));
+    }
+    try{if(new RegExp('\\b'+wl.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b').test(t))return true;}catch(e){}
+    const wstripped=wl.replace(/1/g,'i').replace(/3/g,'e').replace(/4/g,'a').replace(/0/g,'o').replace(/5/g,'s').replace(/@/g,'a').replace(/!/g,'i');
+    return stripped.includes(wstripped);
   });
 }
 
@@ -4687,7 +4839,12 @@ function closeProfileModal(){document.getElementById('profile-modal').style.disp
 async function sendFriendFromProfile(uid,uname){
   if(!currentUser||currentUser.guest)return;
   try{
-    await sbReq('/rest/v1/friends','POST',{sender_id:currentUser.id,receiver_id:uid,status:'pending'},{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'}});
+    const r=await fetch(SB_URL+'/rest/v1/friends',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({sender_id:currentUser.id,receiver_id:uid,status:'pending'})
+    });
+    if(!r.ok){const e=await r.text();console.error('Friend request failed:',e);showToast('Could not send request');return;}
     createNotif(uid,'friend',`👋 Friend Request`,`${currentUser.display_name||currentUser.username} wants to be friends`,'friends',null);
     showToast('Friend request sent!');
     closeProfileModal();
@@ -5134,10 +5291,9 @@ async function ensureBlacklistPreset(){
   // Only auto-load for owner
   if(!currentUser||currentUser.role!=='owner')return;
   siteBlacklist=SLUR_PRESET.split(',').map(w=>w.trim().toLowerCase()).filter(Boolean);
-  await upsertSiteSetting('blacklist',SLUR_PRESET);
+  await upsertSiteSetting('blacklist',siteBlacklist.join(', '));
+  renderBlacklistChips();
   showToast('🚫 Default blacklist loaded ('+siteBlacklist.length+' terms)');
-  const el=document.getElementById('blacklist-input');
-  if(el)el.value=SLUR_PRESET;
 }
 
 // ══════════════════════════════════════════════════════════════════
