@@ -346,9 +346,9 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .nav.owner-btn{color:#ffd60a;background:rgba(255,214,10,.08);border:1px solid rgba(255,214,10,.2);}
 .nav.owner-btn:hover{color:#fff;background:rgba(255,214,10,.2);}
 .owner-badge{background:linear-gradient(135deg,#ffd60a,#ff9500);color:#000;font-size:9px;font-weight:900;padding:2px 6px;border-radius:6px;margin-left:5px;vertical-align:middle;}
-.mod-user-card{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 12px;margin-bottom:6px;}
-.mod-user-card.banned{border-color:rgba(255,55,95,.3);background:rgba(255,55,95,.05);}
-.mod-user-card.suspended{border-color:rgba(255,159,10,.3);background:rgba(255,159,10,.05);}
+.admin-user-card{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 12px;margin-bottom:6px;}
+.admin-user-card.banned{border-color:rgba(255,55,95,.3);background:rgba(255,55,95,.05);}
+.admin-user-card.suspended{border-color:rgba(255,159,10,.3);background:rgba(255,159,10,.05);}
 .auc-info{flex:1;}
 .auc-name{font-size:13px;font-weight:700;}
 .auc-meta{font-size:10px;color:var(--text2);}
@@ -401,10 +401,10 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .auc-btn.yellow{background:rgba(255,159,10,.15);border-color:rgba(255,159,10,.3);color:#ff9f0a;}
 .auc-btn.green{background:rgba(48,209,88,.15);border-color:rgba(48,209,88,.3);color:#30d158;}
 .auc-btn.blue{background:rgba(10,132,255,.15);border-color:rgba(10,132,255,.3);color:var(--blue);}
-.mod-chat-msg{display:flex;align-items:flex-start;gap:8px;padding:8px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);margin-bottom:6px;}
-.mod-chat-msg .acm-content{flex:1;font-size:12px;}
-.mod-chat-msg .acm-user{font-weight:700;color:var(--blue);}
-.mod-chat-msg .acm-time{font-size:10px;color:var(--text2);}
+.admin-chat-msg{display:flex;align-items:flex-start;gap:8px;padding:8px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);margin-bottom:6px;}
+.admin-chat-msg .acm-content{flex:1;font-size:12px;}
+.admin-chat-msg .acm-user{font-weight:700;color:var(--blue);}
+.admin-chat-msg .acm-time{font-size:10px;color:var(--text2);}
 /* ── DM VIEW ── */
 #dm-view{flex-direction:column;padding:0!important;}
 #dm-view.active{display:flex!important;}
@@ -572,7 +572,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <div class="nav" data-view="settings-view">⚙️ Settings</div>
     <div class="nav discord-btn" onclick="window.open('https://discord.gg/gAe83DUFNT','_blank')">🎮 Join Discord</div>
     <div class="nav owner-btn" id="owner-nav" data-view="owner-view" style="display:none">👑 Owner Panel</div>
-    <div class="nav" id="mod-nav" data-view="mod-view" style="display:none;color:#30d158;background:rgba(48,209,88,.08);border:1px solid rgba(48,209,88,.2)">🛡️ WinterAG Panel</div>
+    <div class="nav" id="admin-nav" data-view="admin-view" style="display:none;color:#30d158;background:rgba(48,209,88,.08);border:1px solid rgba(48,209,88,.2)">🛡️ WinterAG Panel</div>
     <div id="game-filters">
       <div class="sec-label">Categories</div>
       <div class="nav" data-cat="all">🏠 All Games</div>
@@ -763,8 +763,8 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       </div>
     </div>
   </div>
-  <!-- mod PANEL VIEW -->
-  <div id="mod-view" class="view">
+  <!-- ADMIN PANEL VIEW -->
+  <div id="admin-view" class="view">
     <header>
       <h1>🛡️ WinterAG Panel</h1>
       <div style="font-size:11px;color:var(--text2);margin-top:2px">Moderator tools — for WinterAG only</div>
@@ -801,10 +801,10 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <div class="s-section">
       <div class="s-sec">👤 User Moderation</div>
       <div style="display:flex;gap:8px;margin-bottom:10px">
-        <input id="mod-search-input" class="lb-field" style="margin:0;flex:1" placeholder="Search username…" maxlength="20" onkeydown="if(event.key==='Enter')modSearchUser()">
-        <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0" onclick="modSearchUser()">Search</button>
+        <input id="admin-search-input" class="lb-field" style="margin:0;flex:1" placeholder="Search username…" maxlength="20" onkeydown="if(event.key==='Enter')adminSearchUser()">
+        <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0" onclick="adminSearchUser()">Search</button>
       </div>
-      <div id="mod-user-result"></div>
+      <div id="admin-user-result"></div>
     </div>
 
     <!-- Chat Moderation -->
@@ -812,20 +812,20 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
         <span>💬 Recent Chat</span>
         <div style="display:flex;gap:6px">
-          <button class="auc-btn blue" style="font-size:11px" onclick="loadmodChatLog2()">↻ Refresh</button>
+          <button class="auc-btn blue" style="font-size:11px" onclick="loadAdminChatLog2()">↻ Refresh</button>
           <button class="auc-btn red" style="font-size:11px" onclick="wagClearChat()">🗑 Clear All</button>
         </div>
       </div>
-      <div id="mod-chat-log2" style="max-height:320px;overflow-y:auto;margin-top:8px"></div>
+      <div id="admin-chat-log2" style="max-height:320px;overflow-y:auto;margin-top:8px"></div>
     </div>
 
     <!-- Reports -->
     <div class="s-section">
       <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
         <span>🚨 Reports</span>
-        <button class="auc-btn blue" style="font-size:11px" onclick="loadmodReports()">↻ Refresh</button>
+        <button class="auc-btn blue" style="font-size:11px" onclick="loadAdminReports()">↻ Refresh</button>
       </div>
-      <div id="mod-reports-list" style="margin-top:8px"></div>
+      <div id="admin-reports-list" style="margin-top:8px"></div>
     </div>
 
     <!-- Chat Controls -->
@@ -932,9 +932,9 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <div style="margin-top:10px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
           <div class="s-lbl">Recent Messages</div>
-          <button class="auc-btn" onclick="loadmodChatLog()">↻ Refresh</button>
+          <button class="auc-btn" onclick="loadAdminChatLog()">↻ Refresh</button>
         </div>
-        <div id="mod-chat-log"></div>
+        <div id="admin-chat-log"></div>
       </div>
     </div>
 
@@ -950,14 +950,14 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <div class="s-section">
       <div class="s-sec">👤 User Management</div>
       <div style="display:flex;gap:8px;margin-bottom:10px">
-        <input id="mod-search" class="lb-field" style="margin:0;flex:1" placeholder="Search username…" onkeydown="if(event.key==='Enter')modSearchUser()">
-        <button class="lb-btn" style="width:auto;padding:12px 18px;margin:0" onclick="modSearchUser()">Search</button>
+        <input id="admin-search" class="lb-field" style="margin:0;flex:1" placeholder="Search username…" onkeydown="if(event.key==='Enter')adminSearchUser()">
+        <button class="lb-btn" style="width:auto;padding:12px 18px;margin:0" onclick="adminSearchUser()">Search</button>
       </div>
-      <div id="mod-user-result"></div>
+      <div id="admin-user-result"></div>
     </div>
     <div class="s-section">
       <div class="s-sec">👥 All Users <span id="user-count" style="color:var(--text2);font-weight:400"></span></div>
-      <div id="mod-all-users"></div>
+      <div id="admin-all-users"></div>
     </div>
     <!-- Score Review -->
     <div class="s-section">
@@ -1087,9 +1087,9 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       </div>
       <!-- Published items -->
       <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px">📸 Published PFPs</div>
-      <div id="gallery-pfp-mod" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><div style="font-size:11px;color:var(--text2)">None yet</div></div>
+      <div id="gallery-pfp-admin" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><div style="font-size:11px;color:var(--text2)">None yet</div></div>
       <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px">🌅 Published Backgrounds</div>
-      <div id="gallery-bg-mod" style="display:flex;gap:8px;flex-wrap:wrap"><div style="font-size:11px;color:var(--text2)">None yet</div></div>
+      <div id="gallery-bg-admin" style="display:flex;gap:8px;flex-wrap:wrap"><div style="font-size:11px;color:var(--text2)">None yet</div></div>
       <div id="owner-gallery-list" style="display:none"></div>
     </div>
   </div>
@@ -1359,7 +1359,7 @@ const BUILTIN=[
   {id:'b7',title:'Slope 3',cat:'arcade',img:'https://slope3.com/upload/imgs/options/slope-3-banner.png',url:'https://html5.101games.io/game/Slope3/index.html'},
   {id:'b8',title:'Slope Cyber',cat:'arcade',img:'https://i.ytimg.com/vi/T8fb6F1XwqM/hq720.jpg',url:'https://azgames.io/game/slope-cyber/'},
   {id:'b9',title:'Slope Legacy',cat:'arcade',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQu21VE-0aK8Dt8b5Lw_UrPIbCT1c50kGvQLA&s',url:'https://azgames.io/game/slope-legacy/'},
-  {id:'b10',title:'67 Clicker',cat:'idle',img:'https://zapgames.io/data/image/game/67-clicker.jpg',url:'https://iogames.onl/67-clicker.embed'},
+  {id:'b10',title:'67 Clicker',cat:'idle',img:'https://zapgames.io/data/image/game/67-clicker.jpg',url:'https://www.hoodamath.com/mobile/games/67-clicker/game.html?nocheckorient=1'},
   {id:'b11',title:'Slope+',cat:'arcade',img:'https://sloperun.org/data/image/posts/slope-image.jpg',url:'https://nebulaplay.site/storage/Slope.html'},
   {id:'b12',title:'Chicken Jockey',cat:'idle',img:'https://chickenjockeyclicker.io/data/image/game/chicken-jockey-clicker-banner.png',url:'https://game.azgame.io/chicken-jockey-clicker/'},
   {id:'b13',title:'Slippery Slope',cat:'racing',img:'https://static.playhop.com/images/2d413_1890793_92da2/4b0576df8/2a0000018748a544_116be46/b705ded35f3a1f67d103_609d64/orig',url:'https://g.vseigru.net/11/igra-skolzkij-cpusk/'},
@@ -1548,7 +1548,7 @@ async function lbSubmit(){
       // Check username taken
       const existing=await sbReq(`/rest/v1/profiles?username=ilike.${encodeURIComponent(un)}&select=id`);
       if(existing&&existing.length){err.textContent='Username already taken.';btn.disabled=false;return;}
-      const reserved=['adless','adless_owner','mod','modistrator','system','mod','moderator','staff','owner','winterag'];
+      const reserved=['adless','adless_owner','admin','administrator','system','mod','moderator','staff','owner','winterag'];
       if(reserved.includes(un.toLowerCase())){err.textContent='That username is reserved.';btn.disabled=false;return;}
       // Insert and return new row
       const emailVal=document.getElementById('lb-email')?.value.trim()||null;
@@ -1566,7 +1566,7 @@ async function lbSubmit(){
       const rows=await sbReq(`/rest/v1/profiles?username=ilike.${encodeURIComponent(un)}&select=id,username,avatar,password_hash,role,banned,suspended_until,ban_reason,display_name`);
       if(!rows||!rows.length){err.textContent='Username not found.';btn.disabled=false;return;}
       if(rows[0].password_hash!==hash){err.textContent='Incorrect password.';btn.disabled=false;return;}
-      if(rows[0].banned){err.textContent=`🚫 Account banned: ${rows[0].ban_reason||'Contact mod'}`;btn.disabled=false;return;}
+      if(rows[0].banned){err.textContent=`🚫 Account banned: ${rows[0].ban_reason||'Contact admin'}`;btn.disabled=false;return;}
       if(rows[0].suspended_until&&new Date(rows[0].suspended_until)>new Date()){err.textContent=`⏸ Account suspended until ${new Date(rows[0].suspended_until).toLocaleDateString()}`;btn.disabled=false;return;}
       currentUser={id:rows[0].id,username:rows[0].username,avatar:rows[0].avatar,role:rows[0].role||'user',display_name:rows[0].display_name||null};
     }
@@ -2014,7 +2014,7 @@ document.querySelectorAll('.nav').forEach(btn=>{
       else if(btn.dataset.view==='badges-view'){switchView('badges-view');setBadgeTab('earned');}
       else if(btn.dataset.view==='friends-view'){switchView('friends-view');loadFriendRequests();loadGroupsList();}
       else if(btn.dataset.view==='owner-view'){switchView('owner-view');loadOwnerPanel();}
-      else if(btn.dataset.view==='mod-view'){switchView('mod-view');loadmodPanel();}
+      else if(btn.dataset.view==='admin-view'){switchView('admin-view');loadAdminPanel();}
       else{switchView(btn.dataset.view);if(btn.dataset.view==='settings-view'){buildColorGrid();buildBgSwatches();buildBgGradients();buildCloakGrid();updateStats();updateAvatarDisplay();loadPfpGallery();loadCurrentEmail();loadGalleryForUser();
         const accSec=document.getElementById('account-section');
         if(accSec)accSec.style.display=(!currentUser||currentUser.guest)?'none':'block';
@@ -2398,8 +2398,8 @@ async function submitCreateGroup(){
     const rows=await res.json();
     if(!res.ok||!rows||!rows.length){err.textContent='Failed to create group';return;}
     const gid=rows[0].id;
-    // Add owner as mod
-    const memberRows=[{group_id:gid,user_id:currentUser.id,role:'mod'}];
+    // Add owner as admin
+    const memberRows=[{group_id:gid,user_id:currentUser.id,role:'admin'}];
     // Add selected friends
     grpSelMembers.forEach(uid=>memberRows.push({group_id:gid,user_id:uid,role:'member'}));
     await fetch(SB_URL+'/rest/v1/group_members',{
@@ -2533,28 +2533,28 @@ async function openGroupInfo(){
     const profiles=uids?await sbReq(`/rest/v1/profiles?id=in.(${uids})&select=id,username,avatar`):[];
     const profMap=Object.fromEntries((profiles||[]).map(p=>[p.id,p]));
     const roleMap=Object.fromEntries((members||[]).map(m=>[m.user_id,m.role]));
-    const ismod=roleMap[currentUser.id]==='mod';
+    const isAdmin=roleMap[currentUser.id]==='admin';
     document.getElementById('grp-info-name').textContent=`${currentGroup.avatar} ${currentGroup.name} · ${members.length}/20 members`;
     document.getElementById('grp-members-list').innerHTML=(members||[]).map(m=>{
       const p=profMap[m.user_id]||{username:'Unknown',avatar:'👤'};
       const isMe=m.user_id===currentUser.id;
-      const isOwner=m.role==='mod';
+      const isOwner=m.role==='admin';
       return`<div class="member-row">
         <div style="font-size:20px">${p.avatar}</div>
         <div style="flex:1">
           <span style="font-size:13px;font-weight:700">${escHtml(p.username)}</span>
-          ${isOwner?'<span class="member-crown">👑 mod</span>':''}
+          ${isOwner?'<span class="member-crown">👑 Admin</span>':''}
           ${isMe?'<span style="font-size:10px;color:var(--text2);margin-left:4px">(you)</span>':''}
         </div>
-        ${ismod&&!isMe?`<button class="auc-btn red" style="font-size:10px" onclick="removeFromGroup('${m.user_id}','${escAttr(p.username)}')">Remove</button>`:''}
+        ${isAdmin&&!isMe?`<button class="auc-btn red" style="font-size:10px" onclick="removeFromGroup('${m.user_id}','${escAttr(p.username)}')">Remove</button>`:''}
       </div>`;
     }).join('');
     // Actions section
     const canAddMore=(members||[]).length<GRP_MAX_MEMBERS;
     document.getElementById('grp-info-actions').innerHTML=`
       <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-        ${ismod&&canAddMore?`<button class="lb-btn" style="font-size:12px" onclick="openAddMembersModal()">➕ Add Members</button>`:''}
-        ${ismod?`<button class="auc-btn red" onclick="disbandGroup()">🗑 Disband Group</button>`:''}
+        ${isAdmin&&canAddMore?`<button class="lb-btn" style="font-size:12px" onclick="openAddMembersModal()">➕ Add Members</button>`:''}
+        ${isAdmin?`<button class="auc-btn red" onclick="disbandGroup()">🗑 Disband Group</button>`:''}
         <button class="auc-btn yellow" onclick="leaveGroup()">🚪 Leave Group</button>
       </div>`;
     document.getElementById('group-info-modal').style.display='flex';
@@ -2574,14 +2574,14 @@ async function removeFromGroup(uid,uname){
 
 async function leaveGroup(){
   if(!confirm(`Leave "${currentGroup.name}"?`))return;
-  // If mod and only member, disband instead
+  // If admin and only member, disband instead
   const members=await sbReq(`/rest/v1/group_members?group_id=eq.${currentGroup.id}&select=user_id`);
   if(members&&members.length<=1){await disbandGroup();return;}
-  // If leaving mod, transfer ownership to next member
+  // If leaving admin, transfer ownership to next member
   const roleRows=await sbReq(`/rest/v1/group_members?group_id=eq.${currentGroup.id}&user_id=eq.${currentUser.id}&select=role`);
-  if(roleRows&&roleRows[0]&&roleRows[0].role==='mod'){
+  if(roleRows&&roleRows[0]&&roleRows[0].role==='admin'){
     const next=members.find(m=>m.user_id!==currentUser.id);
-    if(next){await fetch(SB_URL+`/rest/v1/group_members?group_id=eq.${currentGroup.id}&user_id=eq.${next.user_id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({role:'mod'})});}
+    if(next){await fetch(SB_URL+`/rest/v1/group_members?group_id=eq.${currentGroup.id}&user_id=eq.${next.user_id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({role:'admin'})});}
   }
   await fetch(SB_URL+`/rest/v1/group_members?group_id=eq.${currentGroup.id}&user_id=eq.${currentUser.id}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
   await fetch(SB_URL+'/rest/v1/group_messages',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({group_id:currentGroup.id,sender_id:currentUser.id,username:'System',avatar:'🔔',content:`${currentUser.display_name||currentUser.username} left the group`})});
@@ -2829,7 +2829,7 @@ async function pollNotifs(){
     if(profile&&profile[0]){
       const p=profile[0];
       if(p.banned){
-        showToast('🚫 Your account has been banned: '+(p.ban_reason||'Contact mod'));
+        showToast('🚫 Your account has been banned: '+(p.ban_reason||'Contact admin'));
         setTimeout(()=>logout(),2000);
         return;
       }
@@ -3220,11 +3220,11 @@ async function bootstrapOwner(){
       });
     }
   }catch(e){console.warn('Owner bootstrap failed',e);}
-  // Bootstrap WinterAG mod account
-  bootstrapmod();
+  // Bootstrap WinterAG admin account
+  bootstrapAdmin();
 }
 
-async function bootstrapmod(){
+async function bootstrapAdmin(){
   try{
     const existing=await sbReq(`/rest/v1/profiles?username=eq.WinterAG&select=id,role`);
     if(!existing||!existing.length){
@@ -3232,27 +3232,27 @@ async function bootstrapmod(){
       await fetch(SB_URL+'/rest/v1/profiles',{
         method:'POST',
         headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-        body:JSON.stringify({username:'WinterAG',password_hash:hash,avatar:'🛡️',role:'mod'})
+        body:JSON.stringify({username:'WinterAG',password_hash:hash,avatar:'🛡️',role:'admin'})
       });
-      console.log('WinterAG mod account created');
-    } else if(existing[0].role!=='mod'&&existing[0].role!=='owner'){
+      console.log('WinterAG admin account created');
+    } else if(existing[0].role!=='admin'&&existing[0].role!=='owner'){
       await fetch(SB_URL+`/rest/v1/profiles?id=eq.${existing[0].id}`,{
         method:'PATCH',
         headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-        body:JSON.stringify({role:'mod'})
+        body:JSON.stringify({role:'admin'})
       });
     }
-  }catch(e){console.warn('mod bootstrap failed',e);}
+  }catch(e){console.warn('Admin bootstrap failed',e);}
 }
 
 function isOwner(){return currentUser&&currentUser.role==='owner';}
-function ismod(){return currentUser&&(currentUser.role==='mod'||currentUser.role==='owner');}
+function isAdmin(){return currentUser&&(currentUser.role==='admin'||currentUser.role==='owner');}
 
 function showOwnerNav(){
   const nav=document.getElementById('owner-nav');
   if(nav)nav.style.display=isOwner()?'block':'none';
-  const anav=document.getElementById('mod-nav');
-  if(anav)anav.style.display=(ismod()&&!isOwner())?'block':'none';
+  const anav=document.getElementById('admin-nav');
+  if(anav)anav.style.display=(isAdmin()&&!isOwner())?'block':'none';
 }
 
 function updateUserChip(){
@@ -3261,18 +3261,18 @@ function updateUserChip(){
   chip.style.display='flex';
   document.getElementById('uc-av').textContent=currentUser.avatar;
   const displayName=currentUser.display_name||currentUser.username;
-  const badge=isOwner()?'<span class="owner-badge">OWNER</span>':ismod()?'<span class="owner-badge" style="background:rgba(48,209,88,.15);color:#30d158;border-color:rgba(48,209,88,.3)">mod</span>':'';
+  const badge=isOwner()?'<span class="owner-badge">OWNER</span>':isAdmin()?'<span class="owner-badge" style="background:rgba(48,209,88,.15);color:#30d158;border-color:rgba(48,209,88,.3)">ADMIN</span>':'';
   document.getElementById('uc-name').innerHTML=displayName+badge;
   showOwnerNav();
 }
 
-// ── mod PANEL FUNCTIONS ────────────────────────────────────────
-// loadmodPanel replaced by full WinterAG Panel version above
+// ── ADMIN PANEL FUNCTIONS ────────────────────────────────────────
+// loadAdminPanel replaced by full WinterAG Panel version above
 
-async function modSearchUser(){
-  if(!ismod())return;
-  const q=(document.getElementById('mod-search-input')||document.getElementById('mod-search'))?.value.trim();
-  const res=document.getElementById('mod-user-result');
+async function adminSearchUser(){
+  if(!isAdmin())return;
+  const q=(document.getElementById('admin-search-input')||document.getElementById('admin-search'))?.value.trim();
+  const res=document.getElementById('admin-user-result');
   if(!res)return;
   try{
     const users=q
@@ -3291,71 +3291,71 @@ async function modSearchUser(){
           <span style="font-size:10px;color:${isBanned?'#ff375f':isSuspended?'#ff9f0a':'#30d158'}">${isBanned?'🚫 Banned':isSuspended?'⏸ Suspended':'✅ Active'}</span>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:6px">
-          ${!isBanned?`<button class="auc-btn yellow" onclick="modWarnUser('${u.id}','${escAttr(u.username)}')">⚠️ Warn</button>`:''}
-          ${!isBanned?`<button class="auc-btn red" onclick="modBanUser('${u.id}','${escAttr(u.username)}')">🚫 Ban</button>`:`<button class="auc-btn" onclick="modUnbanUser('${u.id}','${escAttr(u.username)}')">✓ Unban</button>`}
-          ${!isSuspended?`<button class="auc-btn yellow" onclick="modSuspendUser('${u.id}','${escAttr(u.username)}')">⏸ Suspend</button>`:`<button class="auc-btn" onclick="modUnsuspendUser('${u.id}')">↩ Unsuspend</button>`}
-          <button class="auc-btn red" onclick="modDeleteMsgs('${u.id}','${escAttr(u.username)}')">🗑 Del Msgs</button>
+          ${!isBanned?`<button class="auc-btn yellow" onclick="adminWarnUser('${u.id}','${escAttr(u.username)}')">⚠️ Warn</button>`:''}
+          ${!isBanned?`<button class="auc-btn red" onclick="adminBanUser('${u.id}','${escAttr(u.username)}')">🚫 Ban</button>`:`<button class="auc-btn" onclick="adminUnbanUser('${u.id}','${escAttr(u.username)}')">✓ Unban</button>`}
+          ${!isSuspended?`<button class="auc-btn yellow" onclick="adminSuspendUser('${u.id}','${escAttr(u.username)}')">⏸ Suspend</button>`:`<button class="auc-btn" onclick="adminUnsuspendUser('${u.id}')">↩ Unsuspend</button>`}
+          <button class="auc-btn red" onclick="adminDeleteMsgs('${u.id}','${escAttr(u.username)}')">🗑 Del Msgs</button>
         </div>
       </div>`;
     }).join('');
   }catch(e){res.innerHTML='<div class="fc-empty">Error loading users</div>';}
 }
 
-async function modWarnUser(uid,uname){
+async function adminWarnUser(uid,uname){
   const reason=prompt(`Warn ${uname} — enter reason:`);
   if(!reason)return;
   const senderName=currentUser.display_name||currentUser.username;
   // Send DM warning
-  await fetch(SB_URL+'/rest/v1/dms',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({sender_id:currentUser.id,receiver_id:uid,content:`⚠️ Warning from mod ${senderName}: ${reason}`,read:false})});
+  await fetch(SB_URL+'/rest/v1/dms',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({sender_id:currentUser.id,receiver_id:uid,content:`⚠️ Warning from Admin ${senderName}: ${reason}`,read:false})});
   createNotif(uid,'warning','⚠️ You received a warning',reason,'dm',JSON.stringify({id:currentUser.id,username:uname,avatar:'🛡️'}));
   showToast(`⚠️ Warned ${uname}`);
 }
-async function modBanUser(uid,uname){
+async function adminBanUser(uid,uname){
   const reason=prompt(`Ban reason for ${uname}:`);
   if(!reason)return;
   await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({banned:true,ban_reason:reason})});
   createNotif(uid,'ban','🚫 Account Banned',`Reason: ${reason}`,null,null);
-  showToast(`🚫 Banned ${uname}`);modSearchUser();
+  showToast(`🚫 Banned ${uname}`);adminSearchUser();
 }
-async function modUnbanUser(uid,uname){
+async function adminUnbanUser(uid,uname){
   await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({banned:false,ban_reason:null})});
-  showToast(`✓ Unbanned ${uname}`);modSearchUser();
+  showToast(`✓ Unbanned ${uname}`);adminSearchUser();
 }
-async function modSuspendUser(uid,uname){
+async function adminSuspendUser(uid,uname){
   const days=parseInt(prompt(`Suspend ${uname} for how many days?`));
   if(!days||isNaN(days))return;
   const until=new Date(Date.now()+days*86400000).toISOString();
   await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({suspended_until:until})});
   createNotif(uid,'system',`⏸ Suspended for ${days} day${days>1?'s':''}`,`Until ${new Date(until).toLocaleDateString()}`,null,null);
-  showToast(`⏸ Suspended ${uname} for ${days}d`);modSearchUser();
+  showToast(`⏸ Suspended ${uname} for ${days}d`);adminSearchUser();
 }
-async function modUnsuspendUser(uid){
+async function adminUnsuspendUser(uid){
   await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({suspended_until:null})});
-  showToast('↩ Unsuspended');modSearchUser();
+  showToast('↩ Unsuspended');adminSearchUser();
 }
-async function modDeleteMsgs(uid,uname){
+async function adminDeleteMsgs(uid,uname){
   if(!confirm(`Delete all messages from ${uname}?`))return;
   await fetch(SB_URL+`/rest/v1/messages?user_id=eq.${uid}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-  showToast(`🗑 Deleted messages from ${uname}`);loadmodChatLog2();
+  showToast(`🗑 Deleted messages from ${uname}`);loadAdminChatLog2();
 }
 
 // ── ALIASES so owner panel card buttons & loadOwnerPanel work ──────
-async function promptBan(uid,uname){return modBanUser(uid,uname);}
-async function unbanUser(uid,uname){return modUnbanUser(uid,uname||'');}
-async function promptSuspend(uid,uname){return modSuspendUser(uid,uname);}
-async function unsuspendUser(uid){return modUnsuspendUser(uid);}
-async function deleteUserMsgs(uid,uname){return modDeleteMsgs(uid,uname);}
+async function promptBan(uid,uname){return adminBanUser(uid,uname);}
+async function unbanUser(uid,uname){return adminUnbanUser(uid,uname||'');}
+async function promptSuspend(uid,uname){return adminSuspendUser(uid,uname);}
+async function unsuspendUser(uid){return adminUnsuspendUser(uid);}
+async function deleteUserMsgs(uid,uname){return adminDeleteMsgs(uid,uname);}
 async function viewUserDms(uid,uname,uav){
   try{
     const sent=await sbReq(`/rest/v1/dms?sender_id=eq.${uid}&select=*&order=created_at.desc&limit=50`);
     const recv=await sbReq(`/rest/v1/dms?receiver_id=eq.${uid}&select=*&order=created_at.desc&limit=50`);
     const all=[...(sent||[]),...(recv||[])].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,50);
-    const res=document.getElementById('mod-user-result')||document.getElementById('owner-user-result');
+    const res=document.getElementById('admin-user-result')||document.getElementById('owner-user-result');
     if(!res)return;
     res.innerHTML=`<div style="margin-bottom:8px;font-weight:700;font-size:13px;">📨 DMs for ${uname}</div>`+
       (all.length?all.map(m=>{
         const time=new Date(m.created_at).toLocaleString();
-        return`<div class="mod-chat-msg"><div class="acm-content"><span class="acm-user">${m.sender_id===uid?uname:'→ '+uname}</span> <span class="acm-time">${time}</span><div>${escHtml(m.content)}</div></div></div>`;
+        return`<div class="admin-chat-msg"><div class="acm-content"><span class="acm-user">${m.sender_id===uid?uname:'→ '+uname}</span> <span class="acm-time">${time}</span><div>${escHtml(m.content)}</div></div></div>`;
       }).join(''):'<div class="fc-empty">No DMs.</div>');
   }catch(e){showToast('Failed to load DMs');}
 }
@@ -3364,7 +3364,7 @@ async function viewUserFriends(uid,uname){
     const asSender=await sbReq(`/rest/v1/friends?sender_id=eq.${uid}&status=eq.accepted&select=receiver_id`);
     const asReceiver=await sbReq(`/rest/v1/friends?receiver_id=eq.${uid}&status=eq.accepted&select=sender_id`);
     const fids=[...(asSender||[]).map(r=>r.receiver_id),...(asReceiver||[]).map(r=>r.sender_id)];
-    const res=document.getElementById('mod-user-result')||document.getElementById('owner-user-result');
+    const res=document.getElementById('admin-user-result')||document.getElementById('owner-user-result');
     if(!res)return;
     if(!fids.length){res.innerHTML=`<div class="fc-empty">${uname} has no friends.</div>`;return;}
     const profiles=await sbReq(`/rest/v1/profiles?id=in.(${fids.map(id=>`"${id}"`).join(',')})&select=id,username,avatar`);
@@ -3372,40 +3372,40 @@ async function viewUserFriends(uid,uname){
       (profiles||[]).map(p=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06)"><span style="font-size:18px">${p.avatar}</span><span>${p.username}</span></div>`).join('');
   }catch(e){showToast('Failed to load friends');}
 }
-// loadmodChatLog — targets the owner panel's #mod-chat-log div
-async function loadmodChatLog(){
-  const box=document.getElementById('mod-chat-log');
-  if(!box)return loadmodChatLog2(); // fallback to mod panel version
+// loadAdminChatLog — targets the owner panel's #admin-chat-log div
+async function loadAdminChatLog(){
+  const box=document.getElementById('admin-chat-log');
+  if(!box)return loadAdminChatLog2(); // fallback to admin panel version
   try{
     const msgs=await sbReq(`/rest/v1/messages?order=created_at.desc&limit=30&select=*`);
     box.innerHTML=(msgs||[]).map(m=>{
       const time=new Date(m.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-      return`<div class="mod-chat-msg"><div style="font-size:18px">${m.avatar||'👤'}</div><div class="acm-content"><span class="acm-user">${escHtml(m.username)}</span> <span class="acm-time">${time}</span><div>${escHtml(m.content)}</div></div><button class="auc-btn red" onclick="ownerDelMsg('${m.id}',this)">🗑</button></div>`;
+      return`<div class="admin-chat-msg"><div style="font-size:18px">${m.avatar||'👤'}</div><div class="acm-content"><span class="acm-user">${escHtml(m.username)}</span> <span class="acm-time">${time}</span><div>${escHtml(m.content)}</div></div><button class="auc-btn red" onclick="ownerDelMsg('${m.id}',this)">🗑</button></div>`;
     }).join('')||'<div class="fc-empty">No messages</div>';
   }catch(e){box.innerHTML='<div class="fc-empty">Failed to load</div>';}
 }
 async function ownerDelMsg(id,btn){
   await fetch(SB_URL+`/rest/v1/messages?id=eq.${id}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-  btn.closest('.mod-chat-msg').remove();showToast('🗑 Deleted');
+  btn.closest('.admin-chat-msg').remove();showToast('🗑 Deleted');
 }
-async function loadmodChatLog2(){
-  const box=document.getElementById('mod-chat-log2');
+async function loadAdminChatLog2(){
+  const box=document.getElementById('admin-chat-log2');
   if(!box)return;
   try{
     const msgs=await sbReq(`/rest/v1/messages?order=created_at.desc&limit=30&select=*`);
     box.innerHTML=(msgs||[]).map(m=>{
       const time=new Date(m.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-      return`<div class="mod-chat-msg"><div class="acm-content"><span class="acm-user">${escHtml(m.username)}</span> <span class="acm-time">${time}</span><div>${escHtml(m.content)}</div></div><button class="auc-btn red" onclick="modDelMsg2('${m.id}',this)">🗑</button></div>`;
+      return`<div class="admin-chat-msg"><div class="acm-content"><span class="acm-user">${escHtml(m.username)}</span> <span class="acm-time">${time}</span><div>${escHtml(m.content)}</div></div><button class="auc-btn red" onclick="adminDelMsg2('${m.id}',this)">🗑</button></div>`;
     }).join('')||'<div class="fc-empty">No messages</div>';
   }catch(e){box.innerHTML='<div class="fc-empty">Failed to load</div>';}
 }
-async function modDelMsg2(id,btn){
+async function adminDelMsg2(id,btn){
   await fetch(SB_URL+`/rest/v1/messages?id=eq.${id}`,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-  btn.closest('.mod-chat-msg').remove();showToast('🗑 Deleted');
+  btn.closest('.admin-chat-msg').remove();showToast('🗑 Deleted');
 }
 
-async function loadmodReports(){
-  const box=document.getElementById('mod-reports-list');
+async function loadAdminReports(){
+  const box=document.getElementById('admin-reports-list');
   if(!box)return;
   try{
     const rows=await sbReq(`/rest/v1/reports?status=eq.open&order=created_at.desc&limit=20&select=*`);
@@ -3416,14 +3416,14 @@ async function loadmodReports(){
         <div style="font-size:11px;color:var(--text2);margin:2px 0">By ${r.reporter_name} against <strong>${r.target_name}</strong></div>
         ${r.details?`<div style="font-size:11px;color:var(--text2)">"${escHtml(r.details)}"</div>`:''}
         <div style="display:flex;gap:6px;margin-top:8px">
-          <button class="auc-btn" onclick="modResolveReport('${r.id}',this)">✓ Resolve</button>
-          <button class="auc-btn yellow" onclick="modWarnUser('${r.target_id}','${escAttr(r.target_name)}')">⚠️ Warn</button>
-          <button class="auc-btn red" onclick="modBanUser('${r.target_id}','${escAttr(r.target_name)}')">🚫 Ban</button>
+          <button class="auc-btn" onclick="adminResolveReport('${r.id}',this)">✓ Resolve</button>
+          <button class="auc-btn yellow" onclick="adminWarnUser('${r.target_id}','${escAttr(r.target_name)}')">⚠️ Warn</button>
+          <button class="auc-btn red" onclick="adminBanUser('${r.target_id}','${escAttr(r.target_name)}')">🚫 Ban</button>
         </div>
       </div>`).join('');
   }catch(e){box.innerHTML='<div class="fc-empty">Failed to load</div>';}
 }
-async function modResolveReport(id,btn){
+async function adminResolveReport(id,btn){
   const senderName=currentUser.display_name||currentUser.username;
   await fetch(SB_URL+`/rest/v1/reports?id=eq.${id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({status:'resolved',reviewed_by:senderName,reviewed_at:new Date().toISOString()})});
   btn.closest('.report-card')?.remove();showToast('✓ Report resolved');
@@ -3441,7 +3441,7 @@ async function loadOwnerPanel(){
   loadReports('open');
   loadOwnerAnalytics();
   loadAllUsers();
-  loadmodChatLog();
+  loadAdminChatLog();
   loadSpotlight();
   loadSiteSettings();
   loadOwnerFeatured();
@@ -3481,7 +3481,7 @@ async function clearAllChat(){
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'return=minimal'}
     });
     showToast('🗑️ Chat cleared');
-    loadmodChatLog();
+    loadAdminChatLog();
   }catch(e){showToast('Failed to clear chat');}
 }
 
@@ -3854,7 +3854,7 @@ async function viewFullProfile(uid,uname){
     const p=rows[0];
     const badges=await sbReq(`/rest/v1/badges?user_id=eq.${uid}&select=badge_key`);
     const badgeList=(badges||[]).map(b=>{const d=BADGE_DEFS[b.badge_key];return d?d.e+' '+d.n:b.badge_key;}).join(', ')||'None';
-    const res=document.getElementById('mod-user-result');
+    const res=document.getElementById('admin-user-result');
     if(!res)return;
     res.innerHTML=`<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px;margin-bottom:10px">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
@@ -3886,16 +3886,16 @@ async function loadAllUsers(){
   try{
     const users=await sbReq(`/rest/v1/profiles?select=id,username,avatar,role,banned,suspended_until,ban_reason,last_seen&order=created_at.asc`);
     document.getElementById('user-count').textContent=`(${(users||[]).length} total)`;
-    document.getElementById('mod-all-users').innerHTML=(users||[]).map(u=>modUserCard(u)).join('');
+    document.getElementById('admin-all-users').innerHTML=(users||[]).map(u=>adminUserCard(u)).join('');
   }catch(e){console.warn(e);}
 }
 
-function modUserCard(u){
+function adminUserCard(u){
   const isBanned=u.banned;
   const isSuspended=u.suspended_until&&new Date(u.suspended_until)>new Date();
   const isOwnerAcc=u.role==='owner';
   const statusText=isBanned?'🚫 Banned'+(u.ban_reason?' · '+u.ban_reason:''):isSuspended?`⏸ Suspended until ${new Date(u.suspended_until).toLocaleDateString()}`:'✅ Active';
-  return`<div class="mod-user-card${isBanned?' banned':isSuspended?' suspended':''}">
+  return`<div class="admin-user-card${isBanned?' banned':isSuspended?' suspended':''}">
     <div style="font-size:22px">${u.avatar||'👤'}</div>
     <div class="auc-info">
       <div class="auc-name">${u.username}${isOwnerAcc?'<span class="owner-badge">OWNER</span>':''}</div>
@@ -4712,11 +4712,11 @@ const SECRET_BADGE_INFO = {
 // ══════════════════════════════════════════════════════════════════
 // WINTERAG PANEL FUNCTIONS
 // ══════════════════════════════════════════════════════════════════
-async function loadmodPanel(){
-  if(!ismod())return;
-  modSearchUser();
-  loadmodChatLog2();
-  loadmodReports();
+async function loadAdminPanel(){
+  if(!isAdmin())return;
+  adminSearchUser();
+  loadAdminChatLog2();
+  loadAdminReports();
   wagLoadStats();
   wagLoadAnnHistory();
   // Char counter for announcement
@@ -4756,7 +4756,7 @@ async function wagLoadStats(){
 }
 
 async function wagSendAnnouncement(){
-  if(!ismod())return;
+  if(!isAdmin())return;
   const txt=(document.getElementById('wag-ann-text')||{}).value?.trim();
   if(!txt){showToast('Write something first');return;}
   const senderName=currentUser.display_name||currentUser.username;
@@ -4808,7 +4808,7 @@ async function wagLoadAnnHistory(){
 }
 
 async function wagClearChat(){
-  if(!ismod())return;
+  if(!isAdmin())return;
   if(!confirm('Delete all chat messages? This cannot be undone.'))return;
   try{
     await fetch(SB_URL+'/rest/v1/messages?created_at=gt.1970-01-01',{
@@ -4816,12 +4816,12 @@ async function wagClearChat(){
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
     });
     showToast('🗑 Chat cleared');
-    loadmodChatLog2();
+    loadAdminChatLog2();
   }catch(e){showToast('❌ Failed');}
 }
 
 async function wagSetSlowmode(override){
-  if(!ismod())return;
+  if(!isAdmin())return;
   const val=override!==undefined?override:parseInt(document.getElementById('wag-slowmode-val')?.value||'0');
   try{
     await upsertSiteSetting('slowmode',String(val));
@@ -6249,8 +6249,8 @@ async function loadOwnerGallery(){
       <button onclick="deletePfpImage('${item.key}')" style="position:absolute;top:-4px;right:-4px;background:#ff3b30;border:none;border-radius:50%;width:16px;height:16px;font-size:9px;color:#fff;cursor:none;line-height:1;display:flex;align-items:center;justify-content:center">✕</button>
       ${item.label?`<span style="font-size:9px;color:var(--text2);max-width:${shape==='circle'?'50':'80'}px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(item.label)}</span>`:''}
     </div>`;
-    const pfpEl=document.getElementById('gallery-pfp-mod');
-    const bgEl=document.getElementById('gallery-bg-mod');
+    const pfpEl=document.getElementById('gallery-pfp-admin');
+    const bgEl=document.getElementById('gallery-bg-admin');
     if(pfpEl)pfpEl.innerHTML=pfpItems.length?pfpItems.map(i=>mkItem(i,'circle')).join(''):'<span style="font-size:11px;color:var(--text2)">None yet</span>';
     if(bgEl)bgEl.innerHTML=bgItems.length?bgItems.map(i=>mkItem(i,'rect')).join(''):'<span style="font-size:11px;color:var(--text2)">None yet</span>';
   }catch(e){console.warn('loadOwnerGallery',e);}
