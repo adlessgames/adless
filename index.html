@@ -381,6 +381,8 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .badge-chip .bn{font-weight:600;}
 .badge-chip.locked{opacity:.35;filter:grayscale(1);}
 /* ── PROFILE MODAL ── */
+.pm-tab{flex:1;padding:10px 6px;font-size:12px;font-weight:800;text-align:center;cursor:none;color:var(--text2);border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.15s;font-family:inherit;}
+.pm-tab.active{color:var(--blue);border-bottom-color:var(--blue);}
 .pm-av{font-size:52px;text-align:center;margin-bottom:8px;}
 .pm-name{font-size:20px;font-weight:800;text-align:center;}
 .pm-uname{font-size:13px;color:var(--text2);text-align:center;margin-bottom:16px;}
@@ -471,6 +473,10 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <div id="lb-err" class="lb-err"></div>
     <input id="lb-user" class="lb-field" placeholder="Username" maxlength="20" autocomplete="off" spellcheck="false">
     <input id="lb-pass" class="lb-field" type="password" placeholder="Password" autocomplete="off">
+    <div id="lb-email-wrap" style="display:none">
+      <input id="lb-email" class="lb-field" type="email" placeholder="Email (optional — for password recovery)" autocomplete="off" style="margin-bottom:0">
+      <div style="font-size:10px;color:var(--text2);margin-top:4px;padding:0 2px">Only visible to the owner. Used only for account recovery.</div>
+    </div>
     <div id="lb-av-wrap" style="display:none">
       <div style="font-size:11px;color:var(--text2);margin-bottom:8px;">Pick an avatar</div>
       <div class="lb-av-row" id="lb-av-row"></div>
@@ -967,22 +973,73 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <div id="mute-result" style="margin-top:8px;font-size:12px;color:var(--text2)"></div>
     </div>
 
+    <!-- Game Tags Manager -->
+    <div class="s-section">
+      <div class="s-sec">🏷️ Game Tags</div>
+      <div class="s-desc" style="margin-bottom:12px">Set custom tags on any game in the library</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+        <input id="tag-game-search" class="lb-field" style="margin:0;flex:1" placeholder="Search game name…" oninput="searchGamesForTag()">
+      </div>
+      <div id="tag-game-results" style="margin-bottom:12px"></div>
+      <div id="tag-edit-panel" style="display:none;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px">
+        <div style="font-weight:700;margin-bottom:8px" id="tag-edit-game-name"></div>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:8px">Current tags: <span id="tag-current-display">—</span></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px" id="tag-preset-row">
+          <!-- preset tag buttons injected by JS -->
+        </div>
+        <div style="display:flex;gap:8px">
+          <input id="tag-custom-input" class="lb-field" style="margin:0;flex:1" placeholder="Custom tag…" maxlength="20">
+          <button class="auc-btn green" onclick="addCustomTag()">+ Add</button>
+          <button class="auc-btn blue" onclick="saveGameTags()">💾 Save</button>
+        </div>
+        <div id="tag-save-msg" style="font-size:11px;color:var(--text2);min-height:14px;margin-top:6px"></div>
+      </div>
+    </div>
     <!-- PFP / Background Gallery -->
     <div class="s-section">
       <div class="s-sec">🖼️ PFP & Background Gallery</div>
-      <div class="s-desc" style="margin-bottom:12px">Publish images that users can set as their profile picture or background</div>
-      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-        <input id="pfp-pub-url" class="lb-field" style="margin:0;flex:1;min-width:180px" placeholder="Image URL…">
-        <input id="pfp-pub-label" class="lb-field" style="margin:0;width:140px" placeholder="Label (optional)">
-        <select id="pfp-pub-type" class="lb-field" style="margin:0;width:auto;padding:8px 12px;font-size:12px">
-          <option value="pfp">PFP</option>
-          <option value="bg">Background</option>
-          <option value="both">Both</option>
-        </select>
-        <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0" onclick="publishPfpImage()">📤 Publish</button>
+      <div class="s-desc" style="margin-bottom:12px">Upload images users can set as profile picture or background</div>
+      <!-- Tab toggle -->
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <button class="auc-btn blue" id="gal-tab-upload" onclick="switchGalTab('upload')">⬆️ Upload</button>
+        <button class="auc-btn" id="gal-tab-url" onclick="switchGalTab('url')">🔗 URL</button>
       </div>
-      <div id="owner-gallery-list" style="display:flex;flex-wrap:wrap;gap:10px"></div>
-      <button class="auc-btn" style="margin-top:10px" onclick="loadOwnerGallery()">↻ Refresh</button>
+      <!-- File upload -->
+      <div id="gal-panel-upload">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px">
+          <select id="gallery-upload-type" class="lb-field" style="margin:0;width:auto;padding:8px 12px;font-size:12px">
+            <option value="pfp">Profile Picture (PFP)</option>
+            <option value="bg">Background</option>
+          </select>
+          <input type="file" id="gallery-file-input" accept="image/*" style="display:none" onchange="onGalleryFileSelect(event)">
+          <button class="auc-btn blue" onclick="document.getElementById('gallery-file-input').click()">📁 Choose File</button>
+          <button class="auc-btn green" onclick="uploadGalleryImage()">⬆️ Upload & Publish</button>
+        </div>
+        <div id="gallery-upload-preview" style="display:none;align-items:center;gap:10px;margin-bottom:8px">
+          <img id="gallery-upload-img" style="width:80px;height:60px;border-radius:8px;object-fit:cover;border:2px solid rgba(255,255,255,.15)">
+          <span id="gallery-upload-name" style="font-size:11px;color:var(--text2)"></span>
+        </div>
+        <div id="gallery-upload-status" style="font-size:12px;min-height:16px;margin-bottom:8px"></div>
+      </div>
+      <!-- URL publish -->
+      <div id="gal-panel-url" style="display:none">
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <input id="pfp-pub-url" class="lb-field" style="margin:0;flex:1;min-width:180px" placeholder="Image URL…">
+          <input id="pfp-pub-label" class="lb-field" style="margin:0;width:130px" placeholder="Label (optional)">
+          <select id="pfp-pub-type" class="lb-field" style="margin:0;width:auto;padding:8px 12px;font-size:12px">
+            <option value="pfp">PFP</option>
+            <option value="bg">Background</option>
+            <option value="both">Both</option>
+          </select>
+          <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0" onclick="publishPfpImage()">📤 Publish</button>
+        </div>
+      </div>
+      <!-- Published items -->
+      <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px">📸 Published PFPs</div>
+      <div id="gallery-pfp-admin" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><div style="font-size:11px;color:var(--text2)">None yet</div></div>
+      <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px">🌅 Published Backgrounds</div>
+      <div id="gallery-bg-admin" style="display:flex;gap:8px;flex-wrap:wrap"><div style="font-size:11px;color:var(--text2)">None yet</div></div>
+      <div id="owner-gallery-list" style="display:none"></div>
     </div>
   </div>
   <!-- LEADERBOARD VIEW -->
@@ -1109,6 +1166,15 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
           <input id="new-password" class="lb-field" type="password" style="margin:0;flex:1;min-width:120px" placeholder="New password…">
           <button class="lb-btn" style="width:auto;padding:10px 16px;margin:0" onclick="changePassword()">Save</button>
         </div>
+      </div>
+      <!-- Email -->
+      <div class="s-row" style="flex-direction:column;align-items:flex-start;gap:8px;margin-top:4px">
+        <div><div class="s-lbl">📧 Email Address</div><div class="s-desc">Optional — only shown to owner. Used for account recovery.</div></div>
+        <div style="display:flex;gap:8px;width:100%">
+          <input id="new-email" class="lb-field" type="email" style="margin:0;flex:1" placeholder="your@email.com">
+          <button class="lb-btn" style="width:auto;padding:10px 16px;margin:0" onclick="saveEmail()">Save</button>
+        </div>
+        <div id="email-current-display" style="font-size:11px;color:var(--text2)"></div>
       </div>
       <div id="account-msg" style="font-size:11px;min-height:16px;margin-top:4px"></div>
       <!-- Emoji Avatar Picker -->
@@ -1260,10 +1326,12 @@ const BUILTIN=[
   {id:'b25',title:'Nighttime Visitor',cat:'horror',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpc2po9VtgMuo6rLgCJ7VMbGVci5mqHO0ypQ&s',url:'https://ccgstatic.com/games/game_ebaf_c84839ff543da/index.html'},
   {id:'b26',title:'Bloxorz',cat:'puzzle',img:'https://www.coolmathgames.com/sites/default/files/Bloxorz_OG-logo.jpg',url:'https://ccgstatic.com/games/game_a87e_24923a4fc7de4/index.html'},
   {id:'b27',title:'Brookhaven',cat:'multiplayer',img:'https://tr.rbxcdn.com/180DAY-808370c4e617d8ce593b16f54eaf645d/768/432/Image/Webp/noFilter',url:'https://st.8games.net/9/8g/igra-brukkhejven/'},
+  // Self-hosted clickers — upload game files to /games/ folder in your repo
+  {id:'b28',title:'Cookie Clicker',cat:'idle',img:'https://orteil.dashnet.org/cookieclicker/img/favicon.ico',url:'/games/cookie-clicker/index.html',saves:true},
+  {id:'b29',title:'Universal Paperclips',cat:'idle',img:'https://www.decisionproblem.com/paperclips/favicon.ico',url:'https://www.decisionproblem.com/paperclips/index2.html'},
+  {id:'b30',title:'A Dark Room',cat:'idle',img:'https://adarkroom.doublespeakgames.com/img/fire.png',url:'https://adarkroom.doublespeakgames.com/'},
 ];
-// 252 new games (dupes removed)
-const EXTRA_GAMES=[
-];
+const EXTRA_GAMES=[];
 const ZONES_URL='https://cdn.jsdelivr.net/gh/gn-math/assets@main/zones.json';
 const COVER='https://cdn.jsdelivr.net/gh/gn-math/covers@main';
 const HTMLB='https://rawcdn.githack.com/gn-math/html/main';
@@ -1340,7 +1408,7 @@ function addRecent(game){
 const SK='adless_settings_v3',BK='adless_bg_v3',TK='adless_theme_v3',FK='adless_favs_v3';
 let favs=[];
 let currentCat='all',currentView='games-view',selectedShow=null,selectedSeason=null;
-let zones=[],gpGames=[];
+let zones=[];
 let filteredList=[],currentPage=1;
 const PER_PAGE=500;
 
@@ -1432,10 +1500,13 @@ async function lbSubmit(){
       const reserved=['adless','adless_owner','admin','administrator','system','mod','moderator','staff','owner','winterag'];
       if(reserved.includes(un.toLowerCase())){err.textContent='That username is reserved.';btn.disabled=false;return;}
       // Insert and return new row
+      const emailVal=document.getElementById('lb-email')?.value.trim()||null;
+      const signupBody={username:un,password_hash:hash,avatar:lbSelAv};
+      if(emailVal)signupBody.email=emailVal;
       const res=await fetch(SB_URL+'/rest/v1/profiles',{
         method:'POST',
         headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
-        body:JSON.stringify({username:un,password_hash:hash,avatar:lbSelAv})
+        body:JSON.stringify(signupBody)
       });
       const rows=await res.json();
       if(!res.ok||!rows||!rows.length){err.textContent='Signup failed: '+(rows?.message||res.status);btn.disabled=false;return;}
@@ -1456,6 +1527,7 @@ async function lbSubmit(){
 }
 function lbGuest(){
   currentUser={id:'guest',username:'Guest',avatar:'👤',guest:true};
+  loadCustomGameTags();
   lbEnter();
 }
 function lbEnter(){
@@ -1468,6 +1540,7 @@ function lbEnter(){
   bootstrapOwner();
   startNotifPoll();
   postLoginBadgeCheck();
+  loadCustomGameTags();
   // Ads: load opt-out state then show popup if first login on this device
   if(!currentUser.guest){
     loadAdsOptOut().then(()=>{
@@ -1577,7 +1650,7 @@ function invalidateCard(id){cardCache.delete(id);}
 // FILTER
 let srchTimer=null;
 function onSearch(){clearTimeout(srchTimer);srchTimer=setTimeout(()=>{currentPage=1;buildList();renderPage();},100);}
-function allGames(){return[...BUILTIN,...EXTRA_GAMES,...zones,...gpGames];}
+function allGames(){return[...BUILTIN,...EXTRA_GAMES,...zones];}
 function buildList(){
   const q=(document.getElementById('search')?.value||'').toLowerCase().trim();
   const all=allGames();
@@ -1641,67 +1714,15 @@ async function loadZones(){
       return{id:'z'+z.id,title:z.name,img,url,cat:cats[0],cats:[cats[0]],featured:!!z.featured,isZone:true};
     });
     rebuildDedup();buildList();renderPage();updateStats();
-    bootStep('Zones ready! Loading GamePix games…',80);
+    
     showToast('🎮 '+zones.length+' zones loaded!');
-    loadGP();
+    bootStep("Games loaded!",100);
+    setTimeout(bootDone,600);
   }catch(e){
     bootStep('Games loaded!',100);
     buildList();renderPage();
     setTimeout(bootDone,600);
   }
-}
-// GAMEPIX TITLE OVERRIDES — rename specific games
-const GP_RENAME={'bloxdhop':'Bloxd.io','bloxd hop':'Bloxd.io'};
-function gpTitle(raw){const t=raw.title||raw.name||'';return GP_RENAME[t.toLowerCase().trim()]||t;}
-let gpTS=new Set(),gpUS=new Set(),gpIdx=0;
-async function loadGP(){
-  gpTS=new Set(kTitles);gpUS=new Set(kUrls);
-  const bar=document.getElementById('gp-bar');
-  const pages=[];for(let i=1;i<=133;i++){if(i!==100)pages.push(i);}
-  const BATCH=6,tot=pages.length;let done=0;
-  for(let i=0;i<pages.length;i+=BATCH){
-    const batch=pages.slice(i,i+BATCH);
-    const res=await Promise.allSettled(batch.map(p=>fetch(`/v2/json?page=${p}&pagination=96`).then(r=>r.ok?r.json():Promise.reject())));
-    let added=0;
-    res.forEach(r=>{
-      if(r.status!=='fulfilled')return;
-      const d=r.value,items=Array.isArray(d)?d:(d.games||d.data||d.items||d.results||[]);
-      items.forEach(raw=>{
-        const title=gpTitle(raw),url=raw.url||raw.gameUrl||raw.embed_url||'';
-        // Prefer larger image fields for better quality
-        const img=raw.image_large||raw.image_hd||raw.image||raw.thumbnail||raw.thumb||raw.cover||'';
-        if(!title||!url)return;
-        const n=nt(title);
-        if(gpTS.has(n)||gpUS.has(url))return;
-        gpTS.add(n);gpUS.add(url);
-        const extra=(Array.isArray(raw.categories)?raw.categories.join(' '):String(raw.categories||raw.category||raw.tags||''));
-        const genres=detectTags(title,extra);
-        // Fix: only 1 genre per game (cat only, no cats array multi-tag)
-        const primaryCat=genres[0]||'arcade';
-        gpGames.push({id:'gp_'+(gpIdx++),title,img,url,cat:primaryCat,cats:[primaryCat],isGamePix:true});
-        added++;
-      });
-    });
-    done+=batch.length;
-    const pct=Math.round((done/tot)*100);
-    if(bar)bar.style.width=pct+'%';
-    // Update boot screen if still visible
-    const bootBar=document.getElementById('boot-bar');
-    const bootSt=document.getElementById('boot-status');
-    if(bootBar)bootBar.style.width=(80+Math.round(pct*0.2))+'%';
-    if(bootSt)bootSt.textContent=`Loading GamePix… ${gpGames.length.toLocaleString()} games (${pct}%)`;
-    if(added>0){updateStats();if(currentView==='games-view'){buildList();renderPage();}}
-    await new Promise(r=>setTimeout(r,0));
-  }
-  if(bar){bar.style.width='100%';setTimeout(()=>{bar.style.width='0%';},500);}
-  showToast('✅ '+gpGames.length.toLocaleString()+' GamePix games added!');
-  updateStats();if(currentView==='games-view'){buildList();renderPage();}
-  // Boot screen finishes here — all games loaded
-  const bootBar=document.getElementById('boot-bar');
-  const bootSt=document.getElementById('boot-status');
-  if(bootBar)bootBar.style.width='100%';
-  if(bootSt)bootSt.textContent=`✅ ${allGames().length.toLocaleString()} games ready!`;
-  setTimeout(bootDone,800);
 }
 // ── WATCH PROGRESS ───────────────────────────────────────────────
 function loadProgress(){try{return JSON.parse(localStorage.getItem(userKey('adless_progress'))||'{}');}catch(e){return{};}}
@@ -1943,7 +1964,7 @@ document.querySelectorAll('.nav').forEach(btn=>{
       else if(btn.dataset.view==='friends-view'){switchView('friends-view');loadFriendRequests();loadGroupsList();}
       else if(btn.dataset.view==='owner-view'){switchView('owner-view');loadOwnerPanel();}
       else if(btn.dataset.view==='admin-view'){switchView('admin-view');loadAdminPanel();}
-      else{switchView(btn.dataset.view);if(btn.dataset.view==='settings-view'){buildColorGrid();buildBgSwatches();buildBgGradients();buildCloakGrid();updateStats();updateAvatarDisplay();loadPfpGallery();
+      else{switchView(btn.dataset.view);if(btn.dataset.view==='settings-view'){buildColorGrid();buildBgSwatches();buildBgGradients();buildCloakGrid();updateStats();updateAvatarDisplay();loadPfpGallery();loadCurrentEmail();loadGalleryForUser();
         const accSec=document.getElementById('account-section');
         if(accSec)accSec.style.display=(!currentUser||currentUser.guest)?'none':'block';
         loadAccountCooldowns();
@@ -3771,20 +3792,37 @@ async function forceResetPassword(uid,uname){
 
 async function viewFullProfile(uid,uname){
   try{
-    const rows=await sbReq(`/rest/v1/profiles?id=eq.${uid}&select=*`);
+    const rows=await sbReq(`/rest/v1/profiles?id=eq.${uid}&select=id,username,display_name,avatar,role,banned,ban_reason,suspended_until,created_at,last_seen,email`);
     if(!rows||!rows.length)return;
     const p=rows[0];
-    const info=[
-      `👤 Username: ${p.username}`,
-      `🏷 Display Name: ${p.display_name||'—'}`,
-      `🎭 Avatar: ${p.avatar}`,
-      `🔑 Role: ${p.role||'user'}`,
-      `📅 Joined: ${new Date(p.created_at).toLocaleDateString()}`,
-      `🚫 Banned: ${p.banned?'Yes ('+p.ban_reason+')':'No'}`,
-      `⏸ Suspended: ${p.suspended_until?new Date(p.suspended_until).toLocaleDateString():'No'}`,
-    ].join('\n');
-    alert(info);
-  }catch(e){showToast('Failed');}
+    const badges=await sbReq(`/rest/v1/badges?user_id=eq.${uid}&select=badge_key`);
+    const badgeList=(badges||[]).map(b=>{const d=BADGE_DEFS[b.badge_key];return d?d.e+' '+d.n:b.badge_key;}).join(', ')||'None';
+    const res=document.getElementById('admin-user-result');
+    if(!res)return;
+    res.innerHTML=`<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="font-size:36px">${p.avatar||'👤'}</div>
+        <div>
+          <div style="font-weight:700;font-size:14px">${escHtml(p.username)}</div>
+          <div style="font-size:11px;color:var(--text2)">${escHtml(p.display_name||'')} · ${p.role||'user'}</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;margin-bottom:10px">
+        <div><span style="color:var(--text2)">Joined:</span> ${new Date(p.created_at).toLocaleDateString()}</div>
+        <div><span style="color:var(--text2)">Last seen:</span> ${p.last_seen?new Date(p.last_seen).toLocaleDateString():'Never'}</div>
+        <div><span style="color:var(--text2)">Banned:</span> <span style="color:${p.banned?'#ff375f':'#30d158'}">${p.banned?'Yes':'No'}${p.ban_reason?' ('+escHtml(p.ban_reason)+')':''}</span></div>
+        <div><span style="color:var(--text2)">Suspended:</span> ${p.suspended_until&&new Date(p.suspended_until)>new Date()?new Date(p.suspended_until).toLocaleDateString():'No'}</div>
+        <div style="grid-column:1/-1"><span style="color:var(--text2)">📧 Email:</span> ${p.email?`<a href="mailto:${escHtml(p.email)}" style="color:var(--blue)">${escHtml(p.email)}</a>`:'<span style="opacity:.5">Not set</span>'}</div>
+      </div>
+      <div style="font-size:12px;margin-bottom:8px"><span style="color:var(--text2)">Badges:</span> ${escHtml(badgeList)}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="auc-btn blue" onclick="openProfile('${uid}')">🌐 Public Profile</button>
+        <button class="auc-btn yellow" onclick="warnUser('${uid}','${escHtml(uname)}')">⚠️ Warn</button>
+        ${p.banned?`<button class="auc-btn green" onclick="unbanUser('${uid}')">✓ Unban</button>`:`<button class="auc-btn red" onclick="promptBan('${uid}','${escHtml(uname)}')">🚫 Ban</button>`}
+        <button class="auc-btn blue" onclick="loadBadgeMgrForUser('${uid}','${escHtml(uname)}')">🎖 Badges</button>
+      </div>
+    </div>`;
+  }catch(e){showToast('Failed to load profile');}
 }
 
 async function loadAllUsers(){
@@ -5753,23 +5791,45 @@ async function saveAvatarChoice(){
   }catch(e){msg.textContent='❌ Failed to save';}
 }
 async function loadGalleryForUser(){
-  // Load PFPs
   const pfpRow=document.getElementById('gallery-pfp-row');
   const bgRow=document.getElementById('gallery-bg-row');
   if(!pfpRow&&!bgRow)return;
   try{
-    const items=await sbReq('/rest/v1/site_settings?key=in.(gallery_pfps,gallery_bgs)');
-    const pfpSetting=(items||[]).find(r=>r.key==='gallery_pfps');
-    const bgSetting=(items||[]).find(r=>r.key==='gallery_bgs');
-    const pfpUrls=pfpSetting?.value?pfpSetting.value.split('|').filter(Boolean):[];
-    const bgUrls=bgSetting?.value?bgSetting.value.split('|').filter(Boolean):[];
+    // Load from unified gallery_img_* keys
+    const rows=await sbReq('/rest/v1/site_settings?key=like.gallery_img_*&select=key,value&order=key.asc');
+    const pfpItems=[];const bgItems=[];
+    (rows||[]).forEach(r=>{
+      let d={};try{d=JSON.parse(r.value);}catch(e){}
+      if(!d.url)return;
+      if(d.type==='pfp'||d.type==='both')pfpItems.push(d);
+      if(d.type==='bg'||d.type==='both')bgItems.push(d);
+    });
     if(pfpRow){
-      pfpRow.innerHTML=pfpUrls.length?pfpUrls.map(url=>`<img src="${url}" onclick="pickGalleryAvatar('${url}',this)" style="width:44px;height:44px;border-radius:50%;object-fit:cover;cursor:none;border:2px solid rgba(255,255,255,.15);transition:outline .15s" title="Use as avatar">`).join(''):'<div style="font-size:11px;color:var(--text2);padding:4px">No images published yet</div>';
+      if(pfpItems.length){
+        pfpRow.innerHTML=pfpItems.map(d=>`<div style="display:inline-flex;flex-direction:column;align-items:center;gap:4px">
+          <img src="${d.url}" onclick="pickGalleryAvatar('${d.url}',this)"
+            style="width:48px;height:48px;border-radius:50%;object-fit:cover;cursor:none;border:2px solid rgba(255,255,255,.15);transition:all .15s"
+            onerror="this.style.opacity='.2'" title="${d.label||'Use as PFP'}">
+          ${d.label?`<span style="font-size:9px;color:var(--text2)">${d.label}</span>`:''}
+        </div>`).join('');
+      } else {
+        pfpRow.innerHTML='<div style="font-size:11px;color:var(--text2);padding:4px">No PFPs published yet</div>';
+      }
     }
     if(bgRow){
-      bgRow.innerHTML=bgUrls.length?bgUrls.map(url=>`<div onclick="setProfileBg('${url}',this)" style="position:relative;cursor:none;border-radius:10px;overflow:hidden;border:2px solid rgba(255,255,255,.15);transition:border-color .15s"><img src="${url}" style="width:80px;height:50px;object-fit:cover;display:block"><div style="position:absolute;inset:0;background:linear-gradient(transparent,rgba(0,0,0,.4));display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px"><span style="font-size:9px;color:#fff;opacity:.7">Set</span></div></div>`).join(''):'<div style="font-size:11px;color:var(--text2);padding:4px">No backgrounds published yet</div>';
+      if(bgItems.length){
+        bgRow.innerHTML=bgItems.map(d=>`<div onclick="setProfileBg('${d.url}',this)"
+          style="position:relative;cursor:none;border-radius:10px;overflow:hidden;border:2px solid rgba(255,255,255,.15);transition:border-color .15s;flex-shrink:0">
+          <img src="${d.url}" style="width:90px;height:56px;object-fit:cover;display:block" onerror="this.style.opacity='.2'">
+          <div style="position:absolute;inset:0;background:linear-gradient(transparent,rgba(0,0,0,.5));display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px">
+            <span style="font-size:9px;color:#fff;opacity:.8">${d.label||'Set BG'}</span>
+          </div>
+        </div>`).join('');
+      } else {
+        bgRow.innerHTML='<div style="font-size:11px;color:var(--text2);padding:4px">No backgrounds published yet</div>';
+      }
     }
-  }catch(e){}
+  }catch(e){console.warn('loadGalleryForUser',e);}
 }
 async function setProfileBg(url,el){
   if(!currentUser||currentUser.guest){showToast('Login required');return;}
@@ -5834,19 +5894,50 @@ async function uploadGalleryImage(){
     loadOwnerGallery();
   }catch(e){st.textContent='❌ '+e.message;}
 }
+function switchGalTab(t){
+  document.getElementById('gal-panel-upload').style.display=t==='upload'?'':'none';
+  document.getElementById('gal-panel-url').style.display=t==='url'?'':'none';
+  document.getElementById('gal-tab-upload').className='auc-btn'+(t==='upload'?' blue':'');
+  document.getElementById('gal-tab-url').className='auc-btn'+(t==='url'?' blue':'');
+}
 async function loadOwnerGallery(){
   if(!isOwner())return;
   try{
-    const items=await sbReq('/rest/v1/site_settings?key=in.(gallery_pfps,gallery_bgs)');
-    const pfpSetting=(items||[]).find(r=>r.key==='gallery_pfps');
-    const bgSetting=(items||[]).find(r=>r.key==='gallery_bgs');
-    const pfpUrls=pfpSetting?.value?pfpSetting.value.split('|').filter(Boolean):[];
-    const bgUrls=bgSetting?.value?bgSetting.value.split('|').filter(Boolean):[];
+    // Load from gallery_img_* keys (URL-published) AND gallery_pfps/gallery_bgs (file-uploaded)
+    const items=await sbReq('/rest/v1/site_settings?key=like.gallery_img_*&select=key,value&order=key.asc');
+    const pfpBg=await sbReq('/rest/v1/site_settings?key=in.(gallery_pfps,gallery_bgs)&select=key,value');
+    const pfpSetting=(pfpBg||[]).find(r=>r.key==='gallery_pfps');
+    const bgSetting=(pfpBg||[]).find(r=>r.key==='gallery_bgs');
+    const uploadedPfps=pfpSetting?.value?pfpSetting.value.split('|').filter(Boolean):[];
+    const uploadedBgs=bgSetting?.value?bgSetting.value.split('|').filter(Boolean):[];
+    // URL-published items
+    const urlPfps=[];const urlBgs=[];
+    (items||[]).forEach(r=>{let d={};try{d=JSON.parse(r.value);}catch(e){}
+      if(d.type==='pfp'||d.type==='both')urlPfps.push({url:d.url,key:r.key,label:d.label});
+      if(d.type==='bg'||d.type==='both')urlBgs.push({url:d.url,key:r.key,label:d.label});
+    });
     const pfpEl=document.getElementById('gallery-pfp-admin');
     const bgEl=document.getElementById('gallery-bg-admin');
-    if(pfpEl)pfpEl.innerHTML=pfpUrls.length?pfpUrls.map((url,i)=>`<div style="position:relative"><img src="${url}" style="width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.2)"><button onclick="removeGalleryItem('pfp',${i})" style="position:absolute;top:-4px;right:-4px;background:#ff3b30;border:none;border-radius:50%;width:16px;height:16px;font-size:9px;color:#fff;cursor:none;display:flex;align-items:center;justify-content:center;line-height:1">✕</button></div>`).join(''):'<span style="font-size:11px;color:var(--text2)">None</span>';
-    if(bgEl)bgEl.innerHTML=bgUrls.length?bgUrls.map((url,i)=>`<div style="position:relative"><img src="${url}" style="width:80px;height:50px;border-radius:8px;object-fit:cover;border:2px solid rgba(255,255,255,.2)"><button onclick="removeGalleryItem('bg',${i})" style="position:absolute;top:-4px;right:-4px;background:#ff3b30;border:none;border-radius:50%;width:16px;height:16px;font-size:9px;color:#fff;cursor:none;display:flex;align-items:center;justify-content:center;line-height:1">✕</button></div>`).join(''):'<span style="font-size:11px;color:var(--text2)">None</span>';
-  }catch(e){}
+    const mkUploadedPfp=(url,i)=>`<div style="position:relative;display:inline-block"><img src="${url}" style="width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.2)" onerror="this.style.opacity='.3'"><button onclick="removeUploadedGallery('pfp',${i})" style="position:absolute;top:-4px;right:-4px;background:#ff3b30;border:none;border-radius:50%;width:16px;height:16px;font-size:9px;color:#fff;cursor:none">✕</button></div>`;
+    const mkUploadedBg=(url,i)=>`<div style="position:relative;display:inline-block"><img src="${url}" style="width:80px;height:50px;border-radius:8px;object-fit:cover;border:2px solid rgba(255,255,255,.2)" onerror="this.style.opacity='.3'"><button onclick="removeUploadedGallery('bg',${i})" style="position:absolute;top:-4px;right:-4px;background:#ff3b30;border:none;border-radius:50%;width:16px;height:16px;font-size:9px;color:#fff;cursor:none">✕</button></div>`;
+    const mkUrlItem=(item)=>`<div style="position:relative;display:inline-block;text-align:center"><img src="${item.url}" style="width:50px;height:50px;border-radius:8px;object-fit:cover;border:2px solid rgba(255,255,255,.2)" onerror="this.style.opacity='.3'"><button onclick="deletePfpImage('${item.key}')" style="position:absolute;top:-4px;right:-4px;background:#ff3b30;border:none;border-radius:50%;width:16px;height:16px;font-size:9px;color:#fff;cursor:none">✕</button><div style="font-size:9px;color:var(--text2);margin-top:2px">${escHtml(item.label||'')}</div></div>`;
+    if(pfpEl)pfpEl.innerHTML=(uploadedPfps.length||urlPfps.length)
+      ?uploadedPfps.map((u,i)=>mkUploadedPfp(u,i)).join('')+urlPfps.map(mkUrlItem).join('')
+      :'<span style="font-size:11px;color:var(--text2)">None yet</span>';
+    if(bgEl)bgEl.innerHTML=(uploadedBgs.length||urlBgs.length)
+      ?uploadedBgs.map((u,i)=>mkUploadedBg(u,i)).join('')+urlBgs.map(mkUrlItem).join('')
+      :'<span style="font-size:11px;color:var(--text2)">None yet</span>';
+  }catch(e){console.warn('loadOwnerGallery',e);}
+}
+async function removeUploadedGallery(type,idx){
+  if(!isOwner())return;
+  const settingKey=type==='pfp'?'gallery_pfps':'gallery_bgs';
+  const existing=await sbReq(`/rest/v1/site_settings?key=eq.${settingKey}&select=value&limit=1`);
+  const urls=((existing||[])[0]?.value||'').split('|').filter(Boolean);
+  urls.splice(idx,1);
+  await upsertSiteSetting(settingKey,urls.join('|'));
+  loadOwnerGallery();loadGalleryForUser();
+  showToast('Removed');
 }
 async function removeGalleryItem(type,idx){
   if(!isOwner())return;
@@ -5857,6 +5948,119 @@ async function removeGalleryItem(type,idx){
   await upsertSiteSetting(settingKey,urls.join('|'));
   loadOwnerGallery();
   showToast('Removed');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// OWNER: GAME TAG MANAGER
+// ══════════════════════════════════════════════════════════════════
+const TAG_PRESETS=['action','adventure','arcade','puzzle','idle','clicker','multiplayer','racing','sports','strategy','horror','music','fnf','emulator','minecraft','ai','apps','flash'];
+let _tagEditGame=null;
+let _tagEditCurrent=[];
+function searchGamesForTag(){
+  const q=document.getElementById('tag-game-search').value.toLowerCase().trim();
+  const res=document.getElementById('tag-game-results');
+  if(!q){res.innerHTML='';return;}
+  const matches=allGames().filter(g=>g.title.toLowerCase().includes(q)).slice(0,8);
+  if(!matches.length){res.innerHTML='<div style="font-size:12px;color:var(--text2)">No games found</div>';return;}
+  res.innerHTML=matches.map(g=>`<div onclick="openTagEdit('${g.id.toString().replace(/'/g,"\'")}','${g.title.replace(/'/g,"\'")}')" style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);margin-bottom:5px;cursor:none;transition:.15s" onmouseover="this.style.background='rgba(255,255,255,.08)'" onmouseout="this.style.background='rgba(255,255,255,.04)'">
+    <img src="${g.img}" style="width:32px;height:32px;border-radius:6px;object-fit:cover" onerror="this.style.opacity='.2'">
+    <span style="font-size:13px;font-weight:600">${escHtml(g.title)}</span>
+    <span style="font-size:11px;color:var(--text2);margin-left:auto">${(g.cats||[]).join(', ')||'no tags'}</span>
+  </div>`).join('');
+}
+function openTagEdit(gameId,gameTitle){
+  // Try exact match first, then string comparison
+  const game=allGames().find(g=>String(g.id)===String(gameId));
+  if(!game){showToast('Game not found');return;}
+  _tagEditGame=game;
+  _tagEditCurrent=[...(game.cats||[])];
+  document.getElementById('tag-edit-game-name').textContent='🎮 '+gameTitle;
+  document.getElementById('tag-edit-panel').style.display='block';
+  document.getElementById('tag-game-results').innerHTML='';
+  document.getElementById('tag-game-search').value='';
+  renderTagEdit();
+  document.getElementById('tag-preset-row').innerHTML=TAG_PRESETS.map(t=>`<button class="auc-btn${_tagEditCurrent.includes(t)?' blue':''}" style="font-size:10px" onclick="togglePresetTag('${t}',this)">${t}</button>`).join('');
+}
+function renderTagEdit(){
+  document.getElementById('tag-current-display').innerHTML=_tagEditCurrent.length
+    ?_tagEditCurrent.map(t=>`<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(10,132,255,.15);border:1px solid rgba(10,132,255,.3);color:var(--blue);border-radius:6px;padding:2px 7px;font-size:11px;margin:2px">${escHtml(t)} <span onclick="removeTagEdit('${t}')" style="cursor:none;opacity:.7">✕</span></span>`).join('')
+    :'<span style="color:var(--text2)">None</span>';
+}
+function togglePresetTag(tag,btn){
+  const idx=_tagEditCurrent.indexOf(tag);
+  if(idx>=0){_tagEditCurrent.splice(idx,1);btn.className='auc-btn';}
+  else{_tagEditCurrent.push(tag);btn.className='auc-btn blue';}
+  renderTagEdit();
+}
+function removeTagEdit(tag){
+  _tagEditCurrent=_tagEditCurrent.filter(t=>t!==tag);
+  renderTagEdit();
+  document.querySelectorAll('#tag-preset-row button').forEach(btn=>{
+    btn.className='auc-btn'+(_tagEditCurrent.includes(btn.textContent.trim())?' blue':'');
+  });
+}
+function addCustomTag(){
+  const val=document.getElementById('tag-custom-input').value.trim().toLowerCase();
+  if(!val)return;
+  if(!_tagEditCurrent.includes(val))_tagEditCurrent.push(val);
+  document.getElementById('tag-custom-input').value='';
+  renderTagEdit();
+}
+async function saveGameTags(){
+  if(!_tagEditGame)return;
+  const msg=document.getElementById('tag-save-msg');
+  msg.style.color='var(--text2)';
+  msg.textContent='Saving…';
+  try{
+    const key='game_tags_'+String(_tagEditGame.id);
+    await upsertSiteSetting(key,JSON.stringify(_tagEditCurrent));
+    _tagEditGame.cats=[..._tagEditCurrent];
+    if(_tagEditGame.cat&&!_tagEditCurrent.includes(_tagEditGame.cat))_tagEditGame.cat=_tagEditCurrent[0]||_tagEditGame.cat;
+    invalidateCard(_tagEditGame.id);
+    buildList();renderPage();
+    msg.style.color='#30d158';
+    msg.textContent='✅ Tags saved and applied!';
+    setTimeout(()=>{msg.textContent='';},3000);
+  }catch(e){msg.style.color='#ff3b30';msg.textContent='❌ Failed: '+e.message;console.error(e);}
+}
+async function loadCustomGameTags(){
+  try{
+    const rows=await sbReq('/rest/v1/site_settings?key=like.game_tags_*&select=key,value');
+    (rows||[]).forEach(r=>{
+      const gameId=r.key.replace('game_tags_','');
+      let tags=[];try{tags=JSON.parse(r.value);}catch(e){}
+      const game=allGames().find(g=>String(g.id)===String(gameId));
+      if(game&&tags.length){game.cats=[...tags];if(!game.cat)game.cat=tags[0];invalidateCard(game.id);}
+    });
+  }catch(e){console.warn('loadCustomGameTags',e);}
+}
+
+async function saveEmail(){
+  if(!currentUser||currentUser.guest){showToast('Login required');return;}
+  const val=document.getElementById('new-email').value.trim();
+  if(val&&!/^[^@]+@[^@]+\.[^@]+$/.test(val)){accountMsg('❌ Invalid email address');return;}
+  accountMsg('Saving…');
+  try{
+    await fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({email:val||null})
+    });
+    currentUser.email=val||null;
+    localStorage.setItem('adless_session',JSON.stringify(currentUser));
+    document.getElementById('email-current-display').textContent=val?'Current: '+val:'Email removed';
+    document.getElementById('new-email').value='';
+    accountMsg('✅ Email saved!');
+  }catch(e){accountMsg('❌ Failed');}
+}
+async function loadCurrentEmail(){
+  if(!currentUser||currentUser.guest)return;
+  try{
+    const rows=await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=email`);
+    const email=(rows||[])[0]?.email||'';
+    const el=document.getElementById('email-current-display');
+    if(el)el.textContent=email?'Current: '+email:'Not set';
+  }catch(e){}
 }
 function postLoginBadgeCheck(){
   setTimeout(()=>{
@@ -5890,10 +6094,19 @@ function postLoginBadgeCheck(){
 </div>
 
 <!-- PROFILE MODAL -->
-<div id="profile-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:10001;align-items:center;justify-content:center;backdrop-filter:blur(8px)">
-  <div style="background:#1c1c1e;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px;width:min(480px,94vw);max-height:88vh;overflow-y:auto;position:relative">
-    <button onclick="closeProfileModal()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.1);border:none;color:var(--text);border-radius:8px;padding:5px 10px;cursor:none;font-size:14px">✕</button>
-    <div id="profile-content"></div>
+<div id="profile-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:10001;align-items:center;justify-content:center;backdrop-filter:blur(8px)" onclick="if(event.target===this)closeProfileModal()">
+  <div style="background:#1c1c1e;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:0;width:min(500px,96vw);max-height:90vh;overflow:hidden;position:relative;display:flex;flex-direction:column">
+    <button onclick="closeProfileModal()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,.1);border:none;color:var(--text);border-radius:8px;padding:5px 10px;cursor:none;font-size:14px;z-index:2">✕</button>
+    <!-- Header filled by JS -->
+    <div id="profile-header" style="flex-shrink:0"></div>
+    <!-- Tabs -->
+    <div id="profile-tabs" style="display:none;flex-shrink:0;display:flex;border-bottom:1px solid rgba(255,255,255,.08);background:#1c1c1e">
+      <button class="pm-tab active" id="pm-tab-overview" onclick="switchProfileTab('overview')">👤 Overview</button>
+      <button class="pm-tab" id="pm-tab-scores" onclick="switchProfileTab('scores')">🏆 Scores</button>
+      <button class="pm-tab" id="pm-tab-badges" onclick="switchProfileTab('badges')">🎖 Badges</button>
+    </div>
+    <!-- Tab content -->
+    <div id="profile-content" style="overflow-y:auto;flex:1;padding:20px"></div>
   </div>
 </div>
 
