@@ -509,8 +509,24 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <div style="margin-top:12px;background:rgba(255,193,7,.08);border:1px solid rgba(255,193,7,.2);border-radius:10px;padding:8px 12px;font-size:11px;color:rgba(255,193,7,.8);line-height:1.5;">
       ⚠️ In-game progress (e.g. GunSpin levels) cannot be saved across devices due to browser security rules. Favorites, settings, and watch progress do sync.
     </div>
-    <div style="margin-top:10px;font-size:11px;color:var(--text2);">
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);display:flex;justify-content:space-between">
       <span style="cursor:none;text-decoration:underline;opacity:.6" onclick="lbGuest()">Continue as guest</span>
+      <span style="cursor:none;text-decoration:underline;opacity:.6" onclick="showForgotPw()" id="forgot-pw-link">Forgot password?</span>
+    </div>
+    <!-- Forgot Password Panel -->
+    <div id="forgot-pw-panel" style="display:none;margin-top:14px;padding:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px">
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px">🔑 Reset Password</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:10px">Enter your username and the email you signed up with. If they match, you can set a new password.</div>
+      <input id="fp-username" class="lb-field" placeholder="Your username" maxlength="20" style="margin-bottom:8px">
+      <input id="fp-email" class="lb-field" type="email" placeholder="Your email address" style="margin-bottom:8px">
+      <div id="fp-new-wrap" style="display:none">
+        <input id="fp-new-pass" class="lb-field" type="password" placeholder="New password (min 4 chars)" style="margin-bottom:8px">
+      </div>
+      <div id="fp-msg" style="font-size:11px;min-height:14px;margin-bottom:8px;color:#ff9f0a"></div>
+      <div style="display:flex;gap:8px">
+        <button class="lb-btn" style="flex:1;margin:0;font-size:12px;padding:9px" onclick="submitForgotPw()">Verify</button>
+        <button class="auc-btn" onclick="hideForgotPw()">Cancel</button>
+      </div>
     </div>
   </div>
 </div>
@@ -593,11 +609,13 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <div class="nav" data-view="movies-view">🎬 Movies</div>
     <div class="nav" data-view="shows-view">📺 Shows &amp; Anime</div>
     <div class="nav" data-view="chat-view">💬 Live Chat</div>
-    <div class="nav" data-view="friends-view">👥 Friends</div>
+    <div class="nav" data-view="friends-view">👥 Friends <span id="group-unread-badge" style="display:none;background:#ff375f;color:#fff;font-size:10px;font-weight:800;padding:1px 6px;border-radius:10px;margin-left:2px"></span></div>
     <div class="nav" data-view="leaderboard-view">🏆 Leaderboard</div>
     <div class="nav" data-view="badges-view">🎖️ Badges</div>
     <div class="nav" data-view="settings-view">⚙️ Settings</div>
-    <div class="nav" onclick="playRandom()" style="color:#bf5af2;background:rgba(191,90,242,.08);border:1px solid rgba(191,90,242,.2)">🎲 Random Game</div>
+    <div class="nav" data-view="profile-view">👤 My Profile</div>
+    <div class="nav" data-view="people-view">🔍 Find People</div>
+    <div class="nav" data-action="random" style="color:#bf5af2;background:rgba(191,90,242,.08);border:1px solid rgba(191,90,242,.2)">🎲 Random Game</div>
     <div class="nav discord-btn" onclick="window.open('https://discord.gg/gAe83DUFNT','_blank')">🎮 Join Discord</div>
     <div class="nav owner-btn" id="owner-nav" data-view="owner-view" style="display:none">👑 Owner Panel</div>
     <div class="nav" id="admin-nav" data-view="admin-view" style="display:none;color:#30d158;background:rgba(48,209,88,.08);border:1px solid rgba(48,209,88,.2)">🛡️ WinterAG Panel</div>
@@ -784,6 +802,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     </header>
     <div class="ad-slot-inline" id="ad-dm"></div>
     <div id="dm-messages"></div>
+    <div id="dm-typing-indicator" style="font-size:11px;color:var(--text2);min-height:16px;padding:2px 16px 0"></div>
     <div id="dm-chat-bar" class="chat-bar-wrap">
       <div class="chat-input-row">
         <input id="dm-input" class="lb-field" style="margin:0;flex:1" placeholder="Send a message…" maxlength="500" onkeydown="if(event.key==='Enter')sendDm()">
@@ -1128,6 +1147,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
         <button class="auc-btn" id="lb-tab-global" onclick="setLbTab('global')" style="background:rgba(10,132,255,.2);border-color:rgba(10,132,255,.4);color:var(--blue)">🌐 Global</button>
         <button class="auc-btn" id="lb-tab-game" onclick="setLbTab('game')">🎮 By Game</button>
+        <button class="auc-btn" id="lb-tab-mine" onclick="setLbTab('mine')">📋 My Scores</button>
         <select id="lb-time-filter" class="lb-field" style="margin:0;width:auto;padding:8px 12px;font-size:12px" onchange="loadLeaderboard()">
           <option value="all">All Time</option>
           <option value="week">This Week</option>
@@ -1365,6 +1385,132 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
   </div>
 </div>
 <div id="player">
+  <!-- PEOPLE / USER SEARCH VIEW -->
+  <div id="people-view" class="view" style="max-width:600px;margin:0 auto">
+    <header><h1>🔍 Find People</h1></header>
+    <div class="s-section">
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <input id="people-search-input" class="lb-field" style="margin:0;flex:1" placeholder="Search by username…" maxlength="20" onkeydown="if(event.key==='Enter')searchPeople()">
+        <button class="lb-btn" style="width:auto;padding:10px 16px;margin:0" onclick="searchPeople()">Search</button>
+      </div>
+      <div id="people-results"></div>
+      <div id="people-online" style="margin-top:16px">
+        <div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:8px">🟢 ONLINE NOW</div>
+        <div id="people-online-list" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE PAGE VIEW -->
+  <div id="profile-view" class="view" style="max-width:600px;margin:0 auto">
+    <div style="padding:20px 0 8px;font-size:22px;font-weight:900">👤 My Profile</div>
+    <div id="profile-page-guest" style="display:none;color:var(--text2);font-size:14px;padding:20px 0">Login to view your profile.</div>
+    <div id="profile-page-content">
+      <!-- Avatar -->
+      <div class="s-section">
+        <div class="s-sec">🖼️ Avatar & Background</div>
+        <div class="s-row" style="flex-direction:column;gap:10px;align-items:flex-start">
+          <div style="display:flex;align-items:center;gap:14px">
+            <span id="pp-avatar-preview" style="font-size:48px;width:64px;height:64px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.1)">👤</span>
+            <div>
+              <div style="font-size:13px;font-weight:700" id="pp-display-name">—</div>
+              <div style="font-size:11px;color:var(--text2)" id="pp-username">@—</div>
+            </div>
+          </div>
+          <div class="s-lbl" style="margin-top:4px">Emoji Avatar</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap" id="pp-emoji-picker"></div>
+          <div class="s-lbl" style="margin-top:8px">Gallery PFPs</div>
+          <div id="pp-gallery-pfp-row" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+          <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
+            <span style="font-size:11px;color:var(--text2)">Current:</span>
+            <span id="pp-cur-av-preview" style="font-size:22px">👤</span>
+            <button class="lb-btn" style="width:auto;padding:7px 14px;margin:0;font-size:12px" onclick="ppSaveAvatar()">💾 Save Avatar</button>
+          </div>
+          <div id="pp-av-msg" style="font-size:11px;color:var(--text2);min-height:14px"></div>
+        </div>
+        <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
+          <div class="s-lbl">🌅 Profile Background</div>
+          <div class="s-desc">Shown behind your public profile</div>
+          <div id="pp-gallery-bg-row" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+          <div id="pp-bg-msg" style="font-size:11px;color:var(--text2);min-height:14px"></div>
+        </div>
+      </div>
+      <!-- Bio & Display Name -->
+      <div class="s-section">
+        <div class="s-sec">✏️ Profile Info</div>
+        <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start">
+          <div class="s-lbl">Display Name</div>
+          <div class="s-desc" id="pp-dn-desc">Changeable every 7 days</div>
+          <div style="display:flex;gap:8px;width:100%">
+            <input id="pp-display-name-input" class="lb-field" style="margin:0;flex:1" placeholder="New display name…" maxlength="30">
+            <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="changeDisplayName()">Save</button>
+          </div>
+        </div>
+        <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
+          <div class="s-lbl">📝 Bio</div>
+          <textarea id="pp-bio" class="lb-field" style="margin:0;width:100%;height:72px;resize:vertical;font-family:inherit;font-size:13px" placeholder="Tell people about yourself…" maxlength="200"></textarea>
+          <div style="display:flex;justify-content:space-between;width:100%">
+            <span id="pp-bio-count" style="font-size:11px;color:var(--text2)">0/200</span>
+            <button class="lb-btn" style="width:auto;padding:7px 14px;margin:0;font-size:12px" onclick="ppSaveBio()">💾 Save Bio</button>
+          </div>
+          <div id="pp-bio-msg" style="font-size:11px;color:var(--text2);min-height:14px"></div>
+        </div>
+      </div>
+      <!-- Account -->
+      <div class="s-section">
+        <div class="s-sec">🔐 Account</div>
+        <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start">
+          <div class="s-lbl">Username</div>
+          <div class="s-desc" id="pp-un-desc">Changeable once every 30 days</div>
+          <div style="display:flex;gap:8px;width:100%">
+            <input id="pp-username-input" class="lb-field" style="margin:0;flex:1" placeholder="New username…" maxlength="20">
+            <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="changeUsername()">Save</button>
+          </div>
+        </div>
+        <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
+          <div class="s-lbl">Password</div>
+          <div style="display:flex;gap:8px;width:100%;flex-wrap:wrap">
+            <input id="pp-cur-password" class="lb-field" type="password" style="margin:0;flex:1;min-width:120px" placeholder="Current password…">
+            <input id="pp-new-password" class="lb-field" type="password" style="margin:0;flex:1;min-width:120px" placeholder="New password…">
+            <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="ppChangePassword()">Save</button>
+          </div>
+        </div>
+        <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
+          <div class="s-lbl">📧 Email</div>
+          <div class="s-desc">Optional — only visible to owner</div>
+          <div style="display:flex;gap:8px;width:100%">
+            <input id="pp-email" class="lb-field" type="email" style="margin:0;flex:1" placeholder="your@email.com">
+            <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="ppSaveEmail()">Save</button>
+          </div>
+          <div id="pp-email-display" style="font-size:11px;color:var(--text2)"></div>
+        </div>
+        <div id="pp-account-msg" style="font-size:11px;min-height:16px;margin-top:4px;color:#30d158"></div>
+      </div>
+      <!-- My Badges -->
+      <div class="s-section">
+        <div class="s-sec">🎖️ My Badges</div>
+        <div id="pp-badges-grid" style="display:flex;flex-wrap:wrap;gap:6px;padding:4px 0">
+          <div style="color:var(--text2);font-size:12px">Loading…</div>
+        </div>
+      </div>
+      <!-- My Scores -->
+      <div class="s-section">
+        <div class="s-sec">🏆 My Scores</div>
+        <div id="pp-scores-list" style="display:flex;flex-direction:column;gap:6px">
+          <div style="color:var(--text2);font-size:12px">Loading…</div>
+        </div>
+      </div>
+      <!-- Danger -->
+      <div class="s-section">
+        <div class="s-sec" style="color:#ff375f">⚠️ Danger Zone</div>
+        <div class="s-row">
+          <div><div class="s-lbl" style="color:#ff375f">Delete Account</div><div class="s-desc">Permanently removes your account and all data</div></div>
+          <button class="s-danger" onclick="promptDeleteAccount()" style="background:rgba(255,55,95,.15);border-color:rgba(255,55,95,.3);color:#ff375f">🗑️ Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="player-bar">
     <span id="player-title">Playing</span>
     <button class="pbtn rand" onclick="playRandom()">🎲 Random</button>
@@ -1398,7 +1544,7 @@ const BUILTIN=[
   {id:'b7',title:'Slope 3',cat:'arcade',img:'https://slope3.com/upload/imgs/options/slope-3-banner.png',url:'https://html5.101games.io/game/Slope3/index.html'},
   {id:'b8',title:'Slope Cyber',cat:'arcade',img:'https://i.ytimg.com/vi/T8fb6F1XwqM/hq720.jpg',url:'https://azgames.io/game/slope-cyber/'},
   {id:'b9',title:'Slope Legacy',cat:'arcade',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQu21VE-0aK8Dt8b5Lw_UrPIbCT1c50kGvQLA&s',url:'https://azgames.io/game/slope-legacy/'},
-  {id:'b10',title:'67 Clicker',cat:'idle',img:'https://zapgames.io/data/image/game/67-clicker.jpg',url:'https://www.hoodamath.com/mobile/games/67-clicker/game.html?nocheckorient=1'},
+  {id:'b10',title:'67 Clicker',cat:'idle',img:'https://zapgames.io/data/image/game/67-clicker.jpg',url:'https://iogames.onl/67-clicker.embed'},
   {id:'b11',title:'Slope+',cat:'arcade',img:'https://sloperun.org/data/image/posts/slope-image.jpg',url:'https://nebulaplay.site/storage/Slope.html'},
   {id:'b12',title:'Chicken Jockey',cat:'idle',img:'https://chickenjockeyclicker.io/data/image/game/chicken-jockey-clicker-banner.png',url:'https://game.azgame.io/chicken-jockey-clicker/'},
   {id:'b13',title:'Slippery Slope',cat:'racing',img:'https://static.playhop.com/images/2d413_1890793_92da2/4b0576df8/2a0000018748a544_116be46/b705ded35f3a1f67d103_609d64/orig',url:'https://g.vseigru.net/11/igra-skolzkij-cpusk/'},
@@ -1417,7 +1563,7 @@ const BUILTIN=[
   {id:'b26',title:'Bloxorz',cat:'puzzle',img:'https://www.coolmathgames.com/sites/default/files/Bloxorz_OG-logo.jpg',url:'https://ccgstatic.com/games/game_a87e_24923a4fc7de4/index.html'},
   {id:'b27',title:'Brookhaven',cat:'multiplayer',img:'https://tr.rbxcdn.com/180DAY-808370c4e617d8ce593b16f54eaf645d/768/432/Image/Webp/noFilter',url:'https://st.8games.net/9/8g/igra-brukkhejven/'},
   // Self-hosted clickers — upload game files to /games/ folder in your repo
-  {id:'b28',title:'Cookie Clicker',cat:'idle',img:'https://orteil.dashnet.org/cookieclicker/img/favicon.ico',url:'/games/cookie-clicker/index.html',saves:true},
+  {id:'b28',title:'Cookie Clicker',cat:'idle',img:'https://orteil.dashnet.org/cookieclicker/img/favicon.ico',url:'https://orteil.dashnet.org/cookieclicker/'},
   {id:'b29',title:'Universal Paperclips',cat:'idle',img:'https://www.decisionproblem.com/paperclips/favicon.ico',url:'https://www.decisionproblem.com/paperclips/index2.html'},
   {id:'b30',title:'A Dark Room',cat:'idle',img:'https://adarkroom.doublespeakgames.com/img/fire.png',url:'https://adarkroom.doublespeakgames.com/'},
 ];
@@ -1561,6 +1707,7 @@ function lbTab(mode){
   document.querySelectorAll('.lb-tab').forEach((t,i)=>t.classList.toggle('active',(mode==='login'?i===0:i===1)));
   document.getElementById('lb-submit').textContent=mode==='login'?'Login':'Create Account';
   document.getElementById('lb-av-wrap').style.display=mode==='signup'?'block':'none';
+  document.getElementById('lb-email-wrap').style.display=mode==='signup'?'block':'none';
   document.getElementById('lb-err').textContent='';
 }
 function lbInitAvatars(){
@@ -2072,6 +2219,12 @@ document.querySelectorAll('.nav').forEach(btn=>{
     }else if(btn.dataset.cat){
       document.querySelectorAll('#game-filters .nav').forEach(n=>n.classList.remove('active'));
       btn.classList.add('active');currentCat=btn.dataset.cat;currentPage=1;switchView('games-view');buildList();renderPage();
+    }else if(btn.dataset.action==='random'){
+      playRandom();
+    }else if(btn.dataset.view==='people-view'){
+      switchView('people-view');loadPeopleView();
+    }else if(btn.dataset.view==='profile-view'){
+      switchView('profile-view');loadProfilePage();
     }
   };
 });
@@ -2236,7 +2389,7 @@ async function loadAccountCooldowns(){
 
 async function changeDisplayName(){
   if(!currentUser||currentUser.guest){accountMsg('Login required');return;}
-  const val=document.getElementById('new-display-name')?.value.trim();
+  const val=(document.getElementById('pp-display-name-input')?.value||document.getElementById('new-display-name')?.value||'').trim();
   if(!val){accountMsg('Enter a display name');return;}
   if(val.length<2){accountMsg('Too short (min 2 chars)');return;}
   try{
@@ -2264,7 +2417,7 @@ async function changeDisplayName(){
 
 async function changeUsername(){
   if(!currentUser||currentUser.guest){accountMsg('Login required');return;}
-  const val=document.getElementById('new-username')?.value.trim();
+  const val=(document.getElementById('pp-username-input')?.value||document.getElementById('new-username')?.value||'').trim();
   if(!val){accountMsg('Enter a username');return;}
   if(val.length<3){accountMsg('Too short (min 3 chars)');return;}
   if(!/^[a-zA-Z0-9_]+$/.test(val)){accountMsg('Only letters, numbers, underscores');return;}
@@ -2466,6 +2619,7 @@ async function submitCreateGroup(){
 
 // ── GROUP CHAT VIEW ───────────────────────────────────────────────
 async function openGroupChat(gid){
+  if(!currentUser||currentUser.guest){showToast('Login to use group chats');return;}
   try{
     const groups=await sbReq(`/rest/v1/groups?id=eq.${gid}&select=*`);
     if(!groups||!groups.length)return;
@@ -2878,6 +3032,9 @@ async function pollNotifs(){
         return;
       }
     }
+    // Group unread badge + DM typing check
+    updateGroupUnreadBadge();
+    if(dmPeer)checkDmTyping();
     // Ping last_seen every poll (every 5s)
     fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{
       method:'PATCH',
@@ -3067,6 +3224,7 @@ const REPORT_REASONS={
 let reportState={type:null,targetId:null,targetName:null,reporterId:null,contentId:null,content:null,selectedReason:null};
 
 function openReportModal(type,contentId,targetName,targetId,content){
+  if(!currentUser||currentUser.guest){showToast('Login to report');return;}
   if(!currentUser||currentUser.guest){showToast('Login to report');return;}
   if(targetId===currentUser.id){showToast("You can't report yourself");return;}
   reportState={type,contentId,targetId,targetName,content,selectedReason:null};
@@ -3281,7 +3439,7 @@ async function bootstrapAdmin(){
         body:JSON.stringify({username:'WinterAG',password_hash:hash,avatar:'🛡️',role:'mod'})
       });
       console.log('WinterAG admin account created');
-    } else if(existing[0].role!=='admin'&&existing[0].role!=='owner'){
+    } else if(existing[0].role!=='admin'&&existing[0].role!=='owner'&&existing[0].role!=='mod'){
       await fetch(SB_URL+`/rest/v1/profiles?id=eq.${existing[0].id}`,{
         method:'PATCH',
         headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
@@ -4390,6 +4548,7 @@ let dmPollTimer=null;
 let dmMessages=[];
 
 async function openDm(peerId,peerName,peerAvatar){
+  if(!currentUser||currentUser.guest){showToast('Login to use DMs');return;}
   dmPeer={id:peerId,username:peerName,avatar:peerAvatar};
   dmMessages=[];
   document.getElementById('dm-av').textContent=peerAvatar;
@@ -4819,7 +4978,7 @@ async function wagLoadStats(){
 }
 
 async function wagSendAnnouncement(){
-  if(!isAdmin())return;
+  if(!isMod())return;
   const txt=(document.getElementById('wag-ann-text')||{}).value?.trim();
   if(!txt){showToast('Write something first');return;}
   const senderName=currentUser.display_name||currentUser.username;
@@ -4927,7 +5086,7 @@ const SLUR_PRESET = [
 // ══════════════════════════════════════════════════════════════════
 function openScoreSubmit(){
   if(!currentUser||currentUser.guest){showToast('Login to submit scores');return;}
-  // Allow submission even without active game
+  if(!currentGameTitle||currentView!=='games-view'){showToast('Play a game first to submit a score');return;}
   document.getElementById('score-game-name').textContent='Game: '+currentGameTitle;
   document.getElementById('score-value').value='';
   document.getElementById('score-comment').value='';
@@ -5021,6 +5180,9 @@ function setLbTab(tab){
   document.getElementById('lb-tab-global').style.color=tab==='global'?'var(--blue)':'';
   document.getElementById('lb-tab-game').style.background=tab==='game'?'rgba(10,132,255,.2)':'';
   document.getElementById('lb-tab-game').style.color=tab==='game'?'var(--blue)':'';
+  const mineBtn=document.getElementById('lb-tab-mine');
+  if(mineBtn){mineBtn.style.background=tab==='mine'?'rgba(10,132,255,.2)':'';mineBtn.style.color=tab==='mine'?'var(--blue)':'';}
+  if(tab==='mine'){loadMyScoresTab();return;}
   document.getElementById('lb-game-picker').style.display=tab==='game'?'block':'none';
   if(tab==='game')loadLbGames();
   else loadLeaderboard();
@@ -5436,8 +5598,9 @@ async function awardBadge(key){
     // Check completionist
     if(earnedBadgesCache.size>=25)setTimeout(()=>awardBadge('completionist'),1000);
     // Galaxy brain = all non-secret
-    const nonSecret=Object.keys(BADGE_DEFS).filter(k=>!OWNER_ONLY_BADGES.includes(k)&&!['mystic','rainbow','cursed','ghost','lucky'].includes(k));
-    if(nonSecret.every(k=>earnedBadgesCache.has(k)))setTimeout(()=>awardBadge('galaxy_brain'),1500);
+    {const excl=new Set([...OWNER_ONLY_BADGES,'shadow','touched_grass','brainrot','lurker','lucky','ghost','glitch','404']);
+    const nonSecret=Object.keys(BADGE_DEFS).filter(k=>!excl.has(k));
+    if(nonSecret.every(k=>earnedBadgesCache.has(k)))setTimeout(()=>awardBadge('galaxy_brain'),1500);}
   }catch(e){}
 }
 function showBadgeUnlock(key,def){
@@ -5613,6 +5776,10 @@ async function checkAllBadges(){
   checkLoginStreakBadges();
   checkExplorerBadge();
   checkCompletionistBadge();
+  // Secret auto-award badges
+  await checkNpcBadge();
+  await checkMainCharacterBadge();
+  await checkReverseUnoBadge();
 }
 // checkTimeBadges moved below
 async function checkActivityBadges(){
@@ -5710,10 +5877,10 @@ async function checkActivityBadges(){
     if(bc>=25)awardBadge('completionist');
     if(bc>=40)awardBadge('overachiever');
     // Galaxy brain - all non-secret non-owner badges
-    const secretKeys=new Set(['mystic','rainbow','cursed','glitch','shadow','royalty','trusted','vip','bug_hunter','creator','mod','gifted','hall_of_fame']);
-    const nonSecret=Object.keys(BADGE_DEFS).filter(k=>!secretKeys.has(k));
+    {const excl=new Set([...OWNER_ONLY_BADGES,'shadow','touched_grass','brainrot','lurker','lucky','ghost','glitch','404']);
+    const nonSecret=Object.keys(BADGE_DEFS).filter(k=>!excl.has(k));
     const heldKeys=new Set((myBadges||[]).map(b=>b.badge_key));
-    if(nonSecret.every(k=>heldKeys.has(k)))awardBadge('galaxy_brain');
+    if(nonSecret.every(k=>heldKeys.has(k)))awardBadge('galaxy_brain');}
     // Early adopter
     const allUsers=await sbReq('/rest/v1/profiles?select=id&order=created_at.asc&limit=100');
     const userIds=(allUsers||[]).map(u=>u.id);
@@ -5752,8 +5919,9 @@ function checkCompletionistBadge(){
   const total=earnedBadgesCache?earnedBadgesCache.size:0;
   if(total>=25)awardBadge('completionist');
   if(total>=50)awardBadge('hoarder');
-  const nonSecret=Object.keys(BADGE_DEFS).filter(k=>!OWNER_ONLY_BADGES.includes(k)&&!['mystic','rainbow','cursed','ghost','lucky','glitch','snitch','reformed'].includes(k));
-  if(nonSecret.every(k=>earnedBadgesCache&&earnedBadgesCache.has(k)))awardBadge('galaxy_brain');
+  {const excl=new Set([...OWNER_ONLY_BADGES,'shadow','touched_grass','brainrot','lurker','lucky','ghost','glitch','404']);
+  const nonSecret=Object.keys(BADGE_DEFS).filter(k=>!excl.has(k));
+  if(nonSecret.every(k=>earnedBadgesCache&&earnedBadgesCache.has(k)))awardBadge('galaxy_brain');}
 }
 function checkGhostBadge(lastSeen){
   if(!currentUser||currentUser.guest)return;
@@ -6191,6 +6359,9 @@ async function loadGalleryForUser(){
     // Load from unified gallery_img_* keys
     const rows=await sbReq('/rest/v1/site_settings?key=like.gallery_img_*&select=key,value&order=key.asc');
     const pfpItems=[];const bgItems=[];
+    // Hardcoded built-in PFPs
+    const builtinPfps=[{url:'https://i.imgur.com/nwCGKEi.png',label:'Slope PFP',type:'pfp'}];
+    builtinPfps.forEach(d=>{pfpItems.push(d);});
     (rows||[]).forEach(r=>{
       let d={};try{d=JSON.parse(r.value);}catch(e){}
       if(!d.url)return;
@@ -6626,6 +6797,449 @@ async function updateSidebarOnlineCount(){
     if(el)el.textContent=count>0?count+' online':'';
   }catch(e){}
 }
+
+
+// ══════════════════════════════════════════════════════════════════
+// PROFILE PAGE FUNCTIONS
+// ══════════════════════════════════════════════════════════════════
+let ppSelectedAvatarEmoji=null, ppSelectedAvatarUrl=null;
+
+async function loadProfilePage(){
+  if(!currentUser||currentUser.guest){
+    document.getElementById('profile-page-guest').style.display='block';
+    document.getElementById('profile-page-content').style.display='none';
+    return;
+  }
+  document.getElementById('profile-page-guest').style.display='none';
+  document.getElementById('profile-page-content').style.display='block';
+
+  // Fill header
+  const av=currentUser.avatar||'👤';
+  const dn=currentUser.display_name||currentUser.username;
+  const ppAv=document.getElementById('pp-avatar-preview');
+  if(ppAv){
+    if(av.startsWith('http'))ppAv.innerHTML=`<img src="${av}" style="width:60px;height:60px;border-radius:50%;object-fit:cover">`;
+    else ppAv.textContent=av;
+  }
+  const ppDn=document.getElementById('pp-display-name');if(ppDn)ppDn.textContent=dn;
+  const ppUn=document.getElementById('pp-username');if(ppUn)ppUn.textContent='@'+currentUser.username;
+  const ppCur=document.getElementById('pp-cur-av-preview');
+  if(ppCur){
+    if(av.startsWith('http'))ppCur.innerHTML=`<img src="${av}" style="width:28px;height:28px;border-radius:50%;object-fit:cover">`;
+    else ppCur.textContent=av;
+  }
+
+  // Emoji picker
+  const ep=document.getElementById('pp-emoji-picker');
+  if(ep)ep.innerHTML=ALL_AVATARS.map(a=>`<div onclick="ppPickEmoji(this,'${a}')" style="font-size:22px;cursor:none;padding:4px 6px;border-radius:8px;border:2px solid transparent;transition:.15s" title="${a}">${a}</div>`).join('');
+
+  // Bio
+  try{
+    const rows=await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=bio,email,display_name,last_username_change,last_display_change`);
+    const p=rows&&rows[0]?rows[0]:{};
+    const bioEl=document.getElementById('pp-bio');
+    if(bioEl){bioEl.value=p.bio||'';const cc=document.getElementById('pp-bio-count');if(cc)cc.textContent=(p.bio||'').length+'/200';bioEl.oninput=()=>{if(cc)cc.textContent=bioEl.value.length+'/200';};}
+    const emailEl=document.getElementById('pp-email');if(emailEl)emailEl.value=p.email||'';
+    const emailDisp=document.getElementById('pp-email-display');
+    if(emailDisp)emailDisp.textContent=p.email?'Current: '+p.email:'';
+    // Cooldowns
+    const dnDesc=document.getElementById('pp-dn-desc');
+    if(dnDesc&&p.last_display_change){const days=Math.ceil((new Date(p.last_display_change).getTime()+7*86400000-Date.now())/86400000);if(days>0)dnDesc.textContent=`Changeable in ${days} day${days>1?'s':''}`;else dnDesc.textContent='Ready to change';}
+    const unDesc=document.getElementById('pp-un-desc');
+    if(unDesc&&p.last_username_change){const days=Math.ceil((new Date(p.last_username_change).getTime()+30*86400000-Date.now())/86400000);if(days>0)unDesc.textContent=`Changeable in ${days} day${days>1?'s':''}`;else unDesc.textContent='Ready to change';}
+  }catch(e){}
+
+  // Prefill display name / username inputs
+  const ppDni=document.getElementById('pp-display-name-input');if(ppDni)ppDni.placeholder=currentUser.display_name||currentUser.username;
+  const ppUni=document.getElementById('pp-username-input');if(ppUni)ppUni.placeholder=currentUser.username;
+
+  // Gallery
+  await ppLoadGallery();
+  // Badges & Scores
+  await ppLoadBadgesAndScores();
+}
+
+async function ppLoadGallery(){
+  const pfpRow=document.getElementById('pp-gallery-pfp-row');
+  const bgRow=document.getElementById('pp-gallery-bg-row');
+  try{
+    const rows=await sbReq('/rest/v1/site_settings?key=like.gallery_img_*&select=key,value&order=key.asc');
+    const pfpItems=[{url:'https://i.imgur.com/nwCGKEi.png',label:'Slope PFP',type:'pfp'}];
+    const bgItems=[];
+    (rows||[]).forEach(r=>{let d={};try{d=JSON.parse(r.value);}catch(e){}if(!d.url)return;if(d.type==='pfp'||d.type==='both')pfpItems.push(d);if(d.type==='bg'||d.type==='both')bgItems.push(d);});
+    if(pfpRow){
+      pfpRow.innerHTML=pfpItems.length?pfpItems.map(d=>`<div style="display:inline-flex;flex-direction:column;align-items:center;gap:4px"><img src="${d.url}" onclick="ppPickGalleryAvatar('${d.url}',this)" style="width:48px;height:48px;border-radius:50%;object-fit:cover;cursor:none;border:2px solid rgba(255,255,255,.15);transition:all .15s" title="${d.label||''}"><span style="font-size:9px;color:var(--text2)">${d.label||''}</span></div>`).join(''):'<span style="font-size:11px;color:var(--text2)">No PFPs published yet</span>';
+    }
+    if(bgRow){
+      bgRow.innerHTML=bgItems.length?bgItems.map(d=>`<div onclick="ppSetBg('${d.url}',this)" style="position:relative;cursor:none;border-radius:10px;overflow:hidden;border:2px solid rgba(255,255,255,.15);flex-shrink:0"><img src="${d.url}" style="width:90px;height:56px;object-fit:cover;display:block"><div style="position:absolute;inset:0;background:linear-gradient(transparent,rgba(0,0,0,.5));display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px"><span style="font-size:9px;color:#fff">${d.label||'Set BG'}</span></div></div>`).join(''):'<span style="font-size:11px;color:var(--text2)">No backgrounds published yet</span>';
+    }
+  }catch(e){}
+}
+
+function ppPickEmoji(el,emoji){
+  ppSelectedAvatarEmoji=emoji;ppSelectedAvatarUrl=null;
+  document.querySelectorAll('#pp-emoji-picker div').forEach(d=>d.style.borderColor='transparent');
+  el.style.borderColor='var(--blue)';
+  document.querySelectorAll('#pp-gallery-pfp-row img').forEach(i=>i.style.outline='none');
+  const prev=document.getElementById('pp-cur-av-preview');if(prev)prev.textContent=emoji;
+}
+function ppPickGalleryAvatar(url,el){
+  ppSelectedAvatarUrl=url;ppSelectedAvatarEmoji=null;
+  document.querySelectorAll('#pp-gallery-pfp-row img').forEach(i=>i.style.outline='none');
+  if(el)el.style.outline='3px solid var(--blue)';
+  document.querySelectorAll('#pp-emoji-picker div').forEach(d=>d.style.borderColor='transparent');
+  const prev=document.getElementById('pp-cur-av-preview');
+  if(prev)prev.innerHTML=`<img src="${url}" style="width:28px;height:28px;border-radius:50%;object-fit:cover">`;
+  ppSaveAvatar();
+}
+async function ppSaveAvatar(){
+  if(!currentUser||currentUser.guest)return;
+  const val=ppSelectedAvatarUrl||ppSelectedAvatarEmoji;
+  if(!val){showToast('Pick an avatar first');return;}
+  const msg=document.getElementById('pp-av-msg');if(msg)msg.textContent='Saving…';
+  try{
+    await fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({avatar:val})});
+    currentUser.avatar=val;
+    if(msg)msg.textContent='✅ Saved!';
+    document.getElementById('uc-av').textContent=val.startsWith('http')?'🖼️':val;
+    setTimeout(()=>{if(msg)msg.textContent='';},2000);
+  }catch(e){if(msg)msg.textContent='❌ Failed';}
+}
+async function ppSetBg(url,el){
+  if(!currentUser||currentUser.guest)return;
+  const msg=document.getElementById('pp-bg-msg');if(msg)msg.textContent='Saving…';
+  try{
+    await fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({profile_bg:url})});
+    currentUser.profile_bg=url;
+    if(msg)msg.textContent='✅ Background saved!';
+    document.querySelectorAll('#pp-gallery-bg-row div').forEach(d=>d.style.borderColor='rgba(255,255,255,.15)');
+    if(el)el.style.borderColor='var(--blue)';
+    setTimeout(()=>{if(msg)msg.textContent='';},2000);
+  }catch(e){if(msg)msg.textContent='❌ Failed';}
+}
+async function ppSaveBio(){
+  if(!currentUser||currentUser.guest)return;
+  const val=(document.getElementById('pp-bio')?.value||'').trim().slice(0,200);
+  const msg=document.getElementById('pp-bio-msg');if(msg)msg.textContent='Saving…';
+  try{
+    await fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({bio:val})});
+    currentUser.bio=val;if(msg)msg.textContent='✅ Bio saved!';
+    setTimeout(()=>{if(msg)msg.textContent='';},2000);
+  }catch(e){if(msg)msg.textContent='❌ Failed';}
+}
+async function ppSaveEmail(){
+  if(!currentUser||currentUser.guest)return;
+  const val=document.getElementById('pp-email')?.value.trim()||'';
+  const msg=document.getElementById('pp-account-msg');if(msg)msg.textContent='Saving…';
+  try{
+    await fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({email:val||null})});
+    const disp=document.getElementById('pp-email-display');if(disp)disp.textContent=val?'Current: '+val:'';
+    if(msg)msg.textContent='✅ Email saved!';setTimeout(()=>{if(msg)msg.textContent='';},2000);
+  }catch(e){if(msg)msg.textContent='❌ Failed';}
+}
+async function ppChangePassword(){
+  if(!currentUser||currentUser.guest)return;
+  const cur=document.getElementById('pp-cur-password')?.value;
+  const nw=document.getElementById('pp-new-password')?.value;
+  const msg=document.getElementById('pp-account-msg');
+  if(!cur||!nw){if(msg)msg.textContent='Fill in both fields';return;}
+  if(nw.length<4){if(msg)msg.textContent='Password too short';return;}
+  if(msg)msg.textContent='Saving…';
+  try{
+    const rows=await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=password_hash,username`);
+    const curHash=await sha256(cur+currentUser.username);
+    if(!rows||rows[0].password_hash!==curHash){if(msg)msg.textContent='Current password incorrect';return;}
+    const newHash=await sha256(nw+currentUser.username);
+    await fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({password_hash:newHash,last_password_change:new Date().toISOString()})});
+    if(msg)msg.textContent='✅ Password changed!';
+    document.getElementById('pp-cur-password').value='';document.getElementById('pp-new-password').value='';
+    setTimeout(()=>{if(msg)msg.textContent='';},2500);
+  }catch(e){if(msg)msg.textContent='❌ Failed';}
+}
+
+// ══════════════════════════════════════════════════════════════════
+// FORGOT PASSWORD — self-service via email verification
+// ══════════════════════════════════════════════════════════════════
+let _fpVerifiedUser=null;
+function showForgotPw(){
+  document.getElementById('forgot-pw-panel').style.display='block';
+  document.getElementById('forgot-pw-link').style.display='none';
+  _fpVerifiedUser=null;
+}
+function hideForgotPw(){
+  document.getElementById('forgot-pw-panel').style.display='none';
+  document.getElementById('forgot-pw-link').style.display='inline';
+  document.getElementById('fp-new-wrap').style.display='none';
+  document.getElementById('fp-msg').textContent='';
+  document.getElementById('fp-username').value='';
+  document.getElementById('fp-email').value='';
+  document.getElementById('fp-new-pass').value='';
+  _fpVerifiedUser=null;
+}
+async function submitForgotPw(){
+  const msg=document.getElementById('fp-msg');
+  if(_fpVerifiedUser){
+    // Step 2: set new password
+    const newPw=document.getElementById('fp-new-pass').value;
+    if(!newPw||newPw.length<4){msg.textContent='Password must be at least 4 characters';return;}
+    msg.textContent='Saving…';
+    try{
+      const newHash=await sha256(newPw+_fpVerifiedUser.username);
+      const r=await fetch(SB_URL+`/rest/v1/profiles?id=eq.${_fpVerifiedUser.id}`,{
+        method:'PATCH',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({password_hash:newHash,last_password_change:new Date().toISOString()})
+      });
+      if(!r.ok)throw new Error();
+      msg.style.color='#30d158';msg.textContent='✅ Password updated! You can now log in.';
+      setTimeout(hideForgotPw,2500);
+    }catch(e){msg.textContent='Failed to update password. Try again.';}
+    return;
+  }
+  // Step 1: verify username + email
+  const un=document.getElementById('fp-username').value.trim();
+  const email=document.getElementById('fp-email').value.trim().toLowerCase();
+  if(!un||!email){msg.textContent='Fill in both fields';return;}
+  msg.textContent='Verifying…';
+  try{
+    const rows=await sbReq(`/rest/v1/profiles?username=ilike.${encodeURIComponent(un)}&select=id,username,email`);
+    if(!rows||!rows.length){msg.textContent='Username not found';return;}
+    const u=rows[0];
+    if(!u.email||u.email.toLowerCase()!==email){msg.textContent='Email does not match our records';return;}
+    _fpVerifiedUser=u;
+    msg.style.color='#30d158';msg.textContent='✅ Verified! Enter your new password below.';
+    document.getElementById('fp-new-wrap').style.display='block';
+    const btn=document.querySelector('#forgot-pw-panel .lb-btn');
+    if(btn)btn.textContent='Set New Password';
+  }catch(e){msg.textContent='Connection error. Try again.';}
+}
+
+// ══════════════════════════════════════════════════════════════════
+// MY SCORES TAB — leaderboard
+// ══════════════════════════════════════════════════════════════════
+async function loadMyScoresTab(){
+  if(!currentUser||currentUser.guest){
+    document.getElementById('lb-content').innerHTML='<div class="fc-empty">Login to see your scores</div>';return;
+  }
+  document.getElementById('lb-content').innerHTML='<div class="fc-empty">Loading…</div>';
+  try{
+    const rows=await sbReq(`/rest/v1/scores?user_id=eq.${currentUser.id}&order=created_at.desc&select=*&limit=50`);
+    if(!rows||!rows.length){document.getElementById('lb-content').innerHTML='<div class="fc-empty">No scores submitted yet</div>';return;}
+    const statusColor={approved:'#30d158',pending:'#ff9f0a',rejected:'#ff375f'};
+    const statusIcon={approved:'✅',pending:'⏳',rejected:'❌'};
+    document.getElementById('lb-content').innerHTML=rows.map(r=>{
+      const sc=statusColor[r.status]||'var(--text2)';
+      const si=statusIcon[r.status]||'?';
+      return`<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px">
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;font-size:13px">${escHtml(r.game_name||'Unknown Game')}</div>
+          <div style="font-size:12px;color:var(--text2)">${Number(r.score).toLocaleString()} pts · ${new Date(r.created_at).toLocaleDateString()}</div>
+          ${r.comment?`<div style="font-size:11px;color:var(--text2);margin-top:2px;font-style:italic">"${escHtml(r.comment)}"</div>`:''}
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:11px;font-weight:800;color:${sc}">${si} ${(r.status||'pending').toUpperCase()}</div>
+          ${r.screenshot_url?`<a href="${r.screenshot_url}" target="_blank" style="font-size:10px;color:var(--blue);text-decoration:none">📸 Screenshot</a>`:''}
+        </div>
+      </div>`;
+    }).join('');
+  }catch(e){document.getElementById('lb-content').innerHTML='<div class="fc-empty">Error loading scores</div>';}
+}
+
+// ══════════════════════════════════════════════════════════════════
+// GROUP CHAT UNREAD BADGE
+// ══════════════════════════════════════════════════════════════════
+async function updateGroupUnreadBadge(){
+  if(!currentUser||currentUser.guest)return;
+  try{
+    const memberships=await sbReq(`/rest/v1/group_members?user_id=eq.${currentUser.id}&select=group_id,last_read_at`);
+    if(!memberships||!memberships.length)return;
+    let totalUnread=0;
+    for(const m of memberships){
+      const since=m.last_read_at||'1970-01-01';
+      const msgs=await sbReq(`/rest/v1/group_messages?group_id=eq.${m.group_id}&created_at=gt.${since}&user_id=neq.${currentUser.id}&select=id&limit=1`);
+      if(msgs&&msgs.length)totalUnread++;
+    }
+    const badge=document.getElementById('group-unread-badge');
+    if(badge){badge.style.display=totalUnread>0?'inline':'none';badge.textContent=totalUnread>9?'9+':totalUnread;}
+  }catch(e){}
+}
+
+// ══════════════════════════════════════════════════════════════════
+// DM TYPING INDICATOR
+// ══════════════════════════════════════════════════════════════════
+let _dmTypingTimer=null;
+let _dmTypingSent=false;
+async function sendDmTyping(){
+  if(!currentUser||!dmPeer||currentUser.guest)return;
+  if(_dmTypingSent)return;
+  _dmTypingSent=true;
+  try{
+    await upsertSiteSetting(`dm_typing_${currentUser.id}_to_${dmPeer.id}`,JSON.stringify({ts:Date.now(),name:currentUser.display_name||currentUser.username}));
+  }catch(e){}
+  setTimeout(()=>{_dmTypingSent=false;},3000);
+}
+async function checkDmTyping(){
+  if(!currentUser||!dmPeer)return;
+  try{
+    const key=`dm_typing_${dmPeer.id}_to_${currentUser.id}`;
+    const rows=await sbReq(`/rest/v1/site_settings?key=eq.${key}&select=value`);
+    const el=document.getElementById('dm-typing-indicator');
+    if(!el)return;
+    if(rows&&rows.length){
+      let d={};try{d=JSON.parse(rows[0].value);}catch(e){}
+      if(d.ts&&Date.now()-d.ts<4000){el.textContent=(d.name||'They')+' is typing…';return;}
+    }
+    el.textContent='';
+  }catch(e){}
+}
+
+// Hook typing into DM input
+document.addEventListener('DOMContentLoaded',()=>{
+  const dmInp=document.getElementById('dm-input');
+  if(dmInp){
+    dmInp.addEventListener('input',()=>{
+      sendDmTyping();
+      clearTimeout(_dmTypingTimer);
+      _dmTypingTimer=setTimeout(()=>{_dmTypingSent=false;},3000);
+    });
+  }
+});
+
+// ══════════════════════════════════════════════════════════════════
+// PROFILE PAGE — badges and scores
+// ══════════════════════════════════════════════════════════════════
+async function ppLoadBadgesAndScores(){
+  if(!currentUser||currentUser.guest)return;
+  // Badges
+  try{
+    const brows=await sbReq(`/rest/v1/badges?user_id=eq.${currentUser.id}&select=badge_key`);
+    const bg=document.getElementById('pp-badges-grid');
+    if(bg){
+      const earned=(brows||[]).map(b=>b.badge_key);
+      if(earned.length){
+        bg.innerHTML=earned.map(k=>{
+          const b=BADGE_DEFS[k];
+          if(!b)return'';
+          return`<div class="badge-chip" title="${b.d}"><span class="be">${b.e}</span><span class="bn">${b.n}</span></div>`;
+        }).filter(Boolean).join('');
+      } else {
+        bg.innerHTML='<div style="color:var(--text2);font-size:12px">No badges yet</div>';
+      }
+    }
+  }catch(e){}
+  // Scores
+  try{
+    const srows=await sbReq(`/rest/v1/scores?user_id=eq.${currentUser.id}&order=score.desc&select=*&limit=20`);
+    const sl=document.getElementById('pp-scores-list');
+    if(sl){
+      const statusColor={approved:'#30d158',pending:'#ff9f0a',rejected:'#ff375f'};
+      const statusIcon={approved:'✅',pending:'⏳',rejected:'❌'};
+      if(srows&&srows.length){
+        sl.innerHTML=srows.map(r=>`<div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:9px 12px">
+          <div><div style="font-weight:700;font-size:12px">${escHtml(r.game_name||'?')}</div><div style="font-size:11px;color:var(--text2)">${Number(r.score).toLocaleString()} pts</div></div>
+          <div style="font-size:11px;font-weight:800;color:${statusColor[r.status]||'var(--text2)'}">${statusIcon[r.status]||'?'} ${(r.status||'pending').toUpperCase()}</div>
+        </div>`).join('');
+      } else {
+        sl.innerHTML='<div style="color:var(--text2);font-size:12px">No scores yet</div>';
+      }
+    }
+  }catch(e){}
+}
+
+// ══════════════════════════════════════════════════════════════════
+// FIND PEOPLE — user search + online list
+// ══════════════════════════════════════════════════════════════════
+async function loadPeopleView(){
+  document.getElementById('people-results').innerHTML='';
+  await loadOnlinePeople();
+}
+async function loadOnlinePeople(){
+  const el=document.getElementById('people-online-list');
+  if(!el)return;
+  el.innerHTML='<span style="color:var(--text2);font-size:12px">Loading…</span>';
+  try{
+    const since=new Date(Date.now()-120000).toISOString();
+    const rows=await sbReq(`/rest/v1/profiles?last_seen=gte.${since}&select=id,username,avatar,display_name,role&limit=30`);
+    if(!rows||!rows.length){el.innerHTML='<span style="color:var(--text2);font-size:12px">No one online right now</span>';return;}
+    el.innerHTML=rows.map(u=>`<div onclick="openProfile('${u.id}')" style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:8px 12px;cursor:none;transition:.15s" onmouseover="this.style.background='rgba(255,255,255,.08)'" onmouseout="this.style.background='rgba(255,255,255,.04)'">
+      <span style="font-size:20px">${u.avatar||'👤'}</span>
+      <div><div style="font-size:12px;font-weight:700">${escHtml(u.display_name||u.username)}</div><div style="font-size:10px;color:var(--text2)">@${escHtml(u.username)}</div></div>
+      <span style="width:7px;height:7px;border-radius:50%;background:#30d158;margin-left:auto;flex-shrink:0"></span>
+    </div>`).join('');
+  }catch(e){el.innerHTML='<span style="color:var(--text2);font-size:12px">Could not load</span>';}
+}
+async function searchPeople(){
+  const q=document.getElementById('people-search-input')?.value.trim();
+  const res=document.getElementById('people-results');
+  if(!q||!res)return;
+  res.innerHTML='<div style="color:var(--text2);font-size:12px">Searching…</div>';
+  try{
+    const rows=await sbReq(`/rest/v1/profiles?username=ilike.*${encodeURIComponent(q)}*&select=id,username,avatar,display_name,last_seen,role&limit=20`);
+    if(!rows||!rows.length){res.innerHTML='<div class="fc-empty">No users found</div>';return;}
+    res.innerHTML=`<div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:8px">RESULTS FOR "${escHtml(q)}"</div>`+rows.map(u=>{
+      const online=u.last_seen&&Date.now()-new Date(u.last_seen).getTime()<120000;
+      return`<div onclick="openProfile('${u.id}')" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 14px;margin-bottom:6px;cursor:none;transition:.15s" onmouseover="this.style.background='rgba(255,255,255,.08)'" onmouseout="this.style.background='rgba(255,255,255,.04)'">
+        <span style="font-size:24px">${u.avatar||'👤'}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:700">${escHtml(u.display_name||u.username)}</div>
+          <div style="font-size:11px;color:var(--text2)">@${escHtml(u.username)}</div>
+        </div>
+        ${online?'<span style="width:8px;height:8px;border-radius:50%;background:#30d158;flex-shrink:0"></span>':''}
+      </div>`;
+    }).join('');
+  }catch(e){res.innerHTML='<div class="fc-empty">Error searching</div>';}
+}
+
+// ══════════════════════════════════════════════════════════════════
+// BADGE AUTO-AWARDS: npc, reverse_uno, main_character
+// ══════════════════════════════════════════════════════════════════
+// npc: account 30+ days old, 0 friends, 0 messages
+async function checkNpcBadge(){
+  if(!currentUser||currentUser.guest)return;
+  try{
+    const age=Date.now()-new Date(currentUser.created_at||Date.now()).getTime();
+    if(age<30*86400000)return;
+    const [msgs,friends]=await Promise.all([
+      sbReq(`/rest/v1/messages?user_id=eq.${currentUser.id}&select=id&limit=1`),
+      sbReq(`/rest/v1/friends?or=(sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id})&status=eq.accepted&select=id&limit=1`)
+    ]);
+    if(!(msgs&&msgs.length)&&!(friends&&friends.length))awardBadge('npc');
+  }catch(e){}
+}
+// main_character: 100+ messages AND 10+ friends AND 20+ scores submitted
+async function checkMainCharacterBadge(){
+  if(!currentUser||currentUser.guest)return;
+  try{
+    const [msgs,friends,scores]=await Promise.all([
+      sbReq(`/rest/v1/messages?user_id=eq.${currentUser.id}&select=id`),
+      sbReq(`/rest/v1/friends?or=(sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id})&status=eq.accepted&select=id`),
+      sbReq(`/rest/v1/scores?user_id=eq.${currentUser.id}&select=id`)
+    ]);
+    if((msgs||[]).length>=100&&(friends||[]).length>=10&&(scores||[]).length>=20)awardBadge('main_character');
+  }catch(e){}
+}
+// reverse_uno: received a ban/suspend but was later unbanned (check ban_reason history via notifs)
+// Trigger: account is currently NOT banned but has a ban notification
+async function checkReverseUnoBadge(){
+  if(!currentUser||currentUser.guest||currentUser.role==='owner')return;
+  try{
+    const notifs=await sbReq(`/rest/v1/notifications?user_id=eq.${currentUser.id}&type=eq.ban&select=id&limit=1`);
+    // Also check not currently banned
+    const profile=await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=banned`);
+    if(notifs&&notifs.length&&profile&&profile[0]&&!profile[0].banned)awardBadge('reverse_uno');
+  }catch(e){}
+}
+
+// ══════════════════════════════════════════════════════════════════
+// COOKIE CLICKER FALLBACK — redirect to external if 404
+// ══════════════════════════════════════════════════════════════════
+// Cookie clicker self-hosting not set up — patch game entry to use external URL
+// This is handled by updating the BUILTIN entry below in init
+
+// ══════════════════════════════════════════════════════════════════
+// SUPABASE RLS — inform but can't enforce from JS
+// (RLS must be configured in Supabase dashboard, not in code)
+// ══════════════════════════════════════════════════════════════════
 
 function postLoginBadgeCheck(){
   checkShadowBadge();
