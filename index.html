@@ -269,7 +269,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .chat-system{text-align:center;font-size:11px;color:var(--text2);opacity:.5;padding:4px 0;}
 /* ── FRIENDS ── */
 .friend-card{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px 14px;margin-bottom:8px;}
-.friend-card .fc-av{font-size:24px;}
+.friend-card .fc-av{font-size:24px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;overflow:hidden;flex-shrink:0;}
 .friend-card .fc-name{font-size:13px;font-weight:700;flex:1;}
 .friend-card .fc-status{font-size:10px;color:var(--text2);}
 .friend-card .fc-btns{display:flex;gap:6px;}
@@ -301,18 +301,37 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .member-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);}
 .member-row:last-child{border-bottom:none;}
 .member-crown{font-size:10px;color:#ffd60a;margin-left:4px;}
-/* ── NOTIFICATIONS ── */
-.notif-bell{position:relative;background:none;border:none;font-size:16px;cursor:none;padding:2px 4px;border-radius:7px;transition:.15s;color:#fff;}
-.notif-bell:hover{background:rgba(255,255,255,.1);}
-#notif-badge{position:absolute;top:-3px;right:-3px;background:#ff375f;color:#fff;font-size:8px;font-weight:900;min-width:14px;height:14px;border-radius:7px;display:flex;align-items:center;justify-content:center;padding:0 3px;line-height:1;}
-#notif-panel{position:fixed;top:60px;left:252px;width:310px;max-height:80vh;background:#1c1c1e;border:1px solid rgba(255,255,255,.15);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.8);z-index:999999;overflow:hidden;display:flex;flex-direction:column;color:#f5f5f7;}
-.notif-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.1);background:#1c1c1e;color:#f5f5f7;flex-shrink:0;}
-#notif-list{overflow-y:auto;flex:1;max-height:360px;min-height:60px;color:#f5f5f7;}
-.notif-item{display:flex;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.06);cursor:none;transition:.15s;position:relative;color:#f5f5f7;}
+/* ── BANNER PICKER ── */
+.pp-banner-img-opt{transition:border-color .15s;}
+.pp-banner-img-opt.sel{border-color:#7c3aed!important;}
+/* ── FOLLOW SYSTEM ── */
+.follow-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:none;border:none;transition:.15s;}
+.follow-btn.follow{background:#7c3aed;color:#fff;}
+.follow-btn.follow:hover{background:#6d28d9;}
+.follow-btn.following{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.15);}
+.follow-btn.following:hover{background:rgba(255,59,48,.15);color:#ff3b30;border-color:rgba(255,59,48,.3);}
+.follow-stat{text-align:center;cursor:none;}
+.follow-stat:hover .follow-stat-num{color:#7c3aed;}
+.follow-stat-num{font-weight:900;font-size:16px;transition:color .15s;}
+/* ── NOTIFICATIONS (CrazyGames style) ── */
+#notif-badge{position:absolute;top:-2px;right:-2px;background:#ff375f;color:#fff;font-size:8px;font-weight:900;min-width:14px;height:14px;border-radius:7px;display:none;align-items:center;justify-content:center;padding:0 3px;line-height:1;}
+#notif-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000000;display:none;align-items:flex-start;justify-content:center;backdrop-filter:blur(4px);}
+#notif-panel{position:fixed;top:0;right:0;width:min(380px,100vw);height:100vh;background:#1a1a2e;display:flex;flex-direction:column;color:#f5f5f7;z-index:2000001;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);}
+#notif-panel.open{transform:translateX(0);}
+.notif-header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.08);background:#1a1a2e;flex-shrink:0;}
+#notif-list{overflow-y:auto;flex:1;padding:8px 0;}
+.notif-item{display:flex;gap:12px;padding:14px 18px;cursor:none;transition:.15s;position:relative;align-items:flex-start;}
 .notif-item:hover{background:rgba(255,255,255,.05);}
-.notif-item.unread{background:rgba(10,132,255,.07);}
-.notif-item.unread::before{content:'';position:absolute;left:5px;top:50%;transform:translateY(-50%);width:5px;height:5px;border-radius:50%;background:var(--blue);}
-.notif-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.notif-item.unread{background:rgba(124,58,237,.12);}
+.notif-item.unread::before{content:'';position:absolute;left:6px;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:#7c3aed;}
+.notif-icon-wrap{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.notif-icon{font-size:22px;}
+.notif-body{flex:1;min-width:0;}
+.notif-title{font-size:13px;font-weight:700;line-height:1.3;margin-bottom:2px;}
+.notif-text{font-size:12px;color:rgba(255,255,255,.55);line-height:1.4;margin-bottom:4px;}
+.notif-time{font-size:11px;color:rgba(255,255,255,.35);}
+.notif-action-btn{display:inline-block;margin-top:8px;background:#7c3aed;color:#fff;border:none;border-radius:20px;padding:7px 16px;font-size:12px;font-weight:700;cursor:none;}
+.notif-empty{padding:40px 20px;text-align:center;color:rgba(255,255,255,.35);font-size:14px;}
 .notif-body{flex:1;min-width:0;}
 .notif-title{font-size:12px;font-weight:700;line-height:1.3;}
 .notif-text{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -423,7 +442,10 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .cloak-btn img{width:24px;height:24px;object-fit:contain;border-radius:4px;}
 .cloak-btn span{font-size:10px;font-weight:700;text-align:center;line-height:1.2;color:var(--text2);}
 /* ── LOGIN SCREEN ── */
-#login-screen{position:fixed;inset:0;background:#000;z-index:3000000;display:flex;align-items:center;justify-content:center;}
+#login-screen{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:3000000;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px);}
+@media(min-width:600px){#login-screen{align-items:center;}}
+#login-screen .lb{border-radius:20px 20px 0 0;max-height:92vh;overflow-y:auto;}
+@media(min-width:600px){#login-screen .lb{border-radius:20px;}}
 #login-screen.gone{display:none;}
 .lb{background:rgba(18,18,20,.98);border:1px solid rgba(255,255,255,.1);border-radius:28px;padding:38px 34px 34px;width:92%;max-width:380px;text-align:center;}
 .lb-logo{font-size:30px;font-weight:900;letter-spacing:-1px;color:#fff;margin-bottom:4px;}
@@ -486,7 +508,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 <div id="gp-progress"><div id="gp-bar"></div></div>
 
 <!-- LOGIN SCREEN -->
-<div id="login-screen">
+<div id="login-screen" class="gone">
   <div class="lb">
     <div class="lb-logo">Ad<span>less</span></div>
     <div class="lb-sub">Sign in to save your progress across devices</div>
@@ -583,26 +605,36 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
   <button class="ab-close" onclick="dismissAdsBanner(false)">✕ Got it</button>
 </div>
 <div id="app">
+  <!-- TOP-RIGHT HEADER BAR (CrazyGames style) -->
+  <div id="topbar" style="position:fixed;top:0;right:0;z-index:99999;display:flex;align-items:center;gap:6px;padding:8px 12px;pointer-events:none">
+    <div style="pointer-events:all;display:flex;align-items:center;gap:6px">
+      <!-- Bell -->
+      <button id="topbar-bell" onclick="toggleNotifPanel()" style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:none;position:relative;transition:.15s" title="Notifications">
+        🔔<span id="notif-badge" style="display:none;position:absolute;top:-2px;right:-2px;background:#ff375f;color:#fff;font-size:8px;font-weight:900;min-width:14px;height:14px;border-radius:7px;display:none;align-items:center;justify-content:center;padding:0 3px;line-height:1"></span>
+      </button>
+      <!-- Favourites shortcut -->
+      <button onclick="switchView('games-view');currentCat='favs';buildList();renderPage();" style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:none;transition:.15s" title="Favorites">❤️</button>
+      <!-- Friends shortcut -->
+      <button onclick="switchView('friends-view');loadFriendRequests();loadGroupsList();" style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:none;transition:.15s" title="Friends">👥</button>
+      <!-- Log In / avatar -->
+      <div id="topbar-login-btn" onclick="openLoginModal()" style="display:flex;align-items:center;gap:8px;background:#7c3aed;border:none;border-radius:20px;padding:8px 16px;color:#fff;font-size:13px;font-weight:700;cursor:none;transition:.15s" title="Log In">Log in</div>
+      <div id="topbar-user-btn" style="display:none;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:6px 12px 6px 6px;cursor:none" onclick="switchView('profile-view');loadProfilePage()">
+        <span id="topbar-av" style="font-size:20px">👤</span>
+        <span id="topbar-name" style="font-size:12px;font-weight:700;color:#fff;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+      </div>
+    </div>
+  </div>
   <button id="mob-menu-btn" onclick="toggleMobMenu()" aria-label="Menu">☰</button>
   <div id="mob-overlay" onclick="closeMobMenu()"></div>
   <aside id="sidebar">
     <div class="logo">Adless</div>
+    <!-- Sidebar user area -->
     <div id="user-chip" style="display:none">
       <span class="uc-av" id="uc-av">👤</span>
       <span class="uc-name" id="uc-name">Guest</span>
-      <button class="notif-bell" id="notif-bell" onclick="toggleNotifPanel()" title="Notifications">
-        🔔<span id="notif-badge" style="display:none"></span>
-      </button>
       <button class="uc-out" onclick="logout()">Logout</button>
     </div>
-    <!-- Notification Panel -->
-    <div id="notif-panel" style="display:none">
-      <div class="notif-header">
-        <span style="font-weight:800;font-size:13px">🔔 Notifications</span>
-        <button class="auc-btn" style="font-size:10px;padding:3px 8px" onclick="markAllNotifsRead()">Mark all read</button>
-      </div>
-      <div id="notif-list"></div>
-    </div>
+
     <div class="sec-label">Hub</div>
     <div id="sidebar-online-count" style="font-size:10px;color:#30d158;padding:0 8px 4px;font-weight:700;min-height:14px"></div>
     <div class="nav active" data-view="games-view">🎮 Games</div>
@@ -1333,7 +1365,6 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <div class="s-row"><div><div class="s-lbl">Adless OS</div><div class="s-desc">Ad-free hub • 250+ curated games + Zones • Paginated for speed</div></div><span style="font-size:20px">🛡️</span></div>
     </div>
   </div>
-</div>
 <!-- AD OPT-OUT POPUP (shown on login) -->
 <div id="ads-popup" style="display:none;position:fixed;inset:0;z-index:6000000;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
   <div style="background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px;width:min(400px,92vw);display:flex;flex-direction:column;gap:14px;animation:fadeUp .3s ease">
@@ -1384,143 +1415,188 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <button class="lb-btn" onclick="submitReport()">🚨 Submit Report</button>
   </div>
 </div>
-<div id="player">
-  <!-- PEOPLE / USER SEARCH VIEW -->
-  <div id="people-view" class="view" style="max-width:600px;margin:0 auto">
-    <header><h1>🔍 Find People</h1></header>
+<!-- PEOPLE / USER SEARCH VIEW -->
+<div id="people-view" class="view" style="max-width:600px;margin:0 auto">
+  <header><h1>🔍 Find People</h1></header>
+  <div class="s-section">
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <input id="people-search-input" class="lb-field" style="margin:0;flex:1" placeholder="Search by username…" maxlength="20" onkeydown="if(event.key==='Enter')searchPeople()">
+      <button class="lb-btn" style="width:auto;padding:10px 16px;margin:0" onclick="searchPeople()">Search</button>
+    </div>
+    <div id="people-results"></div>
+    <div id="people-online" style="margin-top:16px">
+      <div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:8px">🟢 ONLINE NOW</div>
+      <div id="people-online-list" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+    </div>
+    <div id="people-following" style="margin-top:20px;display:none">
+      <div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:8px">👥 FOLLOWING</div>
+      <div id="people-following-list"></div>
+    </div>
+    <div id="people-followers" style="margin-top:20px;display:none">
+      <div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:8px">❤️ FOLLOWERS</div>
+      <div id="people-followers-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE PAGE VIEW -->
+<div id="profile-view" class="view" style="max-width:600px;margin:0 auto">
+  <div style="padding:20px 0 8px;font-size:22px;font-weight:900">👤 My Profile</div>
+  <div id="profile-page-guest" style="display:none;color:var(--text2);font-size:14px;padding:20px 0">Login to view your profile.</div>
+  <div id="pp-follow-bar" style="display:none;gap:16px;margin-bottom:12px">
+    <div class="follow-stat" onclick="openFollowList(window._ppUserId,'followers')" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 20px">
+      <div class="follow-stat-num" id="pp-followers-count">0</div>
+      <div style="font-size:10px;color:var(--text2)">Followers</div>
+    </div>
+    <div class="follow-stat" onclick="openFollowList(window._ppUserId,'following')" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 20px">
+      <div class="follow-stat-num" id="pp-following-count">0</div>
+      <div style="font-size:10px;color:var(--text2)">Following</div>
+    </div>
+  </div>
+  <div id="profile-page-content">
+    <!-- Avatar -->
     <div class="s-section">
-      <div style="display:flex;gap:8px;margin-bottom:12px">
-        <input id="people-search-input" class="lb-field" style="margin:0;flex:1" placeholder="Search by username…" maxlength="20" onkeydown="if(event.key==='Enter')searchPeople()">
-        <button class="lb-btn" style="width:auto;padding:10px 16px;margin:0" onclick="searchPeople()">Search</button>
+      <div class="s-sec">🖼️ Avatar & Background</div>
+      <div class="s-row" style="flex-direction:column;gap:10px;align-items:flex-start">
+        <div style="display:flex;align-items:center;gap:14px">
+          <span id="pp-avatar-preview" style="font-size:48px;width:64px;height:64px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.1)">👤</span>
+          <div>
+            <div style="font-size:13px;font-weight:700" id="pp-display-name">—</div>
+            <div style="font-size:11px;color:var(--text2)" id="pp-username">@—</div>
+          </div>
+        </div>
+        <div class="s-lbl" style="margin-top:4px">Emoji Avatar</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap" id="pp-emoji-picker"></div>
+        <div class="s-lbl" style="margin-top:8px">Gallery PFPs</div>
+        <div id="pp-gallery-pfp-row" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
+          <span style="font-size:11px;color:var(--text2)">Current:</span>
+          <span id="pp-cur-av-preview" style="font-size:22px">👤</span>
+          <button class="lb-btn" style="width:auto;padding:7px 14px;margin:0;font-size:12px" onclick="ppSaveAvatar()">💾 Save Avatar</button>
+        </div>
+        <div id="pp-av-msg" style="font-size:11px;color:var(--text2);min-height:14px"></div>
       </div>
-      <div id="people-results"></div>
-      <div id="people-online" style="margin-top:16px">
-        <div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:8px">🟢 ONLINE NOW</div>
-        <div id="people-online-list" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+      <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
+        <div class="s-lbl">🎨 Banner / Background</div>
+        <div class="s-desc">Shown behind your public profile header</div>
+        <!-- Banner preview -->
+        <div id="pp-banner-preview" style="width:100%;height:64px;border-radius:12px;background:linear-gradient(135deg,#1a1a3e,#2a1a4e);border:1px solid rgba(255,255,255,.1);position:relative;overflow:hidden;transition:background .2s">
+          <div style="position:absolute;inset:0;background:linear-gradient(transparent,rgba(0,0,0,.4))"></div>
+        </div>
+        <!-- Gradient presets -->
+        <div style="display:flex;gap:6px;flex-wrap:wrap" id="pp-banner-presets">
+          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#1a1a3e,#2a1a4e)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#1a1a3e,#2a1a4e);border:2px solid rgba(255,255,255,.2)" title="Default"></div>
+          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#0f2027,#203a43,#2c5364)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#0f2027,#203a43,#2c5364)" title="Ocean"></div>
+          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#3a1c71,#d76d77,#ffaf7b)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#3a1c71,#d76d77,#ffaf7b)" title="Sunset"></div>
+          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#0d0d0d,#1a1a1a)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#0d0d0d,#1a1a1a)" title="Void"></div>
+          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#134e5e,#71b280)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#134e5e,#71b280)" title="Forest"></div>
+          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#4b0082,#7c3aed,#a855f7)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#4b0082,#7c3aed,#a855f7)" title="Purple"></div>
+          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#1a0000,#5c0000)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#1a0000,#5c0000)" title="Crimson"></div>
+          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#001f3f,#0074D9)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#001f3f,#0074D9)" title="Navy"></div>
+          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#1a1a1a,#ffd700,#1a1a1a)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#1a1a1a,#ffd700,#1a1a1a)" title="Gold"></div>
+          <!-- Color pickers -->
+          <label style="display:flex;align-items:center;justify-content:center;width:40px;height:28px;border-radius:6px;cursor:none;border:2px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);font-size:11px;color:var(--text2)" title="Custom solid color">
+            🎨<input type="color" id="pp-banner-color1" value="#1a1a3e" oninput="ppUpdateBannerCustom()" style="opacity:0;position:absolute;pointer-events:none">
+          </label>
+        </div>
+        <!-- Owner-set banner images -->
+        <div id="pp-banner-img-row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px"></div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
+          <button class="lb-btn" style="width:auto;padding:7px 14px;margin:0;font-size:12px" onclick="ppSaveBanner()">💾 Save Banner</button>
+          <button class="auc-btn red" style="font-size:11px" onclick="ppClearBanner()">✕ Reset</button>
+        </div>
+        <div id="pp-banner-msg" style="font-size:11px;color:var(--text2);min-height:14px"></div>
+      </div>
+    </div>
+    <!-- Bio & Display Name -->
+    <div class="s-section">
+      <div class="s-sec">✏️ Profile Info</div>
+      <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start">
+        <div class="s-lbl">Display Name</div>
+        <div class="s-desc" id="pp-dn-desc">Changeable every 7 days</div>
+        <div style="display:flex;gap:8px;width:100%">
+          <input id="pp-display-name-input" class="lb-field" style="margin:0;flex:1" placeholder="New display name…" maxlength="30">
+          <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="changeDisplayName()">Save</button>
+        </div>
+      </div>
+      <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
+        <div class="s-lbl">📝 Bio</div>
+        <textarea id="pp-bio" class="lb-field" style="margin:0;width:100%;height:72px;resize:vertical;font-family:inherit;font-size:13px" placeholder="Tell people about yourself…" maxlength="200"></textarea>
+        <div style="display:flex;justify-content:space-between;width:100%">
+          <span id="pp-bio-count" style="font-size:11px;color:var(--text2)">0/200</span>
+          <button class="lb-btn" style="width:auto;padding:7px 14px;margin:0;font-size:12px" onclick="ppSaveBio()">💾 Save Bio</button>
+        </div>
+        <div id="pp-bio-msg" style="font-size:11px;color:var(--text2);min-height:14px"></div>
+      </div>
+    </div>
+    <!-- Account -->
+    <div class="s-section">
+      <div class="s-sec">🔐 Account</div>
+      <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start">
+        <div class="s-lbl">Username</div>
+        <div class="s-desc" id="pp-un-desc">Changeable once every 30 days</div>
+        <div style="display:flex;gap:8px;width:100%">
+          <input id="pp-username-input" class="lb-field" style="margin:0;flex:1" placeholder="New username…" maxlength="20">
+          <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="changeUsername()">Save</button>
+        </div>
+      </div>
+      <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
+        <div class="s-lbl">Password</div>
+        <div style="display:flex;gap:8px;width:100%;flex-wrap:wrap">
+          <input id="pp-cur-password" class="lb-field" type="password" style="margin:0;flex:1;min-width:120px" placeholder="Current password…">
+          <input id="pp-new-password" class="lb-field" type="password" style="margin:0;flex:1;min-width:120px" placeholder="New password…">
+          <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="ppChangePassword()">Save</button>
+        </div>
+      </div>
+      <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
+        <div class="s-lbl">📧 Email</div>
+        <div class="s-desc">Optional — only visible to owner</div>
+        <div style="display:flex;gap:8px;width:100%">
+          <input id="pp-email" class="lb-field" type="email" style="margin:0;flex:1" placeholder="your@email.com">
+          <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="ppSaveEmail()">Save</button>
+        </div>
+        <div id="pp-email-display" style="font-size:11px;color:var(--text2)"></div>
+      </div>
+      <div id="pp-account-msg" style="font-size:11px;min-height:16px;margin-top:4px;color:#30d158"></div>
+    </div>
+    <!-- My Badges -->
+    <div class="s-section">
+      <div class="s-sec">🎖️ My Badges</div>
+      <div id="pp-badges-grid" style="display:flex;flex-wrap:wrap;gap:6px;padding:4px 0">
+        <div style="color:var(--text2);font-size:12px">Loading…</div>
+      </div>
+    </div>
+    <!-- My Scores -->
+    <div class="s-section">
+      <div class="s-sec">🏆 My Scores</div>
+      <div id="pp-scores-list" style="display:flex;flex-direction:column;gap:6px">
+        <div style="color:var(--text2);font-size:12px">Loading…</div>
+      </div>
+    </div>
+    <!-- Danger -->
+    <div class="s-section">
+      <div class="s-sec" style="color:#ff375f">⚠️ Danger Zone</div>
+      <div class="s-row">
+        <div><div class="s-lbl" style="color:#ff375f">Delete Account</div><div class="s-desc">Permanently removes your account and all data</div></div>
+        <button class="s-danger" onclick="promptDeleteAccount()" style="background:rgba(255,55,95,.15);border-color:rgba(255,55,95,.3);color:#ff375f">🗑️ Delete</button>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- PROFILE PAGE VIEW -->
-  <div id="profile-view" class="view" style="max-width:600px;margin:0 auto">
-    <div style="padding:20px 0 8px;font-size:22px;font-weight:900">👤 My Profile</div>
-    <div id="profile-page-guest" style="display:none;color:var(--text2);font-size:14px;padding:20px 0">Login to view your profile.</div>
-    <div id="profile-page-content">
-      <!-- Avatar -->
-      <div class="s-section">
-        <div class="s-sec">🖼️ Avatar & Background</div>
-        <div class="s-row" style="flex-direction:column;gap:10px;align-items:flex-start">
-          <div style="display:flex;align-items:center;gap:14px">
-            <span id="pp-avatar-preview" style="font-size:48px;width:64px;height:64px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.1)">👤</span>
-            <div>
-              <div style="font-size:13px;font-weight:700" id="pp-display-name">—</div>
-              <div style="font-size:11px;color:var(--text2)" id="pp-username">@—</div>
-            </div>
-          </div>
-          <div class="s-lbl" style="margin-top:4px">Emoji Avatar</div>
-          <div style="display:flex;gap:5px;flex-wrap:wrap" id="pp-emoji-picker"></div>
-          <div class="s-lbl" style="margin-top:8px">Gallery PFPs</div>
-          <div id="pp-gallery-pfp-row" style="display:flex;gap:8px;flex-wrap:wrap"></div>
-          <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
-            <span style="font-size:11px;color:var(--text2)">Current:</span>
-            <span id="pp-cur-av-preview" style="font-size:22px">👤</span>
-            <button class="lb-btn" style="width:auto;padding:7px 14px;margin:0;font-size:12px" onclick="ppSaveAvatar()">💾 Save Avatar</button>
-          </div>
-          <div id="pp-av-msg" style="font-size:11px;color:var(--text2);min-height:14px"></div>
-        </div>
-        <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
-          <div class="s-lbl">🌅 Profile Background</div>
-          <div class="s-desc">Shown behind your public profile</div>
-          <div id="pp-gallery-bg-row" style="display:flex;gap:8px;flex-wrap:wrap"></div>
-          <div id="pp-bg-msg" style="font-size:11px;color:var(--text2);min-height:14px"></div>
-        </div>
-      </div>
-      <!-- Bio & Display Name -->
-      <div class="s-section">
-        <div class="s-sec">✏️ Profile Info</div>
-        <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start">
-          <div class="s-lbl">Display Name</div>
-          <div class="s-desc" id="pp-dn-desc">Changeable every 7 days</div>
-          <div style="display:flex;gap:8px;width:100%">
-            <input id="pp-display-name-input" class="lb-field" style="margin:0;flex:1" placeholder="New display name…" maxlength="30">
-            <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="changeDisplayName()">Save</button>
-          </div>
-        </div>
-        <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
-          <div class="s-lbl">📝 Bio</div>
-          <textarea id="pp-bio" class="lb-field" style="margin:0;width:100%;height:72px;resize:vertical;font-family:inherit;font-size:13px" placeholder="Tell people about yourself…" maxlength="200"></textarea>
-          <div style="display:flex;justify-content:space-between;width:100%">
-            <span id="pp-bio-count" style="font-size:11px;color:var(--text2)">0/200</span>
-            <button class="lb-btn" style="width:auto;padding:7px 14px;margin:0;font-size:12px" onclick="ppSaveBio()">💾 Save Bio</button>
-          </div>
-          <div id="pp-bio-msg" style="font-size:11px;color:var(--text2);min-height:14px"></div>
-        </div>
-      </div>
-      <!-- Account -->
-      <div class="s-section">
-        <div class="s-sec">🔐 Account</div>
-        <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start">
-          <div class="s-lbl">Username</div>
-          <div class="s-desc" id="pp-un-desc">Changeable once every 30 days</div>
-          <div style="display:flex;gap:8px;width:100%">
-            <input id="pp-username-input" class="lb-field" style="margin:0;flex:1" placeholder="New username…" maxlength="20">
-            <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="changeUsername()">Save</button>
-          </div>
-        </div>
-        <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
-          <div class="s-lbl">Password</div>
-          <div style="display:flex;gap:8px;width:100%;flex-wrap:wrap">
-            <input id="pp-cur-password" class="lb-field" type="password" style="margin:0;flex:1;min-width:120px" placeholder="Current password…">
-            <input id="pp-new-password" class="lb-field" type="password" style="margin:0;flex:1;min-width:120px" placeholder="New password…">
-            <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="ppChangePassword()">Save</button>
-          </div>
-        </div>
-        <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
-          <div class="s-lbl">📧 Email</div>
-          <div class="s-desc">Optional — only visible to owner</div>
-          <div style="display:flex;gap:8px;width:100%">
-            <input id="pp-email" class="lb-field" type="email" style="margin:0;flex:1" placeholder="your@email.com">
-            <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="ppSaveEmail()">Save</button>
-          </div>
-          <div id="pp-email-display" style="font-size:11px;color:var(--text2)"></div>
-        </div>
-        <div id="pp-account-msg" style="font-size:11px;min-height:16px;margin-top:4px;color:#30d158"></div>
-      </div>
-      <!-- My Badges -->
-      <div class="s-section">
-        <div class="s-sec">🎖️ My Badges</div>
-        <div id="pp-badges-grid" style="display:flex;flex-wrap:wrap;gap:6px;padding:4px 0">
-          <div style="color:var(--text2);font-size:12px">Loading…</div>
-        </div>
-      </div>
-      <!-- My Scores -->
-      <div class="s-section">
-        <div class="s-sec">🏆 My Scores</div>
-        <div id="pp-scores-list" style="display:flex;flex-direction:column;gap:6px">
-          <div style="color:var(--text2);font-size:12px">Loading…</div>
-        </div>
-      </div>
-      <!-- Danger -->
-      <div class="s-section">
-        <div class="s-sec" style="color:#ff375f">⚠️ Danger Zone</div>
-        <div class="s-row">
-          <div><div class="s-lbl" style="color:#ff375f">Delete Account</div><div class="s-desc">Permanently removes your account and all data</div></div>
-          <button class="s-danger" onclick="promptDeleteAccount()" style="background:rgba(255,55,95,.15);border-color:rgba(255,55,95,.3);color:#ff375f">🗑️ Delete</button>
-        </div>
-      </div>
-    </div>
-  </div>
+<div id="player-bar">
+  <span id="player-title">Playing</span>
+  <button class="pbtn rand" onclick="playRandom()">🎲 Random</button>
+  <button id="lock-btn" onclick="toggleLock()" title="Lock mouse to game">🔒 Lock Mouse</button>
+  <button class="pbtn" onclick="fsGame()">⛶ Fullscreen</button>
+  <button class="pbtn" onclick="openScoreSubmit()" id="score-submit-btn" style="background:rgba(255,214,10,.15);border:1px solid rgba(255,214,10,.3);color:#ffd60a">🏆 Submit Score</button>
+  <button class="pbtn cls" onclick="closePlayer()">✕ Close</button>
+</div>
+<div id="lock-hint">🔒 Mouse locked — press ESC to unlock</div>
+</div><!-- end #app -->
 
-  <div id="player-bar">
-    <span id="player-title">Playing</span>
-    <button class="pbtn rand" onclick="playRandom()">🎲 Random</button>
-    <button id="lock-btn" onclick="toggleLock()" title="Lock mouse to game">🔒 Lock Mouse</button>
-    <button class="pbtn" onclick="fsGame()">⛶ Fullscreen</button>
-    <button class="pbtn" onclick="openScoreSubmit()" id="score-submit-btn" style="background:rgba(255,214,10,.15);border:1px solid rgba(255,214,10,.3);color:#ffd60a">🏆 Submit Score</button>
-    <button class="pbtn cls" onclick="closePlayer()">✕ Close</button>
-  </div>
-  <div id="lock-hint">🔒 Mouse locked — press ESC to unlock</div>
-  <div id="game-wrap" style="flex:1;display:flex;align-items:center;justify-content:center;background:#000;overflow:hidden;">
+
+<div id="player"><div id="game-wrap" style="flex:1;display:flex;align-items:center;justify-content:center;background:#000;overflow:hidden;">
     <iframe id="game-frame" allow="autoplay;gamepad;fullscreen" allowfullscreen></iframe>
   </div>
 </div>
@@ -1562,14 +1638,10 @@ const BUILTIN=[
   {id:'b25',title:'Nighttime Visitor',cat:'horror',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpc2po9VtgMuo6rLgCJ7VMbGVci5mqHO0ypQ&s',url:'https://ccgstatic.com/games/game_ebaf_c84839ff543da/index.html'},
   {id:'b26',title:'Bloxorz',cat:'puzzle',img:'https://www.coolmathgames.com/sites/default/files/Bloxorz_OG-logo.jpg',url:'https://ccgstatic.com/games/game_a87e_24923a4fc7de4/index.html'},
   {id:'b27',title:'Brookhaven',cat:'multiplayer',img:'https://tr.rbxcdn.com/180DAY-808370c4e617d8ce593b16f54eaf645d/768/432/Image/Webp/noFilter',url:'https://st.8games.net/9/8g/igra-brukkhejven/'},
-  {id:'b28',title:'SlopeV2',cat:'arcade',img:'https://holeonline.io/data/image/slide-down-b.jpg',url:'https://azgames.io/slide-down.embed'},
-  {id:'b29',title:'Unchill guy clicker',cat:'idle',img:'https://game.azgame.io/unchill-guy-clicker/25012201/loading.png',url:'https://azgames.io/unchill-guy-clicker.embed'},
-  {id:'b30',title:'Sorry bob',cat:'arcade',img:'https://gamea.azgame.io/sorry-bob/26012901/loading.png',url:'https://azgames.io/sorry-bob.embed'},
-
   // Self-hosted clickers — upload game files to /games/ folder in your repo
-  {id:'b31',title:'Cookie Clicker',cat:'idle',img:'https://orteil.dashnet.org/cookieclicker/img/favicon.ico',url:'https://orteil.dashnet.org/cookieclicker/'},
-  {id:'b32',title:'Universal Paperclips',cat:'idle',img:'https://www.decisionproblem.com/paperclips/favicon.ico',url:'https://www.decisionproblem.com/paperclips/index2.html'},
-  {id:'b33',title:'A Dark Room',cat:'idle',img:'https://adarkroom.doublespeakgames.com/img/fire.png',url:'https://adarkroom.doublespeakgames.com/'},
+  {id:'b28',title:'Cookie Clicker',cat:'idle',img:'https://orteil.dashnet.org/cookieclicker/img/favicon.ico',url:'https://orteil.dashnet.org/cookieclicker/'},
+  {id:'b29',title:'Universal Paperclips',cat:'idle',img:'https://www.decisionproblem.com/paperclips/favicon.ico',url:'https://www.decisionproblem.com/paperclips/index2.html'},
+  {id:'b30',title:'A Dark Room',cat:'idle',img:'https://adarkroom.doublespeakgames.com/img/fire.png',url:'https://adarkroom.doublespeakgames.com/'},
 ];
 const EXTRA_GAMES=[];
 const ZONES_URL='https://cdn.jsdelivr.net/gh/gn-math/assets@main/zones.json';
@@ -1617,11 +1689,15 @@ const SHOWS=[{title:'South Park',img:'https://upload.wikimedia.org/wikipedia/en/
 const SB_URL='https://nxlfwxuqvvhesczodjng.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54bGZ3eHVxdnZoZXNjem9kam5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5NDM0NDQsImV4cCI6MjA4ODUxOTQ0NH0.r94sUhPC9piwx0jz-d3jXKWlyOVPzijzcF1K5XYlOx8';
 async function sbReq(path,method='GET',body=null,extra={}){
-  const opts={method,headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json',...(extra.headers||{})}};
+  const opts={method,headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Accept':'application/json',...(extra.headers||{})}};
   if(body)opts.body=JSON.stringify(body);
   const r=await fetch(SB_URL+path,opts);
   const t=await r.text();
-  if(!r.ok)throw new Error(t);
+  if(!r.ok){
+    // Supabase "no rows" on single item queries isn't really an error
+    if(r.status===406||t.includes('JSON object requested'))return null;
+    throw new Error(t);
+  }
   return t?JSON.parse(t):null;
 }
 async function sha256(str){
@@ -1766,6 +1842,9 @@ async function lbSubmit(){
   }catch(e){err.textContent='Connection error. Try again.';console.error(e);}
   btn.disabled=false;
 }
+function openLoginModal(){
+  document.getElementById('login-screen').classList.remove('gone');
+}
 function lbGuest(){
   currentUser={id:'guest',username:'Guest',avatar:'👤',guest:true};
   loadCustomGameTags();
@@ -1782,16 +1861,10 @@ function lbEnter(){
   startNotifPoll();
   postLoginBadgeCheck();
   loadCustomGameTags();
-  // Ads: load opt-out state then show popup if first login on this device
+  // Load ads opt-out state
   if(!currentUser.guest){
-    loadAdsOptOut().then(()=>{
-      const popupKey='adless_ads_popup_seen_'+currentUser.id;
-      if(!localStorage.getItem(popupKey)){
-        setTimeout(()=>showAdsPopup(),800);
-      }
-    });
+    loadAdsOptOut();
   } else {
-    // Guests always see ads
     adsOptedOut=false;
     applyAdsState();
   }
@@ -2001,8 +2074,14 @@ function renderMovies(){
     </div>`;
   }).join('');
 }
+function trackMediaWatch(type){
+  if(!currentUser||currentUser.guest)return;
+  const key='adless_'+(type==='movie'?'movies':'eps')+'_'+currentUser.id;
+  localStorage.setItem(key,String(parseInt(localStorage.getItem(key)||'0')+1));
+}
 function playMovie(el){
   const title=el.dataset.title;
+  trackMediaWatch('movie');
   markMovieWatched(title);
   play(el.dataset.url,title);
 }
@@ -2048,6 +2127,7 @@ function openSeason(si,sei){
   ).join('');
 }
 function playEp(el){
+  trackMediaWatch('ep');
   play(el.dataset.url,el.dataset.title);
 }
 function backToShows(){curShowI=-1;curSeasonI=-1;switchView('shows-view');renderShows();}
@@ -2668,7 +2748,7 @@ function renderGrpMessages(){
     let sep='';
     if(date!==lastDate){sep=`<div class="dm-date-sep">${date}</div>`;lastDate=date;}
     return`${sep}<div class="chat-msg${me?' me':''}">
-      <div class="chat-av">${m.avatar||'👤'}</div>
+      <div class="chat-av">${avHtml(m.avatar,32)}</div>
       <div class="chat-bubble">
         <div class="chat-name">${me?'You':escHtml(m.username)}</div>
         <div class="chat-text">${escHtml(m.content)}</div>
@@ -2737,7 +2817,7 @@ async function openGroupInfo(){
       const isMe=m.user_id===currentUser.id;
       const isOwner=m.role==='admin';
       return`<div class="member-row">
-        <div style="font-size:20px">${p.avatar}</div>
+        <div style="font-size:20px">${avHtml(p.avatar,60)}</div>
         <div style="flex:1">
           <span style="font-size:13px;font-weight:700">${escHtml(p.username)}</span>
           ${isOwner?'<span class="member-crown">👑 Admin</span>':''}
@@ -2844,11 +2924,10 @@ let adsOptedOut=false;
 async function loadAdsOptOut(){
   if(!currentUser||currentUser.guest){adsOptedOut=false;applyAdsState();return;}
   try{
-    const rows=await sbReq(`/rest/v1/user_data?user_id=eq.${currentUser.id}&select=ads_opted_out`);
-    adsOptedOut=!!(rows&&rows[0]&&rows[0].ads_opted_out);
+    // Store in localStorage keyed by user — simple and reliable
+    adsOptedOut=localStorage.getItem('adless_ads_optout_'+currentUser.id)==='1';
   }catch(e){adsOptedOut=false;}
   applyAdsState();
-  // Sync toggle in settings if open
   const tog=document.getElementById('ads-opt-out');
   if(tog)tog.checked=adsOptedOut;
 }
@@ -2856,21 +2935,9 @@ async function loadAdsOptOut(){
 async function saveAdsOptOut(val){
   if(!currentUser||currentUser.guest)return;
   try{
-    const existing=await sbReq(`/rest/v1/user_data?user_id=eq.${currentUser.id}&select=id`);
-    if(existing&&existing.length){
-      await fetch(SB_URL+`/rest/v1/user_data?user_id=eq.${currentUser.id}`,{
-        method:'PATCH',
-        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-        body:JSON.stringify({ads_opted_out:val})
-      });
-    }else{
-      await fetch(SB_URL+'/rest/v1/user_data',{
-        method:'POST',
-        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-        body:JSON.stringify({user_id:currentUser.id,ads_opted_out:val})
-      });
-    }
-  }catch(e){console.warn('Failed to save ads preference',e);}
+    if(val)localStorage.setItem('adless_ads_optout_'+currentUser.id,'1');
+    else localStorage.removeItem('adless_ads_optout_'+currentUser.id);
+  }catch(e){}
 }
 
 function applyAdsState(){
@@ -3047,11 +3114,10 @@ async function pollNotifs(){
     });
     const rows=await sbReq(`/rest/v1/notifications?user_id=eq.${currentUser.id}&order=created_at.desc&limit=30&select=*`);
     const unread=(rows||[]).filter(r=>!r.read).length;
-    const badge=document.getElementById('notif-badge');
-    if(badge){
+    document.querySelectorAll('#notif-badge').forEach(badge=>{
       if(unread>0){badge.textContent=unread>9?'9+':unread;badge.style.display='flex';}
       else{badge.style.display='none';}
-    }
+    });
     if(unread>lastNotifCount&&lastNotifCount>=0){
       const newest=(rows||[]).find(r=>!r.read);
       if(newest&&lastNotifCount>-1&&unread>lastNotifCount){
@@ -3098,28 +3164,25 @@ function stopNotifPoll(){
 }
 
 function toggleNotifPanel(){
+  const panel=document.getElementById('notif-panel');
+  const overlay=document.getElementById('notif-overlay');
   notifPanelOpen=!notifPanelOpen;
-  const panel=document.getElementById('notif-panel');
   if(notifPanelOpen){
-    panel.style.display='flex';
+    if(overlay)overlay.style.display='block';
+    if(panel){panel.style.display='flex';requestAnimationFrame(()=>panel.classList.add('open'));}
     loadNotifPanel();
-    // Close when clicking outside
-    setTimeout(()=>document.addEventListener('click',notifOutsideClick),10);
   }else{
-    panel.style.display='none';
-    document.removeEventListener('click',notifOutsideClick);
+    closeNotifPanel();
   }
 }
-
-function notifOutsideClick(e){
+function closeNotifPanel(){
   const panel=document.getElementById('notif-panel');
-  const bell=document.getElementById('notif-bell');
-  if(panel&&!panel.contains(e.target)&&!bell.contains(e.target)){
-    notifPanelOpen=false;
-    panel.style.display='none';
-    document.removeEventListener('click',notifOutsideClick);
-  }
+  const overlay=document.getElementById('notif-overlay');
+  notifPanelOpen=false;
+  if(panel)panel.classList.remove('open');
+  if(overlay)overlay.style.display='none';
 }
+function notifOutsideClick(e){closeNotifPanel();}
 
 async function loadNotifPanel(){
   const list=document.getElementById('notif-list');
@@ -3139,13 +3202,13 @@ function renderNotifList(rows){
     const icon=notifIcon(n.type);
     const time=timeAgo(new Date(n.created_at));
     return`<div class="notif-item${n.read?'':' unread'}" data-notif-id="${n.id}" onclick="handleNotifClick('${n.id}','${n.link_type||''}','${escAttr(n.link_data||'')}')">
-      <div class="notif-icon">${icon}</div>
+      <div class="notif-icon-wrap"><span class="notif-icon">${icon}</span></div>
       <div class="notif-body">
         <div class="notif-title">${escHtml(n.title)}</div>
         ${(n.message||n.body)?`<div class="notif-text">${escHtml(n.message||n.body)}</div>`:''}
         <div class="notif-time">${time}</div>
       </div>
-      <button onclick="event.stopPropagation();dismissNotif('${n.id}')" style="background:none;border:none;color:rgba(255,255,255,.25);font-size:14px;cursor:none;padding:2px 4px;flex-shrink:0;line-height:1" title="Dismiss">✕</button>
+      <button onclick="event.stopPropagation();dismissNotif('${n.id}')" style="background:none;border:none;color:rgba(255,255,255,.25);font-size:18px;cursor:none;padding:2px 4px;flex-shrink:0;line-height:1;margin-top:2px" title="Dismiss">···</button>
     </div>`;
   }).join('');
 }
@@ -3468,8 +3531,22 @@ function updateUserChip(){
   const chip=document.getElementById('user-chip');
   if(!chip||!currentUser)return;
   chip.style.display='flex';
-  document.getElementById('uc-av').textContent=currentUser.avatar;
+  const _ucEl=document.getElementById('uc-av');if(_ucEl){const _av=currentUser.avatar||'👤';if(_av.startsWith('http')){_ucEl.innerHTML=`<img src='${_av}' style='width:22px;height:22px;border-radius:50%;object-fit:cover'>`;_ucEl.style.fontSize='0';}else{_ucEl.textContent=_av;_ucEl.style.fontSize='';}}  
   const displayName=currentUser.display_name||currentUser.username;
+  // Sync topbar
+  const loginBtn=document.getElementById('topbar-login-btn');
+  const userBtn=document.getElementById('topbar-user-btn');
+  const topAv=document.getElementById('topbar-av');
+  const topName=document.getElementById('topbar-name');
+  if(currentUser.guest){
+    if(loginBtn)loginBtn.style.display='flex';
+    if(userBtn)userBtn.style.display='none';
+  } else {
+    if(loginBtn)loginBtn.style.display='none';
+    if(userBtn)userBtn.style.display='flex';
+    if(topAv){const av=currentUser.avatar||'👤';topAv.innerHTML=av.startsWith('http')?`<img src="${av}" style="width:26px;height:26px;border-radius:50%;object-fit:cover">`:av;}
+    if(topName)topName.textContent=currentUser.display_name||currentUser.username;
+  }
   const badge=isOwner()?'<span class="owner-badge">OWNER</span>':isAdmin()&&!isOwner()?'<span class="owner-badge" style="background:rgba(48,209,88,.15);color:#30d158;border-color:rgba(48,209,88,.3)">ADMIN</span>':currentUser&&currentUser.role==='mod'?'<span class="owner-badge" style="background:rgba(10,132,255,.15);color:#0a84ff;border-color:rgba(10,132,255,.3)">MOD</span>':'';
   document.getElementById('uc-name').innerHTML=displayName+badge;
   showOwnerNav();
@@ -3495,7 +3572,7 @@ async function adminSearchUser(){
       if(isOwnerAcc)return''; // can't touch owner
       return`<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 14px;margin-bottom:8px">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-          <span style="font-size:18px">${u.avatar}</span>
+          <span style="font-size:18px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;overflow:hidden">${u.avatar&&u.avatar.startsWith('http')?`<img src="${u.avatar}" style="width:28px;height:28px;border-radius:50%;object-fit:cover">`:(u.avatar||'👤')}</span>
           <span style="font-size:13px;font-weight:700;flex:1">${escHtml(u.username)}</span>
           <span style="font-size:10px;color:${isBanned?'#ff375f':isSuspended?'#ff9f0a':'#30d158'}">${isBanned?'🚫 Banned':isSuspended?'⏸ Suspended':'✅ Active'}</span>
         </div>
@@ -3583,13 +3660,13 @@ async function viewUserFriends(uid,uname){
 }
 // loadAdminChatLog — targets the owner panel's #admin-chat-log div
 async function loadAdminChatLog(){
-  const box=document.getElementById('admin-chat-log');
-  if(!box)return loadAdminChatLog2(); // fallback to admin panel version
+  const box=document.getElementById('admin-chat-log')||document.getElementById('chat-log-admin');
+  if(!box)return;
   try{
     const msgs=await sbReq(`/rest/v1/messages?order=created_at.desc&limit=30&select=*`);
     box.innerHTML=(msgs||[]).map(m=>{
       const time=new Date(m.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-      return`<div class="admin-chat-msg"><div style="font-size:18px">${m.avatar||'👤'}</div><div class="acm-content"><span class="acm-user">${escHtml(m.username)}</span> <span class="acm-time">${time}</span><div>${escHtml(m.content)}</div></div><button class="auc-btn red" onclick="ownerDelMsg('${m.id}',this)">🗑</button></div>`;
+      return`<div class="admin-chat-msg"><div style="font-size:18px">${avHtml(m.avatar,32)}</div><div class="acm-content"><span class="acm-user">${escHtml(m.username)}</span> <span class="acm-time">${time}</span><div>${escHtml(m.content)}</div></div><button class="auc-btn red" onclick="ownerDelMsg('${m.id}',this)">🗑</button></div>`;
     }).join('')||'<div class="fc-empty">No messages</div>';
   }catch(e){box.innerHTML='<div class="fc-empty">Failed to load</div>';}
 }
@@ -3673,7 +3750,7 @@ async function loadOnlineUsers(){
     if(!count){list.innerHTML='<div class="fc-empty">No users online right now</div>';return;}
     list.innerHTML=(users||[]).map(u=>`
       <div class="friend-card">
-        <div class="fc-av" style="position:relative">${u.avatar||'👤'}<span style="position:absolute;bottom:0;right:0;width:9px;height:9px;border-radius:50%;background:#30d158;box-shadow:0 0 6px #30d158;border:2px solid var(--card)"></span></div>
+        <div class="fc-av" style="position:relative">${avHtml(u.avatar,36)}<span style="position:absolute;bottom:0;right:0;width:9px;height:9px;border-radius:50%;background:#30d158;box-shadow:0 0 6px #30d158;border:2px solid var(--card)"></span></div>
         <div style="flex:1"><div class="fc-name">${u.username}</div><div class="fc-status">${presenceText(u.last_seen)}</div></div>
         <div class="fc-btns">
           <button class="fc-btn msg" onclick="openProfile('${u.id}')">👤 Profile</button>
@@ -3785,7 +3862,7 @@ async function loadSpotlight(){
 
 async function loadOwnerFeatured(){
   try{
-    const rows=await sbReq(`/rest/v1/spotlight?id=like.feat_*&select=*`);
+    const rows=await sbReq(`/rest/v1/spotlight?id=like.feat_%&select=*`);
     ownerFeatured=new Set((rows||[]).map(r=>r.game_id));
     const el=document.getElementById('feat-current');
     if(el)el.innerHTML=(rows||[]).length
@@ -4067,7 +4144,7 @@ async function viewFullProfile(uid,uname){
     if(!res)return;
     res.innerHTML=`<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px;margin-bottom:10px">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-        <div style="font-size:36px">${p.avatar||'👤'}</div>
+        <div style="font-size:36px">${avHtml(p.avatar,36)}</div>
         <div>
           <div style="font-weight:700;font-size:14px">${escHtml(p.username)}</div>
           <div style="font-size:11px;color:var(--text2)">${escHtml(p.display_name||'')} · ${p.role||'user'}</div>
@@ -4105,7 +4182,7 @@ function adminUserCard(u){
   const isOwnerAcc=u.role==='owner';
   const statusText=isBanned?'🚫 Banned'+(u.ban_reason?' · '+u.ban_reason:''):isSuspended?`⏸ Suspended until ${new Date(u.suspended_until).toLocaleDateString()}`:'✅ Active';
   return`<div class="admin-user-card${isBanned?' banned':isSuspended?' suspended':''}">
-    <div style="font-size:22px">${u.avatar||'👤'}</div>
+    <div style="font-size:22px">${avHtml(u.avatar,36)}</div>
     <div class="auc-info">
       <div class="auc-name">${u.username}${isOwnerAcc?'<span class="owner-badge">OWNER</span>':''}</div>
       <div class="auc-meta">${statusText}</div>
@@ -4349,7 +4426,7 @@ function msgHtml(m){
   const reportBtn=(!me&&currentUser&&!currentUser.guest)
     ?`<span class="msg-report-btn" onclick="openReportModal('message','${m.id}','${escAttr(m.username)}','${m.user_id}',${JSON.stringify(escHtml(m.content)).replace(/'/g,'&#39;')})" title="Report message">⚑</span>`:'';
   return`<div class="chat-msg${me?' me':''}">
-    <div class="chat-av">${m.avatar||'👤'}</div>
+    <div class="chat-av">${avHtml(m.avatar,32)}</div>
     <div class="chat-bubble">
       <div class="chat-name">${me?"You":`<span style="cursor:none;text-decoration:underline" onclick="openProfile('${m.user_id}')">${m.username}</span>`}${reportBtn}</div>
       <div class="chat-text">${escHtml(m.content)}</div>
@@ -4359,6 +4436,7 @@ function msgHtml(m){
 }
 
 function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function avHtml(av,size=36){av=av||'👤';if(av.startsWith('http'))return`<img src="${av}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;vertical-align:middle" onerror="this.replaceWith(document.createTextNode('👤'))">`;return av;}
 
 function scrollChat(){
   const box=document.getElementById('chat-messages');
@@ -4450,7 +4528,7 @@ async function searchUser(){
     if(!filtered.length){res.innerHTML='<div class="fc-empty">That\'s you!</div>';return;}
     res.innerHTML=filtered.map(u=>`
       <div class="friend-card">
-        <div class="fc-av">${u.avatar||'👤'}</div>
+        <div class="fc-av">${avHtml(u.avatar,36)}</div>
         <div style="flex:1"><div class="fc-name">${u.username}</div></div>
         <div class="fc-btns">
           <button class="fc-btn add" onclick="sendFriendReq('${u.id}','${u.username}')">+ Add</button>
@@ -4502,7 +4580,7 @@ async function loadFriendRequests(){
       reqDiv.innerHTML=pending.map(r=>{
         const p=profileMap[r.sender_id]||{username:'Unknown',avatar:'👤'};
         return`<div class="friend-card">
-          <div class="fc-av">${p.avatar}</div>
+          <div class="fc-av">${avHtml(p.avatar,60)}</div>
           <div style="flex:1"><div class="fc-name">${p.username}</div><div class="fc-status">wants to be friends</div></div>
           <div class="fc-btns">
             <button class="fc-btn accept" onclick="respondFriend('${r.id}','accepted','${p.username}')">✓ Accept</button>
@@ -4527,7 +4605,7 @@ async function loadFriendRequests(){
       const unread=unreadCounts[p.id]||0;
       return`<div class="friend-card">
         <div class="fc-av" style="position:relative">
-          ${p.avatar}
+          ${avHtml(p.avatar,36)}
           <span style="position:absolute;bottom:0;right:0;width:9px;height:9px;border-radius:50%;background:${isOnline(p.last_seen)?'#30d158':'#555'};box-shadow:${isOnline(p.last_seen)?'0 0 6px #30d158':'none'};border:2px solid var(--card)"></span>
         </div>
         <div style="flex:1">
@@ -4901,7 +4979,6 @@ const BADGE_DEFS = {
   'reformed':       {e:'🕊️',n:'Reformed',           d:'Owner assigned',          dOwner:'Owner granted — this user was previously banned or suspended but has since turned things around and is now a positive member of the community.'},
   'partner':        {e:'🤝',n:'Partner',            d:'Official site partner'},
   'legend_staff':   {e:'👑',n:'Legend Staff',       d:'Long-serving staff member'},
-  'hall_of_fame':   {e:'🏆',n:'Hall of Fame',       d:'Inducted by the owner'},
   // ── Funny / Secret ───────────────────────────────────────────
   'touched_grass':  {e:'🌿',n:'Touched Grass',      d:'Did not log in for exactly 7 days then came back'},
   '404':            {e:'❓',n:'404',                 d:'Found a page that doesn\'t exist'},
@@ -4910,9 +4987,61 @@ const BADGE_DEFS = {
   'reverse_uno':    {e:'🔄',n:'Reverse Uno',        d:'Owner assigned',          dOwner:'Owner granted — user reported someone who then reported them right back. The drama was real.'},
   'main_character': {e:'🎬',n:'Main Character',     d:'Owner assigned',          dOwner:'Owner granted — user\'s report directly led to someone getting banned. They were not playing.'},
   'lurker':         {e:'🌫️',n:'Lurker',             d:'Visited the site 10 days without chatting'},
+  // ── New 2025 badges ──────────────────────────────────────────
+  'hall_of_gamer':  {e:'🎖️',n:'Hall of Gamer',     d:'Submit scores on 15 different games'},
+  'speedster':      {e:'🏎️',n:'Speedster',          d:'Submit 5 scores in under an hour'},
+  'obsessed':       {e:'😵',n:'Obsessed',            d:'Submit 200 scores total'},
+  'goat':           {e:'🐐',n:'GOAT',                d:'Hold #1 on 5 different games simultaneously'},
+  'clutch':         {e:'🤌',n:'Clutch',              d:'Submit a score within 1 hour of another player beating yours'},
+  'daily_grind':    {e:'📆',n:'Daily Grind',         d:'Submit scores on 7 different days'},
+  'unstoppable':    {e:'🛑',n:'Unstoppable',         d:'Submit scores 3 days in a row'},
+  'leaderboard_og': {e:'🏅',n:'Leaderboard OG',     d:'Appeared on leaderboard before any season reset'},
+  'first_in_class': {e:'🎓',n:'First in Class',      d:'#1 on leaderboard for 7 days straight'},
+  'message_250':    {e:'📨',n:'Messenger',           d:'Send 250 chat messages'},
+  'message_2500':   {e:'📡',n:'Signal',              d:'Send 2500 chat messages'},
+  'dm_100':         {e:'📩',n:'Pen Pal+',            d:'Send 100 DMs'},
+  'hype_train':     {e:'🚂',n:'Hype Train',          d:'React to 3 messages in a row'},
+  'profile_complete':{e:'📋',n:'Profile Complete',   d:'Set avatar, bio, and display name'},
+  'og_pfp':         {e:'🖼️',n:'OG PFP',              d:'Set a custom PFP within 24 hours of joining'},
+  'bio_writer':     {e:'✍️',n:'Bio Writer',          d:'Write a bio of at least 50 characters'},
+  'name_change':    {e:'📝',n:'Name Change',         d:'Change your display name'},
+  'night_shift':    {e:'🌃',n:'Night Shift',         d:'Active between midnight and 4am on 3 separate days'},
+  'early_riser':    {e:'🌅',n:'Early Riser',         d:'Active before 7am on 3 separate days'},
+  'weekend_legend': {e:'🏄',n:'Weekend Legend',      d:'Active every weekend for 4 weeks'},
+  'year_one':       {e:'🎂',n:'Year One',            d:'Active on the site anniversary (Jan 1)'},
+  'holiday_spirit': {e:'🎁',n:'Holiday Spirit',      d:'Active between Dec 24–26'},
+  'report_hero':    {e:'🦸',n:'Report Hero',         d:'Submit 5 valid reports'},
+  'peacekeeper':    {e:'☮️',n:'Peacekeeper',         d:'Never received a warning, ban, or suspension'},
+  'comeback':       {e:'💪',n:'Comeback',            d:'Return after 14+ days away'},
+  'multiverse':     {e:'🌀',n:'Multiverse',          d:'Play games from 5 different categories'},
+  'movie_buff':     {e:'🎥',n:'Movie Buff',          d:'Watch 10 movies'},
+  'binge_watcher':  {e:'📺',n:'Binge Watcher',      d:'Watch 5 episodes in one session'},
+  'critic':         {e:'⭐',n:'Critic',              d:'Rate or review any content'},
+  'treasure_hunter':{e:'🗺️',n:'Treasure Hunter',    d:'Find all hidden badge triggers'},
+  'degen':          {e:'💸',n:'Degen',               d:'Secret — something degenerate happened',  dOwner:'Owner granted — user did something unhinged or extremely chaotic that made the server laugh'},
+  'gigachad':       {e:'😤',n:'Gigachad',            d:'Secret — for the most based users',        dOwner:'Owner granted — user consistently has the most based takes and carries the community'},
+  '404_found':      {e:'🔍',n:'404 Found',           d:'Secret — you found something',             dOwner:'Owner granted — user discovered a hidden easter egg or secret feature in the site'},
+  'void':           {e:'⬛',n:'Void',                d:'Secret — you looked into the void',         dOwner:'Owner granted — for users who have been banned and returned and been banned again. Extremely rare.'},
+  'sigma':          {e:'🔱',n:'Sigma',               d:'Owner assigned',                           dOwner:'Owner granted — solo grinder energy. Never in a group, rarely in chat, but always top of the leaderboard.'},
+  // ── Auto-fix missing referenced badges ─────────────────────
+  'badge_collector':  {e:'📦',n:'Badge Collector',   d:'Earn 10 badges'},
+  'social_butterfly':  {e:'🦋',n:'Social Butterfly', d:'Send 25 DMs'},
+  'weekend_warrior':  {e:'🏖️',n:'Weekend Warrior',  d:'Active on a weekend'},
+  'submit_500':  {e:'💽',n:'Submit 500',             d:'Submit 500 scores total'},
+  'graveyard':  {e:'⚰️',n:'Graveyard Gamer',        d:'Submit a score between 2am-5am'},
+  'hoarder':  {e:'🗄️',n:'Hoarder',                 d:'Owner assigned',            dOwner:'Owner granted - user has collected an unusual number of badges by any means'},
+  'stylist':  {e:'💅',n:'Stylist',                  d:'Changed avatar, background, and display name'},
+  'returning':  {e:'↩️',n:'Returning',              d:'Log in after being away 7+ days'},
+  'profile_complete':  {e:'📋',n:'Profile Complete', d:'Set avatar, bio, and display name'},
+  'spam_king':      {e:'📮',n:'Spam King',          d:'Send 5000 chat messages'},
+  'dm_addict':      {e:'📱',n:'DM Addict',          d:'Send 1000 DMs'},
+  'double_lucky':   {e:'🎰',n:'Double Lucky',        d:'Submit a score ending in 7777'},
+  'globe_trotter':  {e:'🌍',n:'Globe Trotter',       d:'Submit scores on 25 different games'},
+  'top_10':         {e:'🔝',n:'Top 10',              d:'One of the first 10 users'},
+  'influencer':     {e:'📸',n:'Influencer',          d:'Reach 50 friends'},
 };
 
-const OWNER_ONLY_BADGES=['royalty','trusted','vip','bug_hunter','creator','mod','gifted','partner','legend_staff','hall_of_fame','mystic','rainbow','cursed','glitch','snitch','reformed','main_character','reverse_uno','npc','404'];
+const OWNER_ONLY_BADGES=['royalty','trusted','vip','bug_hunter','creator','mod','gifted','partner','legend_staff','hall_of_fame','mystic','rainbow','cursed','glitch','snitch','reformed','main_character','reverse_uno','npc','404','degen','gigachad','404_found','void','sigma'];
 
 // SECRET badges — users only see "Secret badge", owner sees the real trigger condition
 const SECRET_BADGE_INFO = {
@@ -4932,6 +5061,11 @@ const SECRET_BADGE_INFO = {
   'lurker':         {real:'Auto-awarded: user has been registered for 10+ days but has sent 0 chat messages. Checked passively.'},
   'snitch':         {real:'Manually granted by owner. For users who have submitted 10+ reports (regardless of outcome). Not shown publicly as earned through reports.'},
   'reformed':       {real:'Manually granted by owner. For a user who was previously banned, served their time, came back, and has been a positive member since.'},
+  'degen':          {real:'Owner granted — user did something unhinged or extremely chaotic that became a legendary moment on the server.'},
+  'gigachad':       {real:'Owner granted — user consistently has the most based takes and carries the community energy.'},
+  '404_found':      {real:'Owner granted — user discovered a hidden easter egg or secret feature that was never meant to be found.'},
+  'void':           {real:'Owner granted — for users who have been banned, returned, and been banned again. Extremely rare.'},
+  'sigma':          {real:'Owner granted — solo grinder energy. Never in groups, rarely chats, always on the leaderboard.'},
 };
 
 
@@ -5484,14 +5618,29 @@ async function openProfile(userId){
     const isFriend=!isSelf&&currentUser&&!currentUser.guest
       ?(await sbReq(`/rest/v1/friends?status=eq.accepted&or=(and(sender_id.eq.${currentUser.id},receiver_id.eq.${userId}),and(sender_id.eq.${userId},receiver_id.eq.${currentUser.id}))&select=id`)||[]).length>0
       :false;
-    _profileData={profile,badgeRows:badgeRows||[],scores:scores||[],friendCount,isSelf,isFriend,userId};
+    // Load follow data
+    const [followerRows, followingRows] = await Promise.all([
+      sbReq(`/rest/v1/follows?following_id=eq.${userId}&select=follower_id`),
+      sbReq(`/rest/v1/follows?follower_id=eq.${userId}&select=following_id`)
+    ]);
+    const followerCount=(followerRows||[]).length;
+    const followingCount=(followingRows||[]).length;
+    const isFollowing=currentUser&&!currentUser.guest
+      ?(followerRows||[]).some(r=>r.follower_id===currentUser.id)
+      :false;
+    _profileData={profile,badgeRows:badgeRows||[],scores:scores||[],friendCount,followerCount,followingCount,isFollowing,isSelf,isFriend,userId};
     const joinDate=new Date(profile.created_at).toLocaleDateString('en-US',{month:'short',year:'numeric'});
     const gamesPlayed=[...new Set((scores||[]).map(s=>s.game_name))].length;
     const safeQ=s=>(s||'').replace(/'/g,"'");
     const av=profile.avatar&&profile.avatar.startsWith('http')
       ?`<img src="${profile.avatar}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.3);flex-shrink:0" onerror="this.outerHTML='<div style=\"font-size:48px;line-height:1\">👤</div>'">`
       :`<div style="font-size:48px;line-height:1;flex-shrink:0">${profile.avatar||'👤'}</div>`;
-    const bgStyle=profile.profile_bg?`background:url('${profile.profile_bg}') center/cover;`:'background:linear-gradient(135deg,#1a1a3e,#2a1a4e);';
+    const bgVal=profile.profile_bg||'';
+    const bgStyle=bgVal
+      ?(bgVal.startsWith('linear-gradient')||bgVal.startsWith('radial-gradient')
+        ?`background:${bgVal};`
+        :`background:url('${bgVal}') center/cover;`)
+      :'background:linear-gradient(135deg,#1a1a3e,#2a1a4e);';
     if(hdr){hdr.innerHTML=`<div style="${bgStyle}border-radius:20px 20px 0 0;padding:20px 20px 16px;position:relative">
         <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.2),rgba(0,0,0,.75));border-radius:20px 20px 0 0"></div>
         <div style="position:relative;display:flex;gap:14px;align-items:flex-end">
@@ -5501,20 +5650,31 @@ async function openProfile(userId){
             <div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:2px">@${escHtml(profile.username)} · Joined ${joinDate}</div>
             <div style="font-size:11px;margin-top:3px;color:${isOnline(profile.last_seen)?'#30d158':'rgba(255,255,255,.4)'}">${presenceDot(profile.last_seen)} ${presenceText(profile.last_seen)}</div>
           </div>
-          ${!isSelf&&currentUser&&!currentUser.guest?`<div style="display:flex;gap:6px;flex-shrink:0;align-self:flex-start">
+          ${!isSelf&&currentUser&&!currentUser.guest?`<div style="display:flex;gap:6px;flex-shrink:0;align-self:flex-start;flex-wrap:wrap">
+            <button id="pm-follow-btn" class="follow-btn follow" onclick="toggleFollow('${userId}')">＋ Follow</button>
             ${!isFriend?`<button class="auc-btn blue" style="font-size:11px;padding:5px 10px" onclick="sendFriendFromProfile('${userId}','${safeQ(profile.username)}')">👋 Add</button>`:"<span style='font-size:10px;color:#30d158;font-weight:700;align-self:center'>✓ Friends</span>"}
             <button class="auc-btn green" style="font-size:11px;padding:5px 10px" onclick="closeProfileModal();openDm('${userId}','${safeQ(profile.username)}','${safeQ(profile.avatar||'👤')}')">💬 DM</button>
-            <button class="auc-btn" style="font-size:11px;padding:5px 8px" onclick="openReportModal('user',null,'${safeQ(profile.username)}','${userId}',null)">⚑</button>
           </div>`:''}
         </div>
         <div style="position:relative;display:flex;gap:20px;margin-top:14px">
-          <div style="text-align:center"><div style="font-weight:900;font-size:16px">${friendCount}</div><div style="font-size:10px;color:rgba(255,255,255,.5)">Friends</div></div>
+          <div class="follow-stat" onclick="openFollowList('${userId}','followers')"><div class="follow-stat-num" id="pm-followers-count">—</div><div style="font-size:10px;color:rgba(255,255,255,.5)">Followers</div></div>
+          <div class="follow-stat" onclick="openFollowList('${userId}','following')"><div class="follow-stat-num" id="pm-following-count">—</div><div style="font-size:10px;color:rgba(255,255,255,.5)">Following</div></div>
           <div style="text-align:center"><div style="font-weight:900;font-size:16px">${(scores||[]).length}</div><div style="font-size:10px;color:rgba(255,255,255,.5)">Scores</div></div>
-          <div style="text-align:center"><div style="font-weight:900;font-size:16px">${gamesPlayed}</div><div style="font-size:10px;color:rgba(255,255,255,.5)">Games</div></div>
           <div style="text-align:center"><div style="font-weight:900;font-size:16px">${(badgeRows||[]).length}</div><div style="font-size:10px;color:rgba(255,255,255,.5)">Badges</div></div>
         </div>
       </div>`;}
     if(tabs){tabs.style.display='flex';['overview','scores','badges'].forEach(t=>{const el=document.getElementById('pm-tab-'+t);if(el)el.classList.toggle('active',t==='overview');});}
+    // Update follow counts
+    const fcEl=document.getElementById('pm-followers-count');
+    const fgEl=document.getElementById('pm-following-count');
+    if(fcEl)fcEl.textContent=followerCount;
+    if(fgEl)fgEl.textContent=followingCount;
+    // Update follow button state
+    const fBtn=document.getElementById('pm-follow-btn');
+    if(fBtn){
+      if(isFollowing){fBtn.textContent='✓ Following';fBtn.className='follow-btn following';}
+      else{fBtn.textContent='＋ Follow';fBtn.className='follow-btn follow';}
+    }
     switchProfileTab('overview');
   }catch(e){content.innerHTML='<div style="color:#ff3b30;text-align:center;padding:30px">Failed to load profile</div>';console.error(e);}
 }
@@ -5535,7 +5695,9 @@ function switchProfileTab(tab){
       ${rankBadges.length?`<div style="margin-bottom:14px"><div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:6px">🏆 RANKINGS</div><div style="display:flex;flex-wrap:wrap;gap:5px">${rankBadges.slice(0,6).map(k=>{const b=getRankBadgeDef(k);if(!b)return'';const parts=k.split('__');const rank=parseInt(parts[0].replace('rank_',''));const gn=parts[2]?decodeURIComponent(parts[2]):'';return`<div class="rank-badge-chip rank-${rank}">${b.e} <div><div>${escHtml(gn)}</div></div></div>`;}).join('')}</div></div>`:''}
       ${staticBadges.length?`<div style="margin-bottom:14px"><div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:6px">RECENT BADGES</div><div class="badge-grid">${staticBadges.slice(0,8).map(k=>{const b=BADGE_DEFS[k];return b?`<div class="badge-chip" title="${b.d}"><span class="be">${b.e}</span><span class="bn">${b.n}</span></div>`:''}).join('')}${staticBadges.length>8?`<div class="badge-chip" onclick="switchProfileTab('badges')" style="cursor:none">+${staticBadges.length-8} more</div>`:''}</div></div>`
       :'<div style="color:var(--text2);font-size:12px;margin-bottom:14px;text-align:center">No badges yet</div>'}
-      ${isSelf?'<div style="font-size:11px;color:var(--text2);text-align:center;padding-top:4px">This is your profile</div>':''}
+      ${isSelf
+        ?'<div style="font-size:11px;color:var(--text2);text-align:center;padding-top:4px">This is your profile</div>'
+        :`<div style="text-align:right;padding-top:8px"><span onclick="openReportModal('user',null,'${escHtml(profile.username)}','${profile.id}',null)" style="font-size:11px;color:rgba(255,255,255,.25);cursor:none;text-decoration:underline;transition:color .15s" onmouseover="this.style.color='#ff375f'" onmouseout="this.style.color='rgba(255,255,255,.25)'">⚑ Report user</span></div>`}
     `;
   }else if(tab==='scores'){
     const byGame={};scores.forEach(s=>{if(!byGame[s.game_name])byGame[s.game_name]=[];byGame[s.game_name].push(s);});
@@ -5552,6 +5714,88 @@ function switchProfileTab(tab){
       :'<div style="color:var(--text2);text-align:center;padding:30px">No badges yet</div>'}
     `;
   }
+}
+
+// ── FOLLOW SYSTEM ─────────────────────────────────────────────────
+async function toggleFollow(userId){
+  if(!currentUser||currentUser.guest){showToast('Login to follow users');return;}
+  if(userId===currentUser.id)return;
+  const btn=document.getElementById('pm-follow-btn');
+  const isFollowing=btn&&btn.classList.contains('following');
+  try{
+    if(isFollowing){
+      await fetch(SB_URL+`/rest/v1/follows?follower_id=eq.${currentUser.id}&following_id=eq.${userId}`,{
+        method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'return=minimal'}
+      });
+      if(btn){btn.textContent='＋ Follow';btn.className='follow-btn follow';}
+      showToast('Unfollowed');
+    } else {
+      await fetch(SB_URL+'/rest/v1/follows',{
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({follower_id:currentUser.id,following_id:userId,created_at:new Date().toISOString()})
+      });
+      if(btn){btn.textContent='✓ Following';btn.className='follow-btn following';}
+      showToast('Following!');
+      // Notify the followed user
+      const uname=currentUser.display_name||currentUser.username;
+      createNotif(userId,'system',`${uname} followed you`,'',null,null);
+    }
+    // Update counts
+    const fcEl=document.getElementById('pm-followers-count');
+    if(fcEl){const cur=parseInt(fcEl.textContent)||0;fcEl.textContent=isFollowing?Math.max(0,cur-1):cur+1;}
+  }catch(e){showToast('Failed: '+e.message);}
+}
+
+async function openFollowList(userId,type){
+  // type = 'followers' | 'following'
+  const modal=document.getElementById('follow-list-modal');
+  if(!modal)return;
+  modal.style.display='flex';
+  document.getElementById('follow-list-title').textContent=type==='followers'?'Followers':'Following';
+  document.getElementById('follow-list-body').innerHTML='<div style="text-align:center;padding:30px;color:var(--text2)">Loading…</div>';
+  try{
+    let users=[];
+    if(type==='followers'){
+      const rows=await sbReq(`/rest/v1/follows?following_id=eq.${userId}&select=follower_id`);
+      if((rows||[]).length){
+        const ids=(rows||[]).map(r=>r.follower_id).join(',');
+        users=await sbReq(`/rest/v1/profiles?id=in.(${ids})&select=id,username,avatar,display_name,last_seen`)||[];
+      }
+    } else {
+      const rows=await sbReq(`/rest/v1/follows?follower_id=eq.${userId}&select=following_id`);
+      if((rows||[]).length){
+        const ids=(rows||[]).map(r=>r.following_id).join(',');
+        users=await sbReq(`/rest/v1/profiles?id=in.(${ids})&select=id,username,avatar,display_name,last_seen`)||[];
+      }
+    }
+    if(!users.length){document.getElementById('follow-list-body').innerHTML='<div style="text-align:center;padding:30px;color:var(--text2)">Nobody here yet</div>';return;}
+    document.getElementById('follow-list-body').innerHTML=users.map(u=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.06);cursor:none" onclick="closeFollowList();openProfile('${u.id}')">
+        <div style="width:38px;height:38px;border-radius:50%;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;background:rgba(255,255,255,.06)">${avHtml(u.avatar,38)}</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:13px">${escHtml(u.display_name||u.username)}</div>
+          <div style="font-size:11px;color:var(--text2)">@${escHtml(u.username)}</div>
+        </div>
+        <div style="font-size:10px;color:${isOnline(u.last_seen)?'#30d158':'var(--text2)'}">${isOnline(u.last_seen)?'🟢 Online':'Offline'}</div>
+      </div>`).join('');
+  }catch(e){document.getElementById('follow-list-body').innerHTML='<div style="color:#ff3b30;text-align:center;padding:30px">Failed to load</div>';}
+}
+function closeFollowList(){const m=document.getElementById('follow-list-modal');if(m)m.style.display='none';}
+
+// Add followers/following to My Profile page
+async function loadMyFollowStats(){
+  if(!currentUser||currentUser.guest)return;
+  try{
+    const [frs,fgs]=await Promise.all([
+      sbReq(`/rest/v1/follows?following_id=eq.${currentUser.id}&select=follower_id`),
+      sbReq(`/rest/v1/follows?follower_id=eq.${currentUser.id}&select=following_id`)
+    ]);
+    const frEl=document.getElementById('pp-followers-count');
+    const fgEl=document.getElementById('pp-following-count');
+    if(frEl)frEl.textContent=(frs||[]).length;
+    if(fgEl)fgEl.textContent=(fgs||[]).length;
+  }catch(e){}
 }
 
 function closeProfileModal(){document.getElementById('profile-modal').style.display='none';}
@@ -5729,7 +5973,7 @@ async function loadPfpGallery(){
   const el=document.getElementById('pfp-gallery-list');
   if(!el)return;
   try{
-    const rows=await sbReq('/rest/v1/site_settings?key=like.gallery_img_*&select=key,value&order=key.asc');
+    const rows=await sbReq('/rest/v1/site_settings?key=like.gallery_img_%&select=key,value&order=key.asc');
     if(!rows||!rows.length){el.innerHTML='<div style="color:var(--text2);font-size:12px">No images published by owner yet</div>';return;}
     el.innerHTML=rows.map(r=>{
       let d={};try{d=JSON.parse(r.value);}catch(e){}
@@ -5895,6 +6139,83 @@ async function checkActivityBadges(){
     const h=new Date().getHours();
     if(h>=0&&h<4)awardBadge('night_owl');
     if(h>=4&&h<6)awardBadge('early_bird');
+    // New badge checks
+    if(sc>=200)awardBadge('obsessed');
+    if(uniqueGames.length>=15)awardBadge('hall_of_gamer');
+    // Multiverse: scores in 5 different cats
+    if(cats.size>=5)awardBadge('multiverse');
+    // Daily grind: scores on 7 different calendar days
+    const scoreDays=new Set(all.map(s=>(s.created_at||'').slice(0,10)));
+    if(scoreDays.size>=7)awardBadge('daily_grind');
+    // Unstoppable: scores 3 days in a row
+    const sortedDays=[...scoreDays].sort();
+    for(let i=0;i<sortedDays.length-2;i++){
+      const d1=new Date(sortedDays[i]),d2=new Date(sortedDays[i+1]),d3=new Date(sortedDays[i+2]);
+      if((d2-d1)===86400000&&(d3-d2)===86400000){awardBadge('unstoppable');break;}
+    }
+    // Message count badges
+    if(mc>=250)awardBadge('message_250');
+    if(mc>=2500)awardBadge('message_2500');
+    // DM badges
+    if(dc>=100)awardBadge('dm_100');
+    if(dc>=500)awardBadge('therapist');
+    if(dc>=1000)awardBadge('dm_legend');
+    // Profile complete: avatar + bio + display_name all set
+    const pData=await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=bio,display_name,avatar`);
+    if(pData&&pData[0]){
+      const pd=pData[0];
+      if(pd.bio&&pd.bio.length>0&&pd.display_name&&pd.avatar&&pd.avatar!=='👤')awardBadge('profile_complete');
+      if(pd.bio&&pd.bio.length>=50)awardBadge('bio_writer');
+      if(pd.avatar&&pd.avatar.startsWith('http'))awardBadge('custom_pfp');
+    }
+    // Name change badge
+    const pHistory=await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=last_display_change`);
+    if(pHistory&&pHistory[0]&&pHistory[0].last_display_change)awardBadge('name_change');
+    // Comeback: return after 14+ days — check localStorage
+    const lastActive=localStorage.getItem('adless_last_active_'+currentUser.id);
+    if(lastActive){const gap=Date.now()-parseInt(lastActive);if(gap>=14*86400000)awardBadge('comeback');}
+    // Peacekeeper: never warned/banned — check no ban notifications
+    const banNotifs=await sbReq(`/rest/v1/notifications?user_id=eq.${currentUser.id}&type=in.(ban,warning)&select=id&limit=1`);
+    const profStatus=await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=banned,suspended_until`);
+    if(banNotifs&&banNotifs.length===0&&profStatus&&profStatus[0]&&!profStatus[0].banned&&!profStatus[0].suspended_until)awardBadge('peacekeeper');
+    // Holiday / seasonal
+    const now=new Date();
+    const mo=now.getMonth(),day=now.getDate();
+    if(mo===11&&(day>=24&&day<=26))awardBadge('holiday_spirit');
+    if(mo===0&&day===1){awardBadge('new_year');awardBadge('year_one');}
+    if(now.getDay()===1&&h<12)awardBadge('monday_hero');
+    // Night shift: 3 separate nights active after midnight
+    const nightKey='adless_nights_'+currentUser.id;
+    if(h>=0&&h<4){
+      const nights=new Set(JSON.parse(localStorage.getItem(nightKey)||'[]'));
+      nights.add(new Date().toDateString());
+      localStorage.setItem(nightKey,JSON.stringify([...nights]));
+      if(nights.size>=3)awardBadge('night_shift');
+    }
+    // Early riser: 3 separate mornings before 7am
+    const earlyKey='adless_early_'+currentUser.id;
+    if(h>=4&&h<7){
+      const mornings=new Set(JSON.parse(localStorage.getItem(earlyKey)||'[]'));
+      mornings.add(new Date().toDateString());
+      localStorage.setItem(earlyKey,JSON.stringify([...mornings]));
+      if(mornings.size>=3)awardBadge('early_riser');
+    }
+    // Insomniac: active after 3am 5 times
+    const insomniacKey='adless_insomniac_'+currentUser.id;
+    if(h>=3&&h<5){
+      const nights3=new Set(JSON.parse(localStorage.getItem(insomniacKey)||'[]'));
+      nights3.add(new Date().toDateString());
+      localStorage.setItem(insomniacKey,JSON.stringify([...nights3]));
+      if(nights3.size>=5)awardBadge('insomniac');
+    }
+    // Report hero: 5+ reports submitted
+    const myReports=await sbReq(`/rest/v1/reports?reporter_id=eq.${currentUser.id}&select=id`);
+    if((myReports||[]).length>=5)awardBadge('report_hero');
+    // Movie / show watching badges (tracked via localStorage)
+    const moviesWatched=parseInt(localStorage.getItem('adless_movies_'+currentUser.id)||'0');
+    const showEps=parseInt(localStorage.getItem('adless_eps_'+currentUser.id)||'0');
+    if(moviesWatched>=10)awardBadge('movie_buff');
+    if(showEps>=5)awardBadge('binge_watcher');
   }catch(e){console.warn('checkActivityBadges error',e);}
 }
 function checkLoginStreakBadges(){
@@ -6133,11 +6454,11 @@ async function recalcGameRankBadges(gameId){
     const gameName=(top3[0]?.game_name)||gameId;
 
     // Get all users who currently hold a rank badge for this game
-    const existingBadges=await sbReq(`/rest/v1/badges?badge_key=like.rank_1__${gameId}*&select=user_id,badge_key,id`)
+    const existingBadges=await sbReq(`/rest/v1/badges?badge_key=like.rank_1__${gameId}%&select=user_id,badge_key,id`)
       .catch(()=>[]);
-    const existing2=await sbReq(`/rest/v1/badges?badge_key=like.rank_2__${gameId}*&select=user_id,badge_key,id`)
+    const existing2=await sbReq(`/rest/v1/badges?badge_key=like.rank_2__${gameId}%&select=user_id,badge_key,id`)
       .catch(()=>[]);
-    const existing3=await sbReq(`/rest/v1/badges?badge_key=like.rank_3__${gameId}*&select=user_id,badge_key,id`)
+    const existing3=await sbReq(`/rest/v1/badges?badge_key=like.rank_3__${gameId}%&select=user_id,badge_key,id`)
       .catch(()=>[]);
     const allExisting=[...(existingBadges||[]),...(existing2||[]),...(existing3||[])];
 
@@ -6361,7 +6682,7 @@ async function loadGalleryForUser(){
   if(!pfpRow&&!bgRow)return;
   try{
     // Load from unified gallery_img_* keys
-    const rows=await sbReq('/rest/v1/site_settings?key=like.gallery_img_*&select=key,value&order=key.asc');
+    const rows=await sbReq('/rest/v1/site_settings?key=like.gallery_img_%&select=key,value&order=key.asc');
     const pfpItems=[];const bgItems=[];
     // Hardcoded built-in PFPs
     const builtinPfps=[{url:'https://i.imgur.com/nwCGKEi.png',label:'Slope PFP',type:'pfp'}];
@@ -6476,7 +6797,7 @@ async function loadOwnerGallery(){
   if(!isOwner())return;
   try{
     // Unified: everything is now gallery_img_* JSON
-    const items=await sbReq('/rest/v1/site_settings?key=like.gallery_img_*&select=key,value&order=key.asc');
+    const items=await sbReq('/rest/v1/site_settings?key=like.gallery_img_%&select=key,value&order=key.asc');
     const pfpItems=[];const bgItems=[];
     (items||[]).forEach(r=>{
       let d={};try{d=JSON.parse(r.value);}catch(e){}
@@ -6859,15 +7180,29 @@ async function loadProfilePage(){
 
   // Gallery
   await ppLoadGallery();
+  ppLoadBannerImages();
+  // Set banner preview to current value
+  const curBg=currentUser.profile_bg||'linear-gradient(135deg,#1a1a3e,#2a1a4e)';
+  _ppBannerVal=curBg;
+  const bannerPrev=document.getElementById('pp-banner-preview');
+  if(bannerPrev){
+    if(curBg.startsWith('linear-gradient')||curBg.startsWith('radial-gradient'))bannerPrev.style.background=curBg;
+    else{bannerPrev.style.backgroundImage=`url('${curBg}')`;bannerPrev.style.backgroundSize='cover';}
+  }
   // Badges & Scores
   await ppLoadBadgesAndScores();
+  // Show follow bar and load stats
+  window._ppUserId=currentUser.id;
+  const followBar=document.getElementById('pp-follow-bar');
+  if(followBar)followBar.style.display='flex';
+  loadMyFollowStats();
 }
 
 async function ppLoadGallery(){
   const pfpRow=document.getElementById('pp-gallery-pfp-row');
-  const bgRow=document.getElementById('pp-gallery-bg-row');
+  const bgRow=document.getElementById('pp-banner-img-row');
   try{
-    const rows=await sbReq('/rest/v1/site_settings?key=like.gallery_img_*&select=key,value&order=key.asc');
+    const rows=await sbReq('/rest/v1/site_settings?key=like.gallery_img_%&select=key,value&order=key.asc');
     const pfpItems=[{url:'https://i.imgur.com/nwCGKEi.png',label:'Slope PFP',type:'pfp'}];
     const bgItems=[];
     (rows||[]).forEach(r=>{let d={};try{d=JSON.parse(r.value);}catch(e){}if(!d.url)return;if(d.type==='pfp'||d.type==='both')pfpItems.push(d);if(d.type==='bg'||d.type==='both')bgItems.push(d);});
@@ -6875,7 +7210,7 @@ async function ppLoadGallery(){
       pfpRow.innerHTML=pfpItems.length?pfpItems.map(d=>`<div style="display:inline-flex;flex-direction:column;align-items:center;gap:4px"><img src="${d.url}" onclick="ppPickGalleryAvatar('${d.url}',this)" style="width:48px;height:48px;border-radius:50%;object-fit:cover;cursor:none;border:2px solid rgba(255,255,255,.15);transition:all .15s" title="${d.label||''}"><span style="font-size:9px;color:var(--text2)">${d.label||''}</span></div>`).join(''):'<span style="font-size:11px;color:var(--text2)">No PFPs published yet</span>';
     }
     if(bgRow){
-      bgRow.innerHTML=bgItems.length?bgItems.map(d=>`<div onclick="ppSetBg('${d.url}',this)" style="position:relative;cursor:none;border-radius:10px;overflow:hidden;border:2px solid rgba(255,255,255,.15);flex-shrink:0"><img src="${d.url}" style="width:90px;height:56px;object-fit:cover;display:block"><div style="position:absolute;inset:0;background:linear-gradient(transparent,rgba(0,0,0,.5));display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px"><span style="font-size:9px;color:#fff">${d.label||'Set BG'}</span></div></div>`).join(''):'<span style="font-size:11px;color:var(--text2)">No backgrounds published yet</span>';
+      bgRow.innerHTML=bgItems.length?bgItems.map(d=>`<div class="pp-banner-img-opt" onclick="ppPickBannerImg('${d.url}',this)" style="width:70px;height:44px;border-radius:8px;overflow:hidden;cursor:none;border:2px solid rgba(255,255,255,.15);flex-shrink:0"><img src="${d.url}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.opacity='.2'"></div>`).join(''):'<span style="font-size:11px;color:var(--text2)">None published yet</span>';
     }
   }catch(e){}
 }
@@ -6908,6 +7243,72 @@ async function ppSaveAvatar(){
     document.getElementById('uc-av').textContent=val.startsWith('http')?'🖼️':val;
     setTimeout(()=>{if(msg)msg.textContent='';},2000);
   }catch(e){if(msg)msg.textContent='❌ Failed';}
+}
+// ── BANNER FUNCTIONS ─────────────────────────────────────────────
+let _ppBannerVal = null;
+function ppPickBannerGradient(grad){
+  _ppBannerVal=grad;
+  const prev=document.getElementById('pp-banner-preview');
+  if(prev)prev.style.background=grad;
+  // Deselect img selection
+  document.querySelectorAll('.pp-banner-img-opt.sel').forEach(el=>el.classList.remove('sel'));
+}
+function ppUpdateBannerCustom(){
+  const c1=document.getElementById('pp-banner-color1');
+  if(!c1)return;
+  const grad=`linear-gradient(135deg,${c1.value},${c1.value}dd)`;
+  ppPickBannerGradient(grad);
+}
+function ppPickBannerImg(url,el){
+  _ppBannerVal=url;
+  const prev=document.getElementById('pp-banner-preview');
+  if(prev){prev.style.background=`url('${url}') center/cover`;prev.style.backgroundSize='cover';}
+  document.querySelectorAll('.pp-banner-img-opt').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+}
+async function ppSaveBanner(){
+  if(!currentUser||currentUser.guest){showToast('Login required');return;}
+  if(!_ppBannerVal){showToast('Pick a banner first');return;}
+  const msg=document.getElementById('pp-banner-msg');
+  if(msg){msg.style.color='var(--text2)';msg.textContent='Saving…';}
+  try{
+    await fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({profile_bg:_ppBannerVal})
+    });
+    currentUser.profile_bg=_ppBannerVal;
+    if(msg){msg.style.color='#30d158';msg.textContent='✅ Banner saved!';}
+    setTimeout(()=>{if(msg)msg.textContent='';},3000);
+  }catch(e){if(msg){msg.style.color='#ff3b30';msg.textContent='❌ '+e.message;}}
+}
+async function ppClearBanner(){
+  if(!currentUser||currentUser.guest)return;
+  _ppBannerVal='linear-gradient(135deg,#1a1a3e,#2a1a4e)';
+  const prev=document.getElementById('pp-banner-preview');
+  if(prev)prev.style.background=_ppBannerVal;
+  await fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({profile_bg:null})
+  });
+  currentUser.profile_bg=null;
+  showToast('Banner reset');
+}
+async function ppLoadBannerImages(){
+  // Load owner-set bg images for banners
+  try{
+    const rows=await sbReq('/rest/v1/site_settings?key=like.gallery_img_%&select=key,value&order=key.asc');
+    const bgItems=[];
+    (rows||[]).forEach(r=>{let d={};try{d=JSON.parse(r.value);}catch(e){}if(d.url&&(d.type==='bg'||d.type==='both'))bgItems.push(d);});
+    const row=document.getElementById('pp-banner-img-row');
+    if(!row)return;
+    if(!bgItems.length){row.style.display='none';return;}
+    row.innerHTML=bgItems.map(d=>`<div class="pp-banner-img-opt" onclick="ppPickBannerImg('${d.url}',this)" 
+      style="width:70px;height:44px;border-radius:8px;overflow:hidden;cursor:none;border:2px solid rgba(255,255,255,.15);flex-shrink:0;transition:border-color .15s">
+      <img src="${d.url}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.opacity='.2'">
+    </div>`).join('');
+  }catch(e){}
 }
 async function ppSetBg(url,el){
   if(!currentUser||currentUser.guest)return;
@@ -7156,6 +7557,38 @@ async function ppLoadBadgesAndScores(){
 async function loadPeopleView(){
   document.getElementById('people-results').innerHTML='';
   await loadOnlinePeople();
+  loadFollowLists();
+}
+async function loadFollowLists(){
+  if(!currentUser||currentUser.guest)return;
+  try{
+    const [fgRows,frRows]=await Promise.all([
+      sbReq(`/rest/v1/follows?follower_id=eq.${currentUser.id}&select=following_id`),
+      sbReq(`/rest/v1/follows?following_id=eq.${currentUser.id}&select=follower_id`)
+    ]);
+    const renderList=async(rows,idField,containerId,sectionId)=>{
+      const sec=document.getElementById(sectionId);
+      const list=document.getElementById(containerId);
+      if(!sec||!list)return;
+      if(!(rows||[]).length){sec.style.display='none';return;}
+      sec.style.display='block';
+      const ids=(rows||[]).map(r=>r[idField]).join(',');
+      const users=await sbReq(`/rest/v1/profiles?id=in.(${ids})&select=id,username,avatar,display_name,last_seen`)||[];
+      list.innerHTML=users.map(u=>`
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);cursor:none" onclick="openProfile('${u.id}')">
+          <div style="width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;background:rgba(255,255,255,.06)">${avHtml(u.avatar,36)}</div>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:13px">${escHtml(u.display_name||u.username)}</div>
+            <div style="font-size:11px;color:var(--text2)">@${escHtml(u.username)}</div>
+          </div>
+          <div style="font-size:10px;color:${isOnline(u.last_seen)?'#30d158':'var(--text2)'}">${isOnline(u.last_seen)?'🟢':'⚫'}</div>
+        </div>`).join('');
+    };
+    await Promise.all([
+      renderList(fgRows,'following_id','people-following-list','people-following'),
+      renderList(frRows,'follower_id','people-followers-list','people-followers')
+    ]);
+  }catch(e){console.warn('loadFollowLists',e);}
 }
 async function loadOnlinePeople(){
   const el=document.getElementById('people-online-list');
@@ -7258,6 +7691,19 @@ function postLoginBadgeCheck(){
 }
 </script>
 
+<!-- NOTIFICATION PANEL (CrazyGames style) -->
+<div id="notif-overlay" onclick="closeNotifPanel()"></div>
+<div id="notif-panel">
+  <div class="notif-header">
+    <span style="font-weight:800;font-size:16px">Notifications</span>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="auc-btn" style="font-size:10px;padding:4px 10px;border-radius:10px" onclick="markAllNotifsRead()">Mark all read</button>
+      <button onclick="closeNotifPanel()" style="background:none;border:none;color:rgba(255,255,255,.5);font-size:20px;cursor:none;line-height:1;padding:0 2px">✕</button>
+    </div>
+  </div>
+  <div id="notif-list"></div>
+</div>
+
 <!-- SCORE SUBMIT MODAL -->
 <div id="score-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:10000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px)">
   <div style="background:#1c1c1e;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px;width:min(420px,92vw);max-height:90vh;overflow-y:auto">
@@ -7278,6 +7724,17 @@ function postLoginBadgeCheck(){
       <button class="auc-btn" onclick="closeScoreModal()">Cancel</button>
     </div>
     <div id="score-submit-status" style="margin-top:12px;font-size:13px;text-align:center"></div>
+  </div>
+</div>
+
+<!-- FOLLOW LIST MODAL -->
+<div id="follow-list-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:10002;align-items:center;justify-content:center;backdrop-filter:blur(6px)">
+  <div style="background:#1c1c1e;border-radius:20px;width:min(400px,95vw);max-height:80vh;display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(255,255,255,.12)">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0">
+      <span id="follow-list-title" style="font-size:16px;font-weight:800">Followers</span>
+      <button onclick="closeFollowList()" style="background:none;border:none;color:rgba(255,255,255,.5);font-size:20px;cursor:none">✕</button>
+    </div>
+    <div id="follow-list-body" style="overflow-y:auto;flex:1"></div>
   </div>
 </div>
 
