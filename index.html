@@ -458,7 +458,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .lb-field:focus{border-color:var(--blue);}
 .lb-field::placeholder{color:rgba(255,255,255,.3);}
 .lb-av-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px;}
-.lb-av{font-size:24px;width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;cursor:none;transition:.15s;}
+.lb-av{font-size:24px;width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;cursor:none;transition:.15s;overflow:hidden;flex-shrink:0;}
 .lb-av:hover{border-color:rgba(255,255,255,.3);}
 .lb-av.sel{border-color:var(--blue);background:rgba(10,132,255,.2);}
 .lb-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:12px;padding:13px;font-size:13px;font-weight:800;cursor:none;transition:.15s;margin-top:4px;}
@@ -1032,7 +1032,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
         <input id="admin-search" class="lb-field" style="margin:0;flex:1" placeholder="Search username…" onkeydown="if(event.key==='Enter')adminSearchUser()">
         <button class="lb-btn" style="width:auto;padding:12px 18px;margin:0" onclick="adminSearchUser()">Search</button>
       </div>
-      <div id="admin-user-result"></div>
+      <div id="admin-user-result2"></div>
     </div>
     <div class="s-section">
       <div class="s-sec">👥 All Users <span id="user-count" style="color:var(--text2);font-weight:400"></span></div>
@@ -2152,38 +2152,56 @@ function play(url,title,gameObj){
   const prev=document.getElementById('game-error-bar');
   if(prev)prev.remove();
   frame.src='';
+  frame.removeAttribute('srcdoc');
   document.getElementById('player').classList.add('on');
   document.body.classList.add('player-open');
   const hide=()=>{document.getElementById('game-loader').classList.remove('on');};
   let loadOk=false;
-  frame.onload=()=>{
-    loadOk=true;
-    setTimeout(hide,400);
+  const postPlayMsg=()=>{
     try{
       frame.contentWindow.postMessage({type:'play'},'*');
       frame.contentWindow.postMessage('play','*');
       frame.contentWindow.postMessage({action:'start'},'*');
     }catch(e){}
+  };
+  frame.onload=()=>{
+    loadOk=true;
+    setTimeout(hide,400);
+    postPlayMsg();
     let attempts=0;
     const poller=setInterval(()=>{
       attempts++;
-      try{
-        frame.contentWindow.postMessage({type:'play'},'*');
-        frame.contentWindow.postMessage('start','*');
-      }catch(e){}
+      try{frame.contentWindow.postMessage({type:'play'},'*');frame.contentWindow.postMessage('start','*');}catch(e){}
       if(attempts>15)clearInterval(poller);
     },200);
   };
-  frame.onerror=()=>{
-    hide();
-    showGameError(url,title);
-  };
-  // If game doesn't trigger onload in 12s, show open-in-tab fallback
-  setTimeout(()=>{
-    hide();
-    if(!loadOk)showGameError(url,title);
-  },12000);
-  frame.src=url;
+  frame.onerror=()=>{hide();showGameError(url,title);};
+  // Zone games (.html on rawcdn.githack.com) — fetch+srcdoc to bypass iframe restrictions
+  const isZoneUrl=url.includes('rawcdn.githack.com')||url.includes('cdn.jsdelivr.net/gh/gn-math/html');
+  if(isZoneUrl){
+    fetch(url)
+      .then(r=>{
+        if(!r.ok)throw new Error('HTTP '+r.status);
+        return r.text();
+      })
+      .then(html=>{
+        // Inject a base tag so relative asset paths resolve correctly
+        const base=url.substring(0,url.lastIndexOf('/')+1);
+        const injected=html.replace(/(<head[^>]*>)/i,`$1<base href="${base}">`);
+        frame.srcdoc=injected;
+      })
+      .catch(()=>{
+        // Fallback: try direct src
+        frame.src=url;
+      });
+  } else {
+    // Normal game — set src directly
+    setTimeout(()=>{
+      hide();
+      if(!loadOk)showGameError(url,title);
+    },12000);
+    frame.src=url;
+  }
 }
 function showGameError(url,title){
   const existing=document.getElementById('game-error-bar');
@@ -5494,7 +5512,7 @@ async function loadLeaderboard(){
       const isMine=currentUser&&!currentUser.guest&&r.user_id===currentUser.id;
       return`<div class="lb-row" style="${isMine?'border-color:rgba(10,132,255,.4);background:rgba(10,132,255,.06)':''}" onclick="openSsViewerById('${r.id}')">
         <div class="lb-rank ${rankClass}">${rankDisplay}</div>
-        <div class="lb-av" onclick="event.stopPropagation();openProfile('${r.user_id}')" title="View profile">${av}</div>
+        <div class="lb-av" onclick="event.stopPropagation();openProfile('${r.user_id}')" title="View profile">${avHtml(av,36)}</div>
         <div class="lb-info">
           <div class="lb-uname" onclick="event.stopPropagation();openProfile('${r.user_id}')">${r.username||'Unknown'}${isMine?' <span style="color:var(--blue);font-size:10px">(you)</span>':''}</div>
           <div class="lb-game">${showGame?(r.game_name||'Unknown Game')+' • ':''}${new Date(r.created_at).toLocaleDateString()}</div>
@@ -7317,7 +7335,7 @@ async function ppSetBg(url,el){
     await fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({profile_bg:url})});
     currentUser.profile_bg=url;
     if(msg)msg.textContent='✅ Background saved!';
-    document.querySelectorAll('#pp-gallery-bg-row div').forEach(d=>d.style.borderColor='rgba(255,255,255,.15)');
+    document.querySelectorAll('#pp-banner-img-row div').forEach(d=>d.style.borderColor='rgba(255,255,255,.15)');
     if(el)el.style.borderColor='var(--blue)';
     setTimeout(()=>{if(msg)msg.textContent='';},2000);
   }catch(e){if(msg)msg.textContent='❌ Failed';}
