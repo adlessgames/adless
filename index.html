@@ -1584,19 +1584,20 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
   </div>
 </div>
 
-<div id="player-bar">
-  <span id="player-title">Playing</span>
-  <button class="pbtn rand" onclick="playRandom()">🎲 Random</button>
-  <button id="lock-btn" onclick="toggleLock()" title="Lock mouse to game">🔒 Lock Mouse</button>
-  <button class="pbtn" onclick="fsGame()">⛶ Fullscreen</button>
-  <button class="pbtn" onclick="openScoreSubmit()" id="score-submit-btn" style="background:rgba(255,214,10,.15);border:1px solid rgba(255,214,10,.3);color:#ffd60a">🏆 Submit Score</button>
-  <button class="pbtn cls" onclick="closePlayer()">✕ Close</button>
-</div>
-<div id="lock-hint">🔒 Mouse locked — press ESC to unlock</div>
 </div><!-- end #app -->
 
 
-<div id="player"><div id="game-wrap" style="flex:1;display:flex;align-items:center;justify-content:center;background:#000;overflow:hidden;">
+<div id="player">
+  <div id="player-bar">
+    <span id="player-title">Playing</span>
+    <button class="pbtn rand" onclick="playRandom()">🎲 Random</button>
+    <button id="lock-btn" onclick="toggleLock()" title="Lock mouse to game">🔒 Lock Mouse</button>
+    <button class="pbtn" onclick="fsGame()">⛶ Fullscreen</button>
+    <button class="pbtn" onclick="openScoreSubmit()" id="score-submit-btn" style="background:rgba(255,214,10,.15);border:1px solid rgba(255,214,10,.3);color:#ffd60a">🏆 Submit Score</button>
+    <button class="pbtn cls" onclick="closePlayer()">✕ Close</button>
+  </div>
+  <div id="lock-hint">🔒 Mouse locked — press ESC to unlock</div>
+  <div id="game-wrap" style="flex:1;display:flex;align-items:center;justify-content:center;background:#000;overflow:hidden;">
     <iframe id="game-frame" allow="autoplay;gamepad;fullscreen" allowfullscreen></iframe>
   </div>
 </div>
