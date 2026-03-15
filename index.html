@@ -5073,6 +5073,43 @@ const BADGE_DEFS = {
   'globe_trotter':  {e:'🌍',n:'Globe Trotter',       d:'Submit scores on 25 different games'},
   'top_10':         {e:'🔝',n:'Top 10',              d:'One of the first 10 users'},
   'influencer':     {e:'📸',n:'Influencer',          d:'Reach 50 friends'},
+  'game_over':       {e:'👾',n:'Game Over',            d:'Submit 500 scores total'},
+  'pro_gamer':       {e:'🎮',n:'Pro Gamer',            d:'Top 3 on 5 different games'},
+  'ranked_up':       {e:'📈',n:'Ranked Up',            d:'Beat your own leaderboard score'},
+  'dethroned':       {e:'👊',n:'Dethroned',            d:'Take #1 from another player'},
+  'on_top':          {e:'🗻',n:'On Top',               d:'Hold #1 on any game for 24 hours'},
+  'marathon_man':    {e:'🏃',n:'Marathon',             d:'Submit scores 7 days in a row'},
+  'hat_trick':       {e:'🎩',n:'Hat Trick',            d:'3 scores on 3 different games in one day'},
+  'zero_to_hero':    {e:'⬆️',n:'Zero to Hero',        d:'Go from unranked to top 3'},
+  'untouchable':     {e:'🫧',n:'Untouchable',          d:'Hold #1 on a game for 7 days'},
+  'precision':       {e:'🎯',n:'Precision',            d:'Submit a score ending in exactly 000'},
+  'millionaire':     {e:'💰',n:'Millionaire',          d:'1,000,000 total score points across all games'},
+  'speed_demon':     {e:'💨',n:'Speed Demon',          d:'Submit a score within 60s of opening a game'},
+  'weekend_grinder': {e:'🏋️',n:'Weekend Grinder',     d:'5+ scores on a single Saturday or Sunday'},
+  'open_book':       {e:'📖',n:'Open Book',            d:'Profile viewed by 5 different users'},
+  'fan_favourite':   {e:'💛',n:'Fan Favourite',        d:'Received 10 profile visits'},
+  'famous':          {e:'🌟',n:'Famous',               d:'Received 50 profile visits'},
+  'linked_up':       {e:'🔗',n:'Linked Up',            d:'Added someone who added you back within 24 hours'},
+  'all_nighter':     {e:'🌙',n:'All Nighter',          d:'Active for 3+ hours after midnight'},
+  'caffeine':        {e:'☕',n:'Caffeine',              d:'Active before 7am on 5 different days'},
+  'fossil':          {e:'🦴',n:'Fossil',               d:'Account 2+ years with less than 10 messages'},
+  'movie_marathon':  {e:'🍿',n:'Movie Marathon',       d:'Watch 3 movies in one session'},
+  'show_stopper':    {e:'📡',n:'Show Stopper',         d:'Watch 3 episodes in one session'},
+  'cinephile':       {e:'🎞️',n:'Cinephile',           d:'Watch 50 movies total'},
+  'series_addict':   {e:'🔁',n:'Series Addict',        d:'Watch 10 different shows'},
+  'mega_popular':    {e:'🌟',n:'Mega Popular',         d:'Reach 50 friends'},
+  'critic':          {e:'🎬',n:'Critic',               d:'Watch 20 different titles'},
+  'degen':           {e:'💸',n:'Degen',                d:'Secret — owner assigned', dOwner:'Owner granted — user did something unhinged or extremely chaotic'},
+  'gigachad':        {e:'😤',n:'Gigachad',             d:'Secret — owner assigned', dOwner:'Owner granted — consistently the most based takes'},
+  '404_found':       {e:'🔍',n:'404 Found',            d:'Secret — you found something', dOwner:'Owner granted — discovered a hidden easter egg'},
+  'void':            {e:'⬛',n:'Void',                 d:'Secret — extremely rare', dOwner:'Owner granted — banned and returned more than once'},
+  'sigma':           {e:'🔱',n:'Sigma',                d:'Secret — owner assigned', dOwner:'Owner granted — solo grinder, rarely in chat, always top of leaderboard'},
+  'cryptic':         {e:'🔐',n:'Cryptic',              d:'Secret — owner assigned', dOwner:'Owner granted — communicates in riddles'},
+  'big_brain':       {e:'🧠',n:'Big Brain',            d:'Secret — owner assigned', dOwner:'Owner granted — consistently smart well-reasoned takes'},
+  'chaos_agent':     {e:'🌪️',n:'Chaos Agent',          d:'Secret — owner assigned', dOwner:'Owner granted — regularly causes harmless chaos'},
+  'silent_killer':   {e:'🗡️',n:'Silent Killer',        d:'Secret — owner assigned', dOwner:'Owner granted — barely speaks but always top of leaderboard'},
+  'the_watcher':     {e:'🧿',n:'The Watcher',           d:'Secret — owner assigned', dOwner:'Owner granted — online nearly every day but almost never interacts'},
+  'plot_twist':      {e:'🔀',n:'Plot Twist',            d:'Secret — owner assigned', dOwner:'Owner granted — did something completely unexpected'},
 };
 
 const OWNER_ONLY_BADGES=['royalty','trusted','vip','bug_hunter','creator','mod','gifted','partner','legend_staff','hall_of_fame','mystic','rainbow','cursed','glitch','snitch','reformed','main_character','reverse_uno','npc','404','degen','gigachad','404_found','void','sigma'];
@@ -5433,12 +5470,14 @@ async function loadBadgesPage(){
     if(badgePageTab==="earned"){
       if(!earnedCount){content.innerHTML='<div style="text-align:center;padding:40px;color:var(--text2)">No badges yet — play games and chat to earn some!</div>';return;}
       const categories=[
-        {label:"🎮 Gaming",keys:["first_score","grinder","no_life","century","score_machine","gold","silver","bronze","champion","arcade_king","triple_threat","gamer","legend","speedrunner","hot_streak","wild_card","sharpshooter","photographer","perfectionist","variety_player","high_roller","lucky"]},
-        {label:"💬 Social",keys:["first_word","chatterbox","loud","broadcaster","friendly","social","networker","popular","pen_pal","social_butterfly","lover","group_leader","party_host","community","group_veteran"]},
-        {label:"📅 Loyalty",keys:["newcomer","regular","veteran","elder","og","loyal","dedicated","night_owl","early_bird","early_adopter","weekend_warrior"]},
-        {label:"⭐ Special",keys:["royalty","trusted","vip","bug_hunter","creator","mod","gifted","partner","legend_staff","mystic","rainbow","cursed","glitch"]},
-        {label:"🔒 Secret",keys:["shadow","touched_grass","404","brainrot","npc","reverse_uno","main_character","lurker","snitch","reformed","lucky","ghost"]},
-        {label:"🔍 Misc",keys:["silent_type","explorer","completionist","badge_collector","overachiever","galaxy_brain"]},
+        {label:"🎮 Gaming",keys:["first_score","grinder","no_life","century","score_machine","gold","silver","bronze","champion","arcade_king","triple_threat","gamer","legend","speedrunner","hot_streak","wild_card","sharpshooter","photographer","perfectionist","variety_player","high_roller","lucky","double_down","comeback_kid","screenshot_god","hall_of_gamer","ultra_high","sniper","combo_breaker","ranked","clutch","graveyard_gamer","speedster","obsessed","goat","daily_grind","unstoppable","leaderboard_og","first_in_class","double_lucky","globe_trotter","game_over","pro_gamer","ranked_up","dethroned","on_top","marathon_man","hat_trick","zero_to_hero","untouchable","precision","millionaire","speed_demon","weekend_grinder","multiverse","submit_500","graveyard","treasure_hunter"]},
+        {label:"💬 Social",keys:["first_word","chatterbox","loud","broadcaster","friendly","social","networker","popular","pen_pal","social_butterfly","lover","group_leader","party_host","community","group_veteran","hype_man","therapist","dm_legend","reaction_king","first_friend","squad","mega_popular","group_grinder","welcomer","message_250","message_2500","dm_100","hype_train","spam_king","dm_addict","linked_up","open_book","fan_favourite","famous"]},
+        {label:"📅 Loyalty",keys:["newcomer","regular","veteran","elder","og","loyal","dedicated","night_owl","early_bird","early_adopter","weekend_warrior","ancient","mythic_time","insomniac","lunch_break","monday_hero","holiday_vibes","new_year","weekend_legend","year_one","holiday_spirit","night_shift","early_riser","all_nighter","caffeine","fossil","comeback","returning"]},
+        {label:"🖼️ Profile",keys:["custom_pfp","decorator","fashionista","actor","butterfly_eff","profile_complete","og_pfp","bio_writer","name_change","glow_up","chameleon","minimalist","stylist"]},
+        {label:"🎬 Movies & Shows",keys:["movie_buff","binge_watcher","movie_marathon","show_stopper","critic","cinephile","series_addict"]},
+        {label:"⭐ Special",keys:["royalty","trusted","vip","bug_hunter","creator","mod","gifted","partner","legend_staff","mystic","rainbow","cursed","glitch","report_hero","peacekeeper","hall_of_fame","snitch","reformed"]},
+        {label:"🔒 Secret",keys:["shadow","touched_grass","404","brainrot","npc","reverse_uno","main_character","lurker","ghost","degen","gigachad","404_found","void","sigma","cryptic","silent_killer","the_watcher","plot_twist","big_brain","chaos_agent"]},
+        {label:"🔍 Misc",keys:["silent_type","explorer","completionist","badge_collector","overachiever","galaxy_brain","hoarder","top_10","influencer"]},
       ];
       let html="";
       // Show rank badges first if any
@@ -5476,12 +5515,14 @@ async function loadBadgesPage(){
       content.innerHTML=html;
     } else {
       const categories=[
-        {label:"🎮 Gaming",keys:["first_score","grinder","no_life","century","score_machine","gold","silver","bronze","champion","arcade_king","triple_threat","gamer","legend","speedrunner","hot_streak","wild_card","sharpshooter","photographer","perfectionist","variety_player","high_roller","lucky"]},
-        {label:"💬 Social",keys:["first_word","chatterbox","loud","broadcaster","friendly","social","networker","popular","pen_pal","social_butterfly","lover","group_leader","party_host","community","group_veteran"]},
-        {label:"📅 Loyalty",keys:["newcomer","regular","veteran","elder","og","loyal","dedicated","night_owl","early_bird","early_adopter","weekend_warrior"]},
-        {label:"⭐ Special",keys:["royalty","trusted","vip","bug_hunter","creator","mod","gifted","partner","legend_staff","mystic","rainbow","cursed","glitch"]},
-        {label:"🔒 Secret",keys:["shadow","touched_grass","404","brainrot","npc","reverse_uno","main_character","lurker","snitch","reformed","lucky","ghost"]},
-        {label:"🔍 Misc",keys:["silent_type","explorer","completionist","badge_collector","overachiever","galaxy_brain"]},
+        {label:"🎮 Gaming",keys:["first_score","grinder","no_life","century","score_machine","gold","silver","bronze","champion","arcade_king","triple_threat","gamer","legend","speedrunner","hot_streak","wild_card","sharpshooter","photographer","perfectionist","variety_player","high_roller","lucky","double_down","comeback_kid","screenshot_god","hall_of_gamer","ultra_high","sniper","combo_breaker","ranked","clutch","graveyard_gamer","speedster","obsessed","goat","daily_grind","unstoppable","leaderboard_og","first_in_class","double_lucky","globe_trotter","game_over","pro_gamer","ranked_up","dethroned","on_top","marathon_man","hat_trick","zero_to_hero","untouchable","precision","millionaire","speed_demon","weekend_grinder","multiverse","submit_500","graveyard","treasure_hunter"]},
+        {label:"💬 Social",keys:["first_word","chatterbox","loud","broadcaster","friendly","social","networker","popular","pen_pal","social_butterfly","lover","group_leader","party_host","community","group_veteran","hype_man","therapist","dm_legend","reaction_king","first_friend","squad","mega_popular","group_grinder","welcomer","message_250","message_2500","dm_100","hype_train","spam_king","dm_addict","linked_up","open_book","fan_favourite","famous"]},
+        {label:"📅 Loyalty",keys:["newcomer","regular","veteran","elder","og","loyal","dedicated","night_owl","early_bird","early_adopter","weekend_warrior","ancient","mythic_time","insomniac","lunch_break","monday_hero","holiday_vibes","new_year","weekend_legend","year_one","holiday_spirit","night_shift","early_riser","all_nighter","caffeine","fossil","comeback","returning"]},
+        {label:"🖼️ Profile",keys:["custom_pfp","decorator","fashionista","actor","butterfly_eff","profile_complete","og_pfp","bio_writer","name_change","glow_up","chameleon","minimalist","stylist"]},
+        {label:"🎬 Movies & Shows",keys:["movie_buff","binge_watcher","movie_marathon","show_stopper","critic","cinephile","series_addict"]},
+        {label:"⭐ Special",keys:["royalty","trusted","vip","bug_hunter","creator","mod","gifted","partner","legend_staff","mystic","rainbow","cursed","glitch","report_hero","peacekeeper","hall_of_fame","snitch","reformed"]},
+        {label:"🔒 Secret",keys:["shadow","touched_grass","404","brainrot","npc","reverse_uno","main_character","lurker","ghost","degen","gigachad","404_found","void","sigma","cryptic","silent_killer","the_watcher","plot_twist","big_brain","chaos_agent"]},
+        {label:"🔍 Misc",keys:["silent_type","explorer","completionist","badge_collector","overachiever","galaxy_brain","hoarder","top_10","influencer"]},
       ];
       let html="";
       categories.forEach(cat=>{
@@ -5649,6 +5690,14 @@ async function openProfile(userId){
     ]);
     if(!profile){content.innerHTML='<div style="color:var(--text2);text-align:center;padding:30px">User not found</div>';return;}
     const isSelf=currentUser&&!currentUser.guest&&currentUser.id===userId;
+    // Record profile view (not self, not guest)
+    if(!isSelf&&currentUser&&!currentUser.guest){
+      fetch(SB_URL+'/rest/v1/profile_views',{
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({viewed_id:userId,viewer_id:currentUser.id})
+      }).catch(()=>{});// ignore duplicate/error silently
+    }
     const isFriend=!isSelf&&currentUser&&!currentUser.guest
       ?(await sbReq(`/rest/v1/friends?status=eq.accepted&or=(and(sender_id.eq.${currentUser.id},receiver_id.eq.${userId}),and(sender_id.eq.${userId},receiver_id.eq.${currentUser.id}))&select=id`)||[]).length>0
       :false;
