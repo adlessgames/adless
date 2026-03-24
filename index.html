@@ -3206,7 +3206,25 @@ async function saveAdsOptOut(val){
   }catch(e){}
 }
 
+function loadHillTopBanner(){
+  if(document.getElementById('hilltop-banner-1-script'))return;
+  var s=document.createElement('script');
+  s.id='hilltop-banner-1-script';
+  s.src='//amazingmeaning.com/bBXcV/s/d.GQlA0mYTWGcc/nemmQ9Ju_ZmUnlgkEPPTrYM4GOxTtQg4SO/TicLtwN/jkg/5PNsDCkZwpMWQX';
+  s.async=true;
+  s.referrerPolicy='no-referrer-when-downgrade';
+  document.head.appendChild(s);
+}
+function unloadHillTopBanner(){
+  var s=document.getElementById('hilltop-banner-1-script');
+  if(s)s.remove();
+  var el=document.getElementById('hilltop-banner-1');
+  if(el)el.innerHTML='';
+  var lbl=document.getElementById('hilltop-banner-1-label');
+  if(lbl)lbl.style.display='none';
+}
 function applyAdsState(){
+  window._adsOptedOut=adsOptedOut&&currentUser&&!currentUser.guest;
   const hide=adsOptedOut&&currentUser&&!currentUser.guest;
   // Hide/show all inline slots
   AD_SLOT_IDS.forEach(id=>{
@@ -3219,6 +3237,8 @@ function applyAdsState(){
   // Update settings toggle desc
   const desc=document.getElementById('ads-toggle-desc');
   if(desc)desc.textContent=hide?'Ads are hidden on your account ✓':'Tap to hide all ads on your account';
+  // HillTopAds banner: load if ads on, unload if opted out
+  if(hide){unloadHillTopBanner();}else{loadHillTopBanner();}
 }
 
 function toggleAdsOptOut(checked){
@@ -3283,8 +3303,8 @@ function makeInlineAdHTML(slotId){
   if(slotId==='ad-games-banner'){
     return`<div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 16px;border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04);background:rgba(255,255,255,.01);margin:4px 0">
       <div style="min-height:70px;width:100%;max-width:680px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.025);border:1px dashed rgba(255,255,255,.06);border-radius:10px;overflow:hidden;position:relative;">
-        <!-- AD SLOT: ${slotId} — paste 728×90 leaderboard script here -->
-        <span style="font-size:10px;color:rgba(255,255,255,.2);letter-spacing:.08em;pointer-events:none">Advertisement</span>
+        <div id="hilltop-banner-1"></div>
+        <span style="font-size:10px;color:rgba(255,255,255,.2);letter-spacing:.08em;pointer-events:none" id="hilltop-banner-1-label">Advertisement</span>
         <span style="position:absolute;top:4px;right:7px;font-size:8px;color:rgba(255,255,255,.15);letter-spacing:.06em;pointer-events:none">AD</span>
       </div>
       <button style="font-size:9px;color:rgba(255,255,255,.2);background:none;border:none;cursor:none;padding:1px 0;letter-spacing:.05em" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='rgba(255,255,255,.2)'" onclick="goToAdSettings()">Remove ads in Settings →</button>
