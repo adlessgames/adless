@@ -1201,7 +1201,15 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       </div>
       <div id="lb-content"></div>
     </div>
-
+    <div id="ad-leaderboard" style="display:flex;justify-content:center;padding:16px 0 8px">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div style="width:160px;height:600px;overflow:hidden;border-radius:8px">
+          <script>atOptions={'key':'f98522aebfcb17b3903e595e9abf9d44','format':'iframe','height':600,'width':160,'params':{}};</script>
+          <script src="https://www.highperformanceformat.com/f98522aebfcb17b3903e595e9abf9d44/invoke.js"></script>
+        </div>
+        <button class="ad-close-hint" onclick="goToAdSettings()" style="font-size:9px">Remove ads</button>
+      </div>
+    </div>
   </div>
   <!-- BADGES VIEW -->
   <div id="badges-view" class="view">
@@ -1213,7 +1221,15 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       </div>
       <div id="badges-stats" style="margin-bottom:16px"></div>
       <div id="badges-content"></div>
-
+    </div>
+    <div id="ad-badges" style="display:flex;justify-content:center;padding:16px 0 8px">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div style="width:160px;height:300px;overflow:hidden;border-radius:8px">
+          <script>atOptions={'key':'f98522aebfcb17b3903e595e9abf9d44','format':'iframe','height':300,'width':160,'params':{}};</script>
+          <script src="https://www.highperformanceformat.com/f98522aebfcb17b3903e595e9abf9d44/invoke.js"></script>
+        </div>
+        <button class="ad-close-hint" onclick="goToAdSettings()" style="font-size:9px">Remove ads</button>
+      </div>
     </div>
   </div>
   <div id="settings-view" class="view">
@@ -1397,20 +1413,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 
 <!-- AD SLOTS -->
 <!-- Fixed top-right: 160x600 shown on leaderboard, 160x300 shown on badges -->
-<div id="ad-leaderboard" style="display:none;position:fixed;top:0;right:0;z-index:500;padding:0;margin:0;line-height:0;flex-direction:column;align-items:flex-end;gap:4px">
-  <div style="width:160px;height:600px;overflow:hidden">
-    <script>atOptions={'key':'f98522aebfcb17b3903e595e9abf9d44','format':'iframe','height':600,'width':160,'params':{}};</script>
-    <script src="https://www.highperformanceformat.com/f98522aebfcb17b3903e595e9abf9d44/invoke.js"></script>
-  </div>
-  <button class="ad-close-hint" onclick="goToAdSettings()" style="font-size:9px;margin-right:4px">Remove ads</button>
-</div>
-<div id="ad-badges" style="display:none;position:fixed;top:0;right:0;z-index:500;padding:0;margin:0;line-height:0;flex-direction:column;align-items:flex-end;gap:4px">
-  <div style="width:160px;height:300px;overflow:hidden">
-    <script>atOptions={'key':'f98522aebfcb17b3903e595e9abf9d44','format':'iframe','height':300,'width':160,'params':{}};</script>
-    <script src="https://www.highperformanceformat.com/f98522aebfcb17b3903e595e9abf9d44/invoke.js"></script>
-  </div>
-  <button class="ad-close-hint" onclick="goToAdSettings()" style="font-size:9px;margin-right:4px">Remove ads</button>
-</div>
+
 
 <!-- REPORT MODAL -->
 <div id="report-modal" style="display:none;position:fixed;inset:0;z-index:5000000;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);align-items:center;justify-content:center;" onclick="if(event.target===this)closeReportModal()">
@@ -2545,12 +2548,7 @@ function switchView(id){trackViewExplored(id);
   if(id==="leaderboard-view")setTimeout(()=>loadLeaderboard(),50);
   if(id==="badges-view")setTimeout(()=>loadBadgesPage(),50);
   if(noNameActive)setTimeout(applyNoName,50);
-  // Show view-specific fixed side ads
-  const hide=window._adsOptedOut;
-  const lbAd=document.getElementById('ad-leaderboard');
-  const bdgAd=document.getElementById('ad-badges');
-  if(lbAd)lbAd.style.display=(!hide&&id==='leaderboard-view')?'flex':'none';
-  if(bdgAd)bdgAd.style.display=(!hide&&id==='badges-view')?'flex':'none';
+
 }
 document.querySelectorAll('.nav').forEach(btn=>{
   if(btn.classList.contains('discord-btn'))return;
@@ -3256,13 +3254,7 @@ function applyAdsState(){
   // Bottom-left sidebar banner
   const topBanner=document.getElementById('ad-banner-top');
   if(topBanner)topBanner.style.display=hide?'none':'flex';
-  // View-specific fixed ads — only hide; switchView controls showing
-  if(hide){
-    const lbAd=document.getElementById('ad-leaderboard');
-    const bdgAd=document.getElementById('ad-badges');
-    if(lbAd)lbAd.style.display='none';
-    if(bdgAd)bdgAd.style.display='none';
-  }
+
   // Update settings toggle desc
   const desc=document.getElementById('ads-toggle-desc');
   if(desc)desc.textContent=hide?'Ads are hidden on your account ✓':'Tap to hide all ads on your account';
