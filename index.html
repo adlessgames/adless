@@ -172,8 +172,8 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .ad-placeholder{font-size:10px;color:var(--text2);letter-spacing:.08em;pointer-events:none;}
 .ad-close-hint{font-size:10px;color:var(--text2);background:none;border:none;cursor:none;text-decoration:underline;padding:0;}
 .ad-close-hint:hover{color:var(--blue);}
-.ad-side{position:fixed;bottom:80px;right:12px;width:auto;padding:6px;border:1px solid var(--border);border-radius:12px;background:var(--card);box-shadow:0 4px 20px rgba(0,0,0,.4);z-index:100;flex-direction:column;gap:4px;}
-.ad-side .ad-inner{min-height:120px;width:220px;}
+.ad-side{position:fixed;bottom:16px;right:12px;width:auto;padding:6px;border:1px solid var(--border);border-radius:12px;background:var(--card);box-shadow:0 4px 20px rgba(0,0,0,.4);z-index:100;flex-direction:column;gap:4px;}
+.ad-side .ad-inner{min-height:300px;width:160px;}
 .tog{position:relative;width:50px;height:28px;flex-shrink:0;}
 .tog input{opacity:0;width:0;height:0;position:absolute;}
 .tog-sl{position:absolute;inset:0;background:rgba(255,255,255,.12);border-radius:28px;transition:.2s;border:1px solid var(--border);}
@@ -680,6 +680,13 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <div class="nav" data-cat="flash">⚡ Flash</div>
     </div>
     <button class="rand-btn" onclick="playRandom()">🎲 RANDOM GAME</button>
+    <div id="ad-banner-top" class="ad-banner" style="display:none;flex-direction:column;align-items:center;gap:4px;padding:10px 0 4px;margin-top:8px;background:none;border:none;width:100%">
+      <div class="ad-inner" style="width:220px;min-height:250px;overflow:hidden;max-width:100%">
+        <script>atOptions={'key':'73790f59550213de463ddf84d11b0c57','format':'iframe','height':250,'width':300,'params':{}};</script>
+        <script src="https://www.highperformanceformat.com/73790f59550213de463ddf84d11b0c57/invoke.js"></script>
+      </div>
+      <button class="ad-close-hint" onclick="goToAdSettings()" style="font-size:9px">Remove ads</button>
+    </div>
   </aside>
   <div id="games-view" class="view active">
     <header>
@@ -1194,6 +1201,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       </div>
       <div id="lb-content"></div>
     </div>
+
   </div>
   <!-- BADGES VIEW -->
   <div id="badges-view" class="view">
@@ -1205,6 +1213,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       </div>
       <div id="badges-stats" style="margin-bottom:16px"></div>
       <div id="badges-content"></div>
+
     </div>
   </div>
   <div id="settings-view" class="view">
@@ -1386,19 +1395,21 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
   </div>
 </div>
 
-<!-- AD SLOTS — injected into game grid area -->
-<div id="ad-banner-top" class="ad-banner" style="display:none">
-  <div class="ad-inner">
-    <!-- PASTE AD NETWORK SCRIPT HERE (728x90 leaderboard) -->
-    <span class="ad-placeholder">Advertisement</span>
+<!-- AD SLOTS -->
+<!-- Fixed top-right: 160x600 shown on leaderboard, 160x300 shown on badges -->
+<div id="ad-leaderboard" style="display:none;position:fixed;top:0;right:0;z-index:500;padding:0;margin:0;line-height:0;flex-direction:column;align-items:flex-end;gap:4px">
+  <div style="width:160px;height:600px;overflow:hidden">
+    <script>atOptions={'key':'f98522aebfcb17b3903e595e9abf9d44','format':'iframe','height':600,'width':160,'params':{}};</script>
+    <script src="https://www.highperformanceformat.com/f98522aebfcb17b3903e595e9abf9d44/invoke.js"></script>
   </div>
-  <button class="ad-close-hint" onclick="goToAdSettings()">Remove ads in Settings</button>
+  <button class="ad-close-hint" onclick="goToAdSettings()" style="font-size:9px;margin-right:4px">Remove ads</button>
 </div>
-<div id="ad-banner-side" class="ad-banner ad-side" style="display:none">
-  <div class="ad-inner">
-    <!-- PASTE AD NETWORK SCRIPT HERE (300x250) -->
-    <span class="ad-placeholder">Advertisement</span>
+<div id="ad-badges" style="display:none;position:fixed;top:0;right:0;z-index:500;padding:0;margin:0;line-height:0;flex-direction:column;align-items:flex-end;gap:4px">
+  <div style="width:160px;height:300px;overflow:hidden">
+    <script>atOptions={'key':'f98522aebfcb17b3903e595e9abf9d44','format':'iframe','height':300,'width':160,'params':{}};</script>
+    <script src="https://www.highperformanceformat.com/f98522aebfcb17b3903e595e9abf9d44/invoke.js"></script>
   </div>
+  <button class="ad-close-hint" onclick="goToAdSettings()" style="font-size:9px;margin-right:4px">Remove ads</button>
 </div>
 
 <!-- REPORT MODAL -->
@@ -2534,6 +2545,12 @@ function switchView(id){trackViewExplored(id);
   if(id==="leaderboard-view")setTimeout(()=>loadLeaderboard(),50);
   if(id==="badges-view")setTimeout(()=>loadBadgesPage(),50);
   if(noNameActive)setTimeout(applyNoName,50);
+  // Show view-specific fixed side ads
+  const hide=window._adsOptedOut;
+  const lbAd=document.getElementById('ad-leaderboard');
+  const bdgAd=document.getElementById('ad-badges');
+  if(lbAd)lbAd.style.display=(!hide&&id==='leaderboard-view')?'flex':'none';
+  if(bdgAd)bdgAd.style.display=(!hide&&id==='badges-view')?'flex':'none';
 }
 document.querySelectorAll('.nav').forEach(btn=>{
   if(btn.classList.contains('discord-btn'))return;
@@ -3236,9 +3253,16 @@ function applyAdsState(){
     const el=document.getElementById(id);
     if(el)el.style.display=hide?'none':'';
   });
-  // Side banner
-  const side=document.getElementById('ad-banner-side');
-  if(side)side.style.display=hide?'none':'flex';
+  // Bottom-left sidebar banner
+  const topBanner=document.getElementById('ad-banner-top');
+  if(topBanner)topBanner.style.display=hide?'none':'flex';
+  // View-specific fixed ads — only hide; switchView controls showing
+  if(hide){
+    const lbAd=document.getElementById('ad-leaderboard');
+    const bdgAd=document.getElementById('ad-badges');
+    if(lbAd)lbAd.style.display='none';
+    if(bdgAd)bdgAd.style.display='none';
+  }
   // Update settings toggle desc
   const desc=document.getElementById('ads-toggle-desc');
   if(desc)desc.textContent=hide?'Ads are hidden on your account ✓':'Tap to hide all ads on your account';
@@ -3301,10 +3325,13 @@ const AD_SLOT_IDS=[
   'ad-dm',            // DM view — above messages
   'ad-groupchat',     // group chat view — above messages
   'ad-settings',      // settings view — between Ads and About
+  'ad-leaderboard',    // leaderboard view — 160x600
+  'ad-badges',         // badges view — 160x300
 ];
 
 function makeInlineAdHTML(slotId){
   if(slotId==='ad-games-banner'){
+    // DO NOT TOUCH — existing 320x50 Adsterra
     return`<div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 16px;border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04);background:rgba(255,255,255,.01);margin:4px 0">
       <div style="min-height:70px;width:100%;max-width:680px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.025);border:1px dashed rgba(255,255,255,.06);border-radius:10px;overflow:hidden;position:relative;">
         <div id="adsterra-banner-1"></div>
@@ -3314,11 +3341,32 @@ function makeInlineAdHTML(slotId){
       <button style="font-size:9px;color:rgba(255,255,255,.2);background:none;border:none;cursor:none;padding:1px 0;letter-spacing:.05em" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='rgba(255,255,255,.2)'" onclick="goToAdSettings()">Remove ads in Settings →</button>
     </div>`;
   }
+  // 728x90 slots — wide views
+  const wide728=['ad-movies','ad-shows','ad-seasons','ad-episodes'];
+  if(wide728.includes(slotId)){
+    return`<div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 16px;margin:4px 0">
+      <div style="min-height:90px;width:100%;max-width:740px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:10px;overflow:hidden;position:relative;">
+        <span style="position:absolute;top:3px;right:7px;font-size:8px;color:rgba(255,255,255,.15);letter-spacing:.06em;pointer-events:none">AD</span>
+        <script>atOptions={'key':'b6df02eaee15ac6f15c77c97f15a44ce','format':'iframe','height':90,'width':728,'params':{}};<\/script><script src="https://www.highperformanceformat.com/b6df02eaee15ac6f15c77c97f15a44ce/invoke.js"><\/script>
+      </div>
+      <button style="font-size:9px;color:rgba(255,255,255,.2);background:none;border:none;cursor:none;padding:1px 0;letter-spacing:.05em" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='rgba(255,255,255,.2)'" onclick="goToAdSettings()">Remove ads in Settings →</button>
+    </div>`;
+  }
+  // 468x60 slots — narrower inline views
+  const mid468=['ad-chat','ad-friends','ad-groupchat','ad-dm','ad-settings'];
+  if(mid468.includes(slotId)){
+    return`<div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 16px;margin:4px 0">
+      <div style="min-height:60px;width:100%;max-width:480px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:10px;overflow:hidden;position:relative;">
+        <span style="position:absolute;top:3px;right:7px;font-size:8px;color:rgba(255,255,255,.15);letter-spacing:.06em;pointer-events:none">AD</span>
+        <script>atOptions={'key':'e82ef922230b0eda766359d45cc83804','format':'iframe','height':60,'width':468,'params':{}};<\/script><script src="https://www.highperformanceformat.com/e82ef922230b0eda766359d45cc83804/invoke.js"><\/script>
+      </div>
+      <button style="font-size:9px;color:rgba(255,255,255,.2);background:none;border:none;cursor:none;padding:1px 0;letter-spacing:.05em" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='rgba(255,255,255,.2)'" onclick="goToAdSettings()">Remove ads in Settings →</button>
+    </div>`;
+  }
+  // fallback
   return`<div style="min-height:60px;width:100%;max-width:680px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.05);border-radius:10px;overflow:hidden;position:relative;margin:0 auto;">
-    <!-- AD SLOT: ${slotId} — paste ad script here -->
     <span style="font-size:9px;color:rgba(255,255,255,.15);letter-spacing:.08em;pointer-events:none">Ad</span>
-    <span style="position:absolute;top:3px;right:6px;font-size:8px;color:rgba(255,255,255,.12);letter-spacing:.06em;pointer-events:none">AD</span>
-    <button style="position:absolute;bottom:3px;right:6px;font-size:8px;color:rgba(255,255,255,.18);background:none;border:none;cursor:none;padding:0;letter-spacing:.04em" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='rgba(255,255,255,.18)'" onclick="goToAdSettings()">✕ Remove</button>
+    <button style="position:absolute;bottom:3px;right:6px;font-size:8px;color:rgba(255,255,255,.18);background:none;border:none;cursor:none;padding:0" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='rgba(255,255,255,.18)'" onclick="goToAdSettings()">✕ Remove</button>
   </div>`;
 }
 
@@ -3332,16 +3380,7 @@ function renderAdBanners(){
       if(!el.innerHTML.trim())el.innerHTML=makeInlineAdHTML(id);
     }
   });
-  // Side banner
-  const sideEl=document.getElementById('ad-banner-side');
-  if(sideEl&&!sideEl.innerHTML.trim()){
-    sideEl.innerHTML=`<div class="ad-inner" style="width:160px;min-height:90px;">
-      <!-- AD SLOT: sidebar — paste ad script here -->
-      <span class="ad-placeholder" style="font-size:9px">Ad</span>
-    </div>
-    <button class="ad-close-hint" onclick="goToAdSettings()" style="font-size:9px">Remove ads</button>`;
-    sideEl.style.display='flex';
-  }
+
   applyAdsState();
 }
 
