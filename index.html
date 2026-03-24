@@ -3205,6 +3205,29 @@ async function saveAdsOptOut(val){
   }catch(e){}
 }
 
+function loadAdsterraBanner(){
+  if(document.getElementById('adsterra-script'))return;
+  var el=document.getElementById('adsterra-banner-1');
+  if(!el)return;
+  el.innerHTML='';
+  var s1=document.createElement('script');
+  s1.id='adsterra-script-options';
+  s1.text="atOptions={'key':'73790f59550213de463ddf84d11b0c57','format':'iframe','height':250,'width':300,'params':{}};";
+  el.appendChild(s1);
+  var s2=document.createElement('script');
+  s2.id='adsterra-script';
+  s2.src='https://www.highperformanceformat.com/73790f59550213de463ddf84d11b0c57/invoke.js';
+  s2.async=true;
+  el.appendChild(s2);
+}
+function unloadAdsterraBanner(){
+  var el=document.getElementById('adsterra-banner-1');
+  if(el)el.innerHTML='';
+  var s1=document.getElementById('adsterra-script-options');
+  if(s1)s1.remove();
+  var s2=document.getElementById('adsterra-script');
+  if(s2)s2.remove();
+}
 function applyAdsState(){
   window._adsOptedOut=adsOptedOut&&currentUser&&!currentUser.guest;
   const hide=adsOptedOut&&currentUser&&!currentUser.guest;
@@ -3219,6 +3242,7 @@ function applyAdsState(){
   // Update settings toggle desc
   const desc=document.getElementById('ads-toggle-desc');
   if(desc)desc.textContent=hide?'Ads are hidden on your account ✓':'Tap to hide all ads on your account';
+  if(hide){unloadAdsterraBanner();}else{loadAdsterraBanner();}
 }
 
 function toggleAdsOptOut(checked){
@@ -3283,6 +3307,7 @@ function makeInlineAdHTML(slotId){
   if(slotId==='ad-games-banner'){
     return`<div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 16px;border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04);background:rgba(255,255,255,.01);margin:4px 0">
       <div style="min-height:70px;width:100%;max-width:680px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.025);border:1px dashed rgba(255,255,255,.06);border-radius:10px;overflow:hidden;position:relative;">
+        <div id="adsterra-banner-1"></div>
         <span style="font-size:10px;color:rgba(255,255,255,.2);letter-spacing:.08em;pointer-events:none">Advertisement</span>
         <span style="position:absolute;top:4px;right:7px;font-size:8px;color:rgba(255,255,255,.15);letter-spacing:.06em;pointer-events:none">AD</span>
       </div>
