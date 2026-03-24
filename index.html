@@ -5850,18 +5850,20 @@ async function loadLeaderboard(){
 let ssViewerScoreId=null, ssViewerScoreUserId=null, ssViewerScoreGameId=null, ssViewerScoreVal=null;
 function openSsViewerById(id){
   const d=window._lbScoreCache&&window._lbScoreCache[id];
-  if(!d)return;
+  if(!d){showToast('Score data not found');return;}
   openSsViewer(d.screenshot_url,d);
 }
 function openSsViewerByIdSr(id){
   const d=window._srScoreCache&&window._srScoreCache[id];
-  if(!d)return;
+  if(!d){showToast('Score data not found');return;}
   openSsViewer(d.screenshot_url,d);
 }
 function openSsViewer(url, scoreData){
-  if(!url)return;
   const v=document.getElementById('ss-viewer');
-  document.getElementById('ss-viewer-img').src=url;
+  const imgEl=document.getElementById('ss-viewer-img');
+  const noSs=document.getElementById('ss-no-screenshot');
+  if(url){imgEl.src=url;imgEl.style.display='block';if(noSs)noSs.style.display='none';}
+  else{imgEl.src='';imgEl.style.display='none';if(noSs)noSs.style.display='block';}
   // Populate info bar
   const info=document.getElementById('ss-viewer-info');
   if(scoreData){
@@ -8111,8 +8113,9 @@ function postLoginBadgeCheck(){
     </div>
     <!-- Screenshot -->
     <img id="ss-viewer-img" style="display:block;max-width:100%;max-height:65vh;border-radius:0;object-fit:contain;background:#000" onclick="event.stopPropagation()">
+    <div id="ss-no-screenshot" style="display:none;padding:40px;text-align:center;color:rgba(255,255,255,.4);font-size:13px;background:#111;border-radius:0 0 16px 16px">📷 No screenshot submitted</div>
     <!-- Verdict bar (owner only) -->
-    <div id="ss-viewer-verdict" style="display:none;background:rgba(0,0,0,.85);border:1px solid rgba(255,255,255,.12);border-radius:0 0 16px 16px;padding:12px 18px;display:none;align-items:center;gap:10px;flex-wrap:wrap">
+    <div id="ss-viewer-verdict" style="display:none;background:rgba(0,0,0,.85);border:1px solid rgba(255,255,255,.12);border-radius:0 0 16px 16px;padding:12px 18px;align-items:center;gap:10px;flex-wrap:wrap">
       <div id="ss-viewer-comment" style="flex:1;font-size:12px;color:rgba(255,255,255,.5);font-style:italic"></div>
       <div style="display:flex;gap:8px">
         <button id="ss-approve-btn" style="backgr
