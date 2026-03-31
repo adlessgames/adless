@@ -2534,6 +2534,7 @@ function switchView(id){trackViewExplored(id);
   if(id==="leaderboard-view")setTimeout(()=>loadLeaderboard(),50);
   if(id==="badges-view")setTimeout(()=>loadBadgesPage(),50);
   if(noNameActive)setTimeout(applyNoName,50);
+  if(typeof loadAllAds==='function'&&!adsOptedOut)setTimeout(loadAllAds,200);
 }
 document.querySelectorAll('.nav').forEach(btn=>{
   if(btn.classList.contains('discord-btn'))return;
@@ -5235,7 +5236,7 @@ lbInitAvatars();
 bootStep('Loading games…',20);
 buildList();renderPage();updateStats();
 bootStep('Fetching game library…',40);
-loadZones();loadSpotlightPublic();loadSiteSettings();renderAdBanners();initAdsBanner();
+loadZones();loadSpotlightPublic();loadSiteSettings();renderAdBanners();initAdsBanner();setTimeout(loadAllAds,500);
 setTimeout(function(){bootStep('Ready!',100);setTimeout(bootDone,400);},3500);
 (async()=>{
   const sess=localStorage.getItem('adless_session');
