@@ -172,8 +172,8 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .ad-placeholder{font-size:10px;color:var(--text2);letter-spacing:.08em;pointer-events:none;}
 .ad-close-hint{font-size:10px;color:var(--text2);background:none;border:none;cursor:none;text-decoration:underline;padding:0;}
 .ad-close-hint:hover{color:var(--blue);}
-.ad-side{position:fixed;bottom:80px;right:12px;width:auto;padding:6px;border:1px solid var(--border);border-radius:12px;background:var(--card);box-shadow:0 4px 20px rgba(0,0,0,.4);z-index:100;flex-direction:column;gap:4px;}
-.ad-side .ad-inner{min-height:120px;width:220px;}
+.ad-side{position:fixed;bottom:16px;right:12px;width:auto;padding:6px;border:1px solid var(--border);border-radius:12px;background:var(--card);box-shadow:0 4px 20px rgba(0,0,0,.4);z-index:100;flex-direction:column;gap:4px;}
+.ad-side .ad-inner{min-height:300px;width:160px;}
 .tog{position:relative;width:50px;height:28px;flex-shrink:0;}
 .tog input{opacity:0;width:0;height:0;position:absolute;}
 .tog-sl{position:absolute;inset:0;background:rgba(255,255,255,.12);border-radius:28px;transition:.2s;border:1px solid var(--border);}
@@ -680,6 +680,13 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <div class="nav" data-cat="flash">⚡ Flash</div>
     </div>
     <button class="rand-btn" onclick="playRandom()">🎲 RANDOM GAME</button>
+    <div id="ad-banner-top" class="ad-banner" style="display:none;flex-direction:column;align-items:center;gap:4px;padding:10px 0 4px;margin-top:8px;background:none;border:none;width:100%">
+      <div class="ad-inner" style="width:220px;min-height:250px;overflow:hidden;max-width:100%">
+        <script>atOptions={'key':'73790f59550213de463ddf84d11b0c57','format':'iframe','height':250,'width':300,'params':{}};</script>
+        <script src="https://www.highperformanceformat.com/73790f59550213de463ddf84d11b0c57/invoke.js"></script>
+      </div>
+      <button class="ad-close-hint" onclick="goToAdSettings()" style="font-size:9px">Remove ads</button>
+    </div>
   </aside>
   <div id="games-view" class="view active">
     <header>
@@ -1194,6 +1201,15 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       </div>
       <div id="lb-content"></div>
     </div>
+    <div id="ad-leaderboard" style="display:flex;justify-content:center;padding:16px 0 8px">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div style="width:160px;height:600px;overflow:hidden;border-radius:8px">
+          <script>atOptions={'key':'f98522aebfcb17b3903e595e9abf9d44','format':'iframe','height':600,'width':160,'params':{}};</script>
+          <script src="https://www.highperformanceformat.com/f98522aebfcb17b3903e595e9abf9d44/invoke.js"></script>
+        </div>
+        <button class="ad-close-hint" onclick="goToAdSettings()" style="font-size:9px">Remove ads</button>
+      </div>
+    </div>
   </div>
   <!-- BADGES VIEW -->
   <div id="badges-view" class="view">
@@ -1205,6 +1221,15 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       </div>
       <div id="badges-stats" style="margin-bottom:16px"></div>
       <div id="badges-content"></div>
+    </div>
+    <div id="ad-badges" style="display:flex;justify-content:center;padding:16px 0 8px">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div style="width:160px;height:300px;overflow:hidden;border-radius:8px">
+          <script>atOptions={'key':'f98522aebfcb17b3903e595e9abf9d44','format':'iframe','height':300,'width':160,'params':{}};</script>
+          <script src="https://www.highperformanceformat.com/f98522aebfcb17b3903e595e9abf9d44/invoke.js"></script>
+        </div>
+        <button class="ad-close-hint" onclick="goToAdSettings()" style="font-size:9px">Remove ads</button>
+      </div>
     </div>
   </div>
   <div id="settings-view" class="view">
@@ -1386,20 +1411,9 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
   </div>
 </div>
 
-<!-- AD SLOTS — injected into game grid area -->
-<div id="ad-banner-top" class="ad-banner" style="display:none">
-  <div class="ad-inner">
-    <!-- PASTE AD NETWORK SCRIPT HERE (728x90 leaderboard) -->
-    <span class="ad-placeholder">Advertisement</span>
-  </div>
-  <button class="ad-close-hint" onclick="goToAdSettings()">Remove ads in Settings</button>
-</div>
-<div id="ad-banner-side" class="ad-banner ad-side" style="display:none">
-  <div class="ad-inner">
-    <!-- PASTE AD NETWORK SCRIPT HERE (300x250) -->
-    <span class="ad-placeholder">Advertisement</span>
-  </div>
-</div>
+<!-- AD SLOTS -->
+<!-- Fixed top-right: 160x600 shown on leaderboard, 160x300 shown on badges -->
+
 
 <!-- REPORT MODAL -->
 <div id="report-modal" style="display:none;position:fixed;inset:0;z-index:5000000;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);align-items:center;justify-content:center;" onclick="if(event.target===this)closeReportModal()">
@@ -2534,7 +2548,7 @@ function switchView(id){trackViewExplored(id);
   if(id==="leaderboard-view")setTimeout(()=>loadLeaderboard(),50);
   if(id==="badges-view")setTimeout(()=>loadBadgesPage(),50);
   if(noNameActive)setTimeout(applyNoName,50);
-  if(typeof loadAllAds==='function'&&!adsOptedOut)setTimeout(loadAllAds,200);
+
 }
 document.querySelectorAll('.nav').forEach(btn=>{
   if(btn.classList.contains('discord-btn'))return;
@@ -3206,165 +3220,28 @@ async function saveAdsOptOut(val){
   }catch(e){}
 }
 
-function loadAd_games(){
-  if(document.getElementById('ad-script-games'))return;
-  var el=document.getElementById('adsterra-banner-1');if(!el)return;
+function loadAdsterraBanner(){
+  if(document.getElementById('adsterra-script'))return;
+  var el=document.getElementById('adsterra-banner-1');
+  if(!el)return;
   el.innerHTML='';
-  var s1=document.createElement('script');s1.id='ad-opts-games';
+  var s1=document.createElement('script');
+  s1.id='adsterra-script-options';
   s1.text="atOptions={'key':'1684a07682ff24aaa19bb9f043a4add7','format':'iframe','height':50,'width':320,'params':{}};";
   el.appendChild(s1);
-  var s2=document.createElement('script');s2.id='ad-script-games';
+  var s2=document.createElement('script');
+  s2.id='adsterra-script';
   s2.src='https://www.highperformanceformat.com/1684a07682ff24aaa19bb9f043a4add7/invoke.js';
-  s2.async=true;el.appendChild(s2);
+  s2.async=true;
+  el.appendChild(s2);
 }
-function unloadAd_games(){
-  var el=document.getElementById('adsterra-banner-1');if(el)el.innerHTML='';
-  ['ad-opts-games','ad-script-games'].forEach(function(id){var s=document.getElementById(id);if(s)s.remove();});
-}
-function loadAd_movies(){
-  if(document.getElementById('ad-script-movies'))return;
-  var el=document.getElementById('adsterra-movies');if(!el)return;
-  el.innerHTML='';
-  var s1=document.createElement('script');s1.id='ad-opts-movies';
-  s1.text="atOptions={'key':'73790f59550213de463ddf84d11b0c57','format':'iframe','height':250,'width':300,'params':{}};";
-  el.appendChild(s1);
-  var s2=document.createElement('script');s2.id='ad-script-movies';
-  s2.src='https://www.highperformanceformat.com/73790f59550213de463ddf84d11b0c57/invoke.js';
-  s2.async=true;el.appendChild(s2);
-}
-function unloadAd_movies(){
-  var el=document.getElementById('adsterra-movies');if(el)el.innerHTML='';
-  ['ad-opts-movies','ad-script-movies'].forEach(function(id){var s=document.getElementById(id);if(s)s.remove();});
-}
-function loadAd_shows(){
-  if(document.getElementById('ad-script-shows'))return;
-  var el=document.getElementById('adsterra-shows');if(!el)return;
-  el.innerHTML='';
-  var s1=document.createElement('script');s1.id='ad-opts-shows';
-  s1.text="atOptions={'key':'b6df02eaee15ac6f15c77c97f15a44ce','format':'iframe','height':90,'width':728,'params':{}};";
-  el.appendChild(s1);
-  var s2=document.createElement('script');s2.id='ad-script-shows';
-  s2.src='https://www.highperformanceformat.com/b6df02eaee15ac6f15c77c97f15a44ce/invoke.js';
-  s2.async=true;el.appendChild(s2);
-}
-function unloadAd_shows(){
-  var el=document.getElementById('adsterra-shows');if(el)el.innerHTML='';
-  ['ad-opts-shows','ad-script-shows'].forEach(function(id){var s=document.getElementById(id);if(s)s.remove();});
-}
-function loadAd_seasons(){
-  if(document.getElementById('ad-script-seasons'))return;
-  var el=document.getElementById('adsterra-seasons');if(!el)return;
-  el.innerHTML='';
-  var s1=document.createElement('script');s1.id='ad-opts-seasons';
-  s1.text="atOptions={'key':'e82ef922230b0eda766359d45cc83804','format':'iframe','height':60,'width':468,'params':{}};";
-  el.appendChild(s1);
-  var s2=document.createElement('script');s2.id='ad-script-seasons';
-  s2.src='https://www.highperformanceformat.com/e82ef922230b0eda766359d45cc83804/invoke.js';
-  s2.async=true;el.appendChild(s2);
-}
-function unloadAd_seasons(){
-  var el=document.getElementById('adsterra-seasons');if(el)el.innerHTML='';
-  ['ad-opts-seasons','ad-script-seasons'].forEach(function(id){var s=document.getElementById(id);if(s)s.remove();});
-}
-function loadAd_episodes(){
-  if(document.getElementById('ad-script-episodes'))return;
-  var el=document.getElementById('adsterra-episodes');if(!el)return;
-  el.innerHTML='';
-  var s1=document.createElement('script');s1.id='ad-opts-episodes';
-  s1.text="atOptions={'key':'f98522aebfcb17b3903e595e9abf9d44','format':'iframe','height':300,'width':160,'params':{}};";
-  el.appendChild(s1);
-  var s2=document.createElement('script');s2.id='ad-script-episodes';
-  s2.src='https://www.highperformanceformat.com/f98522aebfcb17b3903e595e9abf9d44/invoke.js';
-  s2.async=true;el.appendChild(s2);
-}
-function unloadAd_episodes(){
-  var el=document.getElementById('adsterra-episodes');if(el)el.innerHTML='';
-  ['ad-opts-episodes','ad-script-episodes'].forEach(function(id){var s=document.getElementById(id);if(s)s.remove();});
-}
-
-
-
-
-
-
-
-
-
-
-
-function loadAllAds(){
-  (function(){
-    if(document.getElementById('adsterra-script'))return;
-    var el=document.getElementById('adsterra-banner-1');if(!el)return;el.innerHTML='';
-    var s1=document.createElement('script');s1.id='adsterra-script-options';
-    s1.text="atOptions={'key':'1684a07682ff24aaa19bb9f043a4add7','format':'iframe','height':50,'width':320,'params':{}};";
-    el.appendChild(s1);
-    var s2=document.createElement('script');s2.id='adsterra-script';
-    s2.src='https://www.highperformanceformat.com/1684a07682ff24aaa19bb9f043a4add7/invoke.js';s2.async=true;
-    el.appendChild(s2);
-  })();
-  (function(){
-    if(document.getElementById('adsterra-script-ad-movies'))return;
-    var el=document.getElementById('adsterra-div-ad-movies');if(!el)return;el.innerHTML='';
-    var s1=document.createElement('script');s1.id='adsterra-opt-ad-movies';
-    s1.text="atOptions={'key':'73790f59550213de463ddf84d11b0c57','format':'iframe','height':250,'width':300,'params':{}};";
-    el.appendChild(s1);
-    var s2=document.createElement('script');s2.id='adsterra-script-ad-movies';
-    s2.src='https://www.highperformanceformat.com/73790f59550213de463ddf84d11b0c57/invoke.js';s2.async=true;
-    el.appendChild(s2);
-  })();
-  (function(){
-    if(document.getElementById('adsterra-script-ad-shows'))return;
-    var el=document.getElementById('adsterra-div-ad-shows');if(!el)return;el.innerHTML='';
-    var s1=document.createElement('script');s1.id='adsterra-opt-ad-shows';
-    s1.text="atOptions={'key':'e82ef922230b0eda766359d45cc83804','format':'iframe','height':60,'width':468,'params':{}};";
-    el.appendChild(s1);
-    var s2=document.createElement('script');s2.id='adsterra-script-ad-shows';
-    s2.src='https://www.highperformanceformat.com/e82ef922230b0eda766359d45cc83804/invoke.js';s2.async=true;
-    el.appendChild(s2);
-  })();
-  (function(){
-    if(document.getElementById('adsterra-script-ad-friends'))return;
-    var el=document.getElementById('adsterra-div-ad-friends');if(!el)return;el.innerHTML='';
-    var s1=document.createElement('script');s1.id='adsterra-opt-ad-friends';
-    s1.text="atOptions={'key':'b6df02eaee15ac6f15c77c97f15a44ce','format':'iframe','height':90,'width':728,'params':{}};";
-    el.appendChild(s1);
-    var s2=document.createElement('script');s2.id='adsterra-script-ad-friends';
-    s2.src='https://www.highperformanceformat.com/b6df02eaee15ac6f15c77c97f15a44ce/invoke.js';s2.async=true;
-    el.appendChild(s2);
-  })();
-  (function(){
-    if(document.getElementById('adsterra-script-ad-chat'))return;
-    var el=document.getElementById('adsterra-div-ad-chat');if(!el)return;el.innerHTML='';
-    var s1=document.createElement('script');s1.id='adsterra-opt-ad-chat';
-    s1.text="atOptions={'key':'f98522aebfcb17b3903e595e9abf9d44','format':'iframe','height':300,'width':160,'params':{}};";
-    el.appendChild(s1);
-    var s2=document.createElement('script');s2.id='adsterra-script-ad-chat';
-    s2.src='https://www.highperformanceformat.com/f98522aebfcb17b3903e595e9abf9d44/invoke.js';s2.async=true;
-    el.appendChild(s2);
-  })();
-}
-function unloadAllAds(){
-  (function(){
-    var el=document.getElementById('adsterra-banner-1');if(el)el.innerHTML='';
-    ['adsterra-script-options','adsterra-script'].forEach(function(id){var s=document.getElementById(id);if(s)s.remove();});
-  })();
-  (function(){
-    var el=document.getElementById('adsterra-div-ad-movies');if(el)el.innerHTML='';
-    ['adsterra-opt-ad-movies','adsterra-script-ad-movies'].forEach(function(id){var s=document.getElementById(id);if(s)s.remove();});
-  })();
-  (function(){
-    var el=document.getElementById('adsterra-div-ad-shows');if(el)el.innerHTML='';
-    ['adsterra-opt-ad-shows','adsterra-script-ad-shows'].forEach(function(id){var s=document.getElementById(id);if(s)s.remove();});
-  })();
-  (function(){
-    var el=document.getElementById('adsterra-div-ad-friends');if(el)el.innerHTML='';
-    ['adsterra-opt-ad-friends','adsterra-script-ad-friends'].forEach(function(id){var s=document.getElementById(id);if(s)s.remove();});
-  })();
-  (function(){
-    var el=document.getElementById('adsterra-div-ad-chat');if(el)el.innerHTML='';
-    ['adsterra-opt-ad-chat','adsterra-script-ad-chat'].forEach(function(id){var s=document.getElementById(id);if(s)s.remove();});
-  })();
+function unloadAdsterraBanner(){
+  var el=document.getElementById('adsterra-banner-1');
+  if(el)el.innerHTML='';
+  var s1=document.getElementById('adsterra-script-options');
+  if(s1)s1.remove();
+  var s2=document.getElementById('adsterra-script');
+  if(s2)s2.remove();
 }
 function applyAdsState(){
   window._adsOptedOut=adsOptedOut&&currentUser&&!currentUser.guest;
@@ -3374,13 +3251,14 @@ function applyAdsState(){
     const el=document.getElementById(id);
     if(el)el.style.display=hide?'none':'';
   });
-  // Side banner
-  const side=document.getElementById('ad-banner-side');
-  if(side)side.style.display=hide?'none':'flex';
+  // Bottom-left sidebar banner
+  const topBanner=document.getElementById('ad-banner-top');
+  if(topBanner)topBanner.style.display=hide?'none':'flex';
+
   // Update settings toggle desc
   const desc=document.getElementById('ads-toggle-desc');
   if(desc)desc.textContent=hide?'Ads are hidden on your account ✓':'Tap to hide all ads on your account';
-  if(hide){unloadAllAds();}else{loadAllAds();}
+  if(hide){unloadAdsterraBanner();}else{loadAdsterraBanner();}
 }
 
 function toggleAdsOptOut(checked){
@@ -3439,10 +3317,13 @@ const AD_SLOT_IDS=[
   'ad-dm',            // DM view — above messages
   'ad-groupchat',     // group chat view — above messages
   'ad-settings',      // settings view — between Ads and About
+  'ad-leaderboard',    // leaderboard view — 160x600
+  'ad-badges',         // badges view — 160x300
 ];
 
 function makeInlineAdHTML(slotId){
   if(slotId==='ad-games-banner'){
+    // DO NOT TOUCH — existing 320x50 Adsterra
     return`<div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 16px;border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04);background:rgba(255,255,255,.01);margin:4px 0">
       <div style="min-height:70px;width:100%;max-width:680px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.025);border:1px dashed rgba(255,255,255,.06);border-radius:10px;overflow:hidden;position:relative;">
         <div id="adsterra-banner-1"></div>
@@ -3452,34 +3333,59 @@ function makeInlineAdHTML(slotId){
       <button style="font-size:9px;color:rgba(255,255,255,.2);background:none;border:none;cursor:none;padding:1px 0;letter-spacing:.05em" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='rgba(255,255,255,.2)'" onclick="goToAdSettings()">Remove ads in Settings →</button>
     </div>`;
   }
+  // 728x90 slots — wide views
+  const wide728=['ad-movies','ad-shows','ad-seasons','ad-episodes'];
+  if(wide728.includes(slotId)){
+    return`<div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 16px;margin:4px 0">
+      <div id="ad-inner-${slotId}" style="min-height:90px;width:100%;max-width:740px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:10px;overflow:hidden;position:relative;">
+        <span style="position:absolute;top:3px;right:7px;font-size:8px;color:rgba(255,255,255,.15);letter-spacing:.06em;pointer-events:none">AD</span>
+      </div>
+      <button style="font-size:9px;color:rgba(255,255,255,.2);background:none;border:none;cursor:none;padding:1px 0;letter-spacing:.05em" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='rgba(255,255,255,.2)'" onclick="goToAdSettings()">Remove ads in Settings →</button>
+    </div>`;
+  }
+  // 468x60 slots — narrower inline views
+  const mid468=['ad-chat','ad-friends','ad-groupchat','ad-dm','ad-settings'];
+  if(mid468.includes(slotId)){
+    return`<div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 16px;margin:4px 0">
+      <div id="ad-inner-${slotId}" style="min-height:60px;width:100%;max-width:480px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:10px;overflow:hidden;position:relative;">
+        <span style="position:absolute;top:3px;right:7px;font-size:8px;color:rgba(255,255,255,.15);letter-spacing:.06em;pointer-events:none">AD</span>
+      </div>
+      <button style="font-size:9px;color:rgba(255,255,255,.2);background:none;border:none;cursor:none;padding:1px 0;letter-spacing:.05em" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='rgba(255,255,255,.2)'" onclick="goToAdSettings()">Remove ads in Settings →</button>
+    </div>`;
+  }
+  // fallback
   return`<div style="min-height:60px;width:100%;max-width:680px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.05);border-radius:10px;overflow:hidden;position:relative;margin:0 auto;">
-    <!-- AD SLOT: ${slotId} — paste ad script here -->
     <span style="font-size:9px;color:rgba(255,255,255,.15);letter-spacing:.08em;pointer-events:none">Ad</span>
-    <span style="position:absolute;top:3px;right:6px;font-size:8px;color:rgba(255,255,255,.12);letter-spacing:.06em;pointer-events:none">AD</span>
-    <button style="position:absolute;bottom:3px;right:6px;font-size:8px;color:rgba(255,255,255,.18);background:none;border:none;cursor:none;padding:0;letter-spacing:.04em" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='rgba(255,255,255,.18)'" onclick="goToAdSettings()">✕ Remove</button>
+    <button style="position:absolute;bottom:3px;right:6px;font-size:8px;color:rgba(255,255,255,.18);background:none;border:none;cursor:none;padding:0" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='rgba(255,255,255,.18)'" onclick="goToAdSettings()">✕ Remove</button>
   </div>`;
+}
+
+function injectAdScript(containerId, key, height, width){
+  const el=document.getElementById(containerId);
+  if(!el)return;
+  const s1=document.createElement('script');
+  s1.text="atOptions={'key':'"+key+"','format':'iframe','height':"+height+",'width':"+width+",'params':{}};";
+  const s2=document.createElement('script');
+  s2.src='https://www.highperformanceformat.com/'+key+'/invoke.js';
+  s2.async=true;
+  el.appendChild(s1);
+  el.appendChild(s2);
 }
 
 function renderAdBanners(){
   AD_SLOT_IDS.forEach(id=>{
     const el=document.getElementById(id);
     if(!el)return;
-    if(id==='ad-games-banner'){
-      if(!el.innerHTML.trim())el.innerHTML=makeInlineAdHTML(id);
-    }else{
-      if(!el.innerHTML.trim())el.innerHTML=makeInlineAdHTML(id);
+    if(!el.innerHTML.trim())el.innerHTML=makeInlineAdHTML(id);
+    // Inject ad scripts into placeholder divs
+    const inner=document.getElementById('ad-inner-'+id);
+    if(inner&&!inner.querySelector('script')){
+      const wide728=['ad-movies','ad-shows','ad-seasons','ad-episodes'];
+      const mid468=['ad-chat','ad-friends','ad-groupchat','ad-dm','ad-settings'];
+      if(wide728.includes(id))injectAdScript('ad-inner-'+id,'b6df02eaee15ac6f15c77c97f15a44ce',90,728);
+      else if(mid468.includes(id))injectAdScript('ad-inner-'+id,'e82ef922230b0eda766359d45cc83804',60,468);
     }
   });
-  // Side banner
-  const sideEl=document.getElementById('ad-banner-side');
-  if(sideEl&&!sideEl.innerHTML.trim()){
-    sideEl.innerHTML=`<div class="ad-inner" style="width:160px;min-height:90px;">
-      <!-- AD SLOT: sidebar — paste ad script here -->
-      <span class="ad-placeholder" style="font-size:9px">Ad</span>
-    </div>
-    <button class="ad-close-hint" onclick="goToAdSettings()" style="font-size:9px">Remove ads</button>`;
-    sideEl.style.display='flex';
-  }
   applyAdsState();
 }
 
@@ -5236,7 +5142,7 @@ lbInitAvatars();
 bootStep('Loading games…',20);
 buildList();renderPage();updateStats();
 bootStep('Fetching game library…',40);
-loadZones();loadSpotlightPublic();loadSiteSettings();renderAdBanners();initAdsBanner();setTimeout(loadAllAds,500);
+loadZones();loadSpotlightPublic();loadSiteSettings();renderAdBanners();initAdsBanner();
 setTimeout(function(){bootStep('Ready!',100);setTimeout(bootDone,400);},3500);
 (async()=>{
   const sess=localStorage.getItem('adless_session');
@@ -5917,7 +5823,7 @@ async function loadLeaderboard(){
       const rankDisplay=rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':rank;
       const p=profMap[r.user_id]||{};const av=p.avatar||'👤';
       const isMine=currentUser&&!currentUser.guest&&r.user_id===currentUser.id;
-      return`<div class="lb-row" style="${isMine?'border-color:rgba(10,132,255,.4);background:rgba(10,132,255,.06)':''}" onclick="openSsViewerById('${r.id}')">
+      return`<div class="lb-row" data-score-id="${r.id}" style="${isMine?'border-color:rgba(10,132,255,.4);background:rgba(10,132,255,.06)':''}" onclick="openSsViewerById(this.dataset.scoreId)">
         <div class="lb-rank ${rankClass}">${rankDisplay}</div>
         <div class="lb-av" onclick="event.stopPropagation();openProfile('${r.user_id}')" title="View profile">${avHtml(av,36)}</div>
         <div class="lb-info">
@@ -5957,18 +5863,20 @@ async function loadLeaderboard(){
 let ssViewerScoreId=null, ssViewerScoreUserId=null, ssViewerScoreGameId=null, ssViewerScoreVal=null;
 function openSsViewerById(id){
   const d=window._lbScoreCache&&window._lbScoreCache[id];
-  if(!d)return;
+  if(!d){showToast('Score data not found');return;}
   openSsViewer(d.screenshot_url,d);
 }
 function openSsViewerByIdSr(id){
   const d=window._srScoreCache&&window._srScoreCache[id];
-  if(!d)return;
+  if(!d){showToast('Score data not found');return;}
   openSsViewer(d.screenshot_url,d);
 }
 function openSsViewer(url, scoreData){
-  if(!url)return;
   const v=document.getElementById('ss-viewer');
-  document.getElementById('ss-viewer-img').src=url;
+  const imgEl=document.getElementById('ss-viewer-img');
+  const noSs=document.getElementById('ss-no-screenshot');
+  if(url){imgEl.src=url;imgEl.style.display='block';if(noSs)noSs.style.display='none';}
+  else{imgEl.src='';imgEl.style.display='none';if(noSs)noSs.style.display='block';}
   // Populate info bar
   const info=document.getElementById('ss-viewer-info');
   if(scoreData){
@@ -6755,7 +6663,7 @@ async function loadScoreReview(tab){
           </div>
           <div class="sr-score">${(r.score||0).toLocaleString()}</div>
         </div>
-        ${r.screenshot_url?`<img class="sr-ss" src="${r.screenshot_url}" onclick="openSsViewerByIdSr('${r.id}')" title="Click to view full screenshot">`:'<div style="color:var(--text2);font-size:12px;margin-bottom:10px">No screenshot</div>'}
+        ${r.screenshot_url?`<img class="sr-ss" src="${r.screenshot_url}" data-score-id="${r.id}" onclick="openSsViewerByIdSr(this.dataset.scoreId)" title="Click to view full screenshot">`:'<div style="color:var(--text2);font-size:12px;margin-bottom:10px">No screenshot</div>'}
         <div class="sr-btns">
           ${srTab==='pending'?`
             <button class="lb-btn" style="margin:0;padding:8px 16px;font-size:12px;background:rgba(48,209,88,.15);border-color:rgba(48,209,88,.3);color:#30d158" onclick="reviewScore('${r.id}','approved','${r.user_id}','${r.game_id}',${r.score})">✅ Approve</button>
@@ -8218,8 +8126,9 @@ function postLoginBadgeCheck(){
     </div>
     <!-- Screenshot -->
     <img id="ss-viewer-img" style="display:block;max-width:100%;max-height:65vh;border-radius:0;object-fit:contain;background:#000" onclick="event.stopPropagation()">
+    <div id="ss-no-screenshot" style="display:none;padding:40px;text-align:center;color:rgba(255,255,255,.4);font-size:13px;background:#111;border-radius:0 0 16px 16px">📷 No screenshot submitted</div>
     <!-- Verdict bar (owner only) -->
-    <div id="ss-viewer-verdict" style="display:none;background:rgba(0,0,0,.85);border:1px solid rgba(255,255,255,.12);border-radius:0 0 16px 16px;padding:12px 18px;display:none;align-items:center;gap:10px;flex-wrap:wrap">
+    <div id="ss-viewer-verdict" style="display:none;background:rgba(0,0,0,.85);border:1px solid rgba(255,255,255,.12);border-radius:0 0 16px 16px;padding:12px 18px;align-items:center;gap:10px;flex-wrap:wrap">
       <div id="ss-viewer-comment" style="flex:1;font-size:12px;color:rgba(255,255,255,.5);font-style:italic"></div>
       <div style="display:flex;gap:8px">
         <button id="ss-approve-btn" style="backgr
