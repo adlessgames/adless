@@ -628,6 +628,19 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
   <div id="mob-overlay" onclick="closeMobMenu()"></div>
   <aside id="sidebar">
     <div class="logo">Adless</div>
+    <!-- Money raised widget -->
+    <a href="https://beta.publishers.adsterra.com/referral/9YFTZphmLh" target="_blank" rel="nofollow" id="money-widget" style="display:block;text-decoration:none;background:linear-gradient(135deg,rgba(48,209,88,.12),rgba(10,132,255,.1));border:1px solid rgba(48,209,88,.25);border-radius:12px;padding:10px 12px;margin-bottom:10px;flex-shrink:0;transition:border-color .15s;" onmouseover="this.style.borderColor='rgba(48,209,88,.6)'" onmouseout="this.style.borderColor='rgba(48,209,88,.25)'">
+      <div style="font-size:9px;color:#30d158;text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:4px">💰 Money Raised</div>
+      <div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap">
+        <span id="money-ads" style="font-size:18px;font-weight:900;color:#fff">$0.00</span>
+        <span style="font-size:9px;color:var(--text2);font-weight:700">ads</span>
+        <span style="font-size:12px;color:var(--text2)">+</span>
+        <span id="money-donations" style="font-size:18px;font-weight:900;color:#fff">$1.00</span>
+        <span style="font-size:9px;color:var(--text2);font-weight:700">donations</span>
+      </div>
+      <div style="font-size:10px;color:#30d158;margin-top:4px;font-weight:600">Total: <span id="money-total" style="color:#fff;font-weight:800">$0.00</span></div>
+      <div style="font-size:9px;color:var(--text2);margin-top:3px">↗ Support via Adsterra</div>
+    </a>
     <!-- Sidebar user area -->
     <div id="user-chip" style="display:none">
       <span class="uc-av" id="uc-av">👤</span>
@@ -8537,6 +8550,29 @@ function postLoginBadgeCheck(){
     setInterval(updateSidebarOnlineCount,60000);
   },2000);
 }
+// ── MONEY RAISED COUNTER ─────────────────────────────────────────
+(function(){
+  const ADS_EARNED = 0.00;       // update with your Adsterra earnings
+  const DONATIONS_EARNED = 0.00; // update with your Ko-fi donations
+  function fmt(n){return '$'+n.toFixed(2);}
+  const el_ads   = document.getElementById('money-ads');
+  const el_don   = document.getElementById('money-donations');
+  const el_total = document.getElementById('money-total');
+  if(!el_ads) return;
+  const total = ADS_EARNED + DONATIONS_EARNED;
+  let start = null;
+  const dur = 1200;
+  function tick(ts){
+    if(!start) start=ts;
+    const p = Math.min((ts-start)/dur,1);
+    const ease = 1-Math.pow(1-p,3);
+    el_ads.textContent   = fmt(ADS_EARNED*ease);
+    el_don.textContent   = fmt(DONATIONS_EARNED*ease);
+    el_total.textContent = fmt(total*ease);
+    if(p<1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
 </script>
 
 <!-- NOTIFICATION PANEL (CrazyGames style) -->
