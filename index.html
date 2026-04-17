@@ -640,7 +640,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
   <aside id="sidebar">
     <div class="logo">Adless</div>
     <!-- Money raised widget -->
-    <a href="https://beta.publishers.adsterra.com/referral/9YFTZphmLh" target="_blank" rel="nofollow" id="money-widget" style="display:block;text-decoration:none;background:linear-gradient(135deg,rgba(48,209,88,.12),rgba(10,132,255,.1));border:1px solid rgba(48,209,88,.25);border-radius:12px;padding:10px 12px;margin-bottom:10px;flex-shrink:0;transition:border-color .15s;" onmouseover="this.style.borderColor='rgba(48,209,88,.6)'" onmouseout="this.style.borderColor='rgba(48,209,88,.25)'">
+    <a href="https://ko-fi.com/adless" target="_blank" rel="nofollow" id="money-widget" style="display:block;text-decoration:none;background:linear-gradient(135deg,rgba(48,209,88,.12),rgba(10,132,255,.1));border:1px solid rgba(48,209,88,.25);border-radius:12px;padding:10px 12px;margin-bottom:10px;flex-shrink:0;transition:border-color .15s;" onmouseover="this.style.borderColor='rgba(48,209,88,.6)'" onmouseout="this.style.borderColor='rgba(48,209,88,.25)'">
       <div style="font-size:9px;color:#30d158;text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:4px">💰 Money Raised</div>
       <div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap">
         <span id="money-ads" style="font-size:18px;font-weight:900;color:#fff">$0.00</span>
@@ -1477,6 +1477,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       Or <a href="https://ko-fi.com/adless" target="_blank" style="color:var(--blue)">support us on Ko-fi ☕</a> — we appreciate it!
     </div>
   </div>
+</div>
 
 <!-- AD SLOTS — injected into game grid area -->
 <div id="ad-banner-top" class="ad-banner" style="display:none">
@@ -1676,6 +1677,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       </div>
     </div>
   </div>
+</div>
 
 
   <!-- ABOUT VIEW -->
@@ -2540,9 +2542,9 @@ async function lbSubmit(){
 // ⚠️ SETUP: Create a free account at emailjs.com, make a service + template,
 // then replace the three values below with your own credentials.
 // Template variables needed: {{to_email}}, {{to_name}}, {{verify_code}}
-const EMAILJS_SERVICE='service_axtpvvs';
-const EMAILJS_TEMPLATE='FNG5AY4zYmlnpqutY';
-const EMAILJS_KEY='FNG5AY4zYmlnpqutY';
+const EMAILJS_SERVICE='YOUR_SERVICE_ID';
+const EMAILJS_TEMPLATE='YOUR_TEMPLATE_ID';
+const EMAILJS_KEY='YOUR_PUBLIC_KEY';
 function _genCode(){return String(Math.floor(100000+Math.random()*900000));}
 async function sendVerifyEmail(email,username){
   _verifyCode=_genCode();
