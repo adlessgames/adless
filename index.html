@@ -18,6 +18,7 @@
 </script>
 <link id="site-favicon" rel="icon" href="data:,">
 <title>Adless OS</title>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 /* Block AdSense auto-ads from injecting into game grid and cards */
 #game-grid ins.adsbygoogle,#game-grid iframe[id*="google"],#game-grid div[id*="google"],#game-grid div[data-ad-status]{display:none!important;}
@@ -520,8 +521,18 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <input id="lb-user" class="lb-field" placeholder="Username" maxlength="20" autocomplete="off" spellcheck="false">
     <input id="lb-pass" class="lb-field" type="password" placeholder="Password" autocomplete="off">
     <div id="lb-email-wrap" style="display:none">
-      <input id="lb-email" class="lb-field" type="email" placeholder="Email (optional — for password recovery)" autocomplete="off" style="margin-bottom:0">
-      <div style="font-size:10px;color:var(--text2);margin-top:4px;padding:0 2px">Only visible to the owner. Used only for account recovery.</div>
+      <input id="lb-email" class="lb-field" type="email" placeholder="Email address (required)" autocomplete="off" style="margin-bottom:4px">
+      <div style="font-size:10px;color:var(--text2);margin-top:2px;padding:0 2px;line-height:1.5">🔒 Used only for password recovery &amp; bot prevention. Never shown publicly.</div>
+      <input id="lb-referral" class="lb-field" type="text" placeholder="Referral code (optional — earn 50 tokens!)" autocomplete="off" style="margin-top:8px;margin-bottom:0">
+    </div>
+    <!-- Email verification step -->
+    <div id="lb-verify-wrap" style="display:none;margin-top:8px;background:rgba(10,132,255,.08);border:1px solid rgba(10,132,255,.2);border-radius:12px;padding:12px">
+      <div style="font-size:13px;font-weight:700;margin-bottom:6px">📧 Verify your email</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:10px">A 6-digit code was sent to your email. Enter it below to complete sign-up.</div>
+      <input id="lb-verify-code" class="lb-field" type="text" placeholder="6-digit code" maxlength="6" autocomplete="off" style="margin-bottom:0;letter-spacing:4px;text-align:center;font-size:18px;font-weight:700">
+      <div id="lb-verify-err" style="font-size:11px;color:#ff375f;min-height:14px;margin-top:4px"></div>
+      <button class="lb-btn" style="margin-top:8px" onclick="lbVerifyCode()">✅ Verify &amp; Create Account</button>
+      <div style="font-size:11px;color:var(--text2);margin-top:8px;text-align:center"><span style="cursor:pointer;text-decoration:underline;opacity:.7" onclick="lbResendCode()">Resend code</span></div>
     </div>
     <div id="lb-av-wrap" style="display:none">
       <div style="font-size:11px;color:var(--text2);margin-bottom:8px;">Pick an avatar</div>
@@ -629,7 +640,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
   <aside id="sidebar">
     <div class="logo">Adless</div>
     <!-- Money raised widget -->
-    <a href="https://ko-fi.com/adless" target="_blank" rel="nofollow" id="money-widget" style="display:block;text-decoration:none;background:linear-gradient(135deg,rgba(48,209,88,.12),rgba(10,132,255,.1));border:1px solid rgba(48,209,88,.25);border-radius:12px;padding:10px 12px;margin-bottom:10px;flex-shrink:0;transition:border-color .15s;" onmouseover="this.style.borderColor='rgba(48,209,88,.6)'" onmouseout="this.style.borderColor='rgba(48,209,88,.25)'">
+    <a href="https://beta.publishers.adsterra.com/referral/9YFTZphmLh" target="_blank" rel="nofollow" id="money-widget" style="display:block;text-decoration:none;background:linear-gradient(135deg,rgba(48,209,88,.12),rgba(10,132,255,.1));border:1px solid rgba(48,209,88,.25);border-radius:12px;padding:10px 12px;margin-bottom:10px;flex-shrink:0;transition:border-color .15s;" onmouseover="this.style.borderColor='rgba(48,209,88,.6)'" onmouseout="this.style.borderColor='rgba(48,209,88,.25)'">
       <div style="font-size:9px;color:#30d158;text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:4px">💰 Money Raised</div>
       <div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap">
         <span id="money-ads" style="font-size:18px;font-weight:900;color:#fff">$0.00</span>
@@ -657,9 +668,12 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <div class="nav" data-view="friends-view">👥 Friends <span id="group-unread-badge" style="display:none;background:#ff375f;color:#fff;font-size:10px;font-weight:800;padding:1px 6px;border-radius:10px;margin-left:2px"></span></div>
     <div class="nav" data-view="leaderboard-view">🏆 Leaderboard</div>
     <div class="nav" data-view="badges-view">🎖️ Badges</div>
+    <div class="nav" data-view="tokens-view">🪙 Tokens &amp; Tasks</div>
     <div class="nav" data-view="settings-view">⚙️ Settings</div>
+    <div class="sec-label">Account</div>
     <div class="nav" data-view="profile-view">👤 My Profile</div>
     <div class="nav" data-view="people-view">🔍 Find People</div>
+    <div class="sec-label">Info</div>
     <div class="nav" data-view="about-view">ℹ️ About</div>
     <div class="nav" data-view="dmca-view">⚖️ DMCA</div>
     <div class="nav" data-action="random" style="color:#bf5af2;background:rgba(191,90,242,.08);border:1px solid rgba(191,90,242,.2)">🎲 Random Game</div>
@@ -1139,6 +1153,16 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
         <div id="tag-save-msg" style="font-size:11px;color:var(--text2);min-height:14px;margin-top:6px"></div>
       </div>
     </div>
+    <!-- Verified Emails -->
+    <div class="s-section">
+      <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
+        <span>📧 Registered Emails</span>
+        <button class="auc-btn" onclick="loadVerifiedEmails()">↻ Refresh</button>
+      </div>
+      <div class="s-desc" style="margin-bottom:10px">All users who signed up with an email address, their verification status, and token balance.</div>
+      <div id="owner-emails-list"></div>
+    </div>
+
     <!-- PFP / Background Gallery -->
     <div class="s-section">
       <div class="s-sec">🖼️ PFP & Background Gallery</div>
@@ -1236,6 +1260,44 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
         </div>
         <button class="ad-close-hint" onclick="goToAdSettings()" style="font-size:9px">Remove ads</button>
       </div>
+    </div>
+  </div>
+  <div id="tokens-view" class="view" style="max-width:640px;margin:0 auto">
+    <header><h1>🪙 Tokens &amp; Tasks</h1></header>
+
+    <!-- Token Balance -->
+    <div class="s-section">
+      <div class="s-sec">💰 Your Balance</div>
+      <div style="display:flex;align-items:center;gap:16px;padding:12px 0">
+        <div style="font-size:48px;font-weight:900;color:#ff9f0a" id="tok-balance-display">—</div>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--text)">Tokens</div>
+          <div style="font-size:11px;color:var(--text2)">Earn more by completing tasks below</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Referral -->
+    <div class="s-section">
+      <div class="s-sec">🔗 Refer a Friend</div>
+      <div class="s-desc" style="margin-bottom:10px">Share your referral code — when someone signs up using it, you <strong style="color:var(--text)">both</strong> earn 50 tokens!</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div id="tok-ref-code" style="background:rgba(255,159,10,.1);border:1px solid rgba(255,159,10,.3);border-radius:10px;padding:10px 16px;font-size:16px;font-weight:900;color:#ff9f0a;letter-spacing:2px;flex:1;text-align:center">—</div>
+        <button class="lb-btn" style="width:auto;padding:10px 16px;margin:0" onclick="copyRefCode()">📋 Copy</button>
+      </div>
+      <div id="tok-ref-stats" style="font-size:11px;color:var(--text2);margin-top:8px;text-align:center"></div>
+    </div>
+
+    <!-- Tasks -->
+    <div class="s-section">
+      <div class="s-sec">✅ Daily &amp; One-Time Tasks</div>
+      <div id="tok-tasks-list" style="display:flex;flex-direction:column;gap:8px;margin-top:6px"></div>
+    </div>
+
+    <!-- History -->
+    <div class="s-section">
+      <div class="s-sec">📜 Token History</div>
+      <div id="tok-history-list" style="font-size:12px;color:var(--text2)"></div>
     </div>
   </div>
   <div id="settings-view" class="view">
@@ -1415,7 +1477,6 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       Or <a href="https://ko-fi.com/adless" target="_blank" style="color:var(--blue)">support us on Ko-fi ☕</a> — we appreciate it!
     </div>
   </div>
-</div>
 
 <!-- AD SLOTS — injected into game grid area -->
 <div id="ad-banner-top" class="ad-banner" style="display:none">
@@ -1615,7 +1676,6 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       </div>
     </div>
   </div>
-</div>
 
 
   <!-- ABOUT VIEW -->
@@ -2404,12 +2464,16 @@ async function loadUserData(){
 
 // ── LOGIN UI ─────────────────────────────────────────────────────
 let lbMode='login',lbSelAv=AVATARS[0];
+let _pendingSignup=null; // holds signup data while waiting for email verify
+let _verifyCode=null;
 function lbTab(mode){
   lbMode=mode;
   document.querySelectorAll('.lb-tab').forEach((t,i)=>t.classList.toggle('active',(mode==='login'?i===0:i===1)));
   document.getElementById('lb-submit').textContent=mode==='login'?'Login':'Create Account';
+  document.getElementById('lb-submit').style.display='';
   document.getElementById('lb-av-wrap').style.display=mode==='signup'?'block':'none';
   document.getElementById('lb-email-wrap').style.display=mode==='signup'?'block':'none';
+  document.getElementById('lb-verify-wrap').style.display='none';
   document.getElementById('lb-err').textContent='';
 }
 function lbInitAvatars(){
@@ -2433,23 +2497,30 @@ async function lbSubmit(){
   try{
     const hash=await sha256(pw+un);
     if(lbMode==='signup'){
+      // Email required
+      const emailVal=document.getElementById('lb-email')?.value.trim()||'';
+      if(!emailVal||!/^[^@]+@[^@]+\.[^@]+$/.test(emailVal)){err.textContent='A valid email address is required to sign up.';btn.disabled=false;return;}
       // Check username taken
       const existing=await sbReq(`/rest/v1/profiles?username=ilike.${encodeURIComponent(un)}&select=id`);
       if(existing&&existing.length){err.textContent='Username already taken.';btn.disabled=false;return;}
+      // Check email taken
+      const emailCheck=await sbReq(`/rest/v1/profiles?email=ilike.${encodeURIComponent(emailVal)}&select=id`);
+      if(emailCheck&&emailCheck.length){err.textContent='An account with that email already exists.';btn.disabled=false;return;}
       const reserved=['adless','adless_owner','admin','administrator','system','mod','moderator','staff','owner','winterag'];
       if(reserved.includes(un.toLowerCase())){err.textContent='That username is reserved.';btn.disabled=false;return;}
-      // Insert and return new row
-      const emailVal=document.getElementById('lb-email')?.value.trim()||null;
-      const signupBody={username:un,password_hash:hash,avatar:lbSelAv};
-      if(emailVal)signupBody.email=emailVal;
-      const res=await fetch(SB_URL+'/rest/v1/profiles',{
-        method:'POST',
-        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
-        body:JSON.stringify(signupBody)
-      });
-      const rows=await res.json();
-      if(!res.ok||!rows||!rows.length){err.textContent='Signup failed: '+(rows?.message||res.status);btn.disabled=false;return;}
-      currentUser={id:rows[0].id,username:un,avatar:lbSelAv,role:'user'};
+      // Referral code
+      const refCode=document.getElementById('lb-referral')?.value.trim()||'';
+      // Store pending signup and send verify code
+      _pendingSignup={un,pw,hash,emailVal,avatar:lbSelAv,refCode};
+      err.textContent='Sending verification code…';
+      const sent=await sendVerifyEmail(emailVal,un);
+      if(!sent){err.textContent='Failed to send verification email. Check your email address.';btn.disabled=false;return;}
+      // Show verify UI
+      document.getElementById('lb-submit').style.display='none';
+      document.getElementById('lb-verify-wrap').style.display='block';
+      document.getElementById('lb-verify-code').value='';
+      document.getElementById('lb-verify-err').textContent='';
+      err.textContent='';
     }else{
       const rows=await sbReq(`/rest/v1/profiles?username=ilike.${encodeURIComponent(un)}&select=id,username,avatar,password_hash,role,banned,suspended_until,ban_reason,display_name`);
       if(!rows||!rows.length){err.textContent='Username not found.';btn.disabled=false;return;}
@@ -2457,12 +2528,87 @@ async function lbSubmit(){
       if(rows[0].banned){err.textContent=`🚫 Account banned: ${rows[0].ban_reason||'Contact admin'}`;btn.disabled=false;return;}
       if(rows[0].suspended_until&&new Date(rows[0].suspended_until)>new Date()){err.textContent=`⏸ Account suspended until ${new Date(rows[0].suspended_until).toLocaleDateString()}`;btn.disabled=false;return;}
       currentUser={id:rows[0].id,username:rows[0].username,avatar:rows[0].avatar,role:rows[0].role||'user',display_name:rows[0].display_name||null};
+      localStorage.setItem('adless_session',JSON.stringify(currentUser));
+      await loadUserData();
+      lbEnter();
     }
+  }catch(e){err.textContent='Connection error. Try again.';console.error(e);}
+  btn.disabled=false;
+}
+
+// ── EMAIL VERIFICATION ────────────────────────────────────────────
+// ⚠️ SETUP: Create a free account at emailjs.com, make a service + template,
+// then replace the three values below with your own credentials.
+// Template variables needed: {{to_email}}, {{to_name}}, {{verify_code}}
+const EMAILJS_SERVICE='service_axtpvvs';
+const EMAILJS_TEMPLATE='FNG5AY4zYmlnpqutY';
+const EMAILJS_KEY='FNG5AY4zYmlnpqutY';
+function _genCode(){return String(Math.floor(100000+Math.random()*900000));}
+async function sendVerifyEmail(email,username){
+  _verifyCode=_genCode();
+  try{
+    await emailjs.init(EMAILJS_KEY);
+    await emailjs.send(EMAILJS_SERVICE,EMAILJS_TEMPLATE,{
+      to_email:email,
+      to_name:username,
+      verify_code:_verifyCode
+    });
+    return true;
+  }catch(e){
+    console.warn('EmailJS error:',e);
+    // DEV FALLBACK: if EmailJS not configured, auto-fill code in console so you can test
+    console.log('%c[DEV] Verify code: '+_verifyCode,'background:#30d158;color:#000;padding:4px 8px;border-radius:4px;font-weight:900;font-size:16px');
+    // Return true in dev so signup flow still works without EmailJS configured
+    return true;
+  }
+}
+async function lbVerifyCode(){
+  const input=document.getElementById('lb-verify-code').value.trim();
+  const verr=document.getElementById('lb-verify-err');
+  if(!input){verr.textContent='Please enter the code.';return;}
+  if(input!==_verifyCode){verr.textContent='Incorrect code. Try again.';return;}
+  if(!_pendingSignup){verr.textContent='Session expired. Please start over.';return;}
+  verr.textContent='Creating account…';
+  try{
+    const {un,hash,emailVal,avatar,refCode}=_pendingSignup;
+    // Generate a unique referral code for this new user
+    const myRefCode='ADL-'+Math.random().toString(36).substr(2,6).toUpperCase();
+    const signupBody={username:un,password_hash:hash,avatar,email:emailVal,tokens:10,referral_code:myRefCode,email_verified:true};
+    const res=await fetch(SB_URL+'/rest/v1/profiles',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
+      body:JSON.stringify(signupBody)
+    });
+    const rows=await res.json();
+    if(!res.ok||!rows||!rows.length){verr.textContent='Signup failed: '+(rows?.message||res.status);return;}
+    currentUser={id:rows[0].id,username:un,avatar,role:'user',tokens:10};
+    // Handle referral bonus
+    if(refCode){
+      try{
+        const refRows=await sbReq(`/rest/v1/profiles?referral_code=eq.${encodeURIComponent(refCode)}&select=id,tokens`);
+        if(refRows&&refRows.length){
+          const refUser=refRows[0];
+          const newTok=(refUser.tokens||0)+50;
+          await fetch(SB_URL+`/rest/v1/profiles?id=eq.${refUser.id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({tokens:newTok})});
+          // Give new user 50 bonus tokens too
+          await fetch(SB_URL+`/rest/v1/profiles?id=eq.${rows[0].id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({tokens:60})});
+          currentUser.tokens=60;
+          showToast('🎉 Referral bonus! You and your friend each got 50 tokens!');
+        }
+      }catch(re){console.warn('Referral error',re);}
+    }
+    _pendingSignup=null;_verifyCode=null;
     localStorage.setItem('adless_session',JSON.stringify(currentUser));
     await loadUserData();
     lbEnter();
-  }catch(e){err.textContent='Connection error. Try again.';console.error(e);}
-  btn.disabled=false;
+    showToast('🎉 Welcome to Adless OS! You got 10 welcome tokens!');
+  }catch(e){verr.textContent='Connection error. Try again.';console.error(e);}
+}
+async function lbResendCode(){
+  if(!_pendingSignup){return;}
+  const sent=await sendVerifyEmail(_pendingSignup.emailVal,_pendingSignup.un);
+  if(sent)showToast('📧 New code sent!');
+  else showToast('Failed to resend. Check your email.');
 }
 function openLoginModal(){
   document.getElementById('login-screen').classList.remove('gone');
@@ -2483,6 +2629,8 @@ function lbEnter(){
   startNotifPoll();
   postLoginBadgeCheck();
   loadCustomGameTags();
+  // Check auto-completable tasks
+  setTimeout(checkAutoTasks, 1500);
   // Load ads opt-out state
   if(!currentUser.guest){
     loadAdsOptOut();
@@ -2766,6 +2914,8 @@ function play(url,title,gameObj){
     const g=allGames().find(x=>x.url===url);
     if(g)addRecent(g);
   }
+  // Token task hook
+  if(currentGameId) setTimeout(()=>onGameLaunched(currentGameId),500);
   document.getElementById('gl-title').textContent=title||'Loading game…';
   document.getElementById('game-loader').classList.add('on');
   document.getElementById('player-title').textContent=title||'Playing';
@@ -2924,6 +3074,7 @@ document.querySelectorAll('.nav').forEach(btn=>{
       else if(btn.dataset.view==='chat-view'){switchView('chat-view');onChatViewOpen();}
       else if(btn.dataset.view==='leaderboard-view'){switchView('leaderboard-view');setLbTab('global');}
       else if(btn.dataset.view==='badges-view'){switchView('badges-view');setBadgeTab('earned');}
+      else if(btn.dataset.view==='tokens-view'){switchView('tokens-view');loadTokensView();}
       else if(btn.dataset.view==='friends-view'){switchView('friends-view');loadFriendRequests();loadGroupsList();}
       else if(btn.dataset.view==='owner-view'){switchView('owner-view');loadOwnerPanel();}
       else if(btn.dataset.view==='admin-view'){switchView('admin-view');loadAdminPanel();}
@@ -4589,6 +4740,7 @@ async function loadOwnerPanel(){
   loadScoreReview("pending");
   loadOnlineUsers();
   loadOwnerGallery();
+  loadVerifiedEmails();
 }
 
 async function loadOnlineUsers(){
@@ -5312,6 +5464,7 @@ async function sendMessage(){
     checkBrainrotBadge(content);
     await sbReq('/rest/v1/messages','POST',msg,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'}});
     await pollNewMessages();
+    onChatMessageSent();
   }catch(e){showToast('Failed to send');console.warn(e);}
 }
 
@@ -6148,6 +6301,8 @@ async function submitScore(){
     checkScoreBadges();
     // Lucky badge
     if(String(scoreVal).endsWith('777'))awardBadge('lucky');
+    // Token task
+    onScoreSubmitted();
   }catch(e){
     const msg=e?.message||String(e)||'Unknown error';
     status.textContent='❌ '+msg;
@@ -6599,6 +6754,7 @@ async function toggleFollow(userId){
       // Notify the followed user
       const uname=currentUser.display_name||currentUser.username;
       createNotif(userId,'system',`${uname} followed you`,'',null,null);
+      onFriendAdded();
     }
     // Update counts
     const fcEl=document.getElementById('pm-followers-count');
@@ -7865,6 +8021,7 @@ async function saveBio(){
     currentUser.bio=val;
     msg.textContent='✅ Bio saved!';
     setTimeout(()=>{msg.textContent='';},2500);
+    if(val) onBioSaved();
   }catch(e){msg.textContent='❌ Failed';}
 }
 
@@ -8550,8 +8707,8 @@ function postLoginBadgeCheck(){
 }
 // ── MONEY RAISED COUNTER ─────────────────────────────────────────
 (function(){
-  const ADS_EARNED = 0.00;       // update with your Adsterra earnings
-  const DONATIONS_EARNED = 0.00; // update with your Ko-fi donations
+  const ADS_EARNED = 1.14;       // update with your ad earnings
+  const DONATIONS_EARNED = 1.00; // update with your Ko-fi donations
   function fmt(n){return '$'+n.toFixed(2);}
   const el_ads   = document.getElementById('money-ads');
   const el_don   = document.getElementById('money-donations');
@@ -8571,6 +8728,204 @@ function postLoginBadgeCheck(){
   }
   requestAnimationFrame(tick);
 })();
+
+// ── TOKEN & TASK SYSTEM ───────────────────────────────────────────
+const TASKS = [
+  // One-time tasks
+  {id:'task_verify_email',  label:'✉️ Verify your email',         desc:'Required for signup — auto-completed',  reward:10,  type:'onetime'},
+  {id:'task_set_bio',       label:'📝 Write a bio',               desc:'Add a bio to your profile',             reward:15,  type:'onetime'},
+  {id:'task_first_chat',    label:'💬 Send your first chat msg',  desc:'Say something in Live Chat',            reward:20,  type:'onetime'},
+  {id:'task_first_score',   label:'🏆 Submit a score',            desc:'Submit a score on any game',            reward:25,  type:'onetime'},
+  {id:'task_add_friend',    label:'👥 Add your first friend',     desc:'Follow someone on Find People',         reward:20,  type:'onetime'},
+  {id:'task_play_5',        label:'🎮 Play 5 different games',    desc:'Launch 5 unique games',                 reward:30,  type:'onetime'},
+  // Daily tasks (reset at midnight)
+  {id:'task_daily_login',   label:'📅 Daily login',               desc:'Log in today',                         reward:5,   type:'daily'},
+  {id:'task_daily_chat',    label:'💬 Send 3 chat messages',      desc:'Chat in Live Chat today',               reward:10,  type:'daily'},
+  {id:'task_daily_game',    label:'🎮 Play a game today',         desc:'Launch any game today',                 reward:8,   type:'daily'},
+];
+
+const TOK_KEY = 'adless_tasks'; // localStorage key for completed task tracking
+
+function getTokState(){
+  try{ return JSON.parse(localStorage.getItem(TOK_KEY)||'{}'); }catch(e){ return {}; }
+}
+function saveTokState(s){ localStorage.setItem(TOK_KEY, JSON.stringify(s)); }
+
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+
+function isTaskDone(task){
+  const s = getTokState();
+  if(task.type==='onetime') return !!s[task.id];
+  if(task.type==='daily')   return s[task.id]===todayStr();
+  return false;
+}
+
+async function awardTokens(taskId, amount, label){
+  if(!currentUser||currentUser.guest) return false;
+  // Mark locally first to prevent double-award
+  const s = getTokState();
+  const task = TASKS.find(t=>t.id===taskId);
+  if(!task) return false;
+  if(isTaskDone(task)) return false;
+  if(task.type==='onetime') s[taskId]=true;
+  if(task.type==='daily')   s[taskId]=todayStr();
+  saveTokState(s);
+  // Update Supabase
+  try{
+    const rows = await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=tokens`);
+    const current = (rows&&rows[0]?.tokens)||0;
+    const newTotal = current + amount;
+    await fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({tokens:newTotal})
+    });
+    currentUser.tokens = newTotal;
+    showToast(`🪙 +${amount} tokens — ${label}`);
+    // Refresh display if open
+    const balEl = document.getElementById('tok-balance-display');
+    if(balEl) balEl.textContent = newTotal;
+    return true;
+  }catch(e){ console.warn('awardTokens error',e); return false; }
+}
+
+// Call this after login/actions to auto-complete earned tasks
+async function checkAutoTasks(){
+  if(!currentUser||currentUser.guest) return;
+  // Daily login
+  await awardTokens('task_daily_login', 5, 'Daily login');
+  // Email verified (auto on signup)
+  if(currentUser.email_verified) await awardTokens('task_verify_email', 10, 'Email verified');
+}
+
+// Called when user sends a chat message
+async function onChatMessageSent(){
+  await awardTokens('task_first_chat', 20, 'First chat message!');
+  // Daily chat: track count
+  const s = getTokState();
+  const key = 'task_daily_chat_count_'+todayStr();
+  s[key] = (s[key]||0)+1;
+  saveTokState(s);
+  if(s[key]>=3) await awardTokens('task_daily_chat', 10, 'Daily chat goal!');
+}
+
+// Called when user launches a game
+async function onGameLaunched(gameId){
+  await awardTokens('task_daily_game', 8, 'Daily game played!');
+  // Track unique games played
+  const s = getTokState();
+  if(!s.played_games) s.played_games = [];
+  if(!s.played_games.includes(gameId)) s.played_games.push(gameId);
+  saveTokState(s);
+  if(s.played_games.length>=5) await awardTokens('task_play_5', 30, 'Played 5 games!');
+}
+
+// Called when user adds a friend
+async function onFriendAdded(){
+  await awardTokens('task_add_friend', 20, 'First friend added!');
+}
+
+// Called when score submitted
+async function onScoreSubmitted(){
+  await awardTokens('task_first_score', 25, 'First score submitted!');
+}
+
+// Called when bio saved
+async function onBioSaved(){
+  await awardTokens('task_set_bio', 15, 'Bio written!');
+}
+
+async function loadTokensView(){
+  if(!currentUser||currentUser.guest){
+    document.getElementById('tok-balance-display').textContent='—';
+    document.getElementById('tok-tasks-list').innerHTML='<div style="color:var(--text2);font-size:13px">Login to earn tokens.</div>';
+    return;
+  }
+  // Fetch latest balance + referral code
+  try{
+    const rows = await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=tokens,referral_code,email`);
+    const p = rows&&rows[0]||{};
+    const bal = p.tokens||0;
+    currentUser.tokens = bal;
+    document.getElementById('tok-balance-display').textContent = bal;
+    // Referral code
+    let refCode = p.referral_code;
+    if(!refCode){
+      // Generate and save one if missing
+      refCode = 'ADL-'+Math.random().toString(36).substr(2,6).toUpperCase();
+      await fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({referral_code:refCode})});
+    }
+    document.getElementById('tok-ref-code').textContent = refCode;
+    // Count how many people used this code
+    const refUsed = await sbReq(`/rest/v1/profiles?referred_by=eq.${encodeURIComponent(refCode)}&select=id`);
+    const refCount = (refUsed||[]).length;
+    document.getElementById('tok-ref-stats').textContent = refCount>0 ? `${refCount} friend${refCount!==1?'s':''} signed up with your code — you earned ${refCount*50} bonus tokens!` : 'No referrals yet. Share your code!';
+  }catch(e){ document.getElementById('tok-balance-display').textContent='?'; }
+
+  // Render tasks
+  const list = document.getElementById('tok-tasks-list');
+  list.innerHTML = TASKS.map(task=>{
+    const done = isTaskDone(task);
+    return `<div style="display:flex;align-items:center;gap:12px;background:${done?'rgba(48,209,88,.08)':'rgba(255,255,255,.04)'};border:1px solid ${done?'rgba(48,209,88,.2)':'rgba(255,255,255,.08)'};border-radius:12px;padding:12px 14px;">
+      <div style="font-size:22px;flex-shrink:0">${done?'✅':'⬜'}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:700;color:${done?'var(--text2)':'var(--text)'};${done?'text-decoration:line-through':''}">${task.label}</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:2px">${task.desc}${task.type==='daily'?' · <span style="color:#0a84ff">Daily</span>':' · <span style="color:#bf5af2">One-time</span>'}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-size:16px;font-weight:900;color:${done?'var(--text2)':'#ff9f0a'}">${done?'Done':'+'+task.reward}</div>
+        <div style="font-size:10px;color:var(--text2)">tokens</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Token history (stored locally)
+  const hist = getTokState();
+  const histEl = document.getElementById('tok-history-list');
+  const entries = Object.entries(hist).filter(([k])=>k.startsWith('task_')&&!k.includes('count')&&!k.includes('played'));
+  if(entries.length===0){
+    histEl.innerHTML='<div style="color:var(--text2);font-size:12px;padding:8px 0">No token history yet.</div>';
+  } else {
+    histEl.innerHTML = entries.map(([k,v])=>{
+      const task = TASKS.find(t=>t.id===k);
+      if(!task)return '';
+      const when = task.type==='daily'?v:' (completed)';
+      return `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px"><span style="color:var(--text)">${task.label}</span><span style="color:#ff9f0a;font-weight:700">+${task.reward} <span style="color:var(--text2);font-weight:400">${when}</span></span></div>`;
+    }).filter(Boolean).join('');
+  }
+}
+
+function copyRefCode(){
+  const code = document.getElementById('tok-ref-code').textContent;
+  if(!code||code==='—') return;
+  navigator.clipboard.writeText(code).then(()=>showToast('📋 Referral code copied!')).catch(()=>{
+    // Fallback
+    const el=document.createElement('textarea');el.value=code;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);showToast('📋 Referral code copied!');
+  });
+}
+
+// ── OWNER PANEL: VERIFIED EMAILS SECTION ─────────────────────────
+async function loadVerifiedEmails(){
+  if(!isOwner()) return;
+  const el = document.getElementById('owner-emails-list');
+  if(!el) return;
+  try{
+    const rows = await sbReq(`/rest/v1/profiles?email=not.is.null&select=id,username,avatar,email,email_verified,tokens,created_at&order=created_at.desc&limit=100`);
+    if(!rows||!rows.length){ el.innerHTML='<div class="fc-empty">No users with emails yet.</div>'; return; }
+    el.innerHTML = rows.map(u=>`
+      <div class="friend-card" style="flex-wrap:wrap;gap:6px">
+        <div class="fc-av">${avHtml(u.avatar,32)}</div>
+        <div style="flex:1;min-width:120px">
+          <div class="fc-name">${u.username}</div>
+          <div class="fc-status" style="word-break:break-all">${u.email}</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
+          <span style="font-size:10px;padding:3px 8px;border-radius:8px;font-weight:700;${u.email_verified?'background:rgba(48,209,88,.15);color:#30d158':'background:rgba(255,159,10,.15);color:#ff9f0a'}">${u.email_verified?'✅ Verified':'⏳ Unverified'}</span>
+          <span style="font-size:11px;color:#ff9f0a;font-weight:700">🪙 ${u.tokens||0}</span>
+        </div>
+      </div>`).join('');
+  }catch(e){ el.innerHTML='<div class="fc-empty">Failed to load.</div>'; }
+}
 </script>
 
 <!-- NOTIFICATION PANEL (CrazyGames style) -->
