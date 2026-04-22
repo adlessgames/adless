@@ -390,6 +390,18 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .lb-flag{background:none;border:1px solid rgba(255,159,10,.3);color:#ff9f0a;border-radius:6px;padding:3px 8px;font-size:11px;cursor:none;flex-shrink:0;}
 /* ── BADGES ── */
 .badge-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:8px;}
+.shop-item{background:var(--glass);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer!important;transition:border-color .15s,transform .15s;position:relative;}
+.shop-item:hover{border-color:rgba(255,255,255,.3);transform:translateY(-2px);}
+.shop-item.owned{border-color:rgba(48,209,88,.4);background:rgba(48,209,88,.06);}
+.shop-item.equipped{border-color:#0a84ff;background:rgba(10,132,255,.1);}
+.shop-item-preview{width:100%;height:80px;display:flex;align-items:center;justify-content:center;font-size:28px;position:relative;}
+.shop-item-info{padding:8px 10px;}
+.shop-item-name{font-size:12px;font-weight:700;margin-bottom:2px;}
+.shop-item-price{font-size:11px;color:#ff9f0a;font-weight:800;}
+.shop-item-owned{font-size:11px;color:#30d158;font-weight:700;}
+.shop-item-equipped-tag{position:absolute;top:5px;right:5px;background:#0a84ff;color:#fff;font-size:8px;font-weight:900;padding:2px 6px;border-radius:6px;}
+.shop-item-btn{width:100%;padding:7px;border:none;border-radius:0 0 14px 14px;font-size:11px;font-weight:800;cursor:pointer!important;transition:.15s;}
 .badge-chip{display:flex;align-items:center;gap:6px;background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:6px 10px;font-size:12px;cursor:none;transition:.15s;}
 .rank-badge-chip{display:inline-flex;align-items:center;gap:7px;border-radius:12px;padding:7px 13px;font-size:12px;font-weight:700;border:1px solid;margin:3px;}
 .rank-badge-chip.rank-1{background:rgba(255,214,10,.12);border-color:rgba(255,214,10,.4);color:#ffd60a;}
@@ -521,7 +533,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <input id="lb-user" class="lb-field" placeholder="Username" maxlength="20" autocomplete="off" spellcheck="false">
     <input id="lb-pass" class="lb-field" type="password" placeholder="Password" autocomplete="off">
     <div id="lb-email-wrap" style="display:none">
-      <input id="lb-email" class="lb-field" type="email" placeholder="Email address (required)" autocomplete="off" style="margin-bottom:4px">
+      <input id="lb-email" class="lb-field" type="email" placeholder="Email address (optional)" autocomplete="off" style="margin-bottom:4px">
       <div style="font-size:10px;color:var(--text2);margin-top:2px;padding:0 2px;line-height:1.5">🔒 Used only for password recovery &amp; bot prevention. Never shown publicly.</div>
       <input id="lb-referral" class="lb-field" type="text" placeholder="Referral code (optional — earn 50 tokens!)" autocomplete="off" style="margin-top:8px;margin-bottom:0">
     </div>
@@ -640,7 +652,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
   <aside id="sidebar">
     <div class="logo">Adless</div>
     <!-- Money raised widget -->
-    <a href="https://ko-fi.com/adless" target="_blank" rel="nofollow" id="money-widget" style="display:block;text-decoration:none;background:linear-gradient(135deg,rgba(48,209,88,.12),rgba(10,132,255,.1));border:1px solid rgba(48,209,88,.25);border-radius:12px;padding:10px 12px;margin-bottom:10px;flex-shrink:0;transition:border-color .15s;" onmouseover="this.style.borderColor='rgba(48,209,88,.6)'" onmouseout="this.style.borderColor='rgba(48,209,88,.25)'">
+    <a href="https://beta.publishers.adsterra.com/referral/9YFTZphmLh" target="_blank" rel="nofollow" id="money-widget" style="display:block;text-decoration:none;background:linear-gradient(135deg,rgba(48,209,88,.12),rgba(10,132,255,.1));border:1px solid rgba(48,209,88,.25);border-radius:12px;padding:10px 12px;margin-bottom:10px;flex-shrink:0;transition:border-color .15s;" onmouseover="this.style.borderColor='rgba(48,209,88,.6)'" onmouseout="this.style.borderColor='rgba(48,209,88,.25)'">
       <div style="font-size:9px;color:#30d158;text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:4px">💰 Money Raised</div>
       <div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap">
         <span id="money-ads" style="font-size:18px;font-weight:900;color:#fff">$0.00</span>
@@ -669,6 +681,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <div class="nav" data-view="leaderboard-view">🏆 Leaderboard</div>
     <div class="nav" data-view="badges-view">🎖️ Badges</div>
     <div class="nav" data-view="tokens-view">🪙 Tokens &amp; Tasks</div>
+    <div class="nav" data-view="shop-view">🛍️ Shop</div>
     <div class="nav" data-view="settings-view">⚙️ Settings</div>
     <div class="sec-label">Account</div>
     <div class="nav" data-view="profile-view">👤 My Profile</div>
@@ -707,6 +720,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <div class="nav" data-cat="flash">⚡ Flash</div>
     </div>
     <button class="rand-btn" onclick="playRandom()">🎲 RANDOM GAME</button>
+    <button onclick="openBugReport()" style="background:rgba(255,55,95,.1);color:#ff375f;border:1px solid rgba(255,55,95,.3);padding:10px;border-radius:12px;font-weight:700;text-align:center;font-size:11px;transition:.15s;flex-shrink:0;margin-top:6px;cursor:pointer!important" onmouseover="this.style.background='rgba(255,55,95,.25)'" onmouseout="this.style.background='rgba(255,55,95,.1)'">🐛 Report a Bug</button>
   </aside>
   <div id="games-view" class="view active">
     <header>
@@ -965,6 +979,15 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
         </div>
       </div>
       <div id="reports-list" style="margin-top:10px"></div>
+    </div>
+
+    <!-- Bug Reports -->
+    <div class="s-section">
+      <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
+        <span>🐛 Bug Reports <span id="bug-count-badge" style="display:none;background:#ff9f0a;color:#000;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;margin-left:6px"></span></span>
+        <button class="auc-btn" onclick="loadBugReports()">↻ Refresh</button>
+      </div>
+      <div id="bug-reports-list" style="margin-top:10px"></div>
     </div>
 
     <!-- Analytics -->
@@ -1300,6 +1323,27 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <div id="tok-history-list" style="font-size:12px;color:var(--text2)"></div>
     </div>
   </div>
+  <!-- SHOP VIEW -->
+  <div id="shop-view" class="view" style="max-width:720px;margin:0 auto">
+    <header><h1>🛍️ Cosmetic Shop</h1></header>
+    <div class="s-section" style="margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:14px;padding:10px 0">
+        <div style="font-size:36px;font-weight:900;color:#ff9f0a" id="shop-balance-display">—</div>
+        <div><div style="font-size:13px;font-weight:700">🪙 Your Tokens</div><div style="font-size:11px;color:var(--text2)">Earn more in Tokens &amp; Tasks</div></div>
+      </div>
+    </div>
+    <div class="s-section">
+      <div class="s-desc" style="margin-bottom:14px">Spend tokens on profile backgrounds and badge frames. Equipped items show on your public profile.</div>
+      <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+        <button class="auc-btn shop-tab-btn active" id="shop-tab-bg" onclick="switchShopTab('bg')" style="font-size:12px;padding:8px 16px">🖼️ Backgrounds</button>
+        <button class="auc-btn shop-tab-btn" id="shop-tab-cursor" onclick="switchShopTab('cursor')" style="font-size:12px;padding:8px 16px">✨ Effects</button>
+        <button class="auc-btn shop-tab-btn" id="shop-tab-badge" onclick="switchShopTab('badge')" style="font-size:12px;padding:8px 16px">🎖️ Badge Frames</button>
+      </div>
+      <div id="shop-grid-bg" class="shop-grid"></div>
+      <div id="shop-grid-cursor" class="shop-grid" style="display:none"></div>
+      <div id="shop-grid-badge" class="shop-grid" style="display:none"></div>
+    </div>
+  </div>
   <div id="settings-view" class="view">
     <header><h1>⚙️ Settings</h1></header>
     <div class="s-section">
@@ -1451,7 +1495,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
         </label>
       </div>
       <div style="font-size:11px;color:var(--text2);margin-top:6px;line-height:1.6">
-        Ads keep Adless free for guests. If you'd like to <a href="https://ko-fi.com/adless" target="_blank" style="color:var(--blue)">support us on Ko-fi ☕</a> instead, you can disable ads above.
+        Ads keep Adless free for guests. If you'd like to <a href="https://beta.publishers.adsterra.com/referral/9YFTZphmLh" target="_blank" style="color:var(--blue)">support us on Ko-fi ☕</a> instead, you can disable ads above.
       </div>
     </div>
     <div class="ad-slot-inline" id="ad-settings"></div>
@@ -1474,7 +1518,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <button class="lb-btn" style="background:rgba(10,132,255,.15);border-color:rgba(10,132,255,.3);color:var(--blue)" onclick="dismissAdsPopup(true)">Remove ads now</button>
     </div>
     <div style="font-size:10px;color:var(--text2);text-align:center">
-      Or <a href="https://ko-fi.com/adless" target="_blank" style="color:var(--blue)">support us on Ko-fi ☕</a> — we appreciate it!
+      Or <a href="https://beta.publishers.adsterra.com/referral/9YFTZphmLh" target="_blank" style="color:var(--blue)">support us on Ko-fi ☕</a> — we appreciate it!
     </div>
   </div>
 </div>
@@ -1897,8 +1941,8 @@ const BUILTIN=[
   {id:'b5',title:'Slope Xtreme',cat:'arcade',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT91j80gISLYLzB8LUhu7zoST3SNGpNB_nXJw&s',url:'https://1games.io/game/slope-xtreme/'},
   {id:'b6',title:'Slope 2',cat:'arcade',img:'https://dashmetry.com/cache/data/image/game/slope-2/slope-2-m546x307.webp',url:'https://1games.io/game/slope-2/'},
   {id:'b7',title:'Slope 3',cat:'arcade',img:'https://slope3.com/upload/imgs/options/slope-3-banner.png',url:'https://html5.101games.io/game/Slope3/index.html'},
-  {id:'b8',title:'Slope Cyber',cat:'arcade',img:'https://i.ytimg.com/vi/T8fb6F1XwqM/hq720.jpg',url:'https://azgames.io/game/slope-cyber/'},
-  {id:'b9',title:'Slope Legacy',cat:'arcade',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQu21VE-0aK8Dt8b5Lw_UrPIbCT1c50kGvQLA&s',url:'https://azgames.io/game/slope-legacy/'},
+  {id:'b8',title:'Slope Cyber',cat:'arcade',img:'https://i.ytimg.com/vi/T8fb6F1XwqM/hq720.jpg',url:'https://azgames.io/slope-cyber.embed'},
+  {id:'b9',title:'Slope Legacy',cat:'arcade',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQu21VE-0aK8Dt8b5Lw_UrPIbCT1c50kGvQLA&s',url:'https://azgames.io/slope-legacy.embed'},
   {id:'b10',title:'67 Clicker',cat:'idle',img:'https://zapgames.io/data/image/game/67-clicker.jpg',url:'https://iogames.onl/67-clicker.embed'},
   {id:'b11',title:'Slope+',cat:'arcade',img:'https://sloperun.org/data/image/posts/slope-image.jpg',url:'https://nebulaplay.site/storage/Slope.html'},
   {id:'b12',title:'Chicken Jockey',cat:'idle',img:'https://chickenjockeyclicker.io/data/image/game/chicken-jockey-clicker-banner.png',url:'https://game.azgame.io/chicken-jockey-clicker/'},
@@ -2462,6 +2506,16 @@ async function loadUserData(){
     if(d.recent)localStorage.setItem(userKey('adless_recent'),JSON.stringify(d.recent));
     if(d.progress)localStorage.setItem(userKey('adless_progress'),JSON.stringify(d.progress));
   }catch(e){console.warn('Load data failed',e);}
+  // Sync completed onetime tasks from server so clearing localStorage doesn't reset them
+  try{
+    const profile=await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=completed_tasks`);
+    const done=(profile&&profile[0]?.completed_tasks)||[];
+    if(done.length){
+      const s=getTokState();
+      done.forEach(id=>{s[id]=true;});
+      saveTokState(s);
+    }
+  }catch(e){}
 }
 
 // ── LOGIN UI ─────────────────────────────────────────────────────
@@ -2499,30 +2553,48 @@ async function lbSubmit(){
   try{
     const hash=await sha256(pw+un);
     if(lbMode==='signup'){
-      // Email required
+      // Email optional
       const emailVal=document.getElementById('lb-email')?.value.trim()||'';
-      if(!emailVal||!/^[^@]+@[^@]+\.[^@]+$/.test(emailVal)){err.textContent='A valid email address is required to sign up.';btn.disabled=false;return;}
+      if(emailVal&&!/^[^@]+@[^@]+\.[^@]+$/.test(emailVal)){err.textContent='Please enter a valid email address (or leave it blank).';btn.disabled=false;return;}
       // Check username taken
       const existing=await sbReq(`/rest/v1/profiles?username=ilike.${encodeURIComponent(un)}&select=id`);
       if(existing&&existing.length){err.textContent='Username already taken.';btn.disabled=false;return;}
-      // Check email taken
-      const emailCheck=await sbReq(`/rest/v1/profiles?email=ilike.${encodeURIComponent(emailVal)}&select=id`);
-      if(emailCheck&&emailCheck.length){err.textContent='An account with that email already exists.';btn.disabled=false;return;}
+      // Check email taken (only if email provided)
+      if(emailVal){const emailCheck=await sbReq(`/rest/v1/profiles?email=ilike.${encodeURIComponent(emailVal)}&select=id`);if(emailCheck&&emailCheck.length){err.textContent='An account with that email already exists.';btn.disabled=false;return;}}
       const reserved=['adless','adless_owner','admin','administrator','system','mod','moderator','staff','owner','winterag'];
       if(reserved.includes(un.toLowerCase())){err.textContent='That username is reserved.';btn.disabled=false;return;}
       // Referral code
       const refCode=document.getElementById('lb-referral')?.value.trim()||'';
-      // Store pending signup and send verify code
-      _pendingSignup={un,pw,hash,emailVal,avatar:lbSelAv,refCode};
-      err.textContent='Sending verification code…';
-      const sent=await sendVerifyEmail(emailVal,un);
-      if(!sent){err.textContent='Failed to send verification email. Check your email address.';btn.disabled=false;return;}
-      // Show verify UI
-      document.getElementById('lb-submit').style.display='none';
-      document.getElementById('lb-verify-wrap').style.display='block';
-      document.getElementById('lb-verify-code').value='';
-      document.getElementById('lb-verify-err').textContent='';
-      err.textContent='';
+      // Create account directly — email is optional, verification skipped
+      try{
+        const myRefCode='ADL-'+Math.random().toString(36).substr(2,6).toUpperCase();
+        const signupBody={username:un,password_hash:hash,avatar:lbSelAv,tokens:10,referral_code:myRefCode,email_verified:false};
+        if(emailVal)signupBody.email=emailVal;
+        const res=await fetch(SB_URL+'/rest/v1/profiles',{
+          method:'POST',
+          headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
+          body:JSON.stringify(signupBody)
+        });
+        const rows=await res.json();
+        if(!res.ok||!rows||!rows.length){err.textContent='Signup failed: '+(rows?.message||res.status);btn.disabled=false;return;}
+        currentUser={id:rows[0].id,username:un,avatar:lbSelAv,role:'user',tokens:10};
+        if(refCode){
+          try{
+            const refRows=await sbReq(`/rest/v1/profiles?referral_code=eq.${encodeURIComponent(refCode)}&select=id,tokens`);
+            if(refRows&&refRows.length){
+              const referrer=refRows[0];
+              await fetch(SB_URL+`/rest/v1/profiles?id=eq.${referrer.id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({tokens:(referrer.tokens||0)+50})});
+              await fetch(SB_URL+`/rest/v1/profiles?id=eq.${rows[0].id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({tokens:60,referred_by:refCode})});
+              currentUser.tokens=60;
+            }
+          }catch(re){console.warn('Referral error',re);}
+        }
+        localStorage.setItem('adless_session',JSON.stringify(currentUser));
+        await loadUserData();
+        lbEnter();
+      }catch(e){err.textContent='Connection error. Try again.';console.error(e);}
+      btn.disabled=false;
+      return;
     }else{
       const rows=await sbReq(`/rest/v1/profiles?username=ilike.${encodeURIComponent(un)}&select=id,username,avatar,password_hash,role,banned,suspended_until,ban_reason,display_name`);
       if(!rows||!rows.length){err.textContent='Username not found.';btn.disabled=false;return;}
@@ -2542,9 +2614,9 @@ async function lbSubmit(){
 // ⚠️ SETUP: Create a free account at emailjs.com, make a service + template,
 // then replace the three values below with your own credentials.
 // Template variables needed: {{to_email}}, {{to_name}}, {{verify_code}}
-const EMAILJS_SERVICE='YOUR_SERVICE_ID';
-const EMAILJS_TEMPLATE='YOUR_TEMPLATE_ID';
-const EMAILJS_KEY='YOUR_PUBLIC_KEY';
+const EMAILJS_SERVICE='service_axtpvvs';
+const EMAILJS_TEMPLATE='FNG5AY4zYmlnpqutY';
+const EMAILJS_KEY='FNG5AY4zYmlnpqutY';
 function _genCode(){return String(Math.floor(100000+Math.random()*900000));}
 async function sendVerifyEmail(email,username){
   _verifyCode=_genCode();
@@ -3077,6 +3149,7 @@ document.querySelectorAll('.nav').forEach(btn=>{
       else if(btn.dataset.view==='leaderboard-view'){switchView('leaderboard-view');setLbTab('global');}
       else if(btn.dataset.view==='badges-view'){switchView('badges-view');setBadgeTab('earned');}
       else if(btn.dataset.view==='tokens-view'){switchView('tokens-view');loadTokensView();}
+      else if(btn.dataset.view==='shop-view'){switchView('shop-view');loadShopView();}
       else if(btn.dataset.view==='friends-view'){switchView('friends-view');loadFriendRequests();loadGroupsList();}
       else if(btn.dataset.view==='owner-view'){switchView('owner-view');loadOwnerPanel();}
       else if(btn.dataset.view==='admin-view'){switchView('admin-view');loadAdminPanel();}
@@ -3139,6 +3212,7 @@ function applyStoredSettings(){const s=loadS(),t=loadTheme(),bg=loadBg();documen
 // CONFIRM / TOAST
 let _cb=null;
 function askConfirm(title,msg,cb){document.getElementById('conf-title').textContent=title;document.getElementById('conf-msg').textContent=msg;_cb=cb;document.getElementById('confirm').classList.add('on');}
+function askPrompt(title,msg,cb){const v=prompt(title+'\n'+msg);if(v!==null&&v.trim())cb(v.trim());}
 function closeConfirm(){document.getElementById('confirm').classList.remove('on');_cb=null;}
 document.getElementById('conf-ok').onclick=()=>{if(_cb)_cb();closeConfirm();};
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2000);}
@@ -4569,8 +4643,8 @@ async function adminSearchUser(){
   if(!res)return;
   try{
     const users=q
-      ?await sbReq(`/rest/v1/profiles?username=ilike.*${encodeURIComponent(q)}*&select=id,username,avatar,role,banned,suspended_until,ban_reason,last_seen`)
-      :await sbReq(`/rest/v1/profiles?select=id,username,avatar,role,banned,suspended_until,ban_reason,last_seen&order=created_at.desc&limit=20`);
+      ?await sbReq(`/rest/v1/profiles?username=ilike.*${encodeURIComponent(q)}*&select=id,username,avatar,role,banned,suspended_until,ban_reason,last_seen,tokens`)
+      :await sbReq(`/rest/v1/profiles?select=id,username,avatar,role,banned,suspended_until,ban_reason,last_seen,tokens&order=created_at.desc&limit=20`);
     if(!users||!users.length){res.innerHTML='<div class="fc-empty">No users found</div>';return;}
     res.innerHTML=users.map(u=>{
       const isBanned=u.banned;
@@ -4635,6 +4709,51 @@ async function adminDeleteMsgs(uid,uname){
 // ── ALIASES so owner panel card buttons & loadOwnerPanel work ──────
 async function promptBan(uid,uname){return adminBanUser(uid,uname);}
 async function unbanUser(uid,uname){return adminUnbanUser(uid,uname||'');}
+async function loadBadgeMgrForUser(userId,uname){
+  switchView('owner-view');
+  const searchEl=document.getElementById('badge-mgr-search');
+  if(searchEl)searchEl.value=uname||'';
+  const result=document.getElementById('badge-mgr-result');
+  if(!result)return;
+  result.innerHTML=`<div style="background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><span style="font-weight:700">Managing: ${escHtml(uname||userId)}</span><button class="auc-btn" onclick="openProfile('${userId}')">👤 Profile</button></div><div id="badge-mgr-badges-${userId}">Loading badges…</div></div>`;
+  loadUserBadgesForMgr(userId);
+}
+function ownerAdjustTokens(uid,uname,current){
+  askPrompt(`🪙 Adjust tokens for ${uname}`,`Current: ${current}. Enter new total or +/-amount (e.g. +50 or -20 or 300):`, async(val)=>{
+    if(!val)return;
+    let newTotal;
+    const v=val.trim();
+    if(v.startsWith('+')){newTotal=current+parseInt(v.slice(1))||current;}
+    else if(v.startsWith('-')){newTotal=Math.max(0,current-parseInt(v.slice(1))||current);}
+    else{newTotal=parseInt(v);}
+    if(isNaN(newTotal)||newTotal<0){showToast('Invalid amount');return;}
+    try{
+      await fetch(SB_URL+`/rest/v1/profiles?id=eq.${uid}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({tokens:newTotal})});
+      showToast(`🪙 ${uname} tokens set to ${newTotal}`);
+      loadOwnerPanel();
+    }catch(e){showToast('Failed to update tokens');}
+  });
+}
+async function submitBugReport(){
+  if(!currentUser||currentUser.guest){showToast('Login to report bugs');return;}
+  const desc=document.getElementById('bug-report-desc')?.value.trim();
+  const sev=document.getElementById('bug-report-sev')?.value||'medium';
+  if(!desc){showToast('Please describe the bug');return;}
+  try{
+    await fetch(SB_URL+'/rest/v1/reports',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({reporter_id:currentUser.id,reporter_username:currentUser.username,type:'bug',target_type:'site',reason:'Bug Report',details:`[${sev.toUpperCase()}] ${desc}`,status:'open'})
+    });
+    document.getElementById('bug-report-desc').value='';
+    document.getElementById('bug-modal').style.display='none';
+    showToast('🐛 Bug report sent — thanks!');
+  }catch(e){showToast('Failed to send report');}
+}
+function openBugReport(){
+  const m=document.getElementById('bug-modal');
+  if(m)m.style.display='flex';
+}
 async function promptSuspend(uid,uname){return adminSuspendUser(uid,uname);}
 async function unsuspendUser(uid){return adminUnsuspendUser(uid);}
 async function deleteUserMsgs(uid,uname){return adminDeleteMsgs(uid,uname);}
@@ -4732,6 +4851,7 @@ let lastMsgTime={};
 async function loadOwnerPanel(){
   if(!isOwner())return;
   loadReports('open');
+  loadBugReports();
   loadOwnerAnalytics();
   loadAllUsers();
   loadAdminChatLog();
@@ -4743,6 +4863,43 @@ async function loadOwnerPanel(){
   loadOnlineUsers();
   loadOwnerGallery();
   loadVerifiedEmails();
+}
+async function loadBugReports(){
+  const el=document.getElementById('bug-reports-list');
+  if(!el)return;
+  el.innerHTML='<div style="color:var(--text2);font-size:12px">Loading…</div>';
+  try{
+    const rows=await sbReq(`/rest/v1/reports?type=eq.bug&order=created_at.desc&limit=50&select=id,reporter_username,details,created_at,status`);
+    if(!rows||!rows.length){el.innerHTML='<div style="color:var(--text2);font-size:12px;padding:8px 0">No bug reports yet.</div>';return;}
+    const badge=document.getElementById('bug-count-badge');
+    const open=rows.filter(r=>r.status==='open').length;
+    if(badge){badge.textContent=open;badge.style.display=open?'inline':'none';}
+    el.innerHTML=rows.map(r=>{
+      const sev=r.details?.match(/^\[(\w+)\]/)?.[1]||'?';
+      const sevColor=sev==='CRITICAL'?'#ff375f':sev==='HIGH'?'#ff9f0a':sev==='MEDIUM'?'#ffd60a':'#30d158';
+      const desc=(r.details||'').replace(/^\[\w+\]\s*/,'');
+      const date=new Date(r.created_at).toLocaleDateString();
+      return`<div style="background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <span style="background:${sevColor}20;color:${sevColor};font-size:9px;font-weight:900;padding:2px 7px;border-radius:5px;border:1px solid ${sevColor}40">${sev}</span>
+          <span style="font-size:12px;font-weight:700">${escHtml(r.reporter_username||'?')}</span>
+          <span style="font-size:11px;color:var(--text2);margin-left:auto">${date}</span>
+          <span style="font-size:10px;padding:2px 7px;border-radius:5px;background:${r.status==='open'?'rgba(255,55,95,.15)':'rgba(48,209,88,.15)'};color:${r.status==='open'?'#ff375f':'#30d158'}">${r.status}</span>
+        </div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.5">${escHtml(desc)}</div>
+        ${r.status==='open'?`<div style="display:flex;gap:6px;margin-top:8px">
+          <button class="auc-btn green" style="font-size:10px;padding:4px 10px" onclick="resolveBugReport('${r.id}')">✅ Resolve</button>
+          <button class="auc-btn" style="font-size:10px;padding:4px 10px" onclick="dismissBugReport('${r.id}')">🗑 Dismiss</button>
+        </div>`:''}
+      </div>`;
+    }).join('');
+  }catch(e){el.innerHTML='<div style="color:#ff375f;font-size:12px">Failed to load bug reports.</div>';}
+}
+async function resolveBugReport(id){
+  try{await fetch(SB_URL+`/rest/v1/reports?id=eq.${id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({status:'resolved'})});showToast('✅ Bug report resolved');loadBugReports();}catch(e){showToast('Failed');}
+}
+async function dismissBugReport(id){
+  try{await fetch(SB_URL+`/rest/v1/reports?id=eq.${id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({status:'dismissed'})});showToast('🗑 Bug report dismissed');loadBugReports();}catch(e){showToast('Failed');}
 }
 
 async function loadOnlineUsers(){
@@ -5178,7 +5335,7 @@ async function viewFullProfile(uid,uname){
 
 async function loadAllUsers(){
   try{
-    const users=await sbReq(`/rest/v1/profiles?select=id,username,avatar,role,banned,suspended_until,ban_reason,last_seen&order=created_at.asc`);
+    const users=await sbReq(`/rest/v1/profiles?select=id,username,avatar,role,banned,suspended_until,ban_reason,last_seen,tokens&order=created_at.asc`);
     document.getElementById('user-count').textContent=`(${(users||[]).length} total)`;
     document.getElementById('admin-all-users').innerHTML=(users||[]).map(u=>adminUserCard(u)).join('');
   }catch(e){console.warn(e);}
@@ -5189,12 +5346,14 @@ function adminUserCard(u){
   const isSuspended=u.suspended_until&&new Date(u.suspended_until)>new Date();
   const isOwnerAcc=u.role==='owner';
   const statusText=isBanned?'🚫 Banned'+(u.ban_reason?' · '+u.ban_reason:''):isSuspended?`⏸ Suspended until ${new Date(u.suspended_until).toLocaleDateString()}`:'✅ Active';
+  const shortId=u.id?u.id.slice(0,8)+'…':'—';
   return`<div class="admin-user-card${isBanned?' banned':isSuspended?' suspended':''}">
     <div style="font-size:22px">${avHtml(u.avatar,36)}</div>
     <div class="auc-info">
       <div class="auc-name">${u.username}${isOwnerAcc?'<span class="owner-badge">OWNER</span>':''}</div>
+      <div style="font-size:10px;color:var(--text2);font-family:monospace;margin-bottom:2px" title="${u.id||''}">ID: ${shortId} <button onclick="navigator.clipboard.writeText('${u.id||''}').then(()=>showToast('ID copied!'))" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:10px;padding:0 2px">📋</button></div>
       <div class="auc-meta">${statusText}</div>
-      <div style="font-size:11px;margin-top:2px;color:${isOnline(u.last_seen)?'#30d158':'var(--text2)'}">● ${presenceText(u.last_seen)}</div>
+      <div style="font-size:11px;margin-top:2px;color:${isOnline(u.last_seen)?'#30d158':'var(--text2)'}">● ${presenceText(u.last_seen)} · 🪙 ${u.tokens||0}</div>
     </div>
     <div class="auc-btns">
       ${!isOwnerAcc?`
@@ -5206,11 +5365,10 @@ function adminUserCard(u){
         ${isSuspended
           ?`<button class="auc-btn green" onclick="unsuspendUser('${u.id}')">✓ Unsuspend</button>`
           :`<button class="auc-btn yellow" onclick="promptSuspend('${u.id}','${u.username}')">⏸ Suspend</button>`}
+        <button class="auc-btn blue" onclick="loadBadgeMgrForUser('${u.id}','${u.username}')">🎖 Badges</button>
         <button class="auc-btn blue" onclick="viewUserDms('${u.id}','${u.username}','${u.avatar||'👤'}')">💬 DMs</button>
-        <button class="auc-btn blue" onclick="viewUserFriends('${u.id}','${u.username}')">👥 Friends</button>
         <button class="auc-btn red" onclick="deleteUserMsgs('${u.id}','${u.username}')">🗑 Msgs</button>
-        <button class="auc-btn yellow" onclick="resetUsernameCooldown('${u.id}','${u.username}')">🔄 Reset CD</button>
-        <button class="auc-btn red" onclick="forceResetPassword('${u.id}','${u.username}')">🔒 Reset PW</button>
+        <button class="auc-btn" onclick="ownerAdjustTokens('${u.id}','${u.username}',${u.tokens||0})">🪙 Tokens</button>
       `:'<span style="font-size:11px;color:var(--text2)">Owner Account</span>'}
     </div>
   </div>`;
@@ -6043,6 +6201,22 @@ const BADGE_DEFS = {
   'globe_trotter':  {e:'🌍',n:'Globe Trotter',       d:'Submit scores on 25 different games'},
   'top_10':         {e:'🔝',n:'Top 10',              d:'One of the first 10 users'},
   'influencer':     {e:'📸',n:'Influencer',          d:'Reach 50 friends'},
+  // ── Shop & Cosmetic badges ───────────────────────────────────
+  'shopaholic':     {e:'🛍️',n:'Shopaholic',          d:'Buy your first item from the shop'},
+  'collector':      {e:'💼',n:'Collector',            d:'Own 5 cosmetic items'},
+  'fashioned':      {e:'🪄',n:'Fashioned',            d:'Equip a background from the shop'},
+  'rich':           {e:'💰',n:'Rich',                 d:'Accumulate 500 tokens'},
+  'whale':          {e:'🐋',n:'Whale',                d:'Spend 1000 tokens total'},
+  'token_king':     {e:'👑',n:'Token King',           d:'Reach 1000 tokens'},
+  'daily_player':   {e:'📅',n:'Daily Player',         d:'Complete daily task 7 days in a row'},
+  'recruiter':      {e:'📨',n:'Recruiter',            d:'Refer 3 friends'},
+  'big_recruiter':  {e:'🏆',n:'Big Recruiter',        d:'Refer 10 friends'},
+  'aurora':         {e:'🌌',n:'Aurora',               d:'Equip the Aurora background'},
+  'solar':          {e:'☀️',n:'Solar',                d:'Equip the Solar Flare background'},
+  'neon_dreams':    {e:'💜',n:'Neon Dreams',          d:'Equip the Neon Dreams background'},
+  'deep_sea':       {e:'🌊',n:'Deep Sea',             d:'Equip the Ocean Depths background'},
+  'fire_lord':      {e:'🔥',n:'Fire Lord',            d:'Equip the Inferno background'},
+  'galaxy_dweller': {e:'🌠',n:'Galaxy Dweller',       d:'Equip the Galaxy background'},
 };
 
 const OWNER_ONLY_BADGES=['royalty','trusted','vip','bug_hunter','creator','mod','gifted','partner','legend_staff','hall_of_fame','mystic','rainbow','cursed','glitch','snitch','reformed','main_character','reverse_uno','npc','404','degen','gigachad','404_found','void','sigma'];
@@ -8709,7 +8883,7 @@ function postLoginBadgeCheck(){
 }
 // ── MONEY RAISED COUNTER ─────────────────────────────────────────
 (function(){
-  const ADS_EARNED = 1.14;       // update with your ad earnings
+  const ADS_EARNED = 1.28;       // update with your ad earnings
   const DONATIONS_EARNED = 1.00; // update with your Ko-fi donations
   function fmt(n){return '$'+n.toFixed(2);}
   const el_ads   = document.getElementById('money-ads');
@@ -8746,12 +8920,16 @@ const TASKS = [
   {id:'task_daily_game',    label:'🎮 Play a game today',         desc:'Launch any game today',                 reward:8,   type:'daily'},
 ];
 
-const TOK_KEY = 'adless_tasks'; // localStorage key for completed task tracking
+const TOK_KEY = 'adless_tasks'; // base key — actual key is per-user
 
 function getTokState(){
-  try{ return JSON.parse(localStorage.getItem(TOK_KEY)||'{}'); }catch(e){ return {}; }
+  const key = TOK_KEY + '_' + (currentUser?.id||'guest');
+  try{ return JSON.parse(localStorage.getItem(key)||'{}'); }catch(e){ return {}; }
 }
-function saveTokState(s){ localStorage.setItem(TOK_KEY, JSON.stringify(s)); }
+function saveTokState(s){
+  const key = TOK_KEY + '_' + (currentUser?.id||'guest');
+  localStorage.setItem(key, JSON.stringify(s));
+}
 
 function todayStr(){ return new Date().toISOString().slice(0,10); }
 
@@ -8764,27 +8942,42 @@ function isTaskDone(task){
 
 async function awardTokens(taskId, amount, label){
   if(!currentUser||currentUser.guest) return false;
-  // Mark locally first to prevent double-award
-  const s = getTokState();
   const task = TASKS.find(t=>t.id===taskId);
   if(!task) return false;
+  // For onetime tasks, check server-side completed_tasks field to prevent localStorage clearing exploit
+  if(task.type==='onetime'){
+    try{
+      const rows = await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=completed_tasks,tokens`);
+      const profile = rows&&rows[0]||{};
+      const completed = profile.completed_tasks||[];
+      if(completed.includes(taskId)) return false; // already done server-side
+    }catch(e){}
+  }
+  // Check locally for daily tasks
   if(isTaskDone(task)) return false;
+  // Mark locally
+  const s = getTokState();
   if(task.type==='onetime') s[taskId]=true;
   if(task.type==='daily')   s[taskId]=todayStr();
   saveTokState(s);
   // Update Supabase
   try{
-    const rows = await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=tokens`);
+    const rows = await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=tokens,completed_tasks`);
     const current = (rows&&rows[0]?.tokens)||0;
     const newTotal = current + amount;
+    const patchBody = {tokens:newTotal};
+    // For onetime tasks, persist to server too
+    if(task.type==='onetime'){
+      const done = (rows&&rows[0]?.completed_tasks)||[];
+      if(!done.includes(taskId)) patchBody.completed_tasks=[...done,taskId];
+    }
     await fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{
       method:'PATCH',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body:JSON.stringify({tokens:newTotal})
+      body:JSON.stringify(patchBody)
     });
     currentUser.tokens = newTotal;
     showToast(`🪙 +${amount} tokens — ${label}`);
-    // Refresh display if open
     const balEl = document.getElementById('tok-balance-display');
     if(balEl) balEl.textContent = newTotal;
     return true;
@@ -8901,9 +9094,134 @@ function copyRefCode(){
   const code = document.getElementById('tok-ref-code').textContent;
   if(!code||code==='—') return;
   navigator.clipboard.writeText(code).then(()=>showToast('📋 Referral code copied!')).catch(()=>{
-    // Fallback
     const el=document.createElement('textarea');el.value=code;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);showToast('📋 Referral code copied!');
   });
+}
+
+// ── COSMETIC SHOP ─────────────────────────────────────────────────
+const SHOP_ITEMS={
+  bg:[
+    {id:'bg_aurora',name:'Aurora',price:120,preview:'linear-gradient(135deg,#0a1628,#1a3a5c,#2d6a8a,#3d8b7a,#2a5f4f)',emoji:'🌌',badge:'aurora'},
+    {id:'bg_galaxy',name:'Galaxy',price:150,preview:'linear-gradient(135deg,#0d0221,#190945,#2d1b69,#5c3d99,#7b52c7)',emoji:'🌠',badge:'galaxy_dweller'},
+    {id:'bg_neon',name:'Neon Dreams',price:130,preview:'linear-gradient(135deg,#0a0015,#1a0030,#3d0060,#6600cc,#9900ff)',emoji:'💜',badge:'neon_dreams'},
+    {id:'bg_inferno',name:'Inferno',price:140,preview:'linear-gradient(135deg,#1a0000,#3d0000,#7a1500,#cc3300,#ff6600)',emoji:'🔥',badge:'fire_lord'},
+    {id:'bg_ocean',name:'Ocean Depths',price:110,preview:'linear-gradient(135deg,#000d1a,#001f3f,#003366,#005099,#0070cc)',emoji:'🌊',badge:'deep_sea'},
+    {id:'bg_solar',name:'Solar Flare',price:160,preview:'linear-gradient(135deg,#1a0a00,#3d1a00,#7a3300,#cc7700,#ffaa00)',emoji:'☀️',badge:'solar'},
+    {id:'bg_forest',name:'Dark Forest',price:90,preview:'linear-gradient(135deg,#010a02,#0a1f0c,#143d18,#1e5c24,#287a30)',emoji:'🌲'},
+    {id:'bg_cyberpunk',name:'Cyberpunk',price:175,preview:'linear-gradient(135deg,#0a0015,#1a0030,#003333,#006666,#ff0080)',emoji:'🤖'},
+    {id:'bg_cherry',name:'Cherry Blossom',price:100,preview:'linear-gradient(135deg,#1a0010,#3d0025,#7a004d,#cc0066,#ff69b4)',emoji:'🌸'},
+    {id:'bg_arctic',name:'Arctic',price:95,preview:'linear-gradient(135deg,#001429,#002952,#003d7a,#1a5c99,#3399cc)',emoji:'❄️'},
+    {id:'bg_lava',name:'Lava',price:145,preview:'linear-gradient(135deg,#1a0500,#3d0f00,#7a2600,#cc5200,#ff8c00)',emoji:'🌋'},
+    {id:'bg_void',name:'The Void',price:200,preview:'linear-gradient(135deg,#000000,#050005,#0a000a,#0f000f,#000000)',emoji:'⬛'},
+  ],
+  cursor:[
+    {id:'fx_sparkle',name:'Sparkle Trail',price:80,emoji:'✨',preview:'#1a1a2e'},
+    {id:'fx_fire',name:'Fire Trail',price:100,emoji:'🔥',preview:'#1a0a00'},
+    {id:'fx_rainbow',name:'Rainbow Trail',price:120,emoji:'🌈',preview:'#1a1a1a'},
+    {id:'fx_snow',name:'Snow Fall',price:75,emoji:'❄️',preview:'#0a0f1a'},
+    {id:'fx_stars',name:'Star Burst',price:90,emoji:'⭐',preview:'#050520'},
+  ],
+  badge:[
+    {id:'frame_gold',name:'Gold Frame',price:200,emoji:'🥇',preview:'linear-gradient(135deg,#332200,#664400)'},
+    {id:'frame_rainbow',name:'Rainbow Frame',price:250,emoji:'🌈',preview:'linear-gradient(135deg,#1a001a,#001a1a)'},
+    {id:'frame_neon',name:'Neon Frame',price:175,emoji:'💜',preview:'linear-gradient(135deg,#0a0015,#001a15)'},
+    {id:'frame_fire',name:'Fire Frame',price:225,emoji:'🔥',preview:'linear-gradient(135deg,#1a0000,#1a0a00)'},
+  ]
+};
+function getOwnedItems(){try{return JSON.parse(localStorage.getItem('adless_owned_'+(currentUser?.id||''))||'[]');}catch{return[];}}
+function getEquippedItems(){try{return JSON.parse(localStorage.getItem('adless_equipped_'+(currentUser?.id||''))||'{}');}catch{return{};}}
+function saveOwnedItems(arr){localStorage.setItem('adless_owned_'+(currentUser?.id||''),JSON.stringify(arr));}
+function saveEquippedItems(obj){localStorage.setItem('adless_equipped_'+(currentUser?.id||''),JSON.stringify(obj));}
+function loadShopView(){
+  const bal=currentUser?.tokens||0;
+  const el=document.getElementById('shop-balance-display');
+  if(el)el.textContent=bal;
+  renderShopGrid('bg');
+}
+function switchShopTab(tab){
+  ['bg','cursor','badge'].forEach(t=>{
+    const g=document.getElementById('shop-grid-'+t);
+    if(g)g.style.display=t===tab?'grid':'none';
+    const btn=document.getElementById('shop-tab-'+t);
+    if(btn){btn.style.background=t===tab?'rgba(10,132,255,.25)':'';btn.style.borderColor=t===tab?'rgba(10,132,255,.5)':'';}
+  });
+  renderShopGrid(tab);
+}
+function renderShopGrid(tab){
+  const grid=document.getElementById('shop-grid-'+tab);
+  if(!grid)return;
+  const items=SHOP_ITEMS[tab]||[];
+  const owned=getOwnedItems();
+  const equipped=getEquippedItems();
+  const bal=currentUser?.tokens||0;
+  grid.innerHTML=items.map(item=>{
+    const isOwned=owned.includes(item.id);
+    const isEquipped=equipped[tab]===item.id;
+    const canAfford=bal>=item.price;
+    const previewStyle=`background:${item.preview}`;
+    return `<div class="shop-item ${isOwned?'owned':''} ${isEquipped?'equipped':''}">
+      <div class="shop-item-preview" style="${previewStyle}">
+        <span style="font-size:32px">${item.emoji}</span>
+        ${isEquipped?'<div class="shop-item-equipped-tag">ON</div>':''}
+      </div>
+      <div class="shop-item-info">
+        <div class="shop-item-name">${item.name}</div>
+        ${isOwned?`<div class="shop-item-owned">✓ Owned</div>`:`<div class="shop-item-price">🪙 ${item.price}</div>`}
+      </div>
+      ${isOwned
+        ?`<button class="shop-item-btn" style="background:${isEquipped?'rgba(10,132,255,.3)':'rgba(48,209,88,.15)'};color:${isEquipped?'#0a84ff':'#30d158'}" onclick="equipItem('${tab}','${item.id}')">${isEquipped?'✓ Equipped':'Equip'}</button>`
+        :`<button class="shop-item-btn" style="background:${canAfford?'rgba(255,159,10,.2)':'rgba(255,255,255,.05)'};color:${canAfford?'#ff9f0a':'var(--text2)'}" onclick="buyItem('${tab}','${item.id}',${item.price})" ${!canAfford?'disabled':''}>Buy</button>`
+      }
+    </div>`;
+  }).join('');
+}
+async function buyItem(tab,itemId,price){
+  if(!currentUser||currentUser.guest){showToast('Login to buy items');return;}
+  const bal=currentUser.tokens||0;
+  if(bal<price){showToast('❌ Not enough tokens');return;}
+  const newBal=bal-price;
+  try{
+    await fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({tokens:newBal})});
+    currentUser.tokens=newBal;
+    const tokEl=document.getElementById('tok-balance-display');if(tokEl)tokEl.textContent=newBal;
+    const shopEl=document.getElementById('shop-balance-display');if(shopEl)shopEl.textContent=newBal;
+    const owned=getOwnedItems();owned.push(itemId);saveOwnedItems(owned);
+    showToast('🛍️ Item purchased!');
+    if(owned.length===1)grantBadgeIfMissing('shopaholic');
+    if(owned.length>=5)grantBadgeIfMissing('collector');
+    renderShopGrid(tab);
+    equipItem(tab,itemId,true);
+  }catch(e){showToast('Purchase failed');}
+}
+function equipItem(tab,itemId,silent=false){
+  if(!currentUser||currentUser.guest)return;
+  const equipped=getEquippedItems();
+  const wasEquipped=equipped[tab]===itemId;
+  if(wasEquipped){delete equipped[tab];}else{equipped[tab]=itemId;}
+  saveEquippedItems(equipped);
+  if(tab==='bg'){
+    const item=SHOP_ITEMS.bg.find(i=>i.id===itemId);
+    if(!wasEquipped&&item){
+      fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({profile_bg:item.preview})});
+      currentUser.profile_bg=item.preview;
+      grantBadgeIfMissing('fashioned');
+      if(item.badge)grantBadgeIfMissing(item.badge);
+    }else{
+      fetch(SB_URL+`/rest/v1/profiles?id=eq.${currentUser.id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({profile_bg:null})});
+      currentUser.profile_bg=null;
+    }
+  }
+  if(!silent)showToast(wasEquipped?'Unequipped':'✅ Equipped!');
+  renderShopGrid(tab);
+}
+async function grantBadgeIfMissing(key){
+  if(!currentUser||currentUser.guest||!BADGE_DEFS[key])return;
+  try{
+    const existing=await sbReq(`/rest/v1/badges?user_id=eq.${currentUser.id}&badge_key=eq.${key}&select=id`);
+    if(existing&&existing.length>0)return;
+    await sbReq('/rest/v1/badges','POST',{user_id:currentUser.id,badge_key:key,granted_at:new Date().toISOString()});
+    showBadgeUnlock(key);
+  }catch(e){}
 }
 
 // ── OWNER PANEL: VERIFIED EMAILS SECTION ─────────────────────────
@@ -8941,6 +9259,27 @@ async function loadVerifiedEmails(){
     </div>
   </div>
   <div id="notif-list"></div>
+</div>
+
+<!-- BUG REPORT MODAL -->
+<div id="bug-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:10000;align-items:center;justify-content:center;backdrop-filter:blur(8px)" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:#1c1c1e;border:1px solid rgba(255,55,95,.3);border-radius:20px;padding:28px;width:min(420px,92vw);max-height:90vh;overflow-y:auto">
+    <div style="font-size:20px;font-weight:800;margin-bottom:4px">🐛 Report a Bug</div>
+    <div style="color:var(--text2);font-size:13px;margin-bottom:20px">Help us improve Adless OS</div>
+    <label style="font-size:12px;color:var(--text2);font-weight:600;display:block;margin-bottom:6px">SEVERITY</label>
+    <select id="bug-report-sev" class="lb-field" style="margin:0 0 16px;font-size:13px">
+      <option value="low">🟡 Low — Minor visual issue</option>
+      <option value="medium" selected>🟠 Medium — Feature broken</option>
+      <option value="high">🔴 High — Major issue</option>
+      <option value="critical">🚨 Critical — Site unusable</option>
+    </select>
+    <label style="font-size:12px;color:var(--text2);font-weight:600;display:block;margin-bottom:6px">DESCRIPTION</label>
+    <textarea id="bug-report-desc" class="lb-field" style="height:100px;resize:none;margin:0 0 20px" placeholder="Describe the bug — what happened, what you expected, how to reproduce it…" maxlength="1000"></textarea>
+    <div style="display:flex;gap:10px">
+      <button class="lb-btn" style="flex:1;margin:0;background:rgba(255,55,95,.2);border-color:rgba(255,55,95,.4);color:#ff375f" onclick="submitBugReport()">🐛 Submit Report</button>
+      <button class="auc-btn" onclick="document.getElementById('bug-modal').style.display='none'">Cancel</button>
+    </div>
+  </div>
 </div>
 
 <!-- SCORE SUBMIT MODAL -->
