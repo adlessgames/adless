@@ -1902,7 +1902,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
   </div>
   <div id="lock-hint">🔒 Mouse locked — press ESC to unlock</div>
   <div id="game-wrap" style="flex:1;display:flex;align-items:center;justify-content:center;background:#000;overflow:hidden;">
-    <iframe id="game-frame" allow="autoplay;gamepad;fullscreen" allowfullscreen></iframe>
+    <iframe id="game-frame" allow="autoplay *; gamepad *; fullscreen *; cross-origin-isolated *; clipboard-read *; clipboard-write *" allowfullscreen></iframe>
   </div>
 </div>
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
@@ -2058,7 +2058,7 @@ const EXTRA_GAMES=[
   {id:'n26',title:'Shift at Midnight',img:'https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor/images/356.jpg',url:'https://script.google.com/macros/s/AKfycbxbf7DaEtTxZVBBPow6r-L0q2mvgkI4D7xYUU-_sbldBlrXfiB4jK1f4ACNiR0LPuCt/exec?game=362.html',cat:'action',cats:['action']},
   {id:'n27',title:'Road of Fury',img:'https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor/images/355.jpg',url:'https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/361.html',cat:'action',cats:['action']},
   {id:'n28',title:'Roulette Hero',img:'https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor/images/354.jpg',url:'https://script.google.com/macros/s/AKfycbxbf7DaEtTxZVBBPow6r-L0q2mvgkI4D7xYUU-_sbldBlrXfiB4jK1f4ACNiR0LPuCt/exec?game=360.html',cat:'action',cats:['action']},
-  {id:'n29',title:'Fear Assessment',img:'https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor/images/353.png',url:'https://html-classic.itch.zone/html/8991133/Fear%20Assessment%20HTML%202.0/index.html?v=1732313615',cat:'action',cats:['action']},
+  {id:'n29',title:'Fear Assessment',img:'https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor/images/353.png',url:'https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/359.html',cat:'action',cats:['action']},
   {id:'n30',title:'Dimension Incident',img:'https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor/images/352.jpg',url:'https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/358.html',cat:'action',cats:['action']},
   {id:'n31',title:'Raldi\'s Crackhouse',img:'https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor/images/360.jpg',url:'https://script.google.com/macros/s/AKfycbxbf7DaEtTxZVBBPow6r-L0q2mvgkI4D7xYUU-_sbldBlrXfiB4jK1f4ACNiR0LPuCt/exec?game=357.html',cat:'action',cats:['action']},
   {id:'n32',title:'Christmas Massacre',img:'https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor/images/359.jpg',url:'https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/356.html',cat:'action',cats:['action']},
@@ -2470,6 +2470,7 @@ const SK='adless_settings_v3',BK='adless_bg_v3',TK='adless_theme_v3',FK='adless_
 let favs=[];
 let currentCat='all',currentView='games-view',selectedShow=null,selectedSeason=null;
 let zones=[];
+let hydraGames=[];
 let filteredList=[],currentPage=1;
 const PER_PAGE=500;
 
@@ -2825,7 +2826,7 @@ function invalidateCard(id){cardCache.delete(id);}
 // FILTER
 let srchTimer=null;
 function onSearch(){var _q=(document.getElementById('search')?document.getElementById('search').value:'').trim();checkNoNameEasterEgg(_q);if(noNameActive){applyNoName();return;}clearTimeout(srchTimer);srchTimer=setTimeout(()=>{currentPage=1;buildList();renderPage();},100);}
-function allGames(){return[...BUILTIN,...EXTRA_GAMES,...zones];}
+function allGames(){return[...BUILTIN,...EXTRA_GAMES,...zones,...hydraGames];}
 function buildList(){
   const q=(document.getElementById('search')?.value||'').toLowerCase().trim();
   const all=allGames();
@@ -2897,6 +2898,72 @@ async function loadZones(){
     bootStep('Games loaded!',100);
     buildList();renderPage();
     setTimeout(bootDone,600);
+  }
+}
+// ── HYDRA GAMES ──────────────────────────────────────────────────
+const HYDRA_BASES=[
+  "https://cdn.jsdelivr.net/gh/Hydra-Network/hydra-assets@main/",
+  "https://raw.githubusercontent.com/Hydra-Network/hydra-assets/main/",
+  "https://raw.githack.com/Hydra-Network/hydra-assets/main/"
+];
+const HYDRA_JSON="gmes.json";
+const HYDRA_GAME_PREFIX="gmes/";
+const HYDRA_THUMB_PREFIX="";
+
+async function fetchHydraJson(){
+  for(const base of HYDRA_BASES){
+    try{
+      const r=await fetch(base+HYDRA_JSON+'?t='+Date.now());
+      if(!r.ok)continue;
+      return await r.json();
+    }catch(e){}
+  }
+  throw new Error('Hydra JSON unreachable');
+}
+
+function hydraThumbUrl(thumb){
+  if(!thumb)return '';
+  const clean=thumb.replace(/^\/+/,'');
+  return HYDRA_BASES[0]+HYDRA_THUMB_PREFIX+clean;
+}
+
+function hydraGameUrl(fileName){
+  // We use a special marker URL; play() will detect it and fetch+srcdoc
+  return HYDRA_BASES[0]+HYDRA_GAME_PREFIX+encodeURIComponent(fileName);
+}
+
+async function loadHydraGames(){
+  try{
+    const raw=await fetchHydraJson();
+    if(!Array.isArray(raw))return;
+    // Dedup against existing games
+    const existTitles=new Set([...BUILTIN,...EXTRA_GAMES,...zones].map(g=>g.title.toLowerCase().trim()));
+    const existUrls=new Set([...BUILTIN,...EXTRA_GAMES,...zones].map(g=>g.url));
+    let idx=0;
+    hydraGames=raw
+      .filter(g=>g&&g.file_name&&g.title)
+      .filter(g=>!existTitles.has((g.title||'').toLowerCase().trim()))
+      .map(g=>{
+        const url=hydraGameUrl(g.file_name);
+        if(existUrls.has(url))return null;
+        const cats=detectTags(g.title,'');
+        const imgUrl=g.thumb?hydraThumbUrl(g.thumb):'';
+        return{
+          id:'hy'+(idx++),
+          title:g.title,
+          img:imgUrl,
+          url,
+          cat:cats[0],
+          cats:[cats[0]],
+          isHydra:true,
+          hydraFile:g.file_name
+        };
+      })
+      .filter(Boolean);
+    buildList();renderPage();updateStats();
+    showToast('🎮 '+hydraGames.length+' Hydra games loaded!');
+  }catch(e){
+    // silently fail — hydra games just won't appear
   }
 }
 // ── WATCH PROGRESS ───────────────────────────────────────────────
@@ -3040,8 +3107,39 @@ function play(url,title,gameObj){
   };
   frame.onerror=()=>{hide();showGameError(url,title);};
   // Zone games (.html on rawcdn.githack.com) — fetch+srcdoc to bypass iframe restrictions
-  const isZoneUrl=url.includes('rawcdn.githack.com')||url.includes('cdn.jsdelivr.net/gh/gn-math/html');
-  if(isZoneUrl){
+  const isZoneUrl=url.includes('rawcdn.githack.com')||(url.includes('cdn.jsdelivr.net/gh/')&&url.endsWith('.html'));
+  // Hydra games — each wrapper HTML has its own <base> pointing to real assets.
+  // Fetch via raw.githack (serves with correct headers) and inject via srcdoc,
+  // only adding a <base> tag if the game doesn't already have one.
+  const isHydraUrl=url.includes('cdn.jsdelivr.net/gh/Hydra-Network/hydra-assets');
+  if(isHydraUrl){
+    const gameObj2=allGames().find(g=>g.url===url);
+    const fileName=gameObj2?.hydraFile||decodeURIComponent(url.split(HYDRA_GAME_PREFIX).pop());
+    const tryBases=async()=>{
+      const orderedBases=[
+        "https://raw.githack.com/Hydra-Network/hydra-assets/main/",
+        "https://raw.githubusercontent.com/Hydra-Network/hydra-assets/main/",
+        "https://cdn.jsdelivr.net/gh/Hydra-Network/hydra-assets@main/"
+      ];
+      for(const base of orderedBases){
+        try{
+          const r=await fetch(base+HYDRA_GAME_PREFIX+fileName);
+          if(!r.ok)continue;
+          const html=await r.text();
+          // Only inject <base> if the game doesn't already declare one
+          const hasBase=/<base\s[^>]*href/i.test(html);
+          const processed=hasBase
+            ? html
+            : html.replace(/(<head[^>]*>)/i,`$1<base href="${base+HYDRA_GAME_PREFIX}">`);
+          frame.srcdoc=processed;
+          return;
+        }catch(e){}
+      }
+      // All fetch attempts failed — set src directly
+      frame.src=url;
+    };
+    tryBases();
+  } else if(isZoneUrl){
     fetch(url)
       .then(r=>{
         if(!r.ok)throw new Error('HTTP '+r.status);
@@ -3078,10 +3176,10 @@ function showGameError(url,title){
 function closePlayer(){
   document.getElementById('game-loader').classList.remove('on');
   document.getElementById('player').classList.remove('on');
-  document.getElementById('game-frame').src='';
   document.body.classList.remove('player-open');
   releaseLock();
-  // Refresh progress badges
+  const f=document.getElementById('game-frame');
+  if(f){f.srcdoc='';f.removeAttribute('srcdoc');f.src='about:blank';setTimeout(()=>{f.src='';},50);}
   if(currentView==='movies-view')renderMovies();
 }
 function fsGame(){const f=document.getElementById('game-frame');if(f.requestFullscreen)f.requestFullscreen();}
@@ -5992,7 +6090,7 @@ lbInitAvatars();
 bootStep('Loading games…',20);
 buildList();renderPage();updateStats();
 bootStep('Fetching game library…',40);
-loadZones();loadSpotlightPublic();loadSiteSettings();renderAdBanners();initAdsBanner();setTimeout(loadAllAds,500);
+loadZones();loadHydraGames();loadSpotlightPublic();loadSiteSettings();renderAdBanners();initAdsBanner();setTimeout(loadAllAds,500);
 setTimeout(function(){bootStep('Ready!',100);setTimeout(bootDone,400);},3500);
 (async()=>{
   const sess=localStorage.getItem('adless_session');
