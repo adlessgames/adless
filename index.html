@@ -6528,11 +6528,17 @@ async function wagSendAnnouncement(){
   if(!txt){showToast('Write something first');return;}
   const senderName=currentUser.display_name||currentUser.username;
   try{
-    await fetch(SB_URL+'/rest/v1/announcements',{
+    const annRes=await fetch(SB_URL+'/rest/v1/announcements',{
       method:'POST',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body:JSON.stringify({content:`[${senderName}] ${txt}`})
+      body:JSON.stringify({user_id:currentUser.id,content:`[${senderName}] ${txt}`})
     });
+    if(!annRes.ok){
+      const errText=await annRes.text();
+      console.error('Announcement insert failed:',annRes.status,errText);
+      showToast('❌ Failed to save announcement');
+      return;
+    }
     await fetch(SB_URL+'/rest/v1/messages',{
       method:'POST',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
@@ -6557,7 +6563,7 @@ async function wagSendAnnouncement(){
     document.getElementById('wag-ann-char').textContent='0/500';
     showToast('📢 Announcement sent!');
     wagLoadAnnHistory();
-  }catch(e){showToast('❌ Failed to send');}
+  }catch(e){console.error('Announcement error:',e);showToast('❌ Failed to send');}
 }
 
 async function wagLoadAnnHistory(){
