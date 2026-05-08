@@ -518,6 +518,9 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
   .view{margin-left:0!important;padding-top:56px;}
   .view>header,header.view-header{padding-top:8px;}
   .game-card{min-width:140px;max-width:none;flex:1 1 calc(50% - 8px);}
+.dbg-badge{position:absolute;top:6px;left:6px;font-size:9px;font-weight:800;padding:2px 6px;border-radius:20px;letter-spacing:.3px;pointer-events:none;z-index:3;backdrop-filter:blur(6px);}
+.dbg-badge.working{background:rgba(48,209,88,.25);border:1px solid rgba(48,209,88,.5);color:#30d158;}
+.dbg-badge.broken{background:rgba(255,55,95,.25);border:1px solid rgba(255,55,95,.5);color:#ff375f;}
   #game-grid{grid-template-columns:repeat(2,1fr)!important;gap:10px!important;padding:12px!important;}
   .player-wrap{border-radius:0!important;}
   .chat-wrap{height:calc(100vh - 110px);}
@@ -2570,6 +2573,8 @@ let favs=[];
 let currentCat='all',currentView='games-view',selectedShow=null,selectedSeason=null;
 let zones=[];
 let hydraGames=[];
+let dbgResults={};
+let gameFixOverrides={};
 let filteredList=[],currentPage=1;
 const PER_PAGE=500;
 
@@ -2913,7 +2918,9 @@ function buildCardHtml(g){
   const saveLabel=SAVES_PROGRESS.has(g.id)?'<div class="save-badge">💾 Saves</div>':'';
   const sid=g.id.toString().replace(/"/g,'&quot;');
   const surl=g.url.replace(/"/g,'&quot;');
-  return`<div class="card" data-url="${surl}" data-title="${stitle}" onclick="cardClick(this)">${feat}${saveLabel}<div class="fav-star FAV_PLACEHOLDER" data-id="${sid}" onclick="event.stopPropagation();favClick(this)">★</div><img src="${g.img.replace(/"/g,'&quot;')}" loading="lazy" onerror="this.style.opacity='.1'"><div class="info"><div class="title">${stitle}</div><div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:5px">${tags}</div></div></div>`;
+  const dbgEntry=dbgResults&&dbgResults[g.id];
+  const dbgBadge=dbgEntry&&dbgEntry.status==='working'?'<div class="dbg-badge working">✅ Works</div>':dbgEntry&&dbgEntry.status==='broken'?'<div class="dbg-badge broken">❌ Broken</div>':'';
+  return`<div class="card" data-url="${surl}" data-title="${stitle}" onclick="cardClick(this)">${feat}${saveLabel}${dbgBadge}<div class="fav-star FAV_PLACEHOLDER" data-id="${sid}" onclick="event.stopPropagation();favClick(this)">★</div><img src="${g.img.replace(/"/g,'&quot;')}" loading="lazy" onerror="this.style.opacity='.1'"><div class="info"><div class="title">${stitle}</div><div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:5px">${tags}</div></div></div>`;
 }
 function cardClick(el){play(el.dataset.url,el.dataset.title);}
 function favClick(el){toggleFav(el.dataset.id);}
@@ -8168,9 +8175,8 @@ async function updSaveEdit(id) {
 // ── END UPDATE LOG ────────────────────────────────────────────────
 
 // ── GAME DEBUG ───────────────────────────────────────────────────
-let dbgResults = {};      // { gameId: { status:'working'|'broken'|'skipped', title, url } }
-let dbgQueue   = [];      // shuffled list of game ids yet to test
-let dbgCurrent = null;    // game object currently in the debug iframe
+let dbgQueue   = [];
+let dbgCurrent = null;
 const DBG_KEY  = 'game_debug';
 
 async function dbgLoad() {
@@ -8180,6 +8186,9 @@ async function dbgLoad() {
       dbgResults = JSON.parse(rows[0].value);
     }
   } catch(e) { dbgResults = {}; }
+  // Bust card cache so badges render correctly for all tested games
+  cardCache.clear();
+  buildList(); renderPage();
   dbgRefreshUI();
 }
 
@@ -8277,13 +8286,18 @@ function dbgLoadIntoFrame(game) {
 
 function dbgMark(status) {
   if (!dbgCurrent) return;
-  dbgResults[dbgCurrent.id] = { status, title: dbgCurrent.title, url: dbgCurrent.url, ts: Date.now() };
+  const _markedId = dbgCurrent.id;
+  dbgResults[_markedId] = { status, title: dbgCurrent.title, url: dbgCurrent.url, ts: Date.now() };
   dbgSave();
   dbgCurrent = null;
 
   // Kill frame audio/content
   const frame = document.getElementById('dbg-frame');
   if (frame) { frame.srcdoc = ''; frame.removeAttribute('srcdoc'); frame.src = 'about:blank'; setTimeout(() => { frame.src = ''; }, 50); }
+
+  // Bust card cache so badge shows immediately
+  invalidateCard(_markedId);
+  buildList(); renderPage();
 
   dbgRefreshUI();
   showToast(status === 'working' ? '✅ Marked Working' : '❌ Marked Broken');
@@ -8385,6 +8399,8 @@ function dbgRetest(id) {
 function dbgRemove(id) {
   delete dbgResults[id];
   dbgSave();
+  invalidateCard(id);
+  buildList(); renderPage();
   dbgRefreshUI();
 }
 
@@ -8400,6 +8416,7 @@ function dbgReset() {
   const btn = document.getElementById('dbg-start-btn');
   if (btn) btn.textContent = '🧪 Start Game Debug';
   dbgSave();
+  cardCache.clear(); buildList(); renderPage();
   dbgRefreshUI();
   showToast('Debug results cleared.');
 }
@@ -8412,7 +8429,7 @@ function dbgExportResults() {
   navigator.clipboard.writeText(text).then(() => showToast('📋 Report copied to clipboard!')).catch(() => showToast('Copy failed'));
 }
 // ── GAME FIX SYSTEM ─────────────────────────────────────────────
-let gameFixOverrides = {};   // { gameId: replacementUrl }
+// gameFixOverrides declared at top of file
 const FIX_KEY_PREFIX = 'game_fix_';
 
 async function dbgLoadFixes() {
