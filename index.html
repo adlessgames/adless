@@ -1233,6 +1233,47 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <div id="gallery-bg-admin" style="display:flex;gap:8px;flex-wrap:wrap"><div style="font-size:11px;color:var(--text2)">None yet</div></div>
       <div id="owner-gallery-list" style="display:none"></div>
     </div>
+
+    <!-- Game Debug -->
+    <div class="s-section">
+      <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
+        <span>🧪 Game Debug</span>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span id="dbg-progress" style="font-size:11px;color:var(--text2)"></span>
+          <button class="auc-btn" onclick="dbgExportResults()" title="Copy results summary">📋 Export</button>
+          <button class="auc-btn red" onclick="dbgReset()" title="Clear all debug data">🗑 Reset</button>
+        </div>
+      </div>
+      <div class="s-desc" style="margin-bottom:12px">Load games one by one and mark them working or broken. Results save to Supabase.</div>
+
+      <div id="dbg-player" style="display:none;flex-direction:column;gap:10px;margin-bottom:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <span id="dbg-game-title" style="font-size:14px;font-weight:600;color:var(--text)"></span>
+          <span id="dbg-game-index" style="font-size:11px;color:var(--text2)"></span>
+        </div>
+        <iframe id="dbg-frame"
+          style="width:100%;height:340px;border-radius:12px;border:1px solid var(--border);background:#000"
+          allow="autoplay *; gamepad *; fullscreen *; cross-origin-isolated *"
+          allowfullscreen></iframe>
+        <div style="display:flex;gap:8px">
+          <button class="lb-btn" style="flex:1;background:rgba(48,209,88,.15);border:1px solid rgba(48,209,88,.35);color:#30d158;padding:12px" onclick="dbgMark('working')">✅ Working</button>
+          <button class="lb-btn" style="flex:1;background:rgba(255,55,95,.15);border:1px solid rgba(255,55,95,.35);color:#ff375f;padding:12px" onclick="dbgMark('broken')">❌ Broken</button>
+          <button class="lb-btn" style="width:auto;padding:12px 16px;background:rgba(255,255,255,.06)" onclick="dbgSkip()">⏭ Skip</button>
+        </div>
+      </div>
+
+      <button class="lb-btn" id="dbg-start-btn" style="width:100%;padding:12px;margin-bottom:14px" onclick="dbgNext()">🧪 Start Game Debug</button>
+
+      <div id="dbg-stats-bar" style="display:none;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <div style="padding:6px 12px;border-radius:8px;background:rgba(48,209,88,.12);border:1px solid rgba(48,209,88,.25);font-size:12px;color:#30d158">✅ <span id="dbg-count-working">0</span> Working</div>
+        <div style="padding:6px 12px;border-radius:8px;background:rgba(255,55,95,.12);border:1px solid rgba(255,55,95,.25);font-size:12px;color:#ff375f">❌ <span id="dbg-count-broken">0</span> Broken</div>
+        <div style="padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid var(--border);font-size:12px;color:var(--text2)">⏭ <span id="dbg-count-skipped">0</span> Skipped</div>
+        <div style="padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid var(--border);font-size:12px;color:var(--text2)">📋 <span id="dbg-count-total">0</span> Total Games</div>
+      </div>
+
+      <div id="dbg-results-list" style="display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto"></div>
+    </div>
+
   </div>
   <!-- LEADERBOARD VIEW -->
   <div id="leaderboard-view" class="view">
@@ -4972,6 +5013,7 @@ async function loadOwnerPanel(){
   loadAdminChatLog();
   loadSpotlight();
   loadSiteSettings();
+  dbgLoad();
   loadOwnerFeatured();
   loadAnnouncementHistory();
   loadScoreReview("pending");
@@ -7911,6 +7953,226 @@ async function toggleBadgeForUser(userId,key,has){
 }
 
 // ══════════════════════════════════════════════════════════════════
+// ── GAME DEBUG ───────────────────────────────────────────────────
+let dbgResults = {};      // { gameId: { status:'working'|'broken'|'skipped', title, url } }
+let dbgQueue   = [];      // shuffled list of game ids yet to test
+let dbgCurrent = null;    // game object currently in the debug iframe
+const DBG_KEY  = 'game_debug';
+
+async function dbgLoad() {
+  try {
+    const rows = await sbReq(`/rest/v1/site_settings?key=eq.${DBG_KEY}&select=value`);
+    if (rows && rows.length && rows[0].value) {
+      dbgResults = JSON.parse(rows[0].value);
+    }
+  } catch(e) { dbgResults = {}; }
+  dbgRefreshUI();
+}
+
+async function dbgSave() {
+  try {
+    await upsertSiteSetting(DBG_KEY, JSON.stringify(dbgResults));
+  } catch(e) { console.warn('dbg save failed', e); }
+}
+
+function dbgAllGames() {
+  // Exclude AI/external tools, only real playable games
+  return allGames().filter(g => g.url && g.id &&
+    !/appetize|deepseek|chatgpt|gemini|claude\.ai|perplexity|deepai/.test(g.url));
+}
+
+function dbgBuildQueue() {
+  const tested = new Set(Object.keys(dbgResults));
+  const untested = dbgAllGames().filter(g => !tested.has(g.id));
+  // Shuffle
+  for (let i = untested.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [untested[i], untested[j]] = [untested[j], untested[i]];
+  }
+  dbgQueue = untested;
+}
+
+function dbgNext() {
+  if (!isOwner()) return;
+  if (!dbgQueue.length) dbgBuildQueue();
+  if (!dbgQueue.length) { showToast('All games have been tested!'); return; }
+
+  dbgCurrent = dbgQueue.shift();
+  dbgLoadIntoFrame(dbgCurrent);
+  dbgRefreshUI();
+
+  // Show player, update button
+  const player = document.getElementById('dbg-player');
+  if (player) player.style.display = 'flex';
+  const btn = document.getElementById('dbg-start-btn');
+  if (btn) btn.textContent = '⏭ Next Game';
+}
+
+function dbgLoadIntoFrame(game) {
+  const frame = document.getElementById('dbg-frame');
+  if (!frame) return;
+
+  // Reset frame
+  frame.removeAttribute('srcdoc');
+  frame.src = 'about:blank';
+
+  const url = game.url;
+  const titleEl = document.getElementById('dbg-game-title');
+  const indexEl = document.getElementById('dbg-game-index');
+  if (titleEl) titleEl.textContent = game.title;
+  const tested = Object.keys(dbgResults).length;
+  const total = dbgAllGames().length;
+  if (indexEl) indexEl.textContent = `${tested}/${total} tested`;
+
+  const isHydra = url.includes('cdn.jsdelivr.net/gh/Hydra-Network/hydra-assets');
+  const isJsdelivrHtml = url.includes('cdn.jsdelivr.net/gh/') && url.endsWith('.html');
+  const isZone = url.includes('rawcdn.githack.com') || (isJsdelivrHtml && !isHydra);
+
+  if (isHydra) {
+    const fileName = game.hydraFile || decodeURIComponent(url.split('gmes/').pop());
+    const bases = [
+      'https://raw.githack.com/Hydra-Network/hydra-assets/main/',
+      'https://raw.githubusercontent.com/Hydra-Network/hydra-assets/main/',
+      'https://cdn.jsdelivr.net/gh/Hydra-Network/hydra-assets@main/'
+    ];
+    (async () => {
+      for (const base of bases) {
+        try {
+          const r = await fetch(base + 'gmes/' + fileName);
+          if (!r.ok) continue;
+          const html = await r.text();
+          const hasBase = /<base\s[^>]*href/i.test(html);
+          frame.srcdoc = hasBase ? html : html.replace(/(<head[^>]*>)/i, `$1<base href="${base}gmes/">`);
+          return;
+        } catch(e) {}
+      }
+      frame.src = url;
+    })();
+  } else if (isZone) {
+    fetch(url)
+      .then(r => { if (!r.ok) throw 0; return r.text(); })
+      .then(html => {
+        const base = url.substring(0, url.lastIndexOf('/') + 1);
+        frame.srcdoc = html.replace(/(<head[^>]*>)/i, `$1<base href="${base}">`);
+      })
+      .catch(() => { frame.src = url; });
+  } else {
+    frame.src = url;
+  }
+}
+
+function dbgMark(status) {
+  if (!dbgCurrent) return;
+  dbgResults[dbgCurrent.id] = { status, title: dbgCurrent.title, url: dbgCurrent.url, ts: Date.now() };
+  dbgSave();
+  dbgCurrent = null;
+
+  // Kill frame audio/content
+  const frame = document.getElementById('dbg-frame');
+  if (frame) { frame.srcdoc = ''; frame.removeAttribute('srcdoc'); frame.src = 'about:blank'; setTimeout(() => { frame.src = ''; }, 50); }
+
+  dbgRefreshUI();
+  showToast(status === 'working' ? '✅ Marked Working' : '❌ Marked Broken');
+  dbgNext();
+}
+
+function dbgSkip() {
+  if (!dbgCurrent) { dbgNext(); return; }
+  dbgResults[dbgCurrent.id] = { status: 'skipped', title: dbgCurrent.title, url: dbgCurrent.url, ts: Date.now() };
+  dbgSave();
+  dbgCurrent = null;
+  const frame = document.getElementById('dbg-frame');
+  if (frame) { frame.srcdoc = ''; frame.removeAttribute('srcdoc'); frame.src = 'about:blank'; setTimeout(() => { frame.src = ''; }, 50); }
+  dbgRefreshUI();
+  dbgNext();
+}
+
+function dbgRefreshUI() {
+  const working = Object.values(dbgResults).filter(r => r.status === 'working');
+  const broken  = Object.values(dbgResults).filter(r => r.status === 'broken');
+  const skipped = Object.values(dbgResults).filter(r => r.status === 'skipped');
+  const total   = dbgAllGames().length;
+  const tested  = Object.keys(dbgResults).length;
+
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set('dbg-count-working', working.length);
+  set('dbg-count-broken', broken.length);
+  set('dbg-count-skipped', skipped.length);
+  set('dbg-count-total', total);
+  set('dbg-progress', `${tested}/${total} tested`);
+
+  const bar = document.getElementById('dbg-stats-bar');
+  if (bar && tested > 0) bar.style.display = 'flex';
+
+  // Render results list — most recent first
+  const listEl = document.getElementById('dbg-results-list');
+  if (!listEl) return;
+
+  const all = Object.entries(dbgResults)
+    .sort((a, b) => (b[1].ts || 0) - (a[1].ts || 0));
+
+  if (!all.length) { listEl.innerHTML = '<div style="font-size:12px;color:var(--text2)">No results yet — click Start to begin.</div>'; return; }
+
+  listEl.innerHTML = all.map(([id, r]) => {
+    const icon  = r.status === 'working' ? '✅' : r.status === 'broken' ? '❌' : '⏭';
+    const color = r.status === 'working' ? '#30d158' : r.status === 'broken' ? '#ff375f' : 'var(--text2)';
+    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid var(--border);gap:8px">
+      <span style="font-size:12px;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${icon} ${r.title}</span>
+      <span style="font-size:11px;color:${color};flex-shrink:0;font-weight:600;text-transform:uppercase">${r.status}</span>
+      <button onclick="dbgRetest('${id}')" style="background:rgba(255,255,255,.08);border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;flex-shrink:0">Retest</button>
+      <button onclick="dbgRemove('${id}')" style="background:rgba(255,55,95,.1);border:1px solid rgba(255,55,95,.2);color:#ff375f;border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;flex-shrink:0">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function dbgRetest(id) {
+  // Remove from results and load it
+  const entry = dbgResults[id];
+  if (!entry) return;
+  delete dbgResults[id];
+  dbgSave();
+  const game = dbgAllGames().find(g => g.id === id);
+  if (!game) return;
+  dbgCurrent = game;
+  dbgLoadIntoFrame(game);
+  const player = document.getElementById('dbg-player');
+  if (player) player.style.display = 'flex';
+  const btn = document.getElementById('dbg-start-btn');
+  if (btn) btn.textContent = '⏭ Next Game';
+  dbgRefreshUI();
+}
+
+function dbgRemove(id) {
+  delete dbgResults[id];
+  dbgSave();
+  dbgRefreshUI();
+}
+
+function dbgReset() {
+  if (!confirm('Clear ALL game debug results? This cannot be undone.')) return;
+  dbgResults = {};
+  dbgQueue = [];
+  dbgCurrent = null;
+  const frame = document.getElementById('dbg-frame');
+  if (frame) { frame.src = ''; frame.removeAttribute('srcdoc'); }
+  const player = document.getElementById('dbg-player');
+  if (player) player.style.display = 'none';
+  const btn = document.getElementById('dbg-start-btn');
+  if (btn) btn.textContent = '🧪 Start Game Debug';
+  dbgSave();
+  dbgRefreshUI();
+  showToast('Debug results cleared.');
+}
+
+function dbgExportResults() {
+  const working = Object.values(dbgResults).filter(r => r.status === 'working').map(r => r.title).sort();
+  const broken  = Object.values(dbgResults).filter(r => r.status === 'broken').map(r => r.title).sort();
+  const total   = dbgAllGames().length;
+  const text = `=== Game Debug Report ===\nTotal: ${total} games\nWorking: ${working.length}\nBroken: ${broken.length}\n\n✅ WORKING:\n${working.map(t => '  • '+t).join('\n')}\n\n❌ BROKEN:\n${broken.map(t => '  • '+t).join('\n')}`;
+  navigator.clipboard.writeText(text).then(() => showToast('📋 Report copied to clipboard!')).catch(() => showToast('Copy failed'));
+}
+// ── END GAME DEBUG ────────────────────────────────────────────────
+
 // PRESET BLACKLIST LOADER — called after loadSiteSettings if empty
 // ══════════════════════════════════════════════════════════════════
 async function ensureBlacklistPreset(){
