@@ -351,6 +351,23 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .report-reason-btn:hover,.report-reason-btn.sel{background:rgba(255,55,95,.2);border-color:rgba(255,55,95,.4);color:#ff375f;}
 /* ── SPOTLIGHT BANNER ── */
 #spotlight-banner{display:flex;gap:10px;padding:0 16px 10px;flex-wrap:wrap;}
+#update-banner{display:none;align-items:center;gap:10px;padding:10px 16px;margin:0 16px 10px;border-radius:12px;background:linear-gradient(135deg,rgba(10,132,255,.18),rgba(94,92,230,.18));border:1px solid rgba(10,132,255,.35);cursor:pointer;transition:.2s;position:relative;}
+#update-banner:hover{background:linear-gradient(135deg,rgba(10,132,255,.28),rgba(94,92,230,.28));}
+#update-banner .upd-pill{background:linear-gradient(135deg,#0a84ff,#5e5ce6);color:#fff;font-size:10px;font-weight:800;padding:3px 8px;border-radius:20px;letter-spacing:.5px;flex-shrink:0;animation:updPulse 2s ease-in-out infinite;}
+@keyframes updPulse{0%,100%{box-shadow:0 0 0 0 rgba(10,132,255,.4);}50%{box-shadow:0 0 0 6px rgba(10,132,255,0);}}
+#update-banner .upd-title{font-size:13px;font-weight:600;color:var(--text);flex:1;}
+#update-banner .upd-sub{font-size:11px;color:var(--text2);flex-shrink:0;}
+#update-banner .upd-close{background:rgba(255,255,255,.1);border:none;color:var(--text2);width:24px;height:24px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s;}
+#update-banner .upd-close:hover{background:rgba(255,255,255,.2);color:var(--text);}
+#update-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);z-index:99999;display:none;align-items:center;justify-content:center;padding:20px;}
+#update-modal-overlay.on{display:flex;}
+#update-modal{background:#1a1a1a;border:1px solid rgba(255,255,255,.12);border-radius:20px;max-width:540px;width:100%;max-height:80vh;overflow:hidden;display:flex;flex-direction:column;}
+#update-modal .um-header{padding:20px 20px 14px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:flex-start;gap:12px;}
+#update-modal .um-header-text{flex:1;}
+#update-modal .um-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px;}
+#update-modal .um-date{font-size:11px;color:var(--text2);}
+#update-modal .um-body{padding:16px 20px;overflow-y:auto;flex:1;font-size:13px;color:var(--text2);line-height:1.7;white-space:pre-wrap;}
+#update-modal .um-footer{padding:14px 20px;border-top:1px solid rgba(255,255,255,.08);display:flex;gap:8px;justify-content:flex-end;}
 .spot-card{flex:1;min-width:200px;border-radius:14px;overflow:hidden;position:relative;cursor:none;border:2px solid transparent;transition:.2s;}
 .spot-card.gotw{border-color:var(--blue);background:linear-gradient(135deg,rgba(10,132,255,.15),rgba(10,132,255,.05));}
 .spot-card.gotm{border-color:#ff9f0a;background:linear-gradient(135deg,rgba(255,159,10,.15),rgba(255,159,10,.05));}
@@ -622,6 +639,21 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
   </div>
 </div>
 <div id="toast">✓ Done</div>
+<div id="update-modal-overlay" onclick="if(event.target===this)dismissUpdateModal()">
+  <div id="update-modal">
+    <div class="um-header">
+      <div style="background:linear-gradient(135deg,#0a84ff,#5e5ce6);border-radius:10px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🆕</div>
+      <div class="um-header-text">
+        <div class="um-title" id="um-title">Update</div>
+        <div class="um-date" id="um-date"></div>
+      </div>
+    </div>
+    <div class="um-body" id="um-body"></div>
+    <div class="um-footer">
+      <button class="lb-btn" style="width:auto;padding:10px 20px" onclick="dismissUpdateModal()">✓ Got it!</button>
+    </div>
+  </div>
+</div>
 <div id="ads-banner" class="banner-hidden">
   <span style="font-size:18px;flex-shrink:0">📢</span>
   <span class="ab-text">We use <strong>optional ads</strong> to help keep Adless OS running smoothly. You can remove them anytime in <span class="ab-link" onclick="dismissAdsBanner(true)">Settings</span>.</span>
@@ -727,6 +759,12 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <input id="search" placeholder="🔍 Search games..." oninput="onSearch()">
       <div id="counter" style="font-size:12px;font-weight:600;white-space:nowrap;color:var(--text2)">Loading...</div>
     </header>
+    <div id="update-banner" onclick="openUpdateModal()">
+      <span class="upd-pill">🆕 NEW UPDATE</span>
+      <span class="upd-title" id="upd-banner-title">See what's new</span>
+      <span class="upd-sub" id="upd-banner-date"></span>
+      <button class="upd-close" onclick="event.stopPropagation();dismissUpdate()" title="Dismiss">✕</button>
+    </div>
     <div id="spotlight-banner"></div>
     <div id="ad-games-banner"></div>
     <div class="grid" id="game-grid" data-google-adsense-exclusion="true"></div>
@@ -1232,6 +1270,26 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px">🌅 Published Backgrounds</div>
       <div id="gallery-bg-admin" style="display:flex;gap:8px;flex-wrap:wrap"><div style="font-size:11px;color:var(--text2)">None yet</div></div>
       <div id="owner-gallery-list" style="display:none"></div>
+    </div>
+
+    <!-- Update Log -->
+    <div class="s-section">
+      <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
+        <span>📣 Update Log</span>
+        <span id="upd-admin-count" style="font-size:11px;color:var(--text2)"></span>
+      </div>
+      <div class="s-desc" style="margin-bottom:12px">Write update notes shown to users as a banner when they visit. Users dismiss it and it won't show again until the next update.</div>
+
+      <!-- Compose new update -->
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;padding:12px;border-radius:12px;background:rgba(10,132,255,.06);border:1px solid rgba(10,132,255,.15)">
+        <div style="font-size:12px;font-weight:600;color:var(--blue);margin-bottom:2px">✏️ New Update</div>
+        <input id="upd-compose-title" class="lb-field" style="margin:0" placeholder="Update title (e.g. v1.4 — New Games Added)">
+        <textarea id="upd-compose-body" class="lb-field" style="margin:0;height:90px;resize:vertical;font-family:inherit;line-height:1.6" placeholder="Describe what changed… supports line breaks"></textarea>
+        <button class="lb-btn" style="width:auto;align-self:flex-end;padding:8px 18px" onclick="updPublish()">📣 Publish Update</button>
+      </div>
+
+      <!-- Existing updates list -->
+      <div id="upd-admin-list" style="display:flex;flex-direction:column;gap:8px"></div>
     </div>
 
     <!-- Game Debug -->
@@ -2762,6 +2820,8 @@ function lbEnter(){
   startNotifPoll();
   postLoginBadgeCheck();
   loadCustomGameTags();
+  // Re-check update banner with user's seen state
+  setTimeout(updCheckBanner, 600);
   // Check auto-completable tasks
   setTimeout(checkAutoTasks, 1500);
   // Load ads opt-out state
@@ -3103,10 +3163,13 @@ function backToShows(){curShowI=-1;curSeasonI=-1;switchView('shows-view');render
 function backToSeasons(){curSeasonI=-1;if(curShowI>=0)openShow(curShowI);else switchView('seasons-view');}// PLAYER
 let currentGameTitle="", currentGameId="", currentGameObj=null, scoreFile=null;
 function play(url,title,gameObj){
+  // Apply owner fix override if one exists for this game
+  const _gObj=gameObj||(allGames?allGames().find(g=>g.url===url):null)||null;
+  if(_gObj&&gameFixOverrides&&gameFixOverrides[_gObj.id]){url=gameFixOverrides[_gObj.id];}
   // Track recently played
   // Track current game for score submission
   currentGameTitle=title||"Unknown Game";
-  currentGameObj=gameObj||(allGames?allGames().find(g=>g.url===url):null)||null;
+  currentGameObj=_gObj||null;
   currentGameId=currentGameObj?.id||btoa(url||"").slice(0,16);
   if(gameObj)addRecent(gameObj);
   else{
@@ -5014,6 +5077,8 @@ async function loadOwnerPanel(){
   loadSpotlight();
   loadSiteSettings();
   dbgLoad();
+  dbgLoadFixes();
+  updRenderAdminList();
   loadOwnerFeatured();
   loadAnnouncementHistory();
   loadScoreReview("pending");
@@ -6132,7 +6197,7 @@ lbInitAvatars();
 bootStep('Loading games…',20);
 buildList();renderPage();updateStats();
 bootStep('Fetching game library…',40);
-loadZones();loadHydraGames();loadSpotlightPublic();loadSiteSettings();renderAdBanners();initAdsBanner();setTimeout(loadAllAds,500);
+loadZones();loadHydraGames();loadSpotlightPublic();loadSiteSettings();dbgLoadFixes();updLoad();renderAdBanners();initAdsBanner();setTimeout(loadAllAds,500);
 setTimeout(function(){bootStep('Ready!',100);setTimeout(bootDone,400);},3500);
 (async()=>{
   const sess=localStorage.getItem('adless_session');
@@ -7953,6 +8018,155 @@ async function toggleBadgeForUser(userId,key,has){
 }
 
 // ══════════════════════════════════════════════════════════════════
+// ── UPDATE LOG ───────────────────────────────────────────────────
+const UPD_SETTING_KEY = 'update_log';
+const UPD_SEEN_KEY    = 'adless_last_seen_update';
+let updLog = [];   // [{id, title, body, date}]
+
+async function updLoad() {
+  try {
+    const rows = await sbReq(`/rest/v1/site_settings?key=eq.${UPD_SETTING_KEY}&select=value`);
+    updLog = (rows && rows.length && rows[0].value) ? JSON.parse(rows[0].value) : [];
+  } catch(e) { updLog = []; }
+  updCheckBanner();
+}
+
+async function updSave() {
+  try { await upsertSiteSetting(UPD_SETTING_KEY, JSON.stringify(updLog)); } catch(e) {}
+}
+
+function updLatest() {
+  return updLog.length ? updLog[0] : null;
+}
+
+function updLastSeenId() {
+  // Logged-in users: stored in settings blob. Guests: localStorage.
+  if (currentUser && !currentUser.guest) {
+    const s = loadS();
+    return s[UPD_SEEN_KEY] || null;
+  }
+  return localStorage.getItem(UPD_SEEN_KEY) || null;
+}
+
+function updMarkSeen(id) {
+  if (currentUser && !currentUser.guest) {
+    const s = loadS();
+    s[UPD_SEEN_KEY] = id;
+    saveS(s);   // auto-syncs to Supabase via syncUserData
+  } else {
+    localStorage.setItem(UPD_SEEN_KEY, id);
+  }
+}
+
+function updCheckBanner() {
+  const latest = updLatest();
+  const banner  = document.getElementById('update-banner');
+  if (!banner) return;
+  if (!latest) { banner.style.display = 'none'; return; }
+  const seen = updLastSeenId();
+  if (seen === latest.id) { banner.style.display = 'none'; return; }
+  // Show banner
+  const titleEl = document.getElementById('upd-banner-title');
+  const dateEl  = document.getElementById('upd-banner-date');
+  if (titleEl) titleEl.textContent = latest.title;
+  if (dateEl)  dateEl.textContent  = latest.date ? new Date(latest.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+  banner.style.display = 'flex';
+}
+
+function openUpdateModal() {
+  const latest = updLatest();
+  if (!latest) return;
+  document.getElementById('um-title').textContent = latest.title;
+  document.getElementById('um-body').textContent  = latest.body || '';
+  document.getElementById('um-date').textContent  = latest.date ? 'Published ' + new Date(latest.date).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '';
+  document.getElementById('update-modal-overlay').classList.add('on');
+}
+
+function dismissUpdateModal() {
+  document.getElementById('update-modal-overlay').classList.remove('on');
+  dismissUpdate();
+}
+
+function dismissUpdate() {
+  const latest = updLatest();
+  if (latest) updMarkSeen(latest.id);
+  const banner = document.getElementById('update-banner');
+  if (banner) banner.style.display = 'none';
+}
+
+// ── OWNER: publish / manage updates ──────────────────────────────
+async function updPublish() {
+  if (!isOwner()) return;
+  const title = (document.getElementById('upd-compose-title').value || '').trim();
+  const body  = (document.getElementById('upd-compose-body').value  || '').trim();
+  if (!title) { showToast('Enter an update title.'); return; }
+  const entry = { id: 'upd_' + Date.now(), title, body, date: new Date().toISOString() };
+  updLog.unshift(entry);   // newest first
+  await updSave();
+  document.getElementById('upd-compose-title').value = '';
+  document.getElementById('upd-compose-body').value  = '';
+  showToast('📣 Update published!');
+  updRenderAdminList();
+  updCheckBanner();
+}
+
+async function updDelete(id) {
+  if (!confirm('Delete this update?')) return;
+  updLog = updLog.filter(u => u.id !== id);
+  await updSave();
+  updRenderAdminList();
+  updCheckBanner();
+  showToast('Update deleted.');
+}
+
+function updRenderAdminList() {
+  const list = document.getElementById('upd-admin-list');
+  const count = document.getElementById('upd-admin-count');
+  if (!list) return;
+  if (count) count.textContent = updLog.length + ' update' + (updLog.length !== 1 ? 's' : '');
+  if (!updLog.length) { list.innerHTML = '<div style="font-size:12px;color:var(--text2)">No updates published yet.</div>'; return; }
+  list.innerHTML = updLog.map(u => `
+    <div style="border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.04);overflow:hidden">
+      <div style="display:flex;align-items:center;gap:8px;padding:10px 12px">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${u.title}</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:2px">${u.date ? new Date(u.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : ''}</div>
+        </div>
+        <button onclick="updToggleEdit('${u.id}')" style="background:rgba(255,255,255,.08);border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer">✏️ Edit</button>
+        <button onclick="updDelete('${u.id}')" style="background:rgba(255,55,95,.1);border:1px solid rgba(255,55,95,.2);color:#ff375f;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer">✕</button>
+      </div>
+      <div id="upd-edit-panel-${u.id}" style="display:none;flex-direction:column;gap:8px;padding:10px 12px;border-top:1px solid var(--border);background:rgba(255,255,255,.03)">
+        <input id="upd-edit-title-${u.id}" class="lb-field" style="margin:0;font-size:13px" value="${u.title.replace(/"/g,'&quot;')}">
+        <textarea id="upd-edit-body-${u.id}" class="lb-field" style="margin:0;height:80px;resize:vertical;font-family:inherit;line-height:1.6">${u.body||''}</textarea>
+        <div style="display:flex;gap:6px;justify-content:flex-end">
+          <button onclick="updSaveEdit('${u.id}')" style="background:rgba(48,209,88,.15);border:1px solid rgba(48,209,88,.3);color:#30d158;border-radius:6px;padding:6px 14px;font-size:11px;cursor:pointer">💾 Save</button>
+          <button onclick="updToggleEdit('${u.id}')" style="background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:6px 10px;font-size:11px;cursor:pointer">Cancel</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function updToggleEdit(id) {
+  const panel = document.getElementById('upd-edit-panel-' + id);
+  if (!panel) return;
+  panel.style.display = panel.style.display === 'flex' ? 'none' : 'flex';
+}
+
+async function updSaveEdit(id) {
+  const idx = updLog.findIndex(u => u.id === id);
+  if (idx < 0) return;
+  const titleEl = document.getElementById('upd-edit-title-' + id);
+  const bodyEl  = document.getElementById('upd-edit-body-'  + id);
+  if (!titleEl || !bodyEl) return;
+  updLog[idx].title = titleEl.value.trim() || updLog[idx].title;
+  updLog[idx].body  = bodyEl.value.trim();
+  await updSave();
+  showToast('✅ Update saved.');
+  updRenderAdminList();
+  updCheckBanner();
+}
+// ── END UPDATE LOG ────────────────────────────────────────────────
+
 // ── GAME DEBUG ───────────────────────────────────────────────────
 let dbgResults = {};      // { gameId: { status:'working'|'broken'|'skipped', title, url } }
 let dbgQueue   = [];      // shuffled list of game ids yet to test
@@ -8104,23 +8318,49 @@ function dbgRefreshUI() {
   const bar = document.getElementById('dbg-stats-bar');
   if (bar && tested > 0) bar.style.display = 'flex';
 
-  // Render results list — most recent first
   const listEl = document.getElementById('dbg-results-list');
   if (!listEl) return;
 
-  const all = Object.entries(dbgResults)
-    .sort((a, b) => (b[1].ts || 0) - (a[1].ts || 0));
-
+  const all = Object.entries(dbgResults).sort((a, b) => (b[1].ts || 0) - (a[1].ts || 0));
   if (!all.length) { listEl.innerHTML = '<div style="font-size:12px;color:var(--text2)">No results yet — click Start to begin.</div>'; return; }
 
   listEl.innerHTML = all.map(([id, r]) => {
     const icon  = r.status === 'working' ? '✅' : r.status === 'broken' ? '❌' : '⏭';
     const color = r.status === 'working' ? '#30d158' : r.status === 'broken' ? '#ff375f' : 'var(--text2)';
-    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid var(--border);gap:8px">
-      <span style="font-size:12px;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${icon} ${r.title}</span>
-      <span style="font-size:11px;color:${color};flex-shrink:0;font-weight:600;text-transform:uppercase">${r.status}</span>
-      <button onclick="dbgRetest('${id}')" style="background:rgba(255,255,255,.08);border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;flex-shrink:0">Retest</button>
-      <button onclick="dbgRemove('${id}')" style="background:rgba(255,55,95,.1);border:1px solid rgba(255,55,95,.2);color:#ff375f;border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;flex-shrink:0">✕</button>
+    const hasFix = !!gameFixOverrides[id];
+    const fixBadge = hasFix ? `<span style="font-size:10px;color:#ffd60a;background:rgba(255,214,10,.12);border:1px solid rgba(255,214,10,.25);padding:2px 6px;border-radius:5px;flex-shrink:0">🔧 Fixed</span>` : '';
+    const fixBtn = r.status === 'broken'
+      ? `<button onclick="dbgOpenFix('${id}')" style="background:rgba(255,159,10,.12);border:1px solid rgba(255,159,10,.3);color:#ff9f0a;border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;flex-shrink:0">🔧 Fix</button>`
+      : '';
+    return `<div style="display:flex;flex-direction:column;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--border);overflow:hidden">
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 12px">
+        <span style="font-size:12px;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${icon} ${r.title}</span>
+        ${fixBadge}
+        <span style="font-size:11px;color:${color};flex-shrink:0;font-weight:600;text-transform:uppercase">${r.status}</span>
+        ${fixBtn}
+        <button onclick="dbgRetest('${id}')" style="background:rgba(255,255,255,.08);border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;flex-shrink:0">Retest</button>
+        <button onclick="dbgRemove('${id}')" style="background:rgba(255,55,95,.1);border:1px solid rgba(255,55,95,.2);color:#ff375f;border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;flex-shrink:0">✕</button>
+      </div>
+      <div id="dbg-fix-panel-${id}" style="display:none;flex-direction:column;gap:8px;padding:10px 12px;border-top:1px solid var(--border);background:rgba(255,159,10,.05)">
+        <div style="font-size:11px;color:var(--text2)">Original URL: <span style="color:var(--text);word-break:break-all">${r.url||''}</span></div>
+        ${hasFix ? `<div style="font-size:11px;color:#ffd60a">Current fix: <span style="word-break:break-all">${gameFixOverrides[id]}</span></div>` : ''}
+        <div style="display:flex;gap:6px;align-items:center">
+          <input id="dbg-fix-input-${id}" class="lb-field" style="margin:0;flex:1;font-size:12px" placeholder="Paste replacement URL…" value="${hasFix ? gameFixOverrides[id] : ''}">
+          <button onclick="dbgTestFix('${id}')" style="background:rgba(10,132,255,.15);border:1px solid rgba(10,132,255,.3);color:var(--blue);border-radius:6px;padding:6px 10px;font-size:11px;cursor:pointer;white-space:nowrap">▶ Test</button>
+          <button onclick="dbgSaveFix('${id}')" style="background:rgba(48,209,88,.15);border:1px solid rgba(48,209,88,.3);color:#30d158;border-radius:6px;padding:6px 10px;font-size:11px;cursor:pointer;white-space:nowrap">💾 Save Fix</button>
+          ${hasFix ? `<button onclick="dbgRemoveFix('${id}')" style="background:rgba(255,55,95,.12);border:1px solid rgba(255,55,95,.25);color:#ff375f;border-radius:6px;padding:6px 10px;font-size:11px;cursor:pointer;white-space:nowrap">✕ Remove Fix</button>` : ''}
+        </div>
+        <div id="dbg-fix-preview-${id}" style="display:none;flex-direction:column;gap:6px">
+          <iframe id="dbg-fix-frame-${id}"
+            style="width:100%;height:260px;border-radius:8px;border:1px solid var(--border);background:#000"
+            allow="autoplay *; gamepad *; fullscreen *; cross-origin-isolated *"
+            allowfullscreen></iframe>
+          <div style="display:flex;gap:6px">
+            <button onclick="dbgConfirmFix('${id}')" style="flex:1;background:rgba(48,209,88,.15);border:1px solid rgba(48,209,88,.35);color:#30d158;padding:8px;border-radius:8px;cursor:pointer;font-size:12px">✅ Works — Save & Mark Working</button>
+            <button onclick="dbgCloseFix('${id}')" style="background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text2);padding:8px 12px;border-radius:8px;cursor:pointer;font-size:12px">✕ Close</button>
+          </div>
+        </div>
+      </div>
     </div>`;
   }).join('');
 }
@@ -8170,6 +8410,104 @@ function dbgExportResults() {
   const total   = dbgAllGames().length;
   const text = `=== Game Debug Report ===\nTotal: ${total} games\nWorking: ${working.length}\nBroken: ${broken.length}\n\n✅ WORKING:\n${working.map(t => '  • '+t).join('\n')}\n\n❌ BROKEN:\n${broken.map(t => '  • '+t).join('\n')}`;
   navigator.clipboard.writeText(text).then(() => showToast('📋 Report copied to clipboard!')).catch(() => showToast('Copy failed'));
+}
+// ── GAME FIX SYSTEM ─────────────────────────────────────────────
+let gameFixOverrides = {};   // { gameId: replacementUrl }
+const FIX_KEY_PREFIX = 'game_fix_';
+
+async function dbgLoadFixes() {
+  try {
+    const rows = await sbReq(`/rest/v1/site_settings?key=like.${FIX_KEY_PREFIX}%&select=key,value`);
+    gameFixOverrides = {};
+    (rows||[]).forEach(r => {
+      const id = r.key.replace(FIX_KEY_PREFIX, '');
+      gameFixOverrides[id] = r.value;
+    });
+  } catch(e) { gameFixOverrides = {}; }
+}
+
+async function dbgSaveFix(id) {
+  const input = document.getElementById('dbg-fix-input-' + id);
+  if (!input) return;
+  const url = input.value.trim();
+  if (!url) { showToast('Please enter a URL first.'); return; }
+  gameFixOverrides[id] = url;
+  try {
+    await upsertSiteSetting(FIX_KEY_PREFIX + id, url);
+    showToast('🔧 Fix saved!');
+  } catch(e) { showToast('Save failed'); }
+  dbgRefreshUI();
+}
+
+async function dbgRemoveFix(id) {
+  delete gameFixOverrides[id];
+  try {
+    await fetch(SB_URL + '/rest/v1/site_settings?key=eq.' + encodeURIComponent(FIX_KEY_PREFIX + id), {
+      method: 'DELETE',
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+    });
+    showToast('Fix removed.');
+  } catch(e) { showToast('Remove failed'); }
+  dbgRefreshUI();
+}
+
+function dbgOpenFix(id) {
+  const panel = document.getElementById('dbg-fix-panel-' + id);
+  if (!panel) return;
+  const isOpen = panel.style.display === 'flex';
+  // Close all other panels first
+  document.querySelectorAll('[id^="dbg-fix-panel-"]').forEach(p => p.style.display = 'none');
+  if (!isOpen) panel.style.display = 'flex';
+}
+
+function dbgTestFix(id) {
+  const input = document.getElementById('dbg-fix-input-' + id);
+  if (!input || !input.value.trim()) { showToast('Enter a URL first.'); return; }
+  const url = input.value.trim();
+  const preview = document.getElementById('dbg-fix-preview-' + id);
+  const frame   = document.getElementById('dbg-fix-frame-' + id);
+  if (!preview || !frame) return;
+  preview.style.display = 'flex';
+
+  // Load using same CDN-aware logic as main player
+  frame.removeAttribute('srcdoc');
+  frame.src = 'about:blank';
+  const isZone = url.includes('rawcdn.githack.com') || (url.includes('cdn.jsdelivr.net/gh/') && url.endsWith('.html'));
+  if (isZone) {
+    fetch(url)
+      .then(r => { if (!r.ok) throw 0; return r.text(); })
+      .then(html => {
+        const base = url.substring(0, url.lastIndexOf('/') + 1);
+        const hasBase = /<base\s[^>]*href/i.test(html);
+        frame.srcdoc = hasBase ? html : html.replace(/(<head[^>]*>)/i, `$1<base href="${base}">`);
+      })
+      .catch(() => { frame.src = url; });
+  } else {
+    frame.src = url;
+  }
+}
+
+function dbgCloseFix(id) {
+  const preview = document.getElementById('dbg-fix-preview-' + id);
+  const frame   = document.getElementById('dbg-fix-frame-' + id);
+  if (frame) { frame.src = 'about:blank'; frame.removeAttribute('srcdoc'); setTimeout(() => { frame.src = ''; }, 50); }
+  if (preview) preview.style.display = 'none';
+}
+
+async function dbgConfirmFix(id) {
+  // Save the fix URL
+  await dbgSaveFix(id);
+  // Mark the game as working in debug results
+  if (dbgResults[id]) {
+    dbgResults[id].status = 'working';
+    dbgResults[id].ts = Date.now();
+    await dbgSave();
+  }
+  dbgCloseFix(id);
+  const panel = document.getElementById('dbg-fix-panel-' + id);
+  if (panel) panel.style.display = 'none';
+  showToast('✅ Fixed & marked working!');
+  dbgRefreshUI();
 }
 // ── END GAME DEBUG ────────────────────────────────────────────────
 
