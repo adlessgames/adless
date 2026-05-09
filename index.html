@@ -521,6 +521,8 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .dbg-badge{position:absolute;top:6px;left:6px;font-size:9px;font-weight:800;padding:2px 6px;border-radius:20px;letter-spacing:.3px;pointer-events:none;z-index:3;backdrop-filter:blur(6px);}
 .dbg-badge.working{background:rgba(48,209,88,.25);border:1px solid rgba(48,209,88,.5);color:#30d158;}
 .dbg-badge.broken{background:rgba(255,55,95,.25);border:1px solid rgba(255,55,95,.5);color:#ff375f;}
+.card-edit-btn{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:8px;padding:3px 7px;font-size:10px;font-weight:700;cursor:pointer;z-index:4;opacity:0;transition:opacity .15s;backdrop-filter:blur(6px);}
+.card:hover .card-edit-btn{opacity:1;}
   #game-grid{grid-template-columns:repeat(2,1fr)!important;gap:10px!important;padding:12px!important;}
   .player-wrap{border-radius:0!important;}
   .chat-wrap{height:calc(100vh - 110px);}
@@ -727,6 +729,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <div class="nav" data-action="random" style="color:#bf5af2;background:rgba(191,90,242,.08);border:1px solid rgba(191,90,242,.2)">🎲 Random Game</div>
     <div class="nav discord-btn" onclick="window.open('https://discord.gg/gAe83DUFNT','_blank')">🎮 Join Discord</div>
     <div class="nav owner-btn" id="owner-nav" data-view="owner-view" style="display:none">👑 Owner Panel</div>
+    <div class="nav" id="tester-nav" data-view="tester-view" style="display:none;color:#ffd60a;background:rgba(255,214,10,.08);border:1px solid rgba(255,214,10,.2)">🧪 Tester Panel</div>
     <div class="nav" id="admin-nav" data-view="admin-view" style="display:none;color:#30d158;background:rgba(48,209,88,.08);border:1px solid rgba(48,209,88,.2)">🛡️ WinterAG Panel</div>
     <div id="game-filters">
       <div class="sec-label">Categories</div>
@@ -1656,6 +1659,95 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <button class="lb-btn" onclick="submitReport()">🚨 Submit Report</button>
   </div>
 </div>
+<!-- TESTER VIEW -->
+<div id="tester-view" class="view">
+  <header><h1>🧪 Tester Panel</h1></header>
+  <div class="s-section">
+    <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
+      <span>🎮 Game Testing Queue</span>
+      <div style="display:flex;gap:6px;align-items:center">
+        <span id="tester-progress" style="font-size:11px;color:var(--text2)"></span>
+        <button class="auc-btn" onclick="testerExport()">📋 Export</button>
+      </div>
+    </div>
+    <div class="s-desc" style="margin-bottom:12px">Test games and mark them working or broken. Results are shared with the owner.</div>
+
+    <div id="tester-player" style="display:none;flex-direction:column;gap:10px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <span id="tester-game-title" style="font-size:14px;font-weight:600;color:var(--text)"></span>
+        <span id="tester-game-index" style="font-size:11px;color:var(--text2)"></span>
+      </div>
+      <iframe id="tester-frame"
+        style="width:100%;height:340px;border-radius:12px;border:1px solid var(--border);background:#000"
+        allow="autoplay *; gamepad *; fullscreen *; cross-origin-isolated *"
+        allowfullscreen></iframe>
+      <div style="display:flex;gap:8px">
+        <button class="lb-btn" style="flex:1;background:rgba(48,209,88,.15);border:1px solid rgba(48,209,88,.35);color:#30d158;padding:12px" onclick="testerMark('working')">✅ Working</button>
+        <button class="lb-btn" style="flex:1;background:rgba(255,55,95,.15);border:1px solid rgba(255,55,95,.35);color:#ff375f;padding:12px" onclick="testerMark('broken')">❌ Broken</button>
+        <button class="lb-btn" style="width:auto;padding:12px 16px;background:rgba(255,255,255,.06)" onclick="testerSkip()">⏭ Skip</button>
+      </div>
+    </div>
+
+    <button class="lb-btn" id="tester-start-btn" style="width:100%;padding:12px;margin-bottom:14px" onclick="testerNext()">🧪 Start Testing</button>
+
+    <div id="tester-stats-bar" style="display:none;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <div style="padding:6px 12px;border-radius:8px;background:rgba(48,209,88,.12);border:1px solid rgba(48,209,88,.25);font-size:12px;color:#30d158">✅ <span id="tester-count-working">0</span> Working</div>
+      <div style="padding:6px 12px;border-radius:8px;background:rgba(255,55,95,.12);border:1px solid rgba(255,55,95,.25);font-size:12px;color:#ff375f">❌ <span id="tester-count-broken">0</span> Broken</div>
+      <div style="padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid var(--border);font-size:12px;color:var(--text2)">📋 <span id="tester-count-total">0</span> Total</div>
+    </div>
+    <div id="tester-results-list" style="display:flex;flex-direction:column;gap:6px;max-height:400px;overflow-y:auto"></div>
+  </div>
+</div>
+
+<!-- GAME EDIT MODAL -->
+<div id="game-edit-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);z-index:6000000;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)closeGameEdit()">
+  <div style="background:#1c1c1e;border:1px solid rgba(255,255,255,.12);border-radius:20px;width:min(520px,96vw);max-height:88vh;overflow-y:auto;display:flex;flex-direction:column">
+    <div style="padding:18px 20px 12px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:16px;font-weight:700">✏️ Edit Game</div>
+      <button onclick="closeGameEdit()" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:var(--text2);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
+    </div>
+    <div style="padding:18px 20px;display:flex;flex-direction:column;gap:14px">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:6px;letter-spacing:.5px">GAME NAME</div>
+        <input id="ge-title" class="lb-field" style="margin:0" placeholder="Game name">
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:6px;letter-spacing:.5px">IMAGE URL</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="ge-img" class="lb-field" style="margin:0;flex:1" placeholder="https://..." oninput="gePreviewImg()">
+          <img id="ge-img-preview" style="width:48px;height:48px;border-radius:8px;object-fit:cover;border:1px solid var(--border);background:#111;flex-shrink:0" onerror="this.style.opacity='.2'">
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:6px;letter-spacing:.5px">GAME SOURCE</div>
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <button id="ge-mode-url" class="auc-btn" style="background:rgba(10,132,255,.2);border-color:rgba(10,132,255,.4);color:var(--blue)" onclick="geSetMode('url')">🔗 URL</button>
+          <button id="ge-mode-html" class="auc-btn" onclick="geSetMode('html')">📄 Custom HTML</button>
+        </div>
+        <div id="ge-url-block">
+          <input id="ge-url" class="lb-field" style="margin:0" placeholder="https://...">
+        </div>
+        <div id="ge-html-block" style="display:none">
+          <textarea id="ge-html" class="lb-field" style="margin:0;height:140px;resize:vertical;font-family:monospace;font-size:11px;line-height:1.5" placeholder="Paste full HTML for the game…"></textarea>
+        </div>
+      </div>
+      <div id="ge-preview-wrap" style="display:none;flex-direction:column;gap:8px">
+        <div style="font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.5px">PREVIEW</div>
+        <iframe id="ge-preview-frame"
+          style="width:100%;height:260px;border-radius:10px;border:1px solid var(--border);background:#000"
+          allow="autoplay *; gamepad *; fullscreen *; cross-origin-isolated *"
+          allowfullscreen></iframe>
+      </div>
+      <div id="ge-err" style="display:none;font-size:12px;color:#ff375f;padding:8px 12px;background:rgba(255,55,95,.1);border-radius:8px;border:1px solid rgba(255,55,95,.2)"></div>
+    </div>
+    <div style="padding:12px 20px 18px;border-top:1px solid rgba(255,255,255,.08);display:flex;gap:8px">
+      <button class="lb-btn" style="flex:1;padding:12px" onclick="gePreview()">▶ Test</button>
+      <button class="lb-btn" style="flex:1;padding:12px;background:rgba(48,209,88,.15);border:1px solid rgba(48,209,88,.3);color:#30d158" onclick="geSave()">💾 Save</button>
+      <button id="ge-delete-btn" class="lb-btn" style="width:auto;padding:12px;background:rgba(255,55,95,.12);border:1px solid rgba(255,55,95,.25);color:#ff375f;display:none" onclick="geDelete()">🗑</button>
+    </div>
+  </div>
+</div>
+
 <!-- PEOPLE / USER SEARCH VIEW -->
 <div id="people-view" class="view" style="max-width:600px;margin:0 auto">
   <header><h1>🔍 Find People</h1></header>
@@ -2920,7 +3012,8 @@ function buildCardHtml(g){
   const surl=g.url.replace(/"/g,'&quot;');
   const dbgEntry=dbgResults&&dbgResults[g.id];
   const dbgBadge=dbgEntry&&dbgEntry.status==='working'?'<div class="dbg-badge working">✅ Works</div>':dbgEntry&&dbgEntry.status==='broken'?'<div class="dbg-badge broken">❌ Broken</div>':'';
-  return`<div class="card" data-url="${surl}" data-title="${stitle}" onclick="cardClick(this)">${feat}${saveLabel}${dbgBadge}<div class="fav-star FAV_PLACEHOLDER" data-id="${sid}" onclick="event.stopPropagation();favClick(this)">★</div><img src="${g.img.replace(/"/g,'&quot;')}" loading="lazy" onerror="this.style.opacity='.1'"><div class="info"><div class="title">${stitle}</div><div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:5px">${tags}</div></div></div>`;
+  const editBtn=isOwner()?`<button class="card-edit-btn" onclick="event.stopPropagation();openGameEdit('${sid}')" title="Edit game">✏️</button>`:'';
+  return`<div class="card" data-url="${surl}" data-title="${stitle}" onclick="cardClick(this)">${feat}${saveLabel}${dbgBadge}${editBtn}<div class="fav-star FAV_PLACEHOLDER" data-id="${sid}" onclick="event.stopPropagation();favClick(this)">★</div><img src="${g.img.replace(/"/g,'&quot;')}" loading="lazy" onerror="this.style.opacity='.1'"><div class="info"><div class="title">${stitle}</div><div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:5px">${tags}</div></div></div>`;
 }
 function cardClick(el){play(el.dataset.url,el.dataset.title);}
 function favClick(el){toggleFav(el.dataset.id);}
@@ -3173,6 +3266,23 @@ function play(url,title,gameObj){
   // Apply owner fix override if one exists for this game
   const _gObj=gameObj||(allGames?allGames().find(g=>g.url===url):null)||null;
   if(_gObj&&gameFixOverrides&&gameFixOverrides[_gObj.id]){url=gameFixOverrides[_gObj.id];}
+  // Custom HTML edit — load via srcdoc directly
+  if(_gObj&&gameEdits&&gameEdits[_gObj.id]&&gameEdits[_gObj.id].html){
+    const _f=document.getElementById('game-frame');
+    if(!_f)return;
+    currentGameTitle=title||_gObj.title||'Game';
+    currentGameObj=_gObj;
+    currentGameId=_gObj.id;
+    document.getElementById('player-title').textContent=currentGameTitle;
+    document.getElementById('gl-title').textContent=currentGameTitle;
+    document.getElementById('game-loader').classList.add('on');
+    _f.src='';_f.removeAttribute('srcdoc');
+    document.getElementById('player').classList.add('on');
+    document.body.classList.add('player-open');
+    _f.srcdoc=gameEdits[_gObj.id].html;
+    setTimeout(()=>document.getElementById('game-loader').classList.remove('on'),1500);
+    return;
+  }
   // Track recently played
   // Track current game for score submission
   currentGameTitle=title||"Unknown Game";
@@ -3377,7 +3487,7 @@ document.querySelectorAll('.nav').forEach(btn=>{
       else if(btn.dataset.view==='tokens-view'){switchView('tokens-view');loadTokensView();}
       else if(btn.dataset.view==='shop-view'){switchView('shop-view');loadShopView();}
       else if(btn.dataset.view==='friends-view'){switchView('friends-view');loadFriendRequests();loadGroupsList();}
-      else if(btn.dataset.view==='owner-view'){switchView('owner-view');loadOwnerPanel();}
+      else if(btn.dataset.view==='owner-view'){switchView('owner-view');loadOwnerPanel();}else if(btn.dataset.view==='tester-view'){switchView('tester-view');testerLoadResults();}
       else if(btn.dataset.view==='admin-view'){switchView('admin-view');loadAdminPanel();}
       else if(btn.dataset.view==='profile-view'){switchView('profile-view');loadProfilePage();}
       else if(btn.dataset.view==='people-view'){switchView('people-view');loadPeopleView();}
@@ -4826,10 +4936,13 @@ async function bootstrapAdmin(){
 function isOwner(){return currentUser&&currentUser.role==='owner';}
 function isAdmin(){return currentUser&&(currentUser.role==='admin'||currentUser.role==='owner');}
 function isMod(){return currentUser&&(currentUser.role==='mod'||currentUser.role==='admin'||currentUser.role==='owner');}
+function isTesterRole(){return currentUser&&(currentUser.role==='tester'||currentUser.role==='owner');}
 
 function showOwnerNav(){
   const nav=document.getElementById('owner-nav');
   if(nav)nav.style.display=isOwner()?'block':'none';
+  const tnav=document.getElementById('tester-nav');
+  if(tnav)tnav.style.display=isTesterRole()&&!isOwner()?'block':'none';
   const anav=document.getElementById('admin-nav');
   if(anav)anav.style.display=(currentUser&&currentUser.role==='mod')?'block':'none';
 }
@@ -4886,12 +4999,28 @@ async function adminSearchUser(){
         <div style="display:flex;flex-wrap:wrap;gap:6px">
           ${!isBanned?`<button class="auc-btn yellow" onclick="adminWarnUser('${u.id}','${escAttr(u.username)}')">⚠️ Warn</button>`:''}
           ${!isBanned?`<button class="auc-btn red" onclick="adminBanUser('${u.id}','${escAttr(u.username)}')">🚫 Ban</button>`:`<button class="auc-btn" onclick="adminUnbanUser('${u.id}','${escAttr(u.username)}')">✓ Unban</button>`}
+          ${u.role!=='owner'?`<button class="auc-btn" onclick="adminSetRole('${u.id}','${escAttr(u.username)}','${u.role}')" style="font-size:10px">🏷 Role: ${u.role||'user'}</button>`:``}
           ${!isSuspended?`<button class="auc-btn yellow" onclick="adminSuspendUser('${u.id}','${escAttr(u.username)}')">⏸ Suspend</button>`:`<button class="auc-btn" onclick="adminUnsuspendUser('${u.id}')">↩ Unsuspend</button>`}
           <button class="auc-btn red" onclick="adminDeleteMsgs('${u.id}','${escAttr(u.username)}')">🗑 Del Msgs</button>
         </div>
       </div>`;
     }).join('');
   }catch(e){res.innerHTML='<div class="fc-empty">Error loading users</div>';}
+}
+
+async function adminSetRole(uid, uname, currentRole) {
+  const roles = ['user','tester','mod','admin'];
+  const next = roles[(roles.indexOf(currentRole) + 1) % roles.length];
+  if (!confirm(`Change ${uname}'s role from "${currentRole}" to "${next}"?`)) return;
+  try {
+    await fetch(SB_URL + `/rest/v1/profiles?id=eq.${uid}`, {
+      method: 'PATCH',
+      headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+      body: JSON.stringify({ role: next })
+    });
+    showToast(`✅ ${uname} is now ${next}`);
+    loadAllUsers();
+  } catch(e) { showToast('Role change failed'); }
 }
 
 async function adminWarnUser(uid,uname){
@@ -5086,6 +5215,7 @@ async function loadOwnerPanel(){
   dbgLoad();
   dbgLoadFixes();
   updRenderAdminList();
+  loadGameEdits();
   loadOwnerFeatured();
   loadAnnouncementHistory();
   loadScoreReview("pending");
@@ -6204,7 +6334,7 @@ lbInitAvatars();
 bootStep('Loading games…',20);
 buildList();renderPage();updateStats();
 bootStep('Fetching game library…',40);
-loadZones();loadHydraGames();loadSpotlightPublic();loadSiteSettings();dbgLoadFixes();updLoad();renderAdBanners();initAdsBanner();setTimeout(loadAllAds,500);
+loadZones();loadHydraGames();loadSpotlightPublic();loadSiteSettings();dbgLoadFixes();updLoad();loadGameEdits();renderAdBanners();initAdsBanner();setTimeout(loadAllAds,500);
 setTimeout(function(){bootStep('Ready!',100);setTimeout(bootDone,400);},3500);
 (async()=>{
   const sess=localStorage.getItem('adless_session');
@@ -6528,17 +6658,11 @@ async function wagSendAnnouncement(){
   if(!txt){showToast('Write something first');return;}
   const senderName=currentUser.display_name||currentUser.username;
   try{
-    const annRes=await fetch(SB_URL+'/rest/v1/announcements',{
+    await fetch(SB_URL+'/rest/v1/announcements',{
       method:'POST',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body:JSON.stringify({user_id:currentUser.id,content:`[${senderName}] ${txt}`})
+      body:JSON.stringify({content:`[${senderName}] ${txt}`})
     });
-    if(!annRes.ok){
-      const errText=await annRes.text();
-      console.error('Announcement insert failed:',annRes.status,errText);
-      showToast('❌ Failed to save announcement');
-      return;
-    }
     await fetch(SB_URL+'/rest/v1/messages',{
       method:'POST',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
@@ -6563,7 +6687,7 @@ async function wagSendAnnouncement(){
     document.getElementById('wag-ann-char').textContent='0/500';
     showToast('📢 Announcement sent!');
     wagLoadAnnHistory();
-  }catch(e){console.error('Announcement error:',e);showToast('❌ Failed to send');}
+  }catch(e){showToast('❌ Failed to send');}
 }
 
 async function wagLoadAnnHistory(){
@@ -8031,6 +8155,326 @@ async function toggleBadgeForUser(userId,key,has){
 }
 
 // ══════════════════════════════════════════════════════════════════
+// ── GAME EDITOR ──────────────────────────────────────────────────
+// Stored in site_settings as game_edit_<id> → JSON {title,img,url,html}
+let gameEdits = {};          // loaded at startup, applied in allGames()
+let _geCurrentId = null;
+let _geMode = 'url';         // 'url' | 'html'
+
+async function loadGameEdits() {
+  try {
+    const rows = await sbReq('/rest/v1/site_settings?key=like.game_edit_%25&select=key,value');
+    gameEdits = {};
+    (rows || []).forEach(r => {
+      const id = r.key.replace('game_edit_', '');
+      try { gameEdits[id] = JSON.parse(r.value); } catch(e) {}
+    });
+    // Apply edits to in-memory game objects and bust card cache
+    applyGameEdits();
+  } catch(e) { gameEdits = {}; }
+}
+
+function applyGameEdits() {
+  if (!Object.keys(gameEdits).length) return;
+  const all = allGames();
+  all.forEach(g => {
+    const ed = gameEdits[g.id];
+    if (!ed) return;
+    if (ed.title) g.title = ed.title;
+    if (ed.img)   g.img   = ed.img;
+    if (ed.url)   g.url   = ed.url;
+    invalidateCard(g.id);
+  });
+  buildList(); renderPage();
+}
+
+function openGameEdit(gameId) {
+  if (!isOwner()) return;
+  const game = allGames().find(g => g.id == gameId);
+  if (!game) return;
+  _geCurrentId = gameId;
+  const ed = gameEdits[gameId] || {};
+
+  document.getElementById('ge-title').value = ed.title || game.title || '';
+  document.getElementById('ge-img').value   = ed.img   || game.img   || '';
+  document.getElementById('ge-url').value   = ed.url   || game.url   || '';
+  document.getElementById('ge-html').value  = ed.html  || '';
+  document.getElementById('ge-err').style.display = 'none';
+
+  const previewWrap = document.getElementById('ge-preview-wrap');
+  previewWrap.style.display = 'none';
+  const pf = document.getElementById('ge-preview-frame');
+  pf.src = ''; pf.removeAttribute('srcdoc');
+
+  gePreviewImg();
+  geSetMode(ed.html ? 'html' : 'url');
+
+  const delBtn = document.getElementById('ge-delete-btn');
+  delBtn.style.display = gameEdits[gameId] ? 'block' : 'none';
+
+  document.getElementById('game-edit-overlay').style.display = 'flex';
+}
+
+function closeGameEdit() {
+  document.getElementById('game-edit-overlay').style.display = 'none';
+  const pf = document.getElementById('ge-preview-frame');
+  pf.src = 'about:blank'; pf.removeAttribute('srcdoc');
+  setTimeout(() => { pf.src = ''; }, 50);
+  _geCurrentId = null;
+}
+
+function geSetMode(mode) {
+  _geMode = mode;
+  document.getElementById('ge-url-block').style.display  = mode === 'url'  ? 'block' : 'none';
+  document.getElementById('ge-html-block').style.display = mode === 'html' ? 'block' : 'none';
+  const btnUrl  = document.getElementById('ge-mode-url');
+  const btnHtml = document.getElementById('ge-mode-html');
+  btnUrl.style.background  = mode === 'url'  ? 'rgba(10,132,255,.2)' : '';
+  btnUrl.style.borderColor = mode === 'url'  ? 'rgba(10,132,255,.4)' : '';
+  btnUrl.style.color       = mode === 'url'  ? 'var(--blue)'         : '';
+  btnHtml.style.background  = mode === 'html' ? 'rgba(10,132,255,.2)' : '';
+  btnHtml.style.borderColor = mode === 'html' ? 'rgba(10,132,255,.4)' : '';
+  btnHtml.style.color       = mode === 'html' ? 'var(--blue)'         : '';
+}
+
+function gePreviewImg() {
+  const url = document.getElementById('ge-img').value.trim();
+  const prev = document.getElementById('ge-img-preview');
+  prev.src = url || '';
+  prev.style.opacity = url ? '1' : '.2';
+}
+
+function gePreview() {
+  const frame = document.getElementById('ge-preview-frame');
+  const wrap  = document.getElementById('ge-preview-wrap');
+  wrap.style.display = 'flex';
+  frame.src = 'about:blank'; frame.removeAttribute('srcdoc');
+
+  if (_geMode === 'html') {
+    const html = document.getElementById('ge-html').value;
+    if (!html.trim()) { geShowErr('Paste some HTML first.'); return; }
+    frame.srcdoc = html;
+  } else {
+    const url = document.getElementById('ge-url').value.trim();
+    if (!url) { geShowErr('Enter a URL first.'); return; }
+    const isZone = url.includes('rawcdn.githack.com') || (url.includes('cdn.jsdelivr.net/gh/') && url.endsWith('.html'));
+    if (isZone) {
+      fetch(url).then(r => r.text()).then(html => {
+        const base = url.substring(0, url.lastIndexOf('/') + 1);
+        const hasBase = /<base\s[^>]*href/i.test(html);
+        frame.srcdoc = hasBase ? html : html.replace(/(<head[^>]*>)/i, `$1<base href="${base}">`);
+      }).catch(() => { frame.src = url; });
+    } else {
+      frame.src = url;
+    }
+  }
+}
+
+function geShowErr(msg) {
+  const el = document.getElementById('ge-err');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+async function geSave() {
+  if (!_geCurrentId) return;
+  const title = document.getElementById('ge-title').value.trim();
+  const img   = document.getElementById('ge-img').value.trim();
+  const url   = _geMode === 'url'  ? document.getElementById('ge-url').value.trim()  : '';
+  const html  = _geMode === 'html' ? document.getElementById('ge-html').value.trim() : '';
+
+  if (!title) { geShowErr('Game name is required.'); return; }
+  if (_geMode === 'url'  && !url)  { geShowErr('Enter a URL.'); return; }
+  if (_geMode === 'html' && !html) { geShowErr('Paste HTML first.'); return; }
+
+  const edit = { title, img, url, html };
+  gameEdits[_geCurrentId] = edit;
+
+  try {
+    await upsertSiteSetting('game_edit_' + _geCurrentId, JSON.stringify(edit));
+    // Apply to live game object
+    const game = allGames().find(g => g.id == _geCurrentId);
+    if (game) {
+      if (title) game.title = title;
+      if (img)   game.img   = img;
+      if (url)   game.url   = url;
+    }
+    invalidateCard(_geCurrentId);
+    cardCache.clear();
+    buildList(); renderPage();
+    document.getElementById('ge-delete-btn').style.display = 'block';
+    showToast('✅ Game saved!');
+    closeGameEdit();
+  } catch(e) {
+    geShowErr('Save failed: ' + e.message);
+  }
+}
+
+async function geDelete() {
+  if (!_geCurrentId || !confirm('Remove all edits for this game? It will revert to original.')) return;
+  try {
+    await fetch(SB_URL + '/rest/v1/site_settings?key=eq.game_edit_' + encodeURIComponent(_geCurrentId), {
+      method: 'DELETE',
+      headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
+    });
+    delete gameEdits[_geCurrentId];
+    // Reload game from original BUILTIN/EXTRA_GAMES
+    cardCache.clear(); buildList(); renderPage();
+    showToast('↩️ Game reverted.');
+    closeGameEdit();
+  } catch(e) {
+    geShowErr('Delete failed.');
+  }
+}
+
+// play() custom HTML handled inline in the real play() function
+// ── END GAME EDITOR ───────────────────────────────────────────────
+
+// ── TESTER PANEL ──────────────────────────────────────────────────
+// Shares the same dbgResults/DBG_KEY as the owner debug panel.
+// Testers read+write to the same Supabase key.
+let testerCurrent = null;
+let testerQueue   = [];
+
+function isTester() {
+  return currentUser && (currentUser.role === 'tester' || isOwner());
+}
+
+async function testerLoadResults() {
+  // Results are the same dbgResults pool — just reload
+  await dbgLoad();
+  testerRefreshUI();
+}
+
+function testerBuildQueue() {
+  const tested = new Set(Object.keys(dbgResults));
+  const untested = dbgAllGames().filter(g => !tested.has(g.id));
+  for (let i = untested.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [untested[i], untested[j]] = [untested[j], untested[i]];
+  }
+  testerQueue = untested;
+}
+
+function testerNext() {
+  if (!isTester()) return;
+  if (!testerQueue.length) testerBuildQueue();
+  if (!testerQueue.length) { showToast('All games tested!'); return; }
+  testerCurrent = testerQueue.shift();
+  testerLoadIntoFrame(testerCurrent);
+  testerRefreshUI();
+  const player = document.getElementById('tester-player');
+  if (player) player.style.display = 'flex';
+  const btn = document.getElementById('tester-start-btn');
+  if (btn) btn.textContent = '⏭ Next Game';
+}
+
+function testerLoadIntoFrame(game) {
+  const frame = document.getElementById('tester-frame');
+  if (!frame) return;
+  frame.removeAttribute('srcdoc'); frame.src = 'about:blank';
+  const titleEl = document.getElementById('tester-game-title');
+  const indexEl = document.getElementById('tester-game-index');
+  if (titleEl) titleEl.textContent = game.title;
+  const tested = Object.keys(dbgResults).length;
+  const total  = dbgAllGames().length;
+  if (indexEl) indexEl.textContent = `${tested}/${total} tested`;
+
+  const url = game.url;
+  const isHydra   = url.includes('cdn.jsdelivr.net/gh/Hydra-Network/hydra-assets');
+  const isZoneUrl  = url.includes('rawcdn.githack.com') || (url.includes('cdn.jsdelivr.net/gh/') && url.endsWith('.html') && !isHydra);
+
+  if (isHydra) {
+    const fileName = game.hydraFile || decodeURIComponent(url.split('gmes/').pop());
+    const bases = [
+      'https://raw.githack.com/Hydra-Network/hydra-assets/main/',
+      'https://raw.githubusercontent.com/Hydra-Network/hydra-assets/main/'
+    ];
+    (async () => {
+      for (const base of bases) {
+        try {
+          const r = await fetch(base + 'gmes/' + fileName);
+          if (!r.ok) continue;
+          const html = await r.text();
+          frame.srcdoc = /<base\s[^>]*href/i.test(html) ? html : html.replace(/(<head[^>]*>)/i, `$1<base href="${base}gmes/">`);
+          return;
+        } catch(e) {}
+      }
+      frame.src = url;
+    })();
+  } else if (isZoneUrl) {
+    fetch(url).then(r => r.text()).then(html => {
+      const base = url.substring(0, url.lastIndexOf('/') + 1);
+      frame.srcdoc = /<base\s[^>]*href/i.test(html) ? html : html.replace(/(<head[^>]*>)/i, `$1<base href="${base}">`);
+    }).catch(() => { frame.src = url; });
+  } else {
+    frame.src = url;
+  }
+}
+
+async function testerMark(status) {
+  if (!testerCurrent) return;
+  const id = testerCurrent.id;
+  dbgResults[id] = { status, title: testerCurrent.title, url: testerCurrent.url, ts: Date.now(), tester: currentUser?.username || 'tester' };
+  await dbgSave();
+  const frame = document.getElementById('tester-frame');
+  if (frame) { frame.srcdoc = ''; frame.removeAttribute('srcdoc'); frame.src = 'about:blank'; setTimeout(() => { frame.src = ''; }, 50); }
+  invalidateCard(id); buildList(); renderPage();
+  testerCurrent = null;
+  testerRefreshUI();
+  showToast(status === 'working' ? '✅ Marked Working' : '❌ Marked Broken');
+  testerNext();
+}
+
+function testerSkip() {
+  if (!testerCurrent) { testerNext(); return; }
+  const frame = document.getElementById('tester-frame');
+  if (frame) { frame.srcdoc = ''; frame.removeAttribute('srcdoc'); frame.src = 'about:blank'; setTimeout(() => { frame.src = ''; }, 50); }
+  testerCurrent = null;
+  testerNext();
+}
+
+function testerRefreshUI() {
+  const working = Object.values(dbgResults).filter(r => r.status === 'working');
+  const broken  = Object.values(dbgResults).filter(r => r.status === 'broken');
+  const total   = dbgAllGames().length;
+  const tested  = Object.keys(dbgResults).length;
+
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set('tester-count-working', working.length);
+  set('tester-count-broken',  broken.length);
+  set('tester-count-total',   total);
+  set('tester-progress', `${tested}/${total} tested`);
+
+  const bar = document.getElementById('tester-stats-bar');
+  if (bar && tested > 0) bar.style.display = 'flex';
+
+  const listEl = document.getElementById('tester-results-list');
+  if (!listEl) return;
+
+  const all = Object.entries(dbgResults).sort((a, b) => (b[1].ts || 0) - (a[1].ts || 0));
+  if (!all.length) { listEl.innerHTML = '<div style="font-size:12px;color:var(--text2)">No results yet.</div>'; return; }
+
+  listEl.innerHTML = all.map(([id, r]) => {
+    const icon  = r.status === 'working' ? '✅' : r.status === 'broken' ? '❌' : '⏭';
+    const color = r.status === 'working' ? '#30d158' : r.status === 'broken' ? '#ff375f' : 'var(--text2)';
+    const testerTag = r.tester ? `<span style="font-size:10px;color:var(--text2);flex-shrink:0">by ${r.tester}</span>` : '';
+    return `<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid var(--border)">
+      <span style="font-size:12px;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${icon} ${r.title}</span>
+      ${testerTag}
+      <span style="font-size:11px;color:${color};flex-shrink:0;font-weight:600;text-transform:uppercase">${r.status}</span>
+    </div>`;
+  }).join('');
+}
+
+function testerExport() {
+  const working = Object.values(dbgResults).filter(r => r.status === 'working').map(r => r.title).sort();
+  const broken  = Object.values(dbgResults).filter(r => r.status === 'broken').map(r => r.title).sort();
+  const lines=['=== Game Test Report ===','Working: '+working.length,'Broken: '+broken.length,'','\u2705 WORKING:',...working.map(t=>'  \u2022 '+t),'','\u274c BROKEN:',...broken.map(t=>'  \u2022 '+t)];const text=lines.join('\n');
+  navigator.clipboard.writeText(text).then(() => showToast('📋 Copied!')).catch(() => showToast('Copy failed'));
+}
+// ── END TESTER PANEL ──────────────────────────────────────────────
+
 // ── UPDATE LOG ───────────────────────────────────────────────────
 const UPD_SETTING_KEY = 'update_log';
 const UPD_SEEN_KEY    = 'adless_last_seen_update';
@@ -8431,7 +8875,7 @@ function dbgExportResults() {
   const working = Object.values(dbgResults).filter(r => r.status === 'working').map(r => r.title).sort();
   const broken  = Object.values(dbgResults).filter(r => r.status === 'broken').map(r => r.title).sort();
   const total   = dbgAllGames().length;
-  const text = `=== Game Debug Report ===\nTotal: ${total} games\nWorking: ${working.length}\nBroken: ${broken.length}\n\n✅ WORKING:\n${working.map(t => '  • '+t).join('\n')}\n\n❌ BROKEN:\n${broken.map(t => '  • '+t).join('\n')}`;
+  const lines2=['=== Game Debug Report ===','Total: '+total+' games','Working: '+working.length,'Broken: '+broken.length,'','✅ WORKING:',...working.map(t=>'  • '+t),'','❌ BROKEN:',...broken.map(t=>'  • '+t)];const text=lines2.join('\n');
   navigator.clipboard.writeText(text).then(() => showToast('📋 Report copied to clipboard!')).catch(() => showToast('Copy failed'));
 }
 // ── GAME FIX SYSTEM ─────────────────────────────────────────────
