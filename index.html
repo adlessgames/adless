@@ -1335,10 +1335,226 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
         <div style="padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid var(--border);font-size:12px;color:var(--text2)">📋 <span id="dbg-count-total">0</span> Total Games</div>
       </div>
 
-      <div id="dbg-results-list" style="display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto"></div>
+      <div style="display:flex;gap:6px;margin-bottom:10px">
+        <button id="dbg-tab-broken" class="auc-btn" onclick="dbgSetTab('broken')" style="background:rgba(255,55,95,.2);border-color:rgba(255,55,95,.4);color:#ff375f">❌ Broken Games</button>
+        <button id="dbg-tab-all" class="auc-btn" onclick="dbgSetTab('all')">📋 All Results</button>
+      </div>
+      <div id="dbg-results-list" style="display:flex;flex-direction:column;gap:6px;max-height:480px;overflow-y:auto"></div>
     </div>
 
   </div>
+
+  <div id="tester-view" class="view">
+  <header><h1>🧪 Tester Panel</h1></header>
+  <div class="s-section">
+    <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
+      <span>🎮 Game Testing Queue</span>
+      <div style="display:flex;gap:6px;align-items:center">
+        <span id="tester-progress" style="font-size:11px;color:var(--text2)"></span>
+        <button class="auc-btn" onclick="testerExport()">📋 Export</button>
+      </div>
+    </div>
+    <div class="s-desc" style="margin-bottom:12px">Test games and mark them working or broken. Results are shared with the owner.</div>
+
+    <div id="tester-player" style="display:none;flex-direction:column;gap:10px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <span id="tester-game-title" style="font-size:14px;font-weight:600;color:var(--text)"></span>
+        <span id="tester-game-index" style="font-size:11px;color:var(--text2)"></span>
+      </div>
+      <iframe id="tester-frame"
+        style="width:100%;height:340px;border-radius:12px;border:1px solid var(--border);background:#000"
+        allow="autoplay *; gamepad *; fullscreen *; cross-origin-isolated *"
+        allowfullscreen></iframe>
+      <div style="display:flex;gap:8px">
+        <button class="lb-btn" style="flex:1;background:rgba(48,209,88,.15);border:1px solid rgba(48,209,88,.35);color:#30d158;padding:12px" onclick="testerMark('working')">✅ Working</button>
+        <button class="lb-btn" style="flex:1;background:rgba(255,55,95,.15);border:1px solid rgba(255,55,95,.35);color:#ff375f;padding:12px" onclick="testerMark('broken')">❌ Broken</button>
+        <button class="lb-btn" style="width:auto;padding:12px 16px;background:rgba(255,255,255,.06)" onclick="testerSkip()">⏭ Skip</button>
+      </div>
+    </div>
+
+    <button class="lb-btn" id="tester-start-btn" style="width:100%;padding:12px;margin-bottom:14px" onclick="testerNext()">🧪 Start Testing</button>
+
+    <div id="tester-stats-bar" style="display:none;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <div style="padding:6px 12px;border-radius:8px;background:rgba(48,209,88,.12);border:1px solid rgba(48,209,88,.25);font-size:12px;color:#30d158">✅ <span id="tester-count-working">0</span> Working</div>
+      <div style="padding:6px 12px;border-radius:8px;background:rgba(255,55,95,.12);border:1px solid rgba(255,55,95,.25);font-size:12px;color:#ff375f">❌ <span id="tester-count-broken">0</span> Broken</div>
+      <div style="padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid var(--border);font-size:12px;color:var(--text2)">📋 <span id="tester-count-total">0</span> Total</div>
+    </div>
+    <div id="tester-results-list" style="display:flex;flex-direction:column;gap:6px;max-height:400px;overflow-y:auto"></div>
+  </div>
+  </div>
+
+  <!-- GAME EDIT MODAL -->
+
+  <!-- PEOPLE / USER SEARCH VIEW -->
+  <div id="people-view" class="view" style="max-width:600px;margin:0 auto">
+  <header><h1>🔍 Find People</h1></header>
+  <div class="s-section">
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <input id="people-search-input" class="lb-field" style="margin:0;flex:1" placeholder="Search by username…" maxlength="20" onkeydown="if(event.key==='Enter')searchPeople()">
+      <button class="lb-btn" style="width:auto;padding:10px 16px;margin:0" onclick="searchPeople()">Search</button>
+    </div>
+    <div id="people-results"></div>
+    <div id="people-online" style="margin-top:16px">
+      <div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:8px">🟢 ONLINE NOW</div>
+      <div id="people-online-list" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+    </div>
+    <div id="people-following" style="margin-top:20px;display:none">
+      <div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:8px">👥 FOLLOWING</div>
+      <div id="people-following-list"></div>
+    </div>
+    <div id="people-followers" style="margin-top:20px;display:none">
+      <div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:8px">❤️ FOLLOWERS</div>
+      <div id="people-followers-list"></div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- PROFILE PAGE VIEW -->
+  <div id="profile-view" class="view" style="max-width:600px;margin:0 auto">
+  <div style="padding:20px 0 8px;font-size:22px;font-weight:900">👤 My Profile</div>
+  <div id="profile-page-guest" style="display:none;color:var(--text2);font-size:14px;padding:20px 0">Login to view your profile.</div>
+  <div id="pp-follow-bar" style="display:none;gap:16px;margin-bottom:12px">
+    <div class="follow-stat" onclick="openFollowList(window._ppUserId,'followers')" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 20px">
+      <div class="follow-stat-num" id="pp-followers-count">0</div>
+      <div style="font-size:10px;color:var(--text2)">Followers</div>
+    </div>
+    <div class="follow-stat" onclick="openFollowList(window._ppUserId,'following')" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 20px">
+      <div class="follow-stat-num" id="pp-following-count">0</div>
+      <div style="font-size:10px;color:var(--text2)">Following</div>
+    </div>
+  </div>
+  <div id="profile-page-content">
+    <!-- Avatar -->
+    <div class="s-section">
+      <div class="s-sec">🖼️ Avatar & Background</div>
+      <div class="s-row" style="flex-direction:column;gap:10px;align-items:flex-start">
+        <div style="display:flex;align-items:center;gap:14px">
+          <span id="pp-avatar-preview" style="font-size:48px;width:64px;height:64px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.1)">👤</span>
+          <div>
+            <div style="font-size:13px;font-weight:700" id="pp-display-name">—</div>
+            <div style="font-size:11px;color:var(--text2)" id="pp-username">@—</div>
+          </div>
+        </div>
+        <div class="s-lbl" style="margin-top:4px">Emoji Avatar</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap" id="pp-emoji-picker"></div>
+        <div class="s-lbl" style="margin-top:8px">Gallery PFPs</div>
+        <div id="pp-gallery-pfp-row" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
+          <span style="font-size:11px;color:var(--text2)">Current:</span>
+          <span id="pp-cur-av-preview" style="font-size:22px">👤</span>
+          <button class="lb-btn" style="width:auto;padding:7px 14px;margin:0;font-size:12px" onclick="ppSaveAvatar()">💾 Save Avatar</button>
+        </div>
+        <div id="pp-av-msg" style="font-size:11px;color:var(--text2);min-height:14px"></div>
+      </div>
+      <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
+        <div class="s-lbl">🎨 Banner / Background</div>
+        <div class="s-desc">Shown behind your public profile header</div>
+        <!-- Banner preview -->
+        <div id="pp-banner-preview" style="width:100%;height:64px;border-radius:12px;background:linear-gradient(135deg,#1a1a3e,#2a1a4e);border:1px solid rgba(255,255,255,.1);position:relative;overflow:hidden;transition:background .2s">
+          <div style="position:absolute;inset:0;background:linear-gradient(transparent,rgba(0,0,0,.4))"></div>
+        </div>
+        <!-- Gradient presets -->
+        <div style="display:flex;gap:6px;flex-wrap:wrap" id="pp-banner-presets">
+          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#1a1a3e,#2a1a4e)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#1a1a3e,#2a1a4e);border:2px solid rgba(255,255,255,.2)" title="Default"></div>
+          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#0f2027,#203a43,#2c5364)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#0f2027,#203a43,#2c5364)" title="Ocean"></div>
+          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#3a1c71,#d76d77,#ffaf7b)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#3a1c71,#d76d77,#ffaf7b)" title="Sunset"></div>
+          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#0d0d0d,#1a1a1a)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#0d0d0d,#1a1a1a)" title="Void"></div>
+          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#134e5e,#71b280)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#134e5e,#71b280)" title="Forest"></div>
+          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#4b0082,#7c3aed,#a855f7)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#4b0082,#7c3aed,#a855f7)" title="Purple"></div>
+          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#1a0000,#5c0000)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#1a0000,#5c0000)" title="Crimson"></div>
+          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#001f3f,#0074D9)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#001f3f,#0074D9)" title="Navy"></div>
+          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#1a1a1a,#ffd700,#1a1a1a)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#1a1a1a,#ffd700,#1a1a1a)" title="Gold"></div>
+          <!-- Color pickers -->
+          <label style="display:flex;align-items:center;justify-content:center;width:40px;height:28px;border-radius:6px;cursor:none;border:2px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);font-size:11px;color:var(--text2)" title="Custom solid color">
+            🎨<input type="color" id="pp-banner-color1" value="#1a1a3e" oninput="ppUpdateBannerCustom()" style="opacity:0;position:absolute;pointer-events:none">
+          </label>
+        </div>
+        <!-- Owner-set banner images -->
+        <div id="pp-banner-img-row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px"></div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
+          <button class="lb-btn" style="width:auto;padding:7px 14px;margin:0;font-size:12px" onclick="ppSaveBanner()">💾 Save Banner</button>
+          <button class="auc-btn red" style="font-size:11px" onclick="ppClearBanner()">✕ Reset</button>
+        </div>
+        <div id="pp-banner-msg" style="font-size:11px;color:var(--text2);min-height:14px"></div>
+      </div>
+    </div>
+    <!-- Bio & Display Name -->
+    <div class="s-section">
+      <div class="s-sec">✏️ Profile Info</div>
+      <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start">
+        <div class="s-lbl">Display Name</div>
+        <div class="s-desc" id="pp-dn-desc">Changeable every 7 days</div>
+        <div style="display:flex;gap:8px;width:100%">
+          <input id="pp-display-name-input" class="lb-field" style="margin:0;flex:1" placeholder="New display name…" maxlength="30">
+          <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="changeDisplayName()">Save</button>
+        </div>
+      </div>
+      <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
+        <div class="s-lbl">📝 Bio</div>
+        <textarea id="pp-bio" class="lb-field" style="margin:0;width:100%;height:72px;resize:vertical;font-family:inherit;font-size:13px" placeholder="Tell people about yourself…" maxlength="200"></textarea>
+        <div style="display:flex;justify-content:space-between;width:100%">
+          <span id="pp-bio-count" style="font-size:11px;color:var(--text2)">0/200</span>
+          <button class="lb-btn" style="width:auto;padding:7px 14px;margin:0;font-size:12px" onclick="ppSaveBio()">💾 Save Bio</button>
+        </div>
+        <div id="pp-bio-msg" style="font-size:11px;color:var(--text2);min-height:14px"></div>
+      </div>
+    </div>
+    <!-- Account -->
+    <div class="s-section">
+      <div class="s-sec">🔐 Account</div>
+      <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start">
+        <div class="s-lbl">Username</div>
+        <div class="s-desc" id="pp-un-desc">Changeable once every 30 days</div>
+        <div style="display:flex;gap:8px;width:100%">
+          <input id="pp-username-input" class="lb-field" style="margin:0;flex:1" placeholder="New username…" maxlength="20">
+          <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="changeUsername()">Save</button>
+        </div>
+      </div>
+      <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
+        <div class="s-lbl">Password</div>
+        <div style="display:flex;gap:8px;width:100%;flex-wrap:wrap">
+          <input id="pp-cur-password" class="lb-field" type="password" style="margin:0;flex:1;min-width:120px" placeholder="Current password…">
+          <input id="pp-new-password" class="lb-field" type="password" style="margin:0;flex:1;min-width:120px" placeholder="New password…">
+          <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="ppChangePassword()">Save</button>
+        </div>
+      </div>
+      <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
+        <div class="s-lbl">📧 Email</div>
+        <div class="s-desc">Optional — only visible to owner</div>
+        <div style="display:flex;gap:8px;width:100%">
+          <input id="pp-email" class="lb-field" type="email" style="margin:0;flex:1" placeholder="your@email.com">
+          <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="ppSaveEmail()">Save</button>
+        </div>
+        <div id="pp-email-display" style="font-size:11px;color:var(--text2)"></div>
+      </div>
+      <div id="pp-account-msg" style="font-size:11px;min-height:16px;margin-top:4px;color:#30d158"></div>
+    </div>
+    <!-- My Badges -->
+    <div class="s-section">
+      <div class="s-sec">🎖️ My Badges</div>
+      <div id="pp-badges-grid" style="display:flex;flex-wrap:wrap;gap:6px;padding:4px 0">
+        <div style="color:var(--text2);font-size:12px">Loading…</div>
+      </div>
+    </div>
+    <!-- My Scores -->
+    <div class="s-section">
+      <div class="s-sec">🏆 My Scores</div>
+      <div id="pp-scores-list" style="display:flex;flex-direction:column;gap:6px">
+        <div style="color:var(--text2);font-size:12px">Loading…</div>
+      </div>
+    </div>
+    <!-- Danger -->
+    <div class="s-section">
+      <div class="s-sec" style="color:#ff375f">⚠️ Danger Zone</div>
+      <div class="s-row">
+        <div><div class="s-lbl" style="color:#ff375f">Delete Account</div><div class="s-desc">Permanently removes your account and all data</div></div>
+        <button class="s-danger" onclick="promptDeleteAccount()" style="background:rgba(255,55,95,.15);border-color:rgba(255,55,95,.3);color:#ff375f">🗑️ Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
   <!-- LEADERBOARD VIEW -->
   <div id="leaderboard-view" class="view">
     <header><h1>🏆 Leaderboard</h1></header>
@@ -1660,46 +1876,6 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
   </div>
 </div>
 <!-- TESTER VIEW -->
-<div id="tester-view" class="view">
-  <header><h1>🧪 Tester Panel</h1></header>
-  <div class="s-section">
-    <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
-      <span>🎮 Game Testing Queue</span>
-      <div style="display:flex;gap:6px;align-items:center">
-        <span id="tester-progress" style="font-size:11px;color:var(--text2)"></span>
-        <button class="auc-btn" onclick="testerExport()">📋 Export</button>
-      </div>
-    </div>
-    <div class="s-desc" style="margin-bottom:12px">Test games and mark them working or broken. Results are shared with the owner.</div>
-
-    <div id="tester-player" style="display:none;flex-direction:column;gap:10px;margin-bottom:14px">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-        <span id="tester-game-title" style="font-size:14px;font-weight:600;color:var(--text)"></span>
-        <span id="tester-game-index" style="font-size:11px;color:var(--text2)"></span>
-      </div>
-      <iframe id="tester-frame"
-        style="width:100%;height:340px;border-radius:12px;border:1px solid var(--border);background:#000"
-        allow="autoplay *; gamepad *; fullscreen *; cross-origin-isolated *"
-        allowfullscreen></iframe>
-      <div style="display:flex;gap:8px">
-        <button class="lb-btn" style="flex:1;background:rgba(48,209,88,.15);border:1px solid rgba(48,209,88,.35);color:#30d158;padding:12px" onclick="testerMark('working')">✅ Working</button>
-        <button class="lb-btn" style="flex:1;background:rgba(255,55,95,.15);border:1px solid rgba(255,55,95,.35);color:#ff375f;padding:12px" onclick="testerMark('broken')">❌ Broken</button>
-        <button class="lb-btn" style="width:auto;padding:12px 16px;background:rgba(255,255,255,.06)" onclick="testerSkip()">⏭ Skip</button>
-      </div>
-    </div>
-
-    <button class="lb-btn" id="tester-start-btn" style="width:100%;padding:12px;margin-bottom:14px" onclick="testerNext()">🧪 Start Testing</button>
-
-    <div id="tester-stats-bar" style="display:none;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-      <div style="padding:6px 12px;border-radius:8px;background:rgba(48,209,88,.12);border:1px solid rgba(48,209,88,.25);font-size:12px;color:#30d158">✅ <span id="tester-count-working">0</span> Working</div>
-      <div style="padding:6px 12px;border-radius:8px;background:rgba(255,55,95,.12);border:1px solid rgba(255,55,95,.25);font-size:12px;color:#ff375f">❌ <span id="tester-count-broken">0</span> Broken</div>
-      <div style="padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid var(--border);font-size:12px;color:var(--text2)">📋 <span id="tester-count-total">0</span> Total</div>
-    </div>
-    <div id="tester-results-list" style="display:flex;flex-direction:column;gap:6px;max-height:400px;overflow-y:auto"></div>
-  </div>
-</div>
-
-<!-- GAME EDIT MODAL -->
 <div id="game-edit-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);z-index:6000000;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)closeGameEdit()">
   <div style="background:#1c1c1e;border:1px solid rgba(255,255,255,.12);border-radius:20px;width:min(520px,96vw);max-height:88vh;overflow-y:auto;display:flex;flex-direction:column">
     <div style="padding:18px 20px 12px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between">
@@ -1748,174 +1924,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
   </div>
 </div>
 
-<!-- PEOPLE / USER SEARCH VIEW -->
-<div id="people-view" class="view" style="max-width:600px;margin:0 auto">
-  <header><h1>🔍 Find People</h1></header>
-  <div class="s-section">
-    <div style="display:flex;gap:8px;margin-bottom:12px">
-      <input id="people-search-input" class="lb-field" style="margin:0;flex:1" placeholder="Search by username…" maxlength="20" onkeydown="if(event.key==='Enter')searchPeople()">
-      <button class="lb-btn" style="width:auto;padding:10px 16px;margin:0" onclick="searchPeople()">Search</button>
-    </div>
-    <div id="people-results"></div>
-    <div id="people-online" style="margin-top:16px">
-      <div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:8px">🟢 ONLINE NOW</div>
-      <div id="people-online-list" style="display:flex;flex-wrap:wrap;gap:8px"></div>
-    </div>
-    <div id="people-following" style="margin-top:20px;display:none">
-      <div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:8px">👥 FOLLOWING</div>
-      <div id="people-following-list"></div>
-    </div>
-    <div id="people-followers" style="margin-top:20px;display:none">
-      <div style="font-size:11px;color:var(--text2);font-weight:700;margin-bottom:8px">❤️ FOLLOWERS</div>
-      <div id="people-followers-list"></div>
-    </div>
-  </div>
-</div>
 
-<!-- PROFILE PAGE VIEW -->
-<div id="profile-view" class="view" style="max-width:600px;margin:0 auto">
-  <div style="padding:20px 0 8px;font-size:22px;font-weight:900">👤 My Profile</div>
-  <div id="profile-page-guest" style="display:none;color:var(--text2);font-size:14px;padding:20px 0">Login to view your profile.</div>
-  <div id="pp-follow-bar" style="display:none;gap:16px;margin-bottom:12px">
-    <div class="follow-stat" onclick="openFollowList(window._ppUserId,'followers')" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 20px">
-      <div class="follow-stat-num" id="pp-followers-count">0</div>
-      <div style="font-size:10px;color:var(--text2)">Followers</div>
-    </div>
-    <div class="follow-stat" onclick="openFollowList(window._ppUserId,'following')" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 20px">
-      <div class="follow-stat-num" id="pp-following-count">0</div>
-      <div style="font-size:10px;color:var(--text2)">Following</div>
-    </div>
-  </div>
-  <div id="profile-page-content">
-    <!-- Avatar -->
-    <div class="s-section">
-      <div class="s-sec">🖼️ Avatar & Background</div>
-      <div class="s-row" style="flex-direction:column;gap:10px;align-items:flex-start">
-        <div style="display:flex;align-items:center;gap:14px">
-          <span id="pp-avatar-preview" style="font-size:48px;width:64px;height:64px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.1)">👤</span>
-          <div>
-            <div style="font-size:13px;font-weight:700" id="pp-display-name">—</div>
-            <div style="font-size:11px;color:var(--text2)" id="pp-username">@—</div>
-          </div>
-        </div>
-        <div class="s-lbl" style="margin-top:4px">Emoji Avatar</div>
-        <div style="display:flex;gap:5px;flex-wrap:wrap" id="pp-emoji-picker"></div>
-        <div class="s-lbl" style="margin-top:8px">Gallery PFPs</div>
-        <div id="pp-gallery-pfp-row" style="display:flex;gap:8px;flex-wrap:wrap"></div>
-        <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
-          <span style="font-size:11px;color:var(--text2)">Current:</span>
-          <span id="pp-cur-av-preview" style="font-size:22px">👤</span>
-          <button class="lb-btn" style="width:auto;padding:7px 14px;margin:0;font-size:12px" onclick="ppSaveAvatar()">💾 Save Avatar</button>
-        </div>
-        <div id="pp-av-msg" style="font-size:11px;color:var(--text2);min-height:14px"></div>
-      </div>
-      <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
-        <div class="s-lbl">🎨 Banner / Background</div>
-        <div class="s-desc">Shown behind your public profile header</div>
-        <!-- Banner preview -->
-        <div id="pp-banner-preview" style="width:100%;height:64px;border-radius:12px;background:linear-gradient(135deg,#1a1a3e,#2a1a4e);border:1px solid rgba(255,255,255,.1);position:relative;overflow:hidden;transition:background .2s">
-          <div style="position:absolute;inset:0;background:linear-gradient(transparent,rgba(0,0,0,.4))"></div>
-        </div>
-        <!-- Gradient presets -->
-        <div style="display:flex;gap:6px;flex-wrap:wrap" id="pp-banner-presets">
-          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#1a1a3e,#2a1a4e)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#1a1a3e,#2a1a4e);border:2px solid rgba(255,255,255,.2)" title="Default"></div>
-          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#0f2027,#203a43,#2c5364)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#0f2027,#203a43,#2c5364)" title="Ocean"></div>
-          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#3a1c71,#d76d77,#ffaf7b)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#3a1c71,#d76d77,#ffaf7b)" title="Sunset"></div>
-          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#0d0d0d,#1a1a1a)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#0d0d0d,#1a1a1a)" title="Void"></div>
-          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#134e5e,#71b280)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#134e5e,#71b280)" title="Forest"></div>
-          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#4b0082,#7c3aed,#a855f7)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#4b0082,#7c3aed,#a855f7)" title="Purple"></div>
-          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#1a0000,#5c0000)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#1a0000,#5c0000)" title="Crimson"></div>
-          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#001f3f,#0074D9)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#001f3f,#0074D9)" title="Navy"></div>
-          <div onclick="ppPickBannerGradient('linear-gradient(135deg,#1a1a1a,#ffd700,#1a1a1a)')" style="width:40px;height:28px;border-radius:6px;cursor:none;background:linear-gradient(135deg,#1a1a1a,#ffd700,#1a1a1a)" title="Gold"></div>
-          <!-- Color pickers -->
-          <label style="display:flex;align-items:center;justify-content:center;width:40px;height:28px;border-radius:6px;cursor:none;border:2px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);font-size:11px;color:var(--text2)" title="Custom solid color">
-            🎨<input type="color" id="pp-banner-color1" value="#1a1a3e" oninput="ppUpdateBannerCustom()" style="opacity:0;position:absolute;pointer-events:none">
-          </label>
-        </div>
-        <!-- Owner-set banner images -->
-        <div id="pp-banner-img-row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px"></div>
-        <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
-          <button class="lb-btn" style="width:auto;padding:7px 14px;margin:0;font-size:12px" onclick="ppSaveBanner()">💾 Save Banner</button>
-          <button class="auc-btn red" style="font-size:11px" onclick="ppClearBanner()">✕ Reset</button>
-        </div>
-        <div id="pp-banner-msg" style="font-size:11px;color:var(--text2);min-height:14px"></div>
-      </div>
-    </div>
-    <!-- Bio & Display Name -->
-    <div class="s-section">
-      <div class="s-sec">✏️ Profile Info</div>
-      <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start">
-        <div class="s-lbl">Display Name</div>
-        <div class="s-desc" id="pp-dn-desc">Changeable every 7 days</div>
-        <div style="display:flex;gap:8px;width:100%">
-          <input id="pp-display-name-input" class="lb-field" style="margin:0;flex:1" placeholder="New display name…" maxlength="30">
-          <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="changeDisplayName()">Save</button>
-        </div>
-      </div>
-      <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
-        <div class="s-lbl">📝 Bio</div>
-        <textarea id="pp-bio" class="lb-field" style="margin:0;width:100%;height:72px;resize:vertical;font-family:inherit;font-size:13px" placeholder="Tell people about yourself…" maxlength="200"></textarea>
-        <div style="display:flex;justify-content:space-between;width:100%">
-          <span id="pp-bio-count" style="font-size:11px;color:var(--text2)">0/200</span>
-          <button class="lb-btn" style="width:auto;padding:7px 14px;margin:0;font-size:12px" onclick="ppSaveBio()">💾 Save Bio</button>
-        </div>
-        <div id="pp-bio-msg" style="font-size:11px;color:var(--text2);min-height:14px"></div>
-      </div>
-    </div>
-    <!-- Account -->
-    <div class="s-section">
-      <div class="s-sec">🔐 Account</div>
-      <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start">
-        <div class="s-lbl">Username</div>
-        <div class="s-desc" id="pp-un-desc">Changeable once every 30 days</div>
-        <div style="display:flex;gap:8px;width:100%">
-          <input id="pp-username-input" class="lb-field" style="margin:0;flex:1" placeholder="New username…" maxlength="20">
-          <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="changeUsername()">Save</button>
-        </div>
-      </div>
-      <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
-        <div class="s-lbl">Password</div>
-        <div style="display:flex;gap:8px;width:100%;flex-wrap:wrap">
-          <input id="pp-cur-password" class="lb-field" type="password" style="margin:0;flex:1;min-width:120px" placeholder="Current password…">
-          <input id="pp-new-password" class="lb-field" type="password" style="margin:0;flex:1;min-width:120px" placeholder="New password…">
-          <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="ppChangePassword()">Save</button>
-        </div>
-      </div>
-      <div class="s-row" style="flex-direction:column;gap:8px;align-items:flex-start;margin-top:8px">
-        <div class="s-lbl">📧 Email</div>
-        <div class="s-desc">Optional — only visible to owner</div>
-        <div style="display:flex;gap:8px;width:100%">
-          <input id="pp-email" class="lb-field" type="email" style="margin:0;flex:1" placeholder="your@email.com">
-          <button class="lb-btn" style="width:auto;padding:10px 14px;margin:0" onclick="ppSaveEmail()">Save</button>
-        </div>
-        <div id="pp-email-display" style="font-size:11px;color:var(--text2)"></div>
-      </div>
-      <div id="pp-account-msg" style="font-size:11px;min-height:16px;margin-top:4px;color:#30d158"></div>
-    </div>
-    <!-- My Badges -->
-    <div class="s-section">
-      <div class="s-sec">🎖️ My Badges</div>
-      <div id="pp-badges-grid" style="display:flex;flex-wrap:wrap;gap:6px;padding:4px 0">
-        <div style="color:var(--text2);font-size:12px">Loading…</div>
-      </div>
-    </div>
-    <!-- My Scores -->
-    <div class="s-section">
-      <div class="s-sec">🏆 My Scores</div>
-      <div id="pp-scores-list" style="display:flex;flex-direction:column;gap:6px">
-        <div style="color:var(--text2);font-size:12px">Loading…</div>
-      </div>
-    </div>
-    <!-- Danger -->
-    <div class="s-section">
-      <div class="s-sec" style="color:#ff375f">⚠️ Danger Zone</div>
-      <div class="s-row">
-        <div><div class="s-lbl" style="color:#ff375f">Delete Account</div><div class="s-desc">Permanently removes your account and all data</div></div>
-        <button class="s-danger" onclick="promptDeleteAccount()" style="background:rgba(255,55,95,.15);border-color:rgba(255,55,95,.3);color:#ff375f">🗑️ Delete</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 
   <!-- ABOUT VIEW -->
@@ -8765,6 +8774,25 @@ function dbgSkip() {
   dbgNext();
 }
 
+let dbgCurrentTab = 'broken';
+
+function dbgSetTab(tab) {
+  dbgCurrentTab = tab;
+  const btnBroken = document.getElementById('dbg-tab-broken');
+  const btnAll    = document.getElementById('dbg-tab-all');
+  if (btnBroken) {
+    btnBroken.style.background    = tab === 'broken' ? 'rgba(255,55,95,.2)' : '';
+    btnBroken.style.borderColor   = tab === 'broken' ? 'rgba(255,55,95,.4)' : '';
+    btnBroken.style.color         = tab === 'broken' ? '#ff375f' : '';
+  }
+  if (btnAll) {
+    btnAll.style.background  = tab === 'all' ? 'rgba(10,132,255,.2)' : '';
+    btnAll.style.borderColor = tab === 'all' ? 'rgba(10,132,255,.4)' : '';
+    btnAll.style.color       = tab === 'all' ? 'var(--blue)' : '';
+  }
+  dbgRefreshUI();
+}
+
 function dbgRefreshUI() {
   const working = Object.values(dbgResults).filter(r => r.status === 'working');
   const broken  = Object.values(dbgResults).filter(r => r.status === 'broken');
@@ -8785,31 +8813,43 @@ function dbgRefreshUI() {
   const listEl = document.getElementById('dbg-results-list');
   if (!listEl) return;
 
-  const all = Object.entries(dbgResults).sort((a, b) => (b[1].ts || 0) - (a[1].ts || 0));
-  if (!all.length) { listEl.innerHTML = '<div style="font-size:12px;color:var(--text2)">No results yet — click Start to begin.</div>'; return; }
+  // Filter by current tab
+  let entries = Object.entries(dbgResults).sort((a, b) => (b[1].ts || 0) - (a[1].ts || 0));
+  if (dbgCurrentTab === 'broken') entries = entries.filter(([,r]) => r.status === 'broken');
 
-  listEl.innerHTML = all.map(([id, r]) => {
+  if (!entries.length) {
+    listEl.innerHTML = dbgCurrentTab === 'broken'
+      ? '<div style="font-size:12px;color:#30d158;padding:12px 0">✅ No broken games! Switch to All Results to see everything.</div>'
+      : '<div style="font-size:12px;color:var(--text2)">No results yet — click Start to begin.</div>';
+    return;
+  }
+
+  listEl.innerHTML = entries.map(([id, r]) => {
     const icon  = r.status === 'working' ? '✅' : r.status === 'broken' ? '❌' : '⏭';
     const color = r.status === 'working' ? '#30d158' : r.status === 'broken' ? '#ff375f' : 'var(--text2)';
     const hasFix = !!gameFixOverrides[id];
     const fixBadge = hasFix ? `<span style="font-size:10px;color:#ffd60a;background:rgba(255,214,10,.12);border:1px solid rgba(255,214,10,.25);padding:2px 6px;border-radius:5px;flex-shrink:0">🔧 Fixed</span>` : '';
-    const fixBtn = r.status === 'broken'
+    // On broken tab: show fix panel open by default; on all tab: collapsible
+    const isBrokenTab = dbgCurrentTab === 'broken';
+    const fixPanelDisplay = (r.status === 'broken' && isBrokenTab) ? 'flex' : 'none';
+    const fixBtn = r.status === 'broken' && !isBrokenTab
       ? `<button onclick="dbgOpenFix('${id}')" style="background:rgba(255,159,10,.12);border:1px solid rgba(255,159,10,.3);color:#ff9f0a;border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;flex-shrink:0">🔧 Fix</button>`
       : '';
-    return `<div style="display:flex;flex-direction:column;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--border);overflow:hidden">
+    const testerTag = r.tester ? `<span style="font-size:10px;color:var(--text2);flex-shrink:0">by ${r.tester}</span>` : '';
+    return `<div style="display:flex;flex-direction:column;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid ${r.status==='broken'?'rgba(255,55,95,.2)':'var(--border)'};overflow:hidden">
       <div style="display:flex;align-items:center;gap:8px;padding:8px 12px">
         <span style="font-size:12px;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${icon} ${r.title}</span>
-        ${fixBadge}
+        ${testerTag}${fixBadge}
         <span style="font-size:11px;color:${color};flex-shrink:0;font-weight:600;text-transform:uppercase">${r.status}</span>
         ${fixBtn}
         <button onclick="dbgRetest('${id}')" style="background:rgba(255,255,255,.08);border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;flex-shrink:0">Retest</button>
         <button onclick="dbgRemove('${id}')" style="background:rgba(255,55,95,.1);border:1px solid rgba(255,55,95,.2);color:#ff375f;border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;flex-shrink:0">✕</button>
       </div>
-      <div id="dbg-fix-panel-${id}" style="display:none;flex-direction:column;gap:8px;padding:10px 12px;border-top:1px solid var(--border);background:rgba(255,159,10,.05)">
+      <div id="dbg-fix-panel-${id}" style="display:${fixPanelDisplay};flex-direction:column;gap:8px;padding:10px 12px;border-top:1px solid var(--border);background:rgba(255,159,10,.05)">
         <div style="font-size:11px;color:var(--text2)">Original URL: <span style="color:var(--text);word-break:break-all">${r.url||''}</span></div>
         ${hasFix ? `<div style="font-size:11px;color:#ffd60a">Current fix: <span style="word-break:break-all">${gameFixOverrides[id]}</span></div>` : ''}
-        <div style="display:flex;gap:6px;align-items:center">
-          <input id="dbg-fix-input-${id}" class="lb-field" style="margin:0;flex:1;font-size:12px" placeholder="Paste replacement URL…" value="${hasFix ? gameFixOverrides[id] : ''}">
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+          <input id="dbg-fix-input-${id}" class="lb-field" style="margin:0;flex:1;min-width:180px;font-size:12px" placeholder="Paste replacement URL…" value="${hasFix ? gameFixOverrides[id] : ''}">
           <button onclick="dbgTestFix('${id}')" style="background:rgba(10,132,255,.15);border:1px solid rgba(10,132,255,.3);color:var(--blue);border-radius:6px;padding:6px 10px;font-size:11px;cursor:pointer;white-space:nowrap">▶ Test</button>
           <button onclick="dbgSaveFix('${id}')" style="background:rgba(48,209,88,.15);border:1px solid rgba(48,209,88,.3);color:#30d158;border-radius:6px;padding:6px 10px;font-size:11px;cursor:pointer;white-space:nowrap">💾 Save Fix</button>
           ${hasFix ? `<button onclick="dbgRemoveFix('${id}')" style="background:rgba(255,55,95,.12);border:1px solid rgba(255,55,95,.25);color:#ff375f;border-radius:6px;padding:6px 10px;font-size:11px;cursor:pointer;white-space:nowrap">✕ Remove Fix</button>` : ''}
