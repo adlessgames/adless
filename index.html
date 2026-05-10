@@ -54,6 +54,14 @@ body,html{margin:0;padding:0;width:100vw;height:100vh;overflow:hidden;background
 #bgLayer{position:fixed;inset:0;z-index:0;pointer-events:none;background-size:cover;background-position:center;opacity:0;transition:opacity .5s;}
 #bgLayer.on{opacity:1;}
 #cur{width:12px;height:12px;background:#fff;border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999999;mix-blend-mode:difference;will-change:transform;}
+.trail-particle{position:fixed;pointer-events:none;z-index:9999998;border-radius:50%;transform:translate(-50%,-50%);animation:trailFade .6s ease-out forwards;}
+@keyframes trailFade{0%{opacity:1;transform:translate(-50%,-50%) scale(1);}100%{opacity:0;transform:translate(-50%,-50%) scale(0);}}
+.av-frame-gold{outline:2px solid #ffd60a;outline-offset:2px;box-shadow:0 0 8px rgba(255,214,10,.6);}
+.av-frame-rainbow{outline:2px solid transparent;outline-offset:2px;box-shadow:0 0 8px rgba(255,100,255,.6);animation:rainbowFrame 2s linear infinite;}
+@keyframes rainbowFrame{0%{box-shadow:0 0 8px #ff0000;}16%{box-shadow:0 0 8px #ff8800;}33%{box-shadow:0 0 8px #ffff00;}50%{box-shadow:0 0 8px #00ff00;}66%{box-shadow:0 0 8px #0088ff;}83%{box-shadow:0 0 8px #8800ff;}100%{box-shadow:0 0 8px #ff0000;}}
+.av-frame-neon{outline:2px solid #bf5af2;outline-offset:2px;box-shadow:0 0 10px rgba(191,90,242,.8);}
+.av-frame-fire{outline:2px solid #ff6600;outline-offset:2px;box-shadow:0 0 8px rgba(255,102,0,.7);animation:fireFrame 1s ease-in-out infinite alternate;}
+@keyframes fireFrame{from{box-shadow:0 0 6px rgba(255,102,0,.6);}to{box-shadow:0 0 14px rgba(255,50,0,.9);}}
 body.g-hover #cur{width:44px;height:44px;margin:-16px 0 0 -16px;background:var(--blue);mix-blend-mode:normal;opacity:.4;transition:width .15s,height .15s;}
 body.r-hover #cur{width:44px;height:44px;margin:-16px 0 0 -16px;background:var(--blue);mix-blend-mode:normal;opacity:.8;}
 #app{display:grid;grid-template-columns:240px 1fr;width:100vw;height:100vh;position:relative;z-index:1;}
@@ -1825,6 +1833,169 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <div class="s-row"><div><div class="s-lbl">Adless OS</div><div class="s-desc">Ad-free hub • 250+ curated games + Zones • Paginated for speed</div></div><span style="font-size:20px">🛡️</span></div>
     </div>
   </div>
+
+<!-- ABOUT VIEW -->
+  <div id="about-view" class="view" style="max-width:700px;margin:0 auto">
+    <header><h1>ℹ️ About Adless OS</h1></header>
+    <div class="s-section">
+      <div class="stat-box" style="margin-bottom:16px">
+        <div style="font-size:32px;margin-bottom:10px">🛡️</div>
+        <div style="font-size:18px;font-weight:800;margin-bottom:8px">What is Adless OS?</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
+          Adless OS is a free, community-driven entertainment hub built for students and casual users who want access to games, movies, and shows without intrusive advertisements. We believe entertainment should be accessible to everyone, regardless of their ability to pay.
+        </p>
+      </div>
+      <div class="stat-box" style="margin-bottom:16px">
+        <div style="font-size:18px;font-weight:800;margin-bottom:8px">🌍 Where are we from?</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
+          Adless OS is an independent project developed in Argentina 🇦🇷. This is a personal, non-commercial project created by a hobbyist developer with no corporate backing, no venture funding, and no profit motive. All content is aggregated from publicly available sources on the internet for educational and entertainment purposes.
+        </p>
+      </div>
+      <div class="stat-box" style="margin-bottom:16px">
+        <div style="font-size:18px;font-weight:800;margin-bottom:8px">🎮 What do we offer?</div>
+        <ul style="font-size:13px;color:var(--text2);line-height:2;margin:0;padding-left:18px">
+          <li>250+ browser-based games from publicly available sources</li>
+          <li>Movies and TV shows for educational and personal viewing</li>
+          <li>A live community chat and social features</li>
+          <li>Leaderboards and a badge achievement system</li>
+          <li>Zero mandatory ads for registered members</li>
+          <li>Fully free — no subscriptions, no paywalls</li>
+        </ul>
+      </div>
+      <div class="stat-box" style="margin-bottom:16px">
+        <div style="font-size:18px;font-weight:800;margin-bottom:8px">📬 Contact</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
+          For any inquiries, DMCA notices, or general questions, please reach out to us at:<br>
+          <a href="/cdn-cgi/l/email-protection#770f4000011a18051237101a161e1b5914181a" style="color:var(--blue);font-weight:700"><span class="__cf_email__" data-cfemail="532b6424253e3c213613343e323a3f7d303c3e">[email&#160;protected]</span></a>
+        </p>
+      </div>
+      <div class="stat-box">
+        <div style="font-size:18px;font-weight:800;margin-bottom:8px">⚠️ Disclaimer</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
+          Adless OS does not host, store, or distribute any copyrighted content directly. All games are embedded from third-party platforms. All video content is linked via publicly accessible URLs (such as Google Drive shares submitted by users). We are not responsible for the content of third-party sites. If you believe any content infringes your copyright, please see our <span style="color:var(--blue);cursor:none" onclick="switchView('dmca-view')">DMCA page</span>.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div id="privacy-view" class="view" style="max-width:700px;margin:0 auto">
+    <header><h1>🔒 Privacy Policy</h1></header>
+    <div class="s-section">
+      <p style="font-size:12px;color:var(--text2);margin-bottom:16px">Last updated: March 2026 · Operated from Argentina 🇦🇷</p>
+
+      <div class="stat-box" style="margin-bottom:14px">
+        <div style="font-size:15px;font-weight:800;margin-bottom:6px">1. Information We Collect</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
+          When you create an account, we collect your chosen <strong style="color:var(--text)">username</strong>, a <strong style="color:var(--text)">hashed (encrypted) password</strong>, and an optional <strong style="color:var(--text)">email address</strong> used only for account recovery. We do not collect your real name, address, phone number, or payment information. We never sell your data to third parties.
+        </p>
+      </div>
+
+      <div class="stat-box" style="margin-bottom:14px">
+        <div style="font-size:15px;font-weight:800;margin-bottom:6px">2. How We Use Your Information</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
+          Your information is used solely to operate the platform — to authenticate your account, display your username in chat and on leaderboards, and save your game preferences and progress. Your email (if provided) is only used for password recovery and is never shared or displayed publicly.
+        </p>
+      </div>
+
+      <div class="stat-box" style="margin-bottom:14px">
+        <div style="font-size:15px;font-weight:800;margin-bottom:6px">3. Cookies & Local Storage</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
+          We use browser <strong style="color:var(--text)">localStorage</strong> to save your session, settings (theme, background, device mode), favorites, and recent games. No tracking cookies are set by Adless OS itself. Third-party embedded games may set their own cookies — we have no control over those.
+        </p>
+      </div>
+
+      <div class="stat-box" style="margin-bottom:14px">
+        <div style="font-size:15px;font-weight:800;margin-bottom:6px">4. Third-Party Services</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
+          We use <strong style="color:var(--text)">Supabase</strong> (a cloud database provider) to store account data, chat messages, scores, and badges. Supabase is GDPR-compliant. We also embed games from third-party platforms (azgames.io, 1games.io, etc.) and videos from Google Drive. These third parties have their own privacy policies. We use Google Analytics (gtag.js) for anonymous traffic analytics — no personally identifiable information is shared.
+        </p>
+      </div>
+
+      <div class="stat-box" style="margin-bottom:14px">
+        <div style="font-size:15px;font-weight:800;margin-bottom:6px">5. Data Retention & Deletion</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
+          You can delete your account at any time from <strong style="color:var(--text)">Settings → Delete Account</strong>. This permanently removes your profile, scores, messages, and badges from our database. If you wish to request manual deletion, email us at <a href="/cdn-cgi/l/email-protection#f880cf8f8e95978a9db89f95999194d69b9795" style="color:var(--blue)"><span class="__cf_email__" data-cfemail="344c034342595b4651745359555d581a575b59">[email&#160;protected]</span></a>.
+        </p>
+      </div>
+
+      <div class="stat-box" style="margin-bottom:14px">
+        <div style="font-size:15px;font-weight:800;margin-bottom:6px">6. Children's Privacy</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
+          Adless OS is intended for general audiences. We do not knowingly collect personal information from children under 13. If you believe a child has provided us with personal information, please contact us and we will delete it promptly.
+        </p>
+      </div>
+
+      <div class="stat-box" style="margin-bottom:14px">
+        <div style="font-size:15px;font-weight:800;margin-bottom:6px">7. Security</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
+          Passwords are never stored in plain text — they are hashed using SHA-256 before being stored. All data is transmitted over HTTPS. However, no system is 100% secure and we cannot guarantee absolute security.
+        </p>
+      </div>
+
+      <div class="stat-box">
+        <div style="font-size:15px;font-weight:800;margin-bottom:6px">8. Contact</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
+          For privacy-related questions or requests, contact us at:<br>
+          <a href="/cdn-cgi/l/email-protection#ea92dd9d9c8785988faa8d878b8386c4898587" style="color:var(--blue);font-weight:700"><span class="__cf_email__" data-cfemail="542c632322393b2631143339353d387a373b39">[email&#160;protected]</span></a><br>
+          <span style="font-size:11px">Adless OS · Independent Project · Argentina 🇦🇷</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+<!-- DMCA VIEW -->
+  <div id="dmca-view" class="view" style="max-width:700px;margin:0 auto">
+    <header><h1>⚖️ DMCA Policy</h1></header>
+    <div class="s-section">
+      <p style="font-size:12px;color:var(--text2);margin-bottom:16px">Last updated: March 2026 · Operated from Argentina 🇦🇷</p>
+
+      <div class="stat-box" style="margin-bottom:14px">
+        <div style="font-size:15px;font-weight:800;margin-bottom:6px">Our Position</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
+          Adless OS is a non-commercial, independent project based in Argentina. We respect the intellectual property rights of others and expect our users to do the same. Adless OS does not host, upload, or store any copyrighted content on our servers. All games are embedded from third-party platforms, and all video content consists of links to files shared publicly on Google Drive by third parties.
+        </p>
+      </div>
+
+      <div class="stat-box" style="margin-bottom:14px">
+        <div style="font-size:15px;font-weight:800;margin-bottom:6px">How to Submit a DMCA Takedown Notice</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0 0 10px">
+          If you are a copyright owner and believe that content accessible through Adless OS infringes your copyright, please send a written notice to our designated agent with the following information:
+        </p>
+        <ul style="font-size:13px;color:var(--text2);line-height:2;margin:0;padding-left:18px">
+          <li>Your full legal name and contact information (email, address)</li>
+          <li>A description of the copyrighted work you claim has been infringed</li>
+          <li>The specific URL or description of the content on our site</li>
+          <li>A statement that you have a good faith belief that the use is not authorized</li>
+          <li>A statement, under penalty of perjury, that the information is accurate and you are the copyright owner or authorized to act on their behalf</li>
+          <li>Your electronic or physical signature</li>
+        </ul>
+      </div>
+
+      <div class="stat-box" style="margin-bottom:14px">
+        <div style="font-size:15px;font-weight:800;margin-bottom:6px">📬 Send DMCA Notices To</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
+          <strong style="color:var(--text)">Email (preferred):</strong><br>
+          <a href="/cdn-cgi/l/email-protection#423a7535342f2d302702252f232b2e6c212d2f" style="color:var(--blue);font-weight:700;font-size:15px"><span class="__cf_email__" data-cfemail="59216e2e2f34362b3c193e34383035773a3634">[email&#160;protected]</span></a><br><br>
+          Please use the subject line: <strong style="color:var(--text)">DMCA Takedown Request — [Content Name]</strong><br><br>
+          We will respond to valid DMCA notices within <strong style="color:var(--text)">72 hours</strong> and remove or disable access to the infringing content promptly.
+        </p>
+      </div>
+
+      <div class="stat-box" style="margin-bottom:14px">
+        <div style="font-size:15px;font-weight:800;margin-bottom:6px">Counter-Notice</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
+          If you believe your content was removed by mistake or misidentification, you may submit a counter-notice to the same email address. Counter-notices must include your contact information, identification of the removed content, a statement under penalty of perjury that you have a good faith belief the content was removed by mistake, and your consent to jurisdiction.
+        </p>
+      </div>
+
+      <div class="stat-box">
+        <div style="font-size:15px;font-weight:800;margin-bottom:6px">⚠️ Limitation of Liability</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
+          Adless OS operates as a link aggregator and embedding platform. We do not upload, transcode, or redistribute copyrighted works. We act in good faith to remove content upon receiving valid notices. As a non-commercial project operated from Argentina, we operate under significant resource constraints but are committed to honoring legitimate intellectual property claims.
+        </p>
+      </div>
+    </div>
+  </div>
 <!-- AD OPT-OUT POPUP (shown on login) -->
 <div id="ads-popup" style="display:none;position:fixed;inset:0;z-index:6000000;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
   <div style="background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px;width:min(400px,92vw);display:flex;flex-direction:column;gap:14px;animation:fadeUp .3s ease">
@@ -1927,169 +2098,12 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 
 
 
-  <!-- ABOUT VIEW -->
-  <div id="about-view" class="view" style="max-width:700px;margin:0 auto">
-    <header><h1>ℹ️ About Adless OS</h1></header>
-    <div class="s-section">
-      <div class="stat-box" style="margin-bottom:16px">
-        <div style="font-size:32px;margin-bottom:10px">🛡️</div>
-        <div style="font-size:18px;font-weight:800;margin-bottom:8px">What is Adless OS?</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          Adless OS is a free, community-driven entertainment hub built for students and casual users who want access to games, movies, and shows without intrusive advertisements. We believe entertainment should be accessible to everyone, regardless of their ability to pay.
-        </p>
-      </div>
-      <div class="stat-box" style="margin-bottom:16px">
-        <div style="font-size:18px;font-weight:800;margin-bottom:8px">🌍 Where are we from?</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          Adless OS is an independent project developed in Argentina 🇦🇷. This is a personal, non-commercial project created by a hobbyist developer with no corporate backing, no venture funding, and no profit motive. All content is aggregated from publicly available sources on the internet for educational and entertainment purposes.
-        </p>
-      </div>
-      <div class="stat-box" style="margin-bottom:16px">
-        <div style="font-size:18px;font-weight:800;margin-bottom:8px">🎮 What do we offer?</div>
-        <ul style="font-size:13px;color:var(--text2);line-height:2;margin:0;padding-left:18px">
-          <li>250+ browser-based games from publicly available sources</li>
-          <li>Movies and TV shows for educational and personal viewing</li>
-          <li>A live community chat and social features</li>
-          <li>Leaderboards and a badge achievement system</li>
-          <li>Zero mandatory ads for registered members</li>
-          <li>Fully free — no subscriptions, no paywalls</li>
-        </ul>
-      </div>
-      <div class="stat-box" style="margin-bottom:16px">
-        <div style="font-size:18px;font-weight:800;margin-bottom:8px">📬 Contact</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          For any inquiries, DMCA notices, or general questions, please reach out to us at:<br>
-          <a href="/cdn-cgi/l/email-protection#770f4000011a18051237101a161e1b5914181a" style="color:var(--blue);font-weight:700"><span class="__cf_email__" data-cfemail="532b6424253e3c213613343e323a3f7d303c3e">[email&#160;protected]</span></a>
-        </p>
-      </div>
-      <div class="stat-box">
-        <div style="font-size:18px;font-weight:800;margin-bottom:8px">⚠️ Disclaimer</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          Adless OS does not host, store, or distribute any copyrighted content directly. All games are embedded from third-party platforms. All video content is linked via publicly accessible URLs (such as Google Drive shares submitted by users). We are not responsible for the content of third-party sites. If you believe any content infringes your copyright, please see our <span style="color:var(--blue);cursor:none" onclick="switchView('dmca-view')">DMCA page</span>.
-        </p>
-      </div>
-    </div>
-  </div>
+  
 
   <!-- PRIVACY POLICY VIEW -->
-  <div id="privacy-view" class="view" style="max-width:700px;margin:0 auto">
-    <header><h1>🔒 Privacy Policy</h1></header>
-    <div class="s-section">
-      <p style="font-size:12px;color:var(--text2);margin-bottom:16px">Last updated: March 2026 · Operated from Argentina 🇦🇷</p>
 
-      <div class="stat-box" style="margin-bottom:14px">
-        <div style="font-size:15px;font-weight:800;margin-bottom:6px">1. Information We Collect</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          When you create an account, we collect your chosen <strong style="color:var(--text)">username</strong>, a <strong style="color:var(--text)">hashed (encrypted) password</strong>, and an optional <strong style="color:var(--text)">email address</strong> used only for account recovery. We do not collect your real name, address, phone number, or payment information. We never sell your data to third parties.
-        </p>
-      </div>
 
-      <div class="stat-box" style="margin-bottom:14px">
-        <div style="font-size:15px;font-weight:800;margin-bottom:6px">2. How We Use Your Information</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          Your information is used solely to operate the platform — to authenticate your account, display your username in chat and on leaderboards, and save your game preferences and progress. Your email (if provided) is only used for password recovery and is never shared or displayed publicly.
-        </p>
-      </div>
-
-      <div class="stat-box" style="margin-bottom:14px">
-        <div style="font-size:15px;font-weight:800;margin-bottom:6px">3. Cookies & Local Storage</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          We use browser <strong style="color:var(--text)">localStorage</strong> to save your session, settings (theme, background, device mode), favorites, and recent games. No tracking cookies are set by Adless OS itself. Third-party embedded games may set their own cookies — we have no control over those.
-        </p>
-      </div>
-
-      <div class="stat-box" style="margin-bottom:14px">
-        <div style="font-size:15px;font-weight:800;margin-bottom:6px">4. Third-Party Services</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          We use <strong style="color:var(--text)">Supabase</strong> (a cloud database provider) to store account data, chat messages, scores, and badges. Supabase is GDPR-compliant. We also embed games from third-party platforms (azgames.io, 1games.io, etc.) and videos from Google Drive. These third parties have their own privacy policies. We use Google Analytics (gtag.js) for anonymous traffic analytics — no personally identifiable information is shared.
-        </p>
-      </div>
-
-      <div class="stat-box" style="margin-bottom:14px">
-        <div style="font-size:15px;font-weight:800;margin-bottom:6px">5. Data Retention & Deletion</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          You can delete your account at any time from <strong style="color:var(--text)">Settings → Delete Account</strong>. This permanently removes your profile, scores, messages, and badges from our database. If you wish to request manual deletion, email us at <a href="/cdn-cgi/l/email-protection#f880cf8f8e95978a9db89f95999194d69b9795" style="color:var(--blue)"><span class="__cf_email__" data-cfemail="344c034342595b4651745359555d581a575b59">[email&#160;protected]</span></a>.
-        </p>
-      </div>
-
-      <div class="stat-box" style="margin-bottom:14px">
-        <div style="font-size:15px;font-weight:800;margin-bottom:6px">6. Children's Privacy</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          Adless OS is intended for general audiences. We do not knowingly collect personal information from children under 13. If you believe a child has provided us with personal information, please contact us and we will delete it promptly.
-        </p>
-      </div>
-
-      <div class="stat-box" style="margin-bottom:14px">
-        <div style="font-size:15px;font-weight:800;margin-bottom:6px">7. Security</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          Passwords are never stored in plain text — they are hashed using SHA-256 before being stored. All data is transmitted over HTTPS. However, no system is 100% secure and we cannot guarantee absolute security.
-        </p>
-      </div>
-
-      <div class="stat-box">
-        <div style="font-size:15px;font-weight:800;margin-bottom:6px">8. Contact</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          For privacy-related questions or requests, contact us at:<br>
-          <a href="/cdn-cgi/l/email-protection#ea92dd9d9c8785988faa8d878b8386c4898587" style="color:var(--blue);font-weight:700"><span class="__cf_email__" data-cfemail="542c632322393b2631143339353d387a373b39">[email&#160;protected]</span></a><br>
-          <span style="font-size:11px">Adless OS · Independent Project · Argentina 🇦🇷</span>
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <!-- DMCA VIEW -->
-  <div id="dmca-view" class="view" style="max-width:700px;margin:0 auto">
-    <header><h1>⚖️ DMCA Policy</h1></header>
-    <div class="s-section">
-      <p style="font-size:12px;color:var(--text2);margin-bottom:16px">Last updated: March 2026 · Operated from Argentina 🇦🇷</p>
-
-      <div class="stat-box" style="margin-bottom:14px">
-        <div style="font-size:15px;font-weight:800;margin-bottom:6px">Our Position</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          Adless OS is a non-commercial, independent project based in Argentina. We respect the intellectual property rights of others and expect our users to do the same. Adless OS does not host, upload, or store any copyrighted content on our servers. All games are embedded from third-party platforms, and all video content consists of links to files shared publicly on Google Drive by third parties.
-        </p>
-      </div>
-
-      <div class="stat-box" style="margin-bottom:14px">
-        <div style="font-size:15px;font-weight:800;margin-bottom:6px">How to Submit a DMCA Takedown Notice</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0 0 10px">
-          If you are a copyright owner and believe that content accessible through Adless OS infringes your copyright, please send a written notice to our designated agent with the following information:
-        </p>
-        <ul style="font-size:13px;color:var(--text2);line-height:2;margin:0;padding-left:18px">
-          <li>Your full legal name and contact information (email, address)</li>
-          <li>A description of the copyrighted work you claim has been infringed</li>
-          <li>The specific URL or description of the content on our site</li>
-          <li>A statement that you have a good faith belief that the use is not authorized</li>
-          <li>A statement, under penalty of perjury, that the information is accurate and you are the copyright owner or authorized to act on their behalf</li>
-          <li>Your electronic or physical signature</li>
-        </ul>
-      </div>
-
-      <div class="stat-box" style="margin-bottom:14px">
-        <div style="font-size:15px;font-weight:800;margin-bottom:6px">📬 Send DMCA Notices To</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          <strong style="color:var(--text)">Email (preferred):</strong><br>
-          <a href="/cdn-cgi/l/email-protection#423a7535342f2d302702252f232b2e6c212d2f" style="color:var(--blue);font-weight:700;font-size:15px"><span class="__cf_email__" data-cfemail="59216e2e2f34362b3c193e34383035773a3634">[email&#160;protected]</span></a><br><br>
-          Please use the subject line: <strong style="color:var(--text)">DMCA Takedown Request — [Content Name]</strong><br><br>
-          We will respond to valid DMCA notices within <strong style="color:var(--text)">72 hours</strong> and remove or disable access to the infringing content promptly.
-        </p>
-      </div>
-
-      <div class="stat-box" style="margin-bottom:14px">
-        <div style="font-size:15px;font-weight:800;margin-bottom:6px">Counter-Notice</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          If you believe your content was removed by mistake or misidentification, you may submit a counter-notice to the same email address. Counter-notices must include your contact information, identification of the removed content, a statement under penalty of perjury that you have a good faith belief the content was removed by mistake, and your consent to jurisdiction.
-        </p>
-      </div>
-
-      <div class="stat-box">
-        <div style="font-size:15px;font-weight:800;margin-bottom:6px">⚠️ Limitation of Liability</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          Adless OS operates as a link aggregator and embedding platform. We do not upload, transcode, or redistribute copyrighted works. We act in good faith to remove content upon receiving valid notices. As a non-commercial project operated from Argentina, we operate under significant resource constraints but are committed to honoring legitimate intellectual property claims.
-        </p>
-      </div>
-    </div>
-  </div>
+  
 
 </div><!-- end #app -->
 
@@ -2676,6 +2690,7 @@ let zones=[];
 let hydraGames=[];
 let dbgResults={};
 let gameFixOverrides={};
+let _activeBgTint=null,_trailEnabled=false,_trailTimer=null,_activeCursorCfg=null,_mouseX=0,_mouseY=0;
 let filteredList=[],currentPage=1;
 const PER_PAGE=500;
 
@@ -2694,7 +2709,7 @@ function syncUserData(){
   if(!currentUser||currentUser.guest)return;
   clearTimeout(syncTimer);
   syncTimer=setTimeout(async()=>{
-    const data={settings:loadS(),bg:loadBg(),theme:loadTheme(),favs:loadFavs(),recent:loadRecent(),progress:loadProgress()};
+    const data={settings:loadS(),bg:loadBg(),theme:loadTheme(),favs:loadFavs(),recent:loadRecent(),progress:loadProgress(),owned:getOwnedItems(),equipped:getEquippedItems()};
     const body=JSON.stringify({user_id:currentUser.id,data:JSON.stringify(data)});
     try{
       // Check if row exists
@@ -2728,6 +2743,8 @@ async function loadUserData(){
     if(d.favs){localStorage.setItem(userKey(FK),JSON.stringify(d.favs));favs=d.favs;}
     if(d.recent)localStorage.setItem(userKey('adless_recent'),JSON.stringify(d.recent));
     if(d.progress)localStorage.setItem(userKey('adless_progress'),JSON.stringify(d.progress));
+    if(d.owned)saveOwnedItems(d.owned);
+    if(d.equipped)saveEquippedItems(d.equipped);
   }catch(e){console.warn('Load data failed',e);}
   // Sync completed onetime tasks from server so clearing localStorage doesn't reset them
   try{
@@ -2928,6 +2945,8 @@ function lbEnter(){
   loadCustomGameTags();
   // Re-check update banner with user's seen state
   setTimeout(updCheckBanner, 600);
+  // Apply equipped cosmetics
+  setTimeout(applyCosmetics, 800);
   // Check auto-completable tasks
   setTimeout(checkAutoTasks, 1500);
   // Load ads opt-out state
@@ -3294,7 +3313,9 @@ function play(url,title,gameObj){
   }
   // Track recently played
   // Track current game for score submission
-  currentGameTitle=title||"Unknown Game";
+  // Use edited title if available
+  const _editedTitle=_gObj&&gameEdits&&gameEdits[_gObj.id]&&gameEdits[_gObj.id].title?gameEdits[_gObj.id].title:(title||"Unknown Game");
+  currentGameTitle=_editedTitle;
   currentGameObj=_gObj||null;
   currentGameId=currentGameObj?.id||btoa(url||"").slice(0,16);
   if(gameObj)addRecent(gameObj);
@@ -3553,7 +3574,7 @@ function applyCursor(on){const s=loadS();s.sysCursor=on;saveS(s);document.body.c
 function applyBgAnim(on){const s=loadS();s.noBg=on;saveS(s);on?stopBg():(!loadS().noAnim&&startBg());showToast(on?'🌑 Particles off':'✨ Particles on');}
 function applyInvert(on){const s=loadS();s.invert=on;saveS(s);document.body.classList.toggle('inverted',on);showToast(on?'🔄 Inverted':'🔄 Normal');}
 function resetAll(){saveS({});saveTheme('#0a84ff');saveBg({});document.documentElement.style.setProperty('--blue','#0a84ff');document.body.classList.remove('no-anim','sys-cursor','inverted','shelf-mode');['tog-anim','tog-cursor','tog-bg','tog-invert','tog-shelf'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});resetBg();startBg();cardCache.clear();buildList();renderPage();buildColorGrid();showToast('↩️ Reset done');}
-function applyStoredSettings(){const s=loadS(),t=loadTheme(),bg=loadBg();document.documentElement.style.setProperty('--blue',t);if(s.noAnim){document.getElementById('tog-anim').checked=true;document.body.classList.add('no-anim');stopBg();}if(s.sysCursor){document.getElementById('tog-cursor').checked=true;document.body.classList.add('sys-cursor');}if(s.noBg){document.getElementById('tog-bg').checked=true;stopBg();}if(s.invert){document.getElementById('tog-invert').checked=true;document.body.classList.add('inverted');}if(s.shelf){document.getElementById('tog-shelf').checked=true;document.body.classList.add('shelf-mode');}if(bg.v){const l=document.getElementById('bgLayer');l.style.background=bg.v;l.classList.add('on');}}
+function applyStoredSettings(){const s=loadS(),t=loadTheme(),bg=loadBg();document.documentElement.style.setProperty('--blue',t);if(s.noAnim){document.getElementById('tog-anim').checked=true;document.body.classList.add('no-anim');stopBg();}if(s.sysCursor){document.getElementById('tog-cursor').checked=true;document.body.classList.add('sys-cursor');}if(s.noBg){document.getElementById('tog-bg').checked=true;stopBg();}if(s.invert){document.getElementById('tog-invert').checked=true;document.body.classList.add('inverted');}if(s.shelf){document.getElementById('tog-shelf').checked=true;document.body.classList.add('shelf-mode');}if(bg.v){const l=document.getElementById('bgLayer');l.style.background=bg.v;l.classList.add('on');}setTimeout(applyCosmetics,100);}
 // CONFIRM / TOAST
 let _cb=null;
 function askConfirm(title,msg,cb){document.getElementById('conf-title').textContent=title;document.getElementById('conf-msg').textContent=msg;_cb=cb;document.getElementById('confirm').classList.add('on');}
@@ -3567,13 +3588,122 @@ let pts=[],w,h,bgRun=true,bgFr=null;
 function res(){w=canvas.width=innerWidth;h=canvas.height=innerHeight;}res();window.onresize=res;
 class Pt{constructor(){this.x=Math.random()*w;this.y=Math.random()*h;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4;this.r=1+Math.random();}upd(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>w)this.vx*=-1;if(this.y<0||this.y>h)this.vy*=-1;}drw(){ctx.fillStyle='rgba(255,255,255,0.2)';ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,6.28);ctx.fill();}}
 for(let i=0;i<50;i++)pts.push(new Pt());
-function bgAnim(){if(!bgRun)return;ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);for(let i=0;i<pts.length;i++){pts[i].upd();pts[i].drw();for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<85){ctx.strokeStyle=`rgba(255,255,255,${.09-d/600})`;ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke();}}}bgFr=requestAnimationFrame(bgAnim);}
+function bgAnim(){
+  if(!bgRun)return;
+  const tint=typeof _activeBgTint!=='undefined'?_activeBgTint:null;
+  ctx.fillStyle=tint?tint.fill:'#000';
+  ctx.fillRect(0,0,w,h);
+  for(let i=0;i<pts.length;i++){
+    pts[i].upd();
+    ctx.fillStyle=tint?tint.dot:'rgba(255,255,255,0.2)';
+    ctx.beginPath();ctx.arc(pts[i].x,pts[i].y,pts[i].r,0,6.28);ctx.fill();
+    for(let j=i+1;j<pts.length;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<85){
+        const rgb=tint?tint.line.match(/\d+/g).slice(0,3).join(','):'255,255,255';
+        ctx.strokeStyle=`rgba(${rgb},${(.09-d/600).toFixed(3)})`;
+        ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke();
+      }
+    }
+  }
+  bgFr=requestAnimationFrame(bgAnim);
+}
 function stopBg(){bgRun=false;if(bgFr)cancelAnimationFrame(bgFr);ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);}
 function startBg(){if(bgRun)return;bgRun=true;bgAnim();}
 bgAnim();
 // CURSOR
 const cur=document.getElementById('cur');
-window.addEventListener('mousemove',e=>{cur.style.transform=`translate(${e.clientX}px,${e.clientY}px)`;},{passive:true});
+window.addEventListener('mousemove',e=>{cur.style.transform=`translate(${e.clientX}px,${e.clientY}px)`;spawnTrail(e.clientX,e.clientY);},{passive:true});
+
+// ── COSMETICS ────────────────────────────────────────────────────
+// _trailEnabled etc declared at top
+
+const TRAIL_CONFIGS={
+  fx_sparkle:{color:'#ffd60a',shape:'star',size:8,rate:40},
+  fx_fire:   {color:'#ff6600',color2:'#ff0000',shape:'circle',size:10,rate:30},
+  fx_rainbow:{color:'rainbow',shape:'circle',size:8,rate:35},
+  fx_snow:   {color:'#aaddff',shape:'circle',size:6,rate:50},
+  fx_stars:  {color:'#ffffff',shape:'star',size:7,rate:45},
+};
+
+const BG_TINTS={
+  bg_aurora:  {fill:'rgba(0,15,30,1)',  dot:'rgba(61,139,122,0.35)',line:'rgba(45,106,138,0.15)'},
+  bg_galaxy:  {fill:'rgba(13,2,33,1)', dot:'rgba(92,61,153,0.4)', line:'rgba(45,27,105,0.2)'},
+  bg_neon:    {fill:'rgba(10,0,21,1)', dot:'rgba(153,0,255,0.4)', line:'rgba(61,0,96,0.2)'},
+  bg_inferno: {fill:'rgba(26,0,0,1)',  dot:'rgba(255,102,0,0.4)', line:'rgba(122,21,0,0.2)'},
+  bg_ocean:   {fill:'rgba(0,13,26,1)', dot:'rgba(0,112,204,0.4)', line:'rgba(0,51,102,0.2)'},
+  bg_solar:   {fill:'rgba(26,10,0,1)', dot:'rgba(255,170,0,0.4)', line:'rgba(122,51,0,0.2)'},
+  bg_forest:  {fill:'rgba(1,10,2,1)',  dot:'rgba(40,122,48,0.4)', line:'rgba(20,61,24,0.2)'},
+  bg_cyberpunk:{fill:'rgba(10,0,21,1)',dot:'rgba(255,0,128,0.4)', line:'rgba(0,102,102,0.2)'},
+  bg_cherry:  {fill:'rgba(26,0,16,1)', dot:'rgba(255,105,180,0.4)',line:'rgba(122,0,77,0.2)'},
+  bg_arctic:  {fill:'rgba(0,20,41,1)', dot:'rgba(51,153,204,0.4)',line:'rgba(0,61,122,0.2)'},
+  bg_lava:    {fill:'rgba(26,5,0,1)',  dot:'rgba(255,140,0,0.4)', line:'rgba(122,38,0,0.2)'},
+  bg_void:    {fill:'rgba(0,0,0,1)',   dot:'rgba(30,0,30,0.3)',   line:'rgba(15,0,15,0.1)'},
+};
+
+// _activeBgTint declared at top
+
+function applyCosmetics(){
+  const eq=getEquippedItems();
+  // BG tint
+  _activeBgTint=eq.bg?BG_TINTS[eq.bg]||null:null;
+  // Cursor trail
+  _trailEnabled=false;
+  if(_trailTimer){clearInterval(_trailTimer);_trailTimer=null;}
+  if(eq.cursor&&TRAIL_CONFIGS[eq.cursor]){
+    _trailEnabled=true;
+    _activeCursorCfg=TRAIL_CONFIGS[eq.cursor];
+  }
+  // Badge frame - apply to avatars
+  applyAvatarFrame(eq.badge||null);
+}
+
+// _activeCursorCfg, _mouseX/Y declared at top
+
+function spawnTrail(x,y){
+  _mouseX=x;_mouseY=y;
+  if(!_trailEnabled||!_activeCursorCfg)return;
+  const cfg=_activeCursorCfg;
+  // Rate limiting
+  if(!spawnTrail._last||Date.now()-spawnTrail._last>cfg.rate){
+    spawnTrail._last=Date.now();
+    const p=document.createElement('div');
+    p.className='trail-particle';
+    let color=cfg.color;
+    if(color==='rainbow'){const h=Math.floor(Math.random()*360);color=`hsl(${h},100%,65%)`;}
+    else if(cfg.color2){color=Math.random()<.5?cfg.color:cfg.color2;}
+    const size=(cfg.size||8)*(0.5+Math.random()*0.8);
+    if(cfg.shape==='star'){
+      p.textContent='✦';
+      p.style.cssText=`left:${x}px;top:${y}px;font-size:${size*2}px;color:${color};animation-duration:${0.4+Math.random()*0.4}s;`;
+    } else {
+      p.style.cssText=`left:${x}px;top:${y}px;width:${size}px;height:${size}px;background:${color};animation-duration:${0.4+Math.random()*0.4}s;`;
+    }
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),800);
+  }
+}
+
+function applyAvatarFrame(frameId){
+  const frames=['av-frame-gold','av-frame-rainbow','av-frame-neon','av-frame-fire'];
+  // Apply to user chip avatar and topbar avatar
+  const targets=[
+    document.getElementById('uc-av'),
+    document.getElementById('topbar-av'),
+  ];
+  targets.forEach(el=>{
+    if(!el)return;
+    const img=el.querySelector('img')||el;
+    frames.forEach(f=>img.classList.remove(f));
+    if(frameId){
+      const cls='av-frame-'+frameId.replace('frame_','');
+      if(frames.includes(cls))img.classList.add(cls);
+    }
+  });
+}
+
+// bgAnim tint handling is built into the main bgAnim above
+// ── END COSMETICS ─────────────────────────────────────────────────
 document.addEventListener('mouseover',e=>{if(e.target.closest('.rand-btn,.pbtn.rand'))document.body.classList.add('r-hover');else if(e.target.closest('.card,.nav,button,input,.ep-item,.tog,.bg-dot,.bg-grad,.color-dot'))document.body.classList.add('g-hover');});
 document.addEventListener('mouseout',()=>document.body.classList.remove('g-hover','r-hover'));
 // ── SPOTLIGHT (PUBLIC) ───────────────────────────────────────────
@@ -5107,7 +5237,7 @@ async function submitBugReport(){
     await fetch(SB_URL+'/rest/v1/reports',{
       method:'POST',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body:JSON.stringify({reporter_id:currentUser.id,reporter_username:currentUser.username,type:'bug',target_type:'site',reason:'Bug Report',details:`[${sev.toUpperCase()}] ${desc}`,status:'open'})
+      body:JSON.stringify({reporter_id:currentUser.id,reporter_name:currentUser.username,type:'bug',target_type:'site',reason:'Bug Report',details:`[${sev.toUpperCase()}] ${desc}`,status:'open'})
     });
     document.getElementById('bug-report-desc').value='';
     document.getElementById('bug-modal').style.display='none';
@@ -6343,7 +6473,7 @@ lbInitAvatars();
 bootStep('Loading games…',20);
 buildList();renderPage();updateStats();
 bootStep('Fetching game library…',40);
-loadZones();loadHydraGames();loadSpotlightPublic();loadSiteSettings();dbgLoadFixes();updLoad();loadGameEdits();renderAdBanners();initAdsBanner();setTimeout(loadAllAds,500);
+loadZones();loadHydraGames();loadSpotlightPublic();loadSiteSettings();dbgLoadFixes();dbgLoad();updLoad();loadGameEdits();renderAdBanners();initAdsBanner();setTimeout(loadAllAds,500);
 setTimeout(function(){bootStep('Ready!',100);setTimeout(bootDone,400);},3500);
 (async()=>{
   const sess=localStorage.getItem('adless_session');
@@ -8870,7 +9000,6 @@ function dbgRefreshUI() {
 }
 
 function dbgRetest(id) {
-  // Remove from results and load it
   const entry = dbgResults[id];
   if (!entry) return;
   delete dbgResults[id];
@@ -8880,9 +9009,10 @@ function dbgRetest(id) {
   dbgCurrent = game;
   dbgLoadIntoFrame(game);
   const player = document.getElementById('dbg-player');
-  if (player) player.style.display = 'flex';
+  if (player) { player.style.display = 'flex'; player.scrollIntoView({behavior:'smooth', block:'nearest'}); }
   const btn = document.getElementById('dbg-start-btn');
   if (btn) btn.textContent = '⏭ Next Game';
+  invalidateCard(id); buildList(); renderPage();
   dbgRefreshUI();
 }
 
@@ -10407,7 +10537,7 @@ async function buyItem(tab,itemId,price){
     currentUser.tokens=newBal;
     const tokEl=document.getElementById('tok-balance-display');if(tokEl)tokEl.textContent=newBal;
     const shopEl=document.getElementById('shop-balance-display');if(shopEl)shopEl.textContent=newBal;
-    const owned=getOwnedItems();owned.push(itemId);saveOwnedItems(owned);
+    const owned=getOwnedItems();owned.push(itemId);saveOwnedItems(owned);syncUserData();
     showToast('🛍️ Item purchased!');
     if(owned.length===1)grantBadgeIfMissing('shopaholic');
     if(owned.length>=5)grantBadgeIfMissing('collector');
@@ -10421,6 +10551,7 @@ function equipItem(tab,itemId,silent=false){
   const wasEquipped=equipped[tab]===itemId;
   if(wasEquipped){delete equipped[tab];}else{equipped[tab]=itemId;}
   saveEquippedItems(equipped);
+  syncUserData();
   if(tab==='bg'){
     const item=SHOP_ITEMS.bg.find(i=>i.id===itemId);
     if(!wasEquipped&&item){
@@ -10433,6 +10564,7 @@ function equipItem(tab,itemId,silent=false){
       currentUser.profile_bg=null;
     }
   }
+  applyCosmetics();
   if(!silent)showToast(wasEquipped?'Unequipped':'✅ Equipped!');
   renderShopGrid(tab);
 }
