@@ -1811,6 +1811,19 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <div class="s-row"><div><div class="s-lbl">Reset All Settings</div><div class="s-desc">Restore defaults</div></div><button class="s-danger" onclick="askConfirm('Reset all settings?','Display, theme and background will be reset.',resetAll)">↩️ Reset</button></div>
       <div class="s-row"><div><div class="s-lbl" style="color:#ff375f">⚠️ Delete Account</div><div class="s-desc">Permanently delete your account and all data. Cannot be undone.</div></div><button class="s-danger" onclick="promptDeleteAccount()" style="background:rgba(255,55,95,.15);border-color:rgba(255,55,95,.3);color:#ff375f">🗑️ Delete</button></div>
     </div>
+    <div class="s-section" id="settings-debug-section">
+      <div class="s-sec">🧪 Game Status Badges</div>
+      <div class="s-row">
+        <div>
+          <div class="s-lbl">Show Working/Broken Labels</div>
+          <div class="s-desc">Display ✅/❌ badges on game cards based on tester results</div>
+        </div>
+        <label class="tog">
+          <input type="checkbox" id="tog-debug-badges" onchange="toggleDebugBadges(this.checked)">
+          <span class="tog-sl"></span>
+        </label>
+      </div>
+    </div>
     <div class="s-section" id="settings-ads-section">
       <div class="s-sec">📢 Ads</div>
       <div class="s-row">
@@ -3038,7 +3051,8 @@ function buildCardHtml(g){
   const saveLabel=SAVES_PROGRESS.has(g.id)?'<div class="save-badge">💾 Saves</div>':'';
   const sid=g.id.toString().replace(/"/g,'&quot;');
   const surl=g.url.replace(/"/g,'&quot;');
-  const dbgEntry=dbgResults&&dbgResults[g.id];
+  const _showBadges=loadS().showDebugBadges;
+  const dbgEntry=_showBadges&&dbgResults&&dbgResults[g.id];
   const dbgBadge=dbgEntry&&dbgEntry.status==='working'?'<div class="dbg-badge working">✅ Works</div>':dbgEntry&&dbgEntry.status==='broken'?'<div class="dbg-badge broken">❌ Broken</div>':'';
   const editBtn=isOwner()?`<button class="card-edit-btn" onclick="event.stopPropagation();openGameEdit('${sid}')" title="Edit game">✏️</button>`:'';
   return`<div class="card" data-url="${surl}" data-title="${stitle}" onclick="cardClick(this)">${feat}${saveLabel}${dbgBadge}${editBtn}<div class="fav-star FAV_PLACEHOLDER" data-id="${sid}" onclick="event.stopPropagation();favClick(this)">★</div><img src="${g.img.replace(/"/g,'&quot;')}" loading="lazy" onerror="this.style.opacity='.1'"><div class="info"><div class="title">${stitle}</div><div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:5px">${tags}</div></div></div>`;
@@ -3521,7 +3535,7 @@ document.querySelectorAll('.nav').forEach(btn=>{
       else if(btn.dataset.view==='admin-view'){switchView('admin-view');loadAdminPanel();}
       else if(btn.dataset.view==='profile-view'){switchView('profile-view');loadProfilePage();}
       else if(btn.dataset.view==='people-view'){switchView('people-view');loadPeopleView();}
-      else{switchView(btn.dataset.view);if(btn.dataset.view==='settings-view'){buildColorGrid();buildBgSwatches();buildBgGradients();buildCloakGrid();updateStats();updateAvatarDisplay();loadPfpGallery();loadCurrentEmail();loadGalleryForUser();loadCurrentBio();
+      else{switchView(btn.dataset.view);if(btn.dataset.view==='settings-view'){buildColorGrid();buildBgSwatches();buildBgGradients();buildCloakGrid();updateStats();updateAvatarDisplay();loadPfpGallery();loadCurrentEmail();loadGalleryForUser();loadCurrentBio();initDebugBadgesToggle();
         const accSec=document.getElementById('account-section');
         if(accSec)accSec.style.display=(!currentUser||currentUser.guest)?'none':'block';
         loadAccountCooldowns();
@@ -3571,6 +3585,8 @@ function resetBg(){const l=document.getElementById('bgLayer');l.style.background
 function applyShelf(on){const s=loadS();s.shelf=on;saveS(s);document.body.classList.toggle('shelf-mode',on);cardCache.clear();buildList();renderPage();showToast(on?'🖼 Shelf mode on':'📋 Normal mode on');}
 function applyAnim(on){const s=loadS();s.noAnim=on;saveS(s);document.body.classList.toggle('no-anim',on);on?stopBg():(!loadS().noBg&&startBg());showToast(on?'⏸ Animations off':'▶ Animations on');}
 function applyCursor(on){const s=loadS();s.sysCursor=on;saveS(s);document.body.classList.toggle('sys-cursor',on);showToast(on?'🖱 System cursor':'✨ Custom cursor');}
+function toggleDebugBadges(on){const s=loadS();s.showDebugBadges=on;saveS(s);cardCache.clear();buildList();renderPage();showToast(on?'🧪 Game badges on':'Game badges off');}
+function initDebugBadgesToggle(){const s=loadS();const el=document.getElementById('tog-debug-badges');if(el)el.checked=!!s.showDebugBadges;}
 function applyBgAnim(on){const s=loadS();s.noBg=on;saveS(s);on?stopBg():(!loadS().noAnim&&startBg());showToast(on?'🌑 Particles off':'✨ Particles on');}
 function applyInvert(on){const s=loadS();s.invert=on;saveS(s);document.body.classList.toggle('inverted',on);showToast(on?'🔄 Inverted':'🔄 Normal');}
 function resetAll(){saveS({});saveTheme('#0a84ff');saveBg({});document.documentElement.style.setProperty('--blue','#0a84ff');document.body.classList.remove('no-anim','sys-cursor','inverted','shelf-mode');['tog-anim','tog-cursor','tog-bg','tog-invert','tog-shelf'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});resetBg();startBg();cardCache.clear();buildList();renderPage();buildColorGrid();showToast('↩️ Reset done');}
@@ -8959,10 +8975,10 @@ function dbgRefreshUI() {
     const color = r.status === 'working' ? '#30d158' : r.status === 'broken' ? '#ff375f' : 'var(--text2)';
     const hasFix = !!gameFixOverrides[id];
     const fixBadge = hasFix ? `<span style="font-size:10px;color:#ffd60a;background:rgba(255,214,10,.12);border:1px solid rgba(255,214,10,.25);padding:2px 6px;border-radius:5px;flex-shrink:0">🔧 Fixed</span>` : '';
-    // On broken tab: show fix panel open by default; on all tab: collapsible
     const isBrokenTab = dbgCurrentTab === 'broken';
-    const fixPanelDisplay = (r.status === 'broken' && isBrokenTab) ? 'flex' : 'none';
-    const fixBtn = r.status === 'broken' && !isBrokenTab
+    // Always collapsed - opened on demand to avoid spawning hundreds of iframes
+    const fixPanelDisplay = 'none';
+    const fixBtn = r.status === 'broken'
       ? `<button onclick="dbgOpenFix('${id}')" style="background:rgba(255,159,10,.12);border:1px solid rgba(255,159,10,.3);color:#ff9f0a;border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;flex-shrink:0">🔧 Fix</button>`
       : '';
     const testerTag = r.tester ? `<span style="font-size:10px;color:var(--text2);flex-shrink:0">by ${r.tester}</span>` : '';
@@ -8985,10 +9001,7 @@ function dbgRefreshUI() {
           ${hasFix ? `<button onclick="dbgRemoveFix('${id}')" style="background:rgba(255,55,95,.12);border:1px solid rgba(255,55,95,.25);color:#ff375f;border-radius:6px;padding:6px 10px;font-size:11px;cursor:pointer;white-space:nowrap">✕ Remove Fix</button>` : ''}
         </div>
         <div id="dbg-fix-preview-${id}" style="display:none;flex-direction:column;gap:6px">
-          <iframe id="dbg-fix-frame-${id}"
-            style="width:100%;height:260px;border-radius:8px;border:1px solid var(--border);background:#000"
-            allow="autoplay *; gamepad *; fullscreen *; cross-origin-isolated *"
-            allowfullscreen></iframe>
+          <!-- iframe injected dynamically by dbgTestFix to avoid mass iframe creation -->
           <div style="display:flex;gap:6px">
             <button onclick="dbgConfirmFix('${id}')" style="flex:1;background:rgba(48,209,88,.15);border:1px solid rgba(48,209,88,.35);color:#30d158;padding:8px;border-radius:8px;cursor:pointer;font-size:12px">✅ Works — Save & Mark Working</button>
             <button onclick="dbgCloseFix('${id}')" style="background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text2);padding:8px 12px;border-radius:8px;cursor:pointer;font-size:12px">✕ Close</button>
@@ -9102,13 +9115,23 @@ function dbgTestFix(id) {
   if (!input || !input.value.trim()) { showToast('Enter a URL first.'); return; }
   const url = input.value.trim();
   const preview = document.getElementById('dbg-fix-preview-' + id);
-  const frame   = document.getElementById('dbg-fix-frame-' + id);
-  if (!preview || !frame) return;
-  preview.style.display = 'flex';
+  if (!preview) return;
 
-  // Load using same CDN-aware logic as main player
+  // Dynamically create iframe so we don't pre-spawn hundreds of them in the list
+  let frame = document.getElementById('dbg-fix-frame-' + id);
+  if (!frame) {
+    frame = document.createElement('iframe');
+    frame.id = 'dbg-fix-frame-' + id;
+    frame.style.cssText = 'width:100%;height:260px;border-radius:8px;border:1px solid var(--border);background:#000;margin-bottom:6px';
+    frame.allow = 'autoplay *; gamepad *; fullscreen *; cross-origin-isolated *';
+    frame.allowFullscreen = true;
+    preview.insertBefore(frame, preview.firstChild);
+  }
+
+  preview.style.display = 'flex';
   frame.removeAttribute('srcdoc');
   frame.src = 'about:blank';
+
   const isZone = url.includes('rawcdn.githack.com') || (url.includes('cdn.jsdelivr.net/gh/') && url.endsWith('.html'));
   if (isZone) {
     fetch(url)
@@ -9127,7 +9150,7 @@ function dbgTestFix(id) {
 function dbgCloseFix(id) {
   const preview = document.getElementById('dbg-fix-preview-' + id);
   const frame   = document.getElementById('dbg-fix-frame-' + id);
-  if (frame) { frame.src = 'about:blank'; frame.removeAttribute('srcdoc'); setTimeout(() => { frame.src = ''; }, 50); }
+  if (frame) { frame.src = 'about:blank'; frame.removeAttribute('srcdoc'); setTimeout(() => frame.remove(), 100); }
   if (preview) preview.style.display = 'none';
 }
 
