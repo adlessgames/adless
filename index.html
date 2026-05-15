@@ -54,7 +54,7 @@ body,html{margin:0;padding:0;width:100vw;height:100vh;overflow:hidden;background
 #bgLayer{position:fixed;inset:0;z-index:0;pointer-events:none;background-size:cover;background-position:center;opacity:0;transition:opacity .5s;}
 #bgLayer.on{opacity:1;}
 #cur{width:12px;height:12px;background:#fff;border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999999;mix-blend-mode:difference;will-change:transform;}
-.trail-particle{position:fixed;pointer-events:none;z-index:9999998;border-radius:50%;transform:translate(-50%,-50%);animation:trailFade .6s ease-out forwards;}
+.trl-particle{position:fixed;pointer-events:none;z-index:9999998;border-radius:50%;transform:translate(-50%,-50%);animation:trailFade .6s ease-out forwards;}
 @keyframes trailFade{0%{opacity:1;transform:translate(-50%,-50%) scale(1);}100%{opacity:0;transform:translate(-50%,-50%) scale(0);}}
 .av-frame-gold{outline:2px solid #ffd60a;outline-offset:2px;box-shadow:0 0 8px rgba(255,214,10,.6);}
 .av-frame-rainbow{outline:2px solid transparent;outline-offset:2px;box-shadow:0 0 8px rgba(255,100,255,.6);animation:rainbowFrame 2s linear infinite;}
@@ -2158,8 +2158,8 @@ const BUILTIN=[
   {id:'b-8',title:'Android Emulator',cat:'emulator',img:'https://fabrikbrands.com/wp-content/uploads/Android-Logo-History-1.png',url:'https://appetize.io/embed/dprul2v3lnp2p2okkylszo6tc4?appearance=light&centered=both&channel-name=production&device=pixel7&deviceColor=black&launchUrl=exp://u.expo.dev/933fd9c0-1666-11e7-afca-d980795c5824%253Fruntime-version%3Dexposdk%253A48.0.0&orientation=landscape&params=%7B&snack=fWdRX7Kw7&snack-channel=ZFbeKoK6f2'},
   {id:'b-7',title:'iOS Emulator',cat:'emulator',img:'https://static.daktilo.com/sites/1689/uploads/2025/04/23/ios-1721717446446-2x-1745411438.png',url:'https://appetize.io/embed/8bnmakzrptf1hv9dq7v7bnteem?autoplay=false&debug=true&device=iphone8+&deviceColor=black&embed=true&orientation=portrait&params=%7B'},
   {id:'b-6',title:'Kahoot Bots',cat:'apps',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Kahoot_Logo.svg/960px-Kahoot_Logo.svg.png',url:'https://kahootbot.net/'},
-  {id:'b-5',title:'Gemini AI',cat:'ai',img:'https://stage.maaal.com/storage/uploads/photos/news/2026-01/1854102090075582.png',url:'https://gemini.google.com/app'},
-  {id:'b-4',title:'Claude AI',cat:'ai',img:'https://sm.pcmag.com/pcmag_me/review/c/claude/claude_e17j.jpg',url:'https://claude.ai/new'},
+  {id:'b-5',title:'Gemini AI',cat:'action',img:'https://stage.maaal.com/storage/uploads/photos/news/2026-01/1854102090075582.png',url:'https://gemini.google.com/app'},
+  {id:'b-4',title:'Claude AI',cat:'Homemade',img:'https://sm.pcmag.com/pcmag_me/review/c/claude/claude_e17j.jpg',url:'https://claude.ai/new'},
   {id:'b-3',title:'Deep AI',cat:'ai',img:'https://www.fahimai.com/wp-content/uploads/2025/11/Fahim-AI-7-48.png',url:'https://deepai.org/'},
   {id:'b-2',title:'DeepSeek AI',cat:'ai',img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTv42AI3aFfhB6SOcRe9oTl5DxYo6JCb9Lfg&s',url:'https://chat.deepseek.com/'},
   {id:'b-1',title:'ChatGPT AI',cat:'ai',img:'https://threatconnect.com/wp-content/uploads/2025/02/ChatGpt-logo.png',url:'https://chatgpt.com/'},
