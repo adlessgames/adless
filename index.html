@@ -17,7 +17,7 @@
   gtag("config", "G-MNR0G49CZP");
 </script>
 <link id="site-favicon" rel="icon" href="data:,">
-<title>Adless OS</title>
+<title>Adless Games</title>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 /* Block AdSense auto-ads from injecting into game grid and cards */
@@ -96,6 +96,34 @@ header input{background:rgba(255,255,255,.08);color:#fff;border:none;border-radi
 .tag-builtin{color:#5ac8fa;background:rgba(90,200,250,.12);}
 .tag-ai{color:#bf5af2;background:rgba(191,90,242,.12);}
 .tag-apps{color:#ff9f0a;background:rgba(255,159,10,.12);}
+/* ── AdlessWorlds ── */
+.we-asset-btn{padding:7px 10px;border-radius:8px;font-size:12px;font-weight:600;color:var(--text2);cursor:none;transition:.15s;margin-bottom:3px;border:1px solid transparent;}
+.we-asset-btn:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.1);}
+.world-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:transform .15s,border-color .15s;cursor:none;}
+.world-card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.25);}
+.world-card-thumb{width:100%;height:120px;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;font-size:48px;}
+.world-card-info{padding:10px 12px 12px;}
+.world-status-badge{display:inline-block;font-size:9px;font-weight:800;text-transform:uppercase;padding:2px 7px;border-radius:5px;margin-bottom:4px;}
+.wsb-pending{background:rgba(255,159,10,.15);color:#ff9f0a;}
+.wsb-approved{background:rgba(48,209,88,.15);color:#30d158;}
+.wsb-rejected{background:rgba(255,55,95,.15);color:#ff375f;}
+.wsb-unpublished{background:rgba(255,255,255,.08);color:var(--text2);}
+.wr-card{background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;gap:14px;align-items:flex-start;}
+.wr-card-thumb{width:90px;height:60px;border-radius:8px;background:linear-gradient(135deg,#1a1a2e,#16213e);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:32px;overflow:hidden;}
+.we-prop-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.we-prop-label{font-size:11px;color:var(--text2);flex-shrink:0;width:65px;}
+.we-prop-input{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:6px;color:#fff;font-size:11px;padding:4px 7px;width:100%;outline:none;}
+.we-prop-input:focus{border-color:var(--blue);}
+.wp-comment-item{background:rgba(255,255,255,.04);border-radius:10px;padding:8px 10px;}
+.my-world-row{background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px;}
+.my-world-thumb{width:80px;height:54px;border-radius:8px;background:linear-gradient(135deg,#1a1a2e,#16213e);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px;overflow:hidden;}
+.worlds-tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--text2);font-size:13px;font-weight:700;padding:10px 18px;cursor:none;transition:.15s;margin-bottom:-1px;border-radius:0;}
+.worlds-tab:hover{color:#fff;}
+.worlds-tab.active{color:#fff;border-bottom-color:var(--blue);}
+.shop-card{background:var(--glass);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform .15s;}
+.shop-card:hover{transform:translateY(-2px);}
+.shop-card-preview{width:100%;height:120px;background:#111;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text2);overflow:hidden;}
+.shop-card-info{padding:10px 12px 12px;}
 .tag-movie{color:#ff9f0a;background:rgba(255,159,10,.12);}
 .tag-show{color:#bf5af2;background:rgba(191,90,242,.12);}
 .tag-fnf{color:#ff375f;background:rgba(255,55,95,.12);}
@@ -477,7 +505,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 .cloak-btn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px 6px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;transition:.15s;cursor:none;color:#fff;}
 .cloak-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);transform:translateY(-2px);}
 .cloak-btn.active{border-color:var(--blue);background:rgba(10,132,255,.15);}
-.cloak-btn img{width:24px;height:24px;object-fit:contain;border-radius:4px;}
+.cloak-btn img{width:28px;height:28px;object-fit:contain;border-radius:6px;image-rendering:auto;}
 .cloak-btn span{font-size:10px;font-weight:700;text-align:center;line-height:1.2;color:var(--text2);}
 /* ── LOGIN SCREEN ── */
 #login-screen{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:3000000;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px);}
@@ -689,6 +717,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       <div id="topbar-user-btn" style="display:none;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:6px 12px 6px 6px;cursor:none" onclick="switchView('profile-view');loadProfilePage()">
         <span id="topbar-av" style="font-size:20px">👤</span>
         <span id="topbar-name" style="font-size:12px;font-weight:700;color:#fff;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+        <span id="topbar-tokens" style="font-size:11px;font-weight:700;color:#ffd60a;background:rgba(255,214,10,.1);border-radius:10px;padding:2px 7px">🪙 —</span>
       </div>
     </div>
   </div>
@@ -721,7 +750,10 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <div class="nav active" data-view="games-view">🎮 Games</div>
     <div class="nav" data-view="movies-view">🎬 Movies</div>
     <div class="nav" data-view="shows-view">📺 Shows &amp; Anime</div>
+    <div class="nav" data-view="worlds-view">🌍 Worlds</div>
+    <div class="nav" data-view="worlds-studio-view">🔨 My Worlds</div>
     <div class="nav" data-view="chat-view">💬 Live Chat</div>
+    <div class="nav" data-view="bugs-view" style="color:#ff453a;background:rgba(255,69,58,.1);border:1px solid rgba(255,69,58,.3);font-weight:700">🐛 Adless Bugs <span style="background:#ff453a;color:#fff;font-size:9px;font-weight:800;padding:1px 6px;border-radius:8px;margin-left:2px;vertical-align:middle">REPORT</span></div>
     <div class="nav" data-view="friends-view">👥 Friends <span id="group-unread-badge" style="display:none;background:#ff375f;color:#fff;font-size:10px;font-weight:800;padding:1px 6px;border-radius:10px;margin-left:2px"></span></div>
     <div class="nav" data-view="leaderboard-view">🏆 Leaderboard</div>
     <div class="nav" data-view="badges-view">🎖️ Badges</div>
@@ -733,12 +765,15 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
     <div class="nav" data-view="people-view">🔍 Find People</div>
     <div class="sec-label">Info</div>
     <div class="nav" data-view="about-view">ℹ️ About</div>
+    <div class="nav" data-view="contact-view">📬 Contact</div>
+    <div class="nav" data-view="blog-view">📰 Blog</div>
     <div class="nav" data-view="dmca-view">⚖️ DMCA</div>
     <div class="nav" data-action="random" style="color:#bf5af2;background:rgba(191,90,242,.08);border:1px solid rgba(191,90,242,.2)">🎲 Random Game</div>
     <div class="nav discord-btn" onclick="window.open('https://discord.gg/gAe83DUFNT','_blank')">🎮 Join Discord</div>
     <div class="nav owner-btn" id="owner-nav" data-view="owner-view" style="display:none">👑 Owner Panel</div>
     <div class="nav" id="tester-nav" data-view="tester-view" style="display:none;color:#ffd60a;background:rgba(255,214,10,.08);border:1px solid rgba(255,214,10,.2)">🧪 Tester Panel</div>
     <div class="nav" id="admin-nav" data-view="admin-view" style="display:none;color:#30d158;background:rgba(48,209,88,.08);border:1px solid rgba(48,209,88,.2)">🛡️ WinterAG Panel</div>
+    <div class="nav" id="worlds-admin-nav" data-view="worlds-review-view" style="display:none;color:#ff9f0a;background:rgba(255,159,10,.08);border:1px solid rgba(255,159,10,.2)">🌍 Worlds Review <span id="worlds-pending-badge" style="display:none;background:#ff375f;color:#fff;font-size:10px;font-weight:800;padding:1px 6px;border-radius:10px;margin-left:2px"></span></div>
     <div id="game-filters">
       <div class="sec-label">Categories</div>
       <div class="nav" data-cat="all">🏠 All Games</div>
@@ -1629,6 +1664,33 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       </div>
     </div>
 
+    <!-- Watch Ad for Tokens -->
+    <div class="s-section">
+      <div class="s-sec">📺 Watch Ads for Tokens</div>
+      <div class="s-desc" style="margin-bottom:14px">Watch a short video ad to earn tokens. Rewards grow with each ad you watch today!</div>
+      <!-- Reward ladder -->
+      <div id="tok-ad-ladder" style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap"></div>
+      <!-- Watch button -->
+      <div style="text-align:center">
+        <div id="tok-ad-status" style="font-size:12px;color:var(--text2);margin-bottom:10px"></div>
+        <button id="tok-watch-btn" class="lb-btn" style="width:auto;padding:12px 32px;font-size:15px;font-weight:800" onclick="watchAdForTokens()">
+          📺 Watch Ad &nbsp;→&nbsp; <span id="tok-next-reward">30</span> 🪙
+        </button>
+        <div style="font-size:10px;color:var(--text2);margin-top:8px" id="tok-daily-limit"></div>
+      </div>
+      <!-- Ad container (hidden until triggered) -->
+      <div id="tok-ad-container" style="display:none;margin-top:16px;border-radius:12px;overflow:hidden;background:#000;min-height:200px;position:relative">
+        <div id="tok-ad-inner" style="width:100%;height:250px"></div>
+        <div id="tok-ad-overlay" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.85)">
+          <div style="font-size:32px;margin-bottom:8px">⏳</div>
+          <div style="font-weight:700;font-size:14px">Ad loading…</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:4px">Please wait for the ad to complete</div>
+          <div id="tok-ad-timer" style="font-size:28px;font-weight:900;color:#ff9f0a;margin-top:12px">30</div>
+          <button id="tok-ad-collect-btn" style="display:none;margin-top:14px" class="lb-btn" onclick="collectAdTokens()">✅ Collect Tokens</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Referral -->
     <div class="s-section">
       <div class="s-sec">🔗 Refer a Friend</div>
@@ -1848,53 +1910,77 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
   </div>
 
 <!-- ABOUT VIEW -->
-  <div id="about-view" class="view" style="max-width:700px;margin:0 auto">
-    <header><h1>ℹ️ About Adless OS</h1></header>
+  <div id="about-view" class="view" style="max-width:760px;margin:0 auto">
+    <header><h1>ℹ️ About Adless Games</h1></header>
+
+    <!-- Hero -->
+    <div style="background:linear-gradient(135deg,rgba(10,132,255,.15),rgba(191,90,242,.1));border:1px solid rgba(10,132,255,.2);border-radius:18px;padding:28px;margin-bottom:18px;text-align:center">
+      <div style="font-size:48px;margin-bottom:12px">🎮</div>
+      <div style="font-size:24px;font-weight:900;margin-bottom:10px">Welcome to Adless Games</div>
+      <p style="font-size:14px;color:var(--text2);line-height:1.9;max-width:560px;margin:0 auto">
+        Adless Games is a free browser-based gaming platform built for students, teens, and casual players who want instant access to hundreds of games — no downloads, no installs, no paywalls. Just click and play.
+      </p>
+    </div>
+
     <div class="s-section">
-      <div class="stat-box" style="margin-bottom:16px">
-        <div style="font-size:32px;margin-bottom:10px">🛡️</div>
-        <div style="font-size:18px;font-weight:800;margin-bottom:8px">What is Adless OS?</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          Adless OS is a free, community-driven entertainment hub built for students and casual users who want access to games, movies, and shows without intrusive advertisements. We believe entertainment should be accessible to everyone, regardless of their ability to pay.
+      <div class="stat-box" style="margin-bottom:14px">
+        <div style="font-size:16px;font-weight:800;margin-bottom:8px">🕹️ What Is Adless Games?</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.9;margin:0">
+          Adless Games is an independent, community-driven entertainment platform launched in 2024. We curate and host hundreds of browser-based games across every genre — action, puzzle, platformer, adventure, sports, and more — all playable instantly in your browser without any account required. Beyond games, Adless Games features a live community chat, friend system, leaderboards, badge achievements, a token reward system, and AdlessWorlds: our very own Roblox-style user-generated game world builder.
         </p>
       </div>
-      <div class="stat-box" style="margin-bottom:16px">
-        <div style="font-size:18px;font-weight:800;margin-bottom:8px">🌍 Where are we from?</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          Adless OS is an independent project developed in Argentina 🇦🇷. This is a personal, non-commercial project created by a hobbyist developer with no corporate backing, no venture funding, and no profit motive. All content is aggregated from publicly available sources on the internet for educational and entertainment purposes.
+
+      <div class="stat-box" style="margin-bottom:14px">
+        <div style="font-size:16px;font-weight:800;margin-bottom:8px">🌟 What Makes Us Different?</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.9;margin:0 0 10px">
+          Unlike other free gaming sites, Adless Games is built around the community. Every feature — from the token system to the world builder — is designed to keep players engaged and rewarded. Here's what sets us apart:
         </p>
-      </div>
-      <div class="stat-box" style="margin-bottom:16px">
-        <div style="font-size:18px;font-weight:800;margin-bottom:8px">🎮 What do we offer?</div>
-        <ul style="font-size:13px;color:var(--text2);line-height:2;margin:0;padding-left:18px">
-          <li>250+ browser-based games from publicly available sources</li>
-          <li>Movies and TV shows for educational and personal viewing</li>
-          <li>A live community chat and social features</li>
-          <li>Leaderboards and a badge achievement system</li>
-          <li>Zero mandatory ads for registered members</li>
-          <li>Fully free — no subscriptions, no paywalls</li>
+        <ul style="font-size:13px;color:var(--text2);line-height:2.2;margin:0;padding-left:18px">
+          <li><strong style="color:var(--text)">500+ games</strong> — one of the largest free browser game libraries online</li>
+          <li><strong style="color:var(--text)">AdlessWorlds</strong> — build your own 3D worlds and share them with the community</li>
+          <li><strong style="color:var(--text)">Token rewards</strong> — watch ads, complete tasks, and earn tokens to spend in our shop</li>
+          <li><strong style="color:var(--text)">Live community</strong> — real-time chat, friend system, and group messaging</li>
+          <li><strong style="color:var(--text)">Leaderboards & badges</strong> — compete and show off your achievements</li>
+          <li><strong style="color:var(--text)">Tab cloaking</strong> — disguise your browser tab for privacy at school or work</li>
+          <li><strong style="color:var(--text)">Completely free</strong> — no subscriptions, no paywalls, no credit card ever required</li>
         </ul>
       </div>
-      <div class="stat-box" style="margin-bottom:16px">
-        <div style="font-size:18px;font-weight:800;margin-bottom:8px">📬 Contact</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          For any inquiries, DMCA notices, or general questions, please reach out to us at:<br>
-          <a href="/cdn-cgi/l/email-protection#770f4000011a18051237101a161e1b5914181a" style="color:var(--blue);font-weight:700"><span class="__cf_email__" data-cfemail="532b6424253e3c213613343e323a3f7d303c3e">[email&#160;protected]</span></a>
+
+      <div class="stat-box" style="margin-bottom:14px">
+        <div style="font-size:16px;font-weight:800;margin-bottom:8px">👨‍💻 Who Built This?</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.9;margin:0">
+          Adless Games is an independent solo project built and maintained by a student developer passionate about making the web more fun and accessible. There is no corporate backing, no investor funding, and no profit motive. The platform is kept alive through minimal advertising revenue, community donations via Ko-fi, and a whole lot of passion. Every feature you see was hand-coded by one person.
         </p>
       </div>
-      <div class="stat-box">
-        <div style="font-size:18px;font-weight:800;margin-bottom:8px">⚠️ Disclaimer</div>
-        <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">
-          Adless OS does not host, store, or distribute any copyrighted content directly. All games are embedded from third-party platforms. All video content is linked via publicly accessible URLs (such as Google Drive shares submitted by users). We are not responsible for the content of third-party sites. If you believe any content infringes your copyright, please see our <span style="color:var(--blue);cursor:none" onclick="switchView('dmca-view')">DMCA page</span>.
+
+      <div class="stat-box" style="margin-bottom:14px">
+        <div style="font-size:16px;font-weight:800;margin-bottom:8px">🔒 Your Privacy Matters</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.9;margin:0">
+          We collect the bare minimum — just a username and optional email for account recovery. We never sell your data, never show you personalized tracking ads, and never share your information with third parties. You can play as a guest with zero data collected. Read our full <span style="color:var(--blue);cursor:none;font-weight:700" onclick="switchView('privacy-view')">Privacy Policy</span> for complete details.
         </p>
+      </div>
+
+      <div class="stat-box" style="margin-bottom:14px">
+        <div style="font-size:16px;font-weight:800;margin-bottom:8px">⚠️ Content Disclaimer</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.9;margin:0">
+          Adless Games does not host or store any game files directly on our servers. All games are embedded from publicly available third-party platforms and sources. We are not responsible for the content of embedded third-party sites. If you believe any content violates copyright, please review our <span style="color:var(--blue);cursor:none;font-weight:700" onclick="switchView('dmca-view')">DMCA Policy</span> or contact us directly.
+        </p>
+      </div>
+
+      <div class="stat-box">
+        <div style="font-size:16px;font-weight:800;margin-bottom:8px">📬 Get In Touch</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.9;margin:0 0 12px">
+          Have a question, suggestion, bug report, or just want to say hi? We read every message.
+        </p>
+        <button class="lb-btn" style="width:auto;padding:10px 20px;margin:0" onclick="switchView('contact-view')">📬 Contact Us</button>
       </div>
     </div>
   </div>
 
-  <div id="privacy-view" class="view" style="max-width:700px;margin:0 auto">
+  <div id="privacy-view" class="view" style="max-width:760px;margin:0 auto">
     <header><h1>🔒 Privacy Policy</h1></header>
     <div class="s-section">
-      <p style="font-size:12px;color:var(--text2);margin-bottom:16px">Last updated: March 2026 · Operated from Argentina 🇦🇷</p>
+      <p style="font-size:12px;color:var(--text2);margin-bottom:16px">Last updated: May 2026 · Adless Games · Independent Project</p>
 
       <div class="stat-box" style="margin-bottom:14px">
         <div style="font-size:15px;font-weight:800;margin-bottom:6px">1. Information We Collect</div>
@@ -2009,6 +2095,564 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
       </div>
     </div>
   </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       ADLESS WORLDS — Browse View
+  ════════════════════════════════════════════════════════════ -->
+  <div id="worlds-view" class="view">
+    <header>
+      <div>
+        <h1 style="margin:0">🌍 AdlessWorlds</h1>
+        <div style="font-size:11px;color:var(--text2);margin-top:2px">Community-made worlds — play, build, explore</div>
+      </div>
+      <button class="lb-btn" style="width:auto;padding:9px 18px;margin:0" onclick="openWorldsStudio()">🔨 Create World</button>
+    </header>
+
+    <!-- Main tab bar -->
+    <div style="display:flex;gap:4px;margin-bottom:18px;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:0">
+      <button class="worlds-tab active" id="wtab-browse" onclick="setWorldsTab('browse')">🌍 Browse</button>
+      <button class="worlds-tab" id="wtab-avatar" onclick="setWorldsTab('avatar')">🧍 Avatar</button>
+      <button class="worlds-tab" id="wtab-shop" onclick="setWorldsTab('shop')">🛍️ Item Shop</button>
+    </div>
+
+    <!-- BROWSE TAB -->
+    <div id="worlds-tab-browse">
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
+        <input id="worlds-search" class="lb-field" style="margin:0;width:200px" placeholder="Search worlds…" oninput="filterWorldsBrowse()">
+        <select id="worlds-genre-filter" class="lb-field" style="margin:0;width:130px;padding:9px 12px" onchange="filterWorldsBrowse()">
+          <option value="all">All Genres</option>
+          <option value="Adventure">Adventure</option>
+          <option value="Puzzle">Puzzle</option>
+          <option value="Horror">Horror</option>
+          <option value="Platformer">Platformer</option>
+          <option value="RPG">RPG</option>
+          <option value="Showcase">Showcase</option>
+          <option value="Other">Other</option>
+        </select>
+        <button class="auc-btn" id="wsort-new" onclick="setWorldSort('new')" style="background:rgba(10,132,255,.15);border-color:rgba(10,132,255,.3);color:var(--blue)">🕐 Newest</button>
+        <button class="auc-btn" id="wsort-pop" onclick="setWorldSort('popular')">🔥 Popular</button>
+        <button class="auc-btn" id="wsort-liked" onclick="setWorldSort('liked')">❤️ Most Liked</button>
+      </div>
+      <div id="worlds-browse-grid" class="grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">
+        <div class="fc-empty">Loading worlds…</div>
+      </div>
+    </div>
+
+    <!-- AVATAR TAB -->
+    <div id="worlds-tab-avatar" style="display:none">
+      <div id="avatar-coming-soon" style="display:none;text-align:center;padding:60px 20px">
+        <div style="font-size:64px;margin-bottom:16px">🧍</div>
+        <div style="font-size:22px;font-weight:800;margin-bottom:8px">Avatar Editor</div>
+        <div style="font-size:13px;color:var(--text2);max-width:400px;margin:0 auto 20px">Customize your 3D character with shirts, pants, hair and more. Coming soon!</div>
+        <div style="display:inline-block;background:rgba(255,159,10,.15);border:1px solid rgba(255,159,10,.3);color:#ff9f0a;font-size:11px;font-weight:800;padding:6px 16px;border-radius:20px">🚧 IN DEVELOPMENT</div>
+      </div>
+      <div id="avatar-editor-wrap" style="display:none">
+        <div style="display:grid;grid-template-columns:1fr 280px;gap:20px;min-height:600px">
+          <!-- Left: 3D preview + clothing slots -->
+          <div>
+            <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+              <button class="auc-btn" id="av-slot-shirt"   onclick="setAvatarSlot('shirt')"  style="background:rgba(10,132,255,.15);border-color:rgba(10,132,255,.3);color:var(--blue)">👕 Shirt</button>
+              <button class="auc-btn" id="av-slot-tshirt"  onclick="setAvatarSlot('tshirt')">👕 T-Shirt</button>
+              <button class="auc-btn" id="av-slot-pants"   onclick="setAvatarSlot('pants')">👖 Pants</button>
+              <button class="auc-btn" id="av-slot-hair"    onclick="setAvatarSlot('hair')">💇 Hair</button>
+              <button class="auc-btn" id="av-slot-skin"    onclick="setAvatarSlot('skin')">🎨 Skin</button>
+            </div>
+            <!-- 3D avatar canvas -->
+            <div style="background:#000;border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden;height:420px;position:relative">
+              <canvas id="av-canvas" style="width:100%;height:100%;display:block"></canvas>
+              <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(255,255,255,.3);white-space:nowrap">Drag to rotate</div>
+            </div>
+            <!-- Skin color quick picks -->
+            <div id="av-skin-row" style="display:none;margin-top:12px">
+              <div style="font-size:11px;color:var(--text2);margin-bottom:6px">Skin Color</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <div onclick="setAvatarSkinColor('#FDDBB4')" style="width:28px;height:28px;border-radius:50%;background:#FDDBB4;cursor:none;border:2px solid rgba(255,255,255,.2)"></div>
+                <div onclick="setAvatarSkinColor('#F5C89A')" style="width:28px;height:28px;border-radius:50%;background:#F5C89A;cursor:none;border:2px solid rgba(255,255,255,.2)"></div>
+                <div onclick="setAvatarSkinColor('#E8A87C')" style="width:28px;height:28px;border-radius:50%;background:#E8A87C;cursor:none;border:2px solid rgba(255,255,255,.2)"></div>
+                <div onclick="setAvatarSkinColor('#D4876A')" style="width:28px;height:28px;border-radius:50%;background:#D4876A;cursor:none;border:2px solid rgba(255,255,255,.2)"></div>
+                <div onclick="setAvatarSkinColor('#C16B4B')" style="width:28px;height:28px;border-radius:50%;background:#C16B4B;cursor:none;border:2px solid rgba(255,255,255,.2)"></div>
+                <div onclick="setAvatarSkinColor('#A0522D')" style="width:28px;height:28px;border-radius:50%;background:#A0522D;cursor:none;border:2px solid rgba(255,255,255,.2)"></div>
+                <div onclick="setAvatarSkinColor('#7B3F1E')" style="width:28px;height:28px;border-radius:50%;background:#7B3F1E;cursor:none;border:2px solid rgba(255,255,255,.2)"></div>
+                <div onclick="setAvatarSkinColor('#4A2412')" style="width:28px;height:28px;border-radius:50%;background:#4A2412;cursor:none;border:2px solid rgba(255,255,255,.2)"></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:14px">
+              <button class="lb-btn" style="width:auto;padding:9px 20px;margin:0" onclick="saveAvatarToProfile()">💾 Save Avatar</button>
+              <button class="auc-btn" onclick="publishClothingItem()" id="av-publish-btn" style="display:none">📤 Publish to Shop</button>
+            </div>
+          </div>
+          <!-- Right: Pixel art editor -->
+          <div>
+            <div style="font-size:13px;font-weight:800;margin-bottom:10px" id="av-editor-label">✏️ Drawing: Shirt</div>
+            <!-- Tools -->
+            <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+              <button class="auc-btn" id="av-tool-draw"  onclick="setDrawTool('draw')"  style="background:rgba(10,132,255,.15);border-color:rgba(10,132,255,.3);color:var(--blue)">✏️ Draw</button>
+              <button class="auc-btn" id="av-tool-fill"  onclick="setDrawTool('fill')">🪣 Fill</button>
+              <button class="auc-btn" id="av-tool-erase" onclick="setDrawTool('erase')">🧹 Erase</button>
+              <input type="color" id="av-color-pick" value="#ff0000" style="width:36px;height:28px;padding:2px;border:none;border-radius:6px;cursor:none;background:none">
+            </div>
+            <!-- Pixel canvas -->
+            <canvas id="av-pixel-canvas" width="512" height="512" style="border:1px solid rgba(255,255,255,.15);border-radius:10px;cursor:crosshair!important;display:block;image-rendering:pixelated;width:100%;max-width:320px"></canvas>
+            <div style="display:flex;gap:6px;margin-top:8px">
+              <button class="auc-btn" onclick="clearPixelCanvas()" style="flex:1">🗑 Clear</button>
+              <button class="auc-btn green" onclick="applyPixelToAvatar()" style="flex:1">✅ Apply</button>
+            </div>
+            <!-- Upload alternative -->
+            <div style="margin-top:10px;border-top:1px solid rgba(255,255,255,.08);padding-top:10px">
+              <div style="font-size:10px;color:var(--text2);margin-bottom:6px">Or upload an image</div>
+              <input type="file" id="av-img-upload" accept="image/*" style="display:none" onchange="uploadClothingImage(this)">
+              <button class="auc-btn" style="width:100%" onclick="document.getElementById('av-img-upload').click()">📁 Upload Image</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SHOP TAB -->
+    <div id="worlds-tab-shop" style="display:none">
+      <div id="shop-coming-soon" style="display:none;text-align:center;padding:60px 20px">
+        <div style="font-size:64px;margin-bottom:16px">🛍️</div>
+        <div style="font-size:22px;font-weight:800;margin-bottom:8px">Item Shop</div>
+        <div style="font-size:13px;color:var(--text2);max-width:400px;margin:0 auto 20px">Buy shirts, pants, hair and more with Tokens. Coming soon!</div>
+        <div style="display:inline-block;background:rgba(255,159,10,.15);border:1px solid rgba(255,159,10,.3);color:#ff9f0a;font-size:11px;font-weight:800;padding:6px 16px;border-radius:20px">🚧 IN DEVELOPMENT</div>
+      </div>
+      <div id="worlds-shop-wrap" style="display:none">
+        <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+          <div style="font-size:13px;font-weight:700">Your balance: <span id="shop-token-balance" style="color:#ffd60a">— 🪙</span></div>
+          <div style="margin-left:auto;display:flex;gap:6px">
+            <button class="auc-btn" id="wshop-all"   onclick="setShopFilter('all')"   style="background:rgba(10,132,255,.15);border-color:rgba(10,132,255,.3);color:var(--blue)">All</button>
+            <button class="auc-btn" id="wshop-shirt"  onclick="setShopFilter('shirt')">👕 Shirts</button>
+            <button class="auc-btn" id="wshop-tshirt" onclick="setShopFilter('tshirt')">👕 T-Shirts</button>
+            <button class="auc-btn" id="wshop-pants"  onclick="setShopFilter('pants')">👖 Pants</button>
+            <button class="auc-btn" id="wshop-hair"   onclick="setShopFilter('hair')">💇 Hair</button>
+          </div>
+        </div>
+        <div id="worlds-shop-grid" class="grid" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr))">
+          <div class="fc-empty">Loading items…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       ADLESS WORLDS — Studio (My Worlds + Editor launcher)
+  ════════════════════════════════════════════════════════════ -->
+  <div id="worlds-studio-view" class="view">
+    <header>
+      <div>
+        <h1 style="margin:0">🔨 My Worlds</h1>
+        <div style="font-size:11px;color:var(--text2);margin-top:2px">Build and manage your worlds</div>
+      </div>
+      <button class="lb-btn" style="width:auto;padding:9px 20px;margin:0" onclick="createNewWorld()">＋ New World</button>
+    </header>
+    <div id="my-worlds-list" style="display:flex;flex-direction:column;gap:12px">
+      <div class="fc-empty">Loading your worlds…</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       ADLESS WORLDS — Editor
+  ════════════════════════════════════════════════════════════ -->
+  <div id="worlds-editor-view" style="display:none;position:fixed;inset:0;z-index:99998;background:#000;flex-direction:column;">
+    <!-- Toolbar -->
+    <div id="we-toolbar" style="position:absolute;top:0;left:0;right:0;z-index:10000;background:rgba(0,0,0,.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.1);">
+      <!-- Row 1: back, title, genre, save, submit -->
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 14px;border-bottom:1px solid rgba(255,255,255,.06);flex-wrap:nowrap;overflow:hidden">
+        <button class="auc-btn" onclick="leaveEditor()" style="flex-shrink:0">← Back</button>
+        <input id="we-title" class="lb-field" style="margin:0;min-width:0;flex:1;max-width:220px;font-weight:700" placeholder="World Title…" maxlength="50">
+        <select id="we-genre" class="lb-field" style="margin:0;width:110px;padding:6px 8px;flex-shrink:0">
+          <option>Adventure</option><option>Puzzle</option><option>Horror</option>
+          <option>Platformer</option><option>RPG</option><option>Showcase</option><option>Other</option>
+        </select>
+        <div style="display:flex;gap:6px;margin-left:auto;flex-shrink:0">
+          <button class="auc-btn" onclick="playtestWorld()" style="color:#ff9f0a;border-color:rgba(255,159,10,.3)">▶ Playtest</button>
+          <button class="auc-btn" onclick="saveWorldDraft()" style="color:#30d158;border-color:rgba(48,209,88,.3)">💾 Save</button>
+          <button class="lb-btn" style="width:auto;padding:6px 14px;margin:0;font-size:11px" onclick="submitWorldForReview()">📤 Submit</button>
+        </div>
+      </div>
+      <!-- Row 2: transform tools -->
+      <div style="display:flex;align-items:center;gap:6px;padding:5px 14px">
+        <button class="auc-btn" id="we-tool-move"   onclick="setEditorTool('move')"   style="background:rgba(10,132,255,.2);border-color:rgba(10,132,255,.4);color:var(--blue)">↕ Move <span style="opacity:.5;font-size:9px">W</span></button>
+        <button class="auc-btn" id="we-tool-scale"  onclick="setEditorTool('scale')">⤡ Scale <span style="opacity:.5;font-size:9px">E</span></button>
+        <button class="auc-btn" id="we-tool-rotate" onclick="setEditorTool('rotate')">↻ Rotate <span style="opacity:.5;font-size:9px">R</span></button>
+        <div style="width:1px;height:18px;background:rgba(255,255,255,.15);margin:0 4px"></div>
+        <button class="auc-btn" id="we-tool-del" onclick="deleteSelectedObj()" style="color:#ff375f;border-color:rgba(255,55,95,.3)">🗑 Delete <span style="opacity:.5;font-size:9px">Del</span></button>
+        <div style="width:1px;height:18px;background:rgba(255,255,255,.15);margin:0 4px"></div>
+        <span style="font-size:11px;color:var(--text2)">LMB=orbit &nbsp; RMB=pan &nbsp; Scroll=zoom</span>
+        <div id="we-sel-label" style="display:none;margin-left:auto;background:rgba(10,132,255,.15);border:1px solid rgba(10,132,255,.3);border-radius:8px;padding:3px 10px;font-size:11px;color:var(--blue)"></div>
+      </div>
+    </div>
+    <!-- Editor body -->
+    <div style="display:flex;height:100vh;padding-top:88px">
+      <!-- Left: Asset palette -->
+      <div id="we-palette" style="width:180px;flex-shrink:0;background:rgba(0,0,0,.7);border-right:1px solid rgba(255,255,255,.1);overflow-y:auto;padding:10px 8px">
+        <div style="font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:8px">Primitives</div>
+        <div class="we-asset-btn" onclick="spawnObject('box')">📦 Cube</div>
+        <div class="we-asset-btn" onclick="spawnObject('sphere')">🔵 Sphere</div>
+        <div class="we-asset-btn" onclick="spawnObject('cylinder')">🔵 Cylinder</div>
+        <div class="we-asset-btn" onclick="spawnObject('ramp')">📐 Ramp</div>
+        <div class="we-asset-btn" onclick="spawnObject('platform')">🟫 Platform</div>
+        <div style="font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin:12px 0 8px">World</div>
+        <div class="we-asset-btn" onclick="spawnObject('spawn')">🚀 Spawn Point</div>
+        <div class="we-asset-btn" onclick="spawnObject('checkpoint')">🏁 Checkpoint</div>
+        <div class="we-asset-btn" onclick="spawnObject('light')">💡 Point Light</div>
+        <div class="we-asset-btn" onclick="spawnObject('trigger')">⚡ Trigger Zone</div>
+        <div style="font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin:12px 0 8px">Decorations</div>
+        <div class="we-asset-btn" onclick="spawnObject('tree')">🌲 Tree</div>
+        <div class="we-asset-btn" onclick="spawnObject('rock')">🪨 Rock</div>
+        <div class="we-asset-btn" onclick="spawnObject('water')">💧 Water</div>
+        <div class="we-asset-btn" onclick="spawnObject('wall')">🧱 Wall</div>
+        <div style="font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin:12px 0 8px">Interactive</div>
+        <div class="we-asset-btn" onclick="spawnObject('npc')">🧑 NPC</div>
+        <div class="we-asset-btn" onclick="spawnObject('coin')">🪙 Coin</div>
+        <div class="we-asset-btn" onclick="spawnObject('goal')">🏆 Goal / Finish</div>
+        <div style="font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin:12px 0 8px">GUI Elements</div>
+        <div class="we-asset-btn" onclick="addGuiElement('label')">🏷 Label</div>
+        <div class="we-asset-btn" onclick="addGuiElement('button')">🖱 Button</div>
+        <div class="we-asset-btn" onclick="addGuiElement('healthbar')">❤️ Health Bar</div>
+        <div class="we-asset-btn" onclick="addGuiElement('timer')">⏱ Timer</div>
+        <div class="we-asset-btn" onclick="addGuiElement('score')">🏆 Score Counter</div>
+      </div>
+      <!-- Centre: 3D Canvas -->
+      <div style="flex:1;position:relative">
+        <canvas id="we-canvas" style="width:100%;height:100%;display:block"></canvas>
+
+      </div>
+      <!-- Right: Properties / Script panel -->
+      <div id="we-props" style="width:240px;flex-shrink:0;background:rgba(0,0,0,.7);border-left:1px solid rgba(255,255,255,.1);overflow-y:auto;padding:10px">
+        <div style="font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:8px">Properties</div>
+        <div id="we-props-body" style="font-size:12px;color:var(--text2)">Select an object to edit its properties.</div>
+        <div style="margin-top:16px;border-top:1px solid rgba(255,255,255,.08);padding-top:12px">
+          <div style="font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:8px">Lua Script</div>
+          <textarea id="we-lua" class="lb-field" rows="12" style="font-family:monospace;font-size:11px;resize:vertical;line-height:1.6" placeholder="-- Lua script for selected object&#10;-- Example:&#10;function onTouch(player)&#10;  player.speed = player.speed + 5&#10;end"></textarea>
+          <button class="auc-btn" style="width:100%;margin-top:6px;font-size:11px" onclick="saveObjScript()">💾 Save Script</button>
+          <div style="margin-top:8px">
+            <div style="font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:6px">World Description</div>
+            <textarea id="we-desc" class="lb-field" rows="3" style="font-size:12px;resize:none" placeholder="Describe your world…" maxlength="300"></textarea>
+          </div>
+        </div>
+        <!-- GUI Builder panel -->
+        <div style="margin-top:16px;border-top:1px solid rgba(255,255,255,.08);padding-top:12px">
+          <div style="font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:8px">GUI Overlay</div>
+          <div id="we-gui-list" style="font-size:11px;color:var(--text2)">No GUI elements yet.</div>
+        </div>
+        <!-- World Settings -->
+        <div style="margin-top:16px;border-top:1px solid rgba(255,255,255,.08);padding-top:12px">
+          <div style="font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:8px">🌍 World Settings</div>
+          <div style="font-size:10px;color:var(--text2);margin-bottom:4px">Sky / Environment</div>
+          <select id="we-sky" class="lb-field" style="margin:0 0 8px;font-size:11px;padding:6px 8px" onchange="updateEditorSky()">
+            <option value="day">☀️ Day</option>
+            <option value="night">🌙 Night</option>
+            <option value="sunset">🌅 Sunset</option>
+            <option value="space">🚀 Space</option>
+            <option value="storm">⛈️ Storm</option>
+          </select>
+          <div style="font-size:10px;color:var(--text2);margin-bottom:4px">Ambient Sound</div>
+          <select id="we-ambient" class="lb-field" style="margin:0 0 8px;font-size:11px;padding:6px 8px">
+            <option value="none">🔇 None</option>
+            <option value="nature">🌿 Nature / Birds</option>
+            <option value="rain">🌧️ Rain</option>
+            <option value="wind">💨 Wind</option>
+            <option value="dungeon">🏰 Dungeon</option>
+            <option value="space">🚀 Space Ambience</option>
+            <option value="upbeat">🎵 Upbeat Music</option>
+          </select>
+          <div style="font-size:10px;color:var(--text2);margin-bottom:4px">Tags (comma-separated)</div>
+          <input id="we-tags" class="lb-field" style="margin:0 0 8px;font-size:11px" placeholder="#parkour, #maze, #horror…" maxlength="100">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       ADLESS WORLDS — World Player (fullscreen)
+  ════════════════════════════════════════════════════════════ -->
+  <div id="worlds-player-view" style="display:none;position:fixed;inset:0;z-index:99998;background:#000;">
+    <div id="wp-topbar" style="position:absolute;top:0;left:0;right:0;z-index:100;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,.08)">
+      <button class="auc-btn" onclick="leaveWorldPlayer()">← Back</button>
+      <div id="wp-title" style="font-weight:800;font-size:14px;flex:1"></div>
+      <button class="auc-btn" id="wp-like-btn" onclick="toggleWorldLike()">❤️ <span id="wp-like-count">0</span></button>
+      <div id="wp-rating" style="display:flex;gap:2px;align-items:center">
+        <span style="font-size:10px;color:var(--text2);margin-right:2px">Rate:</span>
+        <span class="wp-star" onclick="rateWorld(1)" style="cursor:none;font-size:16px;color:#ffd60a">☆</span>
+        <span class="wp-star" onclick="rateWorld(2)" style="cursor:none;font-size:16px;color:#ffd60a">☆</span>
+        <span class="wp-star" onclick="rateWorld(3)" style="cursor:none;font-size:16px;color:#ffd60a">☆</span>
+        <span class="wp-star" onclick="rateWorld(4)" style="cursor:none;font-size:16px;color:#ffd60a">☆</span>
+        <span class="wp-star" onclick="rateWorld(5)" style="cursor:none;font-size:16px;color:#ffd60a">☆</span>
+        <span id="wp-avg-rating" style="font-size:10px;color:var(--text2);margin-left:4px"></span>
+      </div>
+      <button class="auc-btn" id="wp-fork-btn" onclick="forkWorld()" title="Remix this world">🍴 Remix</button>
+      <button class="auc-btn" onclick="openWorldLeaderboard()" style="color:#ffd60a;border-color:rgba(255,214,10,.3)">🏆 Board</button>
+      <div id="wp-creator" style="font-size:11px;color:var(--text2)"></div>
+    </div>
+    <canvas id="wp-canvas" style="width:100%;height:100%;display:block;padding-top:44px"></canvas>
+    <!-- GUI overlay layer -->
+    <div id="wp-gui-layer" style="position:absolute;top:44px;left:0;right:0;bottom:0;pointer-events:none"></div>
+    <!-- Score HUD -->
+    <div id="wp-score-hud" style="display:none;position:absolute;top:54px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);border:1px solid rgba(255,214,10,.3);border-radius:12px;padding:6px 20px;font-size:14px;font-weight:800;color:#ffd60a;pointer-events:none;z-index:50">🪙 <span id="wp-score-val">0</span></div>
+    <!-- Leaderboard modal -->
+    <div id="wp-leaderboard" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.95);border:1px solid rgba(255,255,255,.15);border-radius:18px;padding:24px;min-width:300px;z-index:200">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-weight:800;font-size:16px">🏆 Leaderboard</div>
+        <button class="auc-btn" onclick="document.getElementById('wp-leaderboard').style.display='none'">✕</button>
+      </div>
+      <div id="wp-leaderboard-list" style="font-size:13px"></div>
+      <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:12px;display:flex;gap:8px">
+        <input id="wp-score-submit-val" class="lb-field" style="margin:0;flex:1;font-size:12px" placeholder="Your score…" type="number">
+        <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0" onclick="submitWorldScore()">Submit</button>
+      </div>
+    </div>
+    <!-- Comments sidebar toggle -->
+    <button onclick="toggleWorldComments()" style="position:absolute;bottom:20px;right:20px;z-index:101;background:rgba(0,0,0,.8);border:1px solid rgba(255,255,255,.15);border-radius:50%;width:44px;height:44px;font-size:18px;cursor:none!important;color:#fff">💬</button>
+    <div id="wp-comments" style="display:none;position:absolute;top:44px;right:0;bottom:0;width:300px;background:rgba(0,0,0,.88);border-left:1px solid rgba(255,255,255,.1);z-index:102;display:flex;flex-direction:column;overflow:hidden">
+      <div style="padding:12px;border-bottom:1px solid rgba(255,255,255,.08);font-weight:700;font-size:13px">💬 Comments</div>
+      <div id="wp-comments-list" style="flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px"></div>
+      <div style="padding:10px;border-top:1px solid rgba(255,255,255,.08);display:flex;gap:6px">
+        <input id="wp-comment-input" class="lb-field" style="margin:0;flex:1;font-size:12px" placeholder="Add a comment…" maxlength="200" onkeydown="if(event.key==='Enter')postWorldComment()">
+        <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0;font-size:12px" onclick="postWorldComment()">Post</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       ADLESS WORLDS — Admin Review
+  ════════════════════════════════════════════════════════════ -->
+  <div id="worlds-review-view" class="view">
+    <header>
+      <div>
+        <h1 style="margin:0">🌍 Worlds Review</h1>
+        <div style="font-size:11px;color:var(--text2);margin-top:2px">Review and approve community worlds</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="auc-btn" onclick="loadWorldsReview('pending')" id="wr-tab-pending" style="background:rgba(255,159,10,.15);border-color:rgba(255,159,10,.3);color:#ff9f0a">⏳ Pending</button>
+        <button class="auc-btn" onclick="loadWorldsReview('approved')" id="wr-tab-approved">✅ Approved</button>
+        <button class="auc-btn" onclick="loadWorldsReview('rejected')" id="wr-tab-rejected">❌ Rejected</button>
+      </div>
+    </header>
+    <!-- World Admin management (owner only) -->
+    <div id="wr-admin-mgmt" style="display:none;margin-bottom:16px">
+      <div class="s-section">
+        <div class="s-sec">🛡️ World Reviewers</div>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <input id="wr-promote-input" class="lb-field" style="margin:0;flex:1" placeholder="Username to promote/demote…">
+          <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0;background:rgba(48,209,88,.15);border-color:rgba(48,209,88,.3);color:#30d158" onclick="promoteWorldAdmin()">＋ Add</button>
+          <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0;background:rgba(255,55,95,.15);border-color:rgba(255,55,95,.3);color:#ff375f" onclick="demoteWorldAdmin()">− Remove</button>
+        </div>
+        <div id="wr-admin-list" style="font-size:12px;color:var(--text2)">Loading…</div>
+      </div>
+    </div>
+    <div id="worlds-review-list" style="display:flex;flex-direction:column;gap:12px">
+      <div class="fc-empty">Loading…</div>
+    </div>
+  </div>
+  <!-- CONTACT VIEW -->
+  <!-- ═══════════════════════════════════════════════════════════
+       ADLESS BUGS VIEW
+  ════════════════════════════════════════════════════════════ -->
+  <div id="bugs-view" class="view" style="max-width:760px;margin:0 auto">
+    <header>
+      <div>
+        <h1 style="margin:0">🐛 Adless Bugs</h1>
+        <div style="font-size:11px;color:var(--text2);margin-top:2px">Community bug tracker — report, vote, and track issues</div>
+      </div>
+      <button class="lb-btn" style="width:auto;padding:9px 18px;margin:0" onclick="openBugReportModal()">＋ Report Bug</button>
+    </header>
+
+    <!-- Filter bar -->
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+      <button class="auc-btn" id="bsort-votes" onclick="setBugSort('votes')" style="background:rgba(10,132,255,.15);border-color:rgba(10,132,255,.3);color:var(--blue)">🔥 Most Voted</button>
+      <button class="auc-btn" id="bsort-new"   onclick="setBugSort('new')">🕐 Newest</button>
+      <select id="bug-status-filter" class="lb-field" style="margin:0;width:130px;padding:9px 12px" onchange="renderBugs()">
+        <option value="all">All Status</option>
+        <option value="open">🔴 Open</option>
+        <option value="in_progress">🟡 In Progress</option>
+        <option value="fixed">🟢 Fixed</option>
+        <option value="wontfix">⚫ Won't Fix</option>
+      </select>
+      <input id="bug-search" class="lb-field" style="margin:0;width:180px" placeholder="Search bugs…" oninput="renderBugs()">
+    </div>
+
+    <!-- Bug list -->
+    <div id="bugs-list" style="display:flex;flex-direction:column;gap:10px">
+      <div class="fc-empty">Loading bugs…</div>
+    </div>
+  </div>
+
+  <!-- BUG REPORT MODAL -->
+  <div id="bug-report-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:10003;align-items:center;justify-content:center;backdrop-filter:blur(8px)" onclick="if(event.target===this)closeBugReportModal()">
+    <div style="background:#1c1c1e;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px;width:min(480px,94vw);max-height:90vh;overflow-y:auto">
+      <div style="font-size:20px;font-weight:800;margin-bottom:18px">🐛 Report a Bug</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div>
+          <label style="font-size:11px;color:var(--text2);font-weight:700;display:block;margin-bottom:4px">TITLE <span style="color:#ff375f">*</span></label>
+          <input id="bug-title-input" class="lb-field" style="margin:0;width:100%" placeholder="Short description of the bug…" maxlength="120">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--text2);font-weight:700;display:block;margin-bottom:4px">CATEGORY</label>
+          <select id="bug-category-input" class="lb-field" style="margin:0;padding:9px 12px">
+            <option value="General">🔧 General</option>
+            <option value="Games">🎮 Games</option>
+            <option value="Worlds">🌍 Worlds</option>
+            <option value="Chat">💬 Chat</option>
+            <option value="Account">👤 Account</option>
+            <option value="UI">🖥️ UI / Visual</option>
+            <option value="Performance">⚡ Performance</option>
+            <option value="Other">❓ Other</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--text2);font-weight:700;display:block;margin-bottom:4px">DESCRIPTION <span style="color:#ff375f">*</span></label>
+          <textarea id="bug-desc-input" class="lb-field" rows="4" style="resize:vertical" placeholder="Steps to reproduce, what you expected, what happened instead…" maxlength="1000"></textarea>
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--text2);font-weight:700;display:block;margin-bottom:4px">BROWSER / DEVICE <span style="color:var(--text2);font-weight:400">(optional)</span></label>
+          <input id="bug-device-input" class="lb-field" style="margin:0;width:100%" placeholder="e.g. Chrome on Windows, Safari on iPhone…" maxlength="120">
+        </div>
+      </div>
+      <div id="bug-submit-status" style="font-size:12px;margin-top:10px;display:none"></div>
+      <div style="display:flex;gap:10px;margin-top:20px">
+        <button class="lb-btn" style="flex:1;margin:0" onclick="submitBugReport()">📤 Submit Report</button>
+        <button class="auc-btn" onclick="closeBugReportModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="contact-view" class="view" style="max-width:640px;margin:0 auto">
+    <header><h1>📬 Contact Us</h1></header>
+    <div class="s-section">
+      <p style="font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:20px">
+        Have a question, bug report, game suggestion, partnership inquiry, or DMCA notice? Fill out the form below and we'll get back to you as soon as possible — usually within 24–48 hours.
+      </p>
+
+      <div class="stat-box" style="margin-bottom:16px">
+        <div style="font-size:15px;font-weight:800;margin-bottom:14px">✉️ Send a Message</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div>
+            <label style="font-size:11px;color:var(--text2);font-weight:700;display:block;margin-bottom:4px">Your Name</label>
+            <input id="contact-name" class="lb-field" style="margin:0;width:100%" placeholder="Your name or username">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--text2);font-weight:700;display:block;margin-bottom:4px">Email Address</label>
+            <input id="contact-email" class="lb-field" style="margin:0;width:100%" placeholder="your@email.com" type="email">
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--text2);font-weight:700;display:block;margin-bottom:4px">Subject</label>
+            <select id="contact-subject" class="lb-field" style="margin:0;padding:9px 12px">
+              <option>General Question</option>
+              <option>Bug Report</option>
+              <option>Game Suggestion</option>
+              <option>Partnership / Advertising</option>
+              <option>DMCA / Copyright</option>
+              <option>Account Issue</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--text2);font-weight:700;display:block;margin-bottom:4px">Message</label>
+            <textarea id="contact-message" class="lb-field" rows="5" style="resize:vertical" placeholder="Describe your question or issue in detail…"></textarea>
+          </div>
+          <button class="lb-btn" style="width:auto;align-self:flex-end;padding:10px 24px;margin:0" onclick="submitContactForm()">📤 Send Message</button>
+        </div>
+        <div id="contact-status" style="margin-top:10px;font-size:12px;display:none"></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="stat-box">
+          <div style="font-size:14px;font-weight:800;margin-bottom:6px">📧 Direct Email</div>
+          <p style="font-size:12px;color:var(--text2);line-height:1.7;margin:0">For urgent matters:<br><strong style="color:var(--blue)">x7wvmore@gmail.com</strong></p>
+        </div>
+        <div class="stat-box">
+          <div style="font-size:14px;font-weight:800;margin-bottom:6px">⏱ Response Time</div>
+          <p style="font-size:12px;color:var(--text2);line-height:1.7;margin:0">We typically respond within<br><strong style="color:var(--text)">24–48 hours</strong></p>
+        </div>
+        <div class="stat-box">
+          <div style="font-size:14px;font-weight:800;margin-bottom:6px">🐛 Bug Reports</div>
+          <p style="font-size:12px;color:var(--text2);line-height:1.7;margin:0">Include your browser, device, and steps to reproduce the issue</p>
+        </div>
+        <div class="stat-box">
+          <div style="font-size:14px;font-weight:800;margin-bottom:6px">⚖️ DMCA Notices</div>
+          <p style="font-size:12px;color:var(--text2);line-height:1.7;margin:0">Select "DMCA / Copyright" above or visit our <span style="color:var(--blue);cursor:none" onclick="switchView('dmca-view')">DMCA page</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOG VIEW -->
+  <div id="blog-view" class="view" style="max-width:760px;margin:0 auto">
+    <header>
+      <div>
+        <h1 style="margin:0">📰 Adless Games Blog</h1>
+        <div style="font-size:11px;color:var(--text2);margin-top:2px">News, updates, game guides and more</div>
+      </div>
+    </header>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px">
+
+      <div class="stat-box" style="cursor:none" onclick="openBlogPost('worlds-guide')">
+        <div style="font-size:11px;color:var(--blue);font-weight:700;margin-bottom:6px">📖 GUIDE · May 2026</div>
+        <div style="font-size:17px;font-weight:800;margin-bottom:8px;line-height:1.4">How to Build Your First World in AdlessWorlds</div>
+        <p style="font-size:12px;color:var(--text2);line-height:1.8;margin:0 0 12px">
+          AdlessWorlds lets anyone create 3D games right in the browser. In this guide we'll walk you through placing objects, writing Lua scripts, and publishing your first world for the community to play.
+        </p>
+        <div style="font-size:11px;color:var(--text2)">5 min read</div>
+      </div>
+
+      <div class="stat-box" style="cursor:none" onclick="openBlogPost('top-games')">
+        <div style="font-size:11px;color:#30d158;font-weight:700;margin-bottom:6px">🎮 LIST · May 2026</div>
+        <div style="font-size:17px;font-weight:800;margin-bottom:8px;line-height:1.4">Top 10 Most Played Games on Adless Games Right Now</div>
+        <p style="font-size:12px;color:var(--text2);line-height:1.8;margin:0 0 12px">
+          From fast-paced action games to brain-bending puzzles, here are the ten games our community can't stop playing this month. Updated weekly based on real play data.
+        </p>
+        <div style="font-size:11px;color:var(--text2)">4 min read</div>
+      </div>
+
+      <div class="stat-box" style="cursor:none" onclick="openBlogPost('tokens-guide')">
+        <div style="font-size:11px;color:#ff9f0a;font-weight:700;margin-bottom:6px">🪙 GUIDE · May 2026</div>
+        <div style="font-size:17px;font-weight:800;margin-bottom:8px;line-height:1.4">How to Earn Tokens Fast on Adless Games</div>
+        <p style="font-size:12px;color:var(--text2);line-height:1.8;margin:0 0 12px">
+          Tokens are Adless Games' currency — earn them by watching ads, completing daily tasks, referring friends, and hitting milestones. Here's everything you can do to maximize your daily earnings.
+        </p>
+        <div style="font-size:11px;color:var(--text2)">3 min read</div>
+      </div>
+
+      <div class="stat-box" style="cursor:none" onclick="openBlogPost('tab-cloak')">
+        <div style="font-size:11px;color:#bf5af2;font-weight:700;margin-bottom:6px">💡 TIP · April 2026</div>
+        <div style="font-size:17px;font-weight:800;margin-bottom:8px;line-height:1.4">Tab Cloaking: How to Make Your Browser Tab Look Like Google Classroom</div>
+        <p style="font-size:12px;color:var(--text2);line-height:1.8;margin:0 0 12px">
+          Adless Games has a built-in tab disguise feature that changes your browser tab's title and icon to look like any popular school app. Here's how it works and all the options available.
+        </p>
+        <div style="font-size:11px;color:var(--text2)">2 min read</div>
+      </div>
+
+      <div class="stat-box" style="cursor:none" onclick="openBlogPost('update-worlds')">
+        <div style="font-size:11px;color:var(--blue);font-weight:700;margin-bottom:6px">📣 UPDATE · May 2026</div>
+        <div style="font-size:17px;font-weight:800;margin-bottom:8px;line-height:1.4">Introducing AdlessWorlds: Build and Play Community Games</div>
+        <p style="font-size:12px;color:var(--text2);line-height:1.8;margin:0 0 12px">
+          We just launched AdlessWorlds — a fully browser-based 3D world builder with Lua scripting, multiplayer, an item shop, avatar customization, and more. Here's everything you need to know about the biggest update in Adless Games history.
+        </p>
+        <div style="font-size:11px;color:var(--text2)">6 min read</div>
+      </div>
+
+      <div class="stat-box" style="cursor:none" onclick="openBlogPost('browser-games')">
+        <div style="font-size:11px;color:#30d158;font-weight:700;margin-bottom:6px">📖 ARTICLE · April 2026</div>
+        <div style="font-size:17px;font-weight:800;margin-bottom:8px;line-height:1.4">Why Browser Games Are Making a Comeback in 2026</div>
+        <p style="font-size:12px;color:var(--text2);line-height:1.8;margin:0 0 12px">
+          With Flash gone and WebGL improving fast, browser games are better than ever. We explore why more players are ditching app stores for instant-play web games — and what that means for the future of casual gaming.
+        </p>
+        <div style="font-size:11px;color:var(--text2)">7 min read</div>
+      </div>
+
+    </div>
+
+    <!-- Full article modal -->
+    <div id="blog-modal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.92);overflow-y:auto;padding:40px 20px">
+      <div style="max-width:720px;margin:0 auto;background:var(--glass);border:1px solid var(--border);border-radius:20px;padding:32px;position:relative">
+        <button class="auc-btn" onclick="closeBlogPost()" style="position:absolute;top:16px;right:16px">✕ Close</button>
+        <div id="blog-modal-content"></div>
+      </div>
+    </div>
+  </div>
+
 <!-- AD OPT-OUT POPUP (shown on login) -->
 <div id="ads-popup" style="display:none;position:fixed;inset:0;z-index:6000000;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
   <div style="background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px;width:min(400px,92vw);display:flex;flex-direction:column;gap:14px;animation:fadeUp .3s ease">
@@ -2651,15 +3295,15 @@ const MOVIES=[{title:'Big Buck Bunny',img:'https://upload.wikimedia.org/wikipedi
 {title:'MoreSoon',img:'IMG',url:'URL'},
 {title:'Salt',img:'https://m.media-amazon.com/images/M/MV5BMTQ4MzkzNjcxNF5BMl5BanBnXkFtZTcwNzYxOTYzMw@@._V1_FMjpg_UX1000_.jpg',url:'https://drive.google.com/file/d/1YZwMXDZPHoXfVpPMXCpOvsMkw8DGAlSO/preview'}];
 const SHOWS=[{title:'South Park',img:'https://upload.wikimedia.org/wikipedia/en/5/59/South_Park.png',seasons:[{name:'Pilots',img:'https://www.sling.com/whatson/entertainment/animation/media_10ac90be9a4010ad5553034af903ad659fad96df8.jpg?width=1200&format=pjpg&optimize=medium',episodes:[{title:'Jesus vs. Frosty',url:'https://drive.google.com/file/d/1wQt39GBY_xlsC-1OM095hHTZc2e3Hwti/preview'},{title:'Jesus vs. Santa',url:'https://drive.google.com/file/d/1r6Q7qENTnGZG7BeU_sJtNHhnCJwN1zAG/preview'},{title:'The Unaired Pilot',url:'https://drive.google.com/file/d/1ld1Dc2Mf1gJrQUpEEOSB4bFysJfFir80/preview'}]},{name:'Season 1',img:'https://www.sling.com/whatson/entertainment/animation/media_10ac90be9a4010ad5553034af903ad659fad96df8.jpg?width=1200&format=pjpg&optimize=medium',episodes:[{title:"Cartman Gets an Anal Probe",url:'https://drive.google.com/file/d/1z9D2z36uRaKPVzA6adfMsr3vDgRoRL4e/preview'},{title:'Weight Gain 4000',url:'https://drive.google.com/file/d/13uEDz-xD_mVygP2gLQOsvn1x1XRn5Z_T/preview'},{title:'Volcano',url:'https://drive.google.com/file/d/1g_RYiGjBWNnfGcKUolc-IRrqUMZT9hx-/preview'},{title:"Big Gay Al's Big Gay Boat Ride",url:'https://drive.google.com/file/d/1nSW4LUNBH1Idkx4cv5lv__bY5ZlK0fqJ/preview'},{title:'An Elephant Makes Love to a Pig',url:'https://drive.google.com/file/d/1rjeZCvcGI8w__X29uFChkP7V8QwDMXOK/preview'},{title:'Death',url:'https://drive.google.com/file/d/1tdFCEmtS_oRvn-ZLktUU1KHXjuc-gsuW/preview'},{title:'Pinkeye',url:'https://drive.google.com/file/d/13VG3rUGLJpASJa_1TN9oPyBo11S6L_kR/preview'},{title:"Starvin' Marvin",url:'https://drive.google.com/file/d/14jmlzRYjKWV1I8uAM0b20FeJnHIpe4lr/preview'},{title:'Mr. Hankey, the Christmas Poo',url:'https://drive.google.com/file/d/1lseKSk2Ivob-z9CYKL93hb0W8DK_aCZo/preview'},{title:'Damien',url:'https://drive.google.com/file/d/1MKA1w3Lm5vMsDFAitlhFanud8bX_TaSD/preview'},{title:"Tom's Rhinoplasty",url:'https://drive.google.com/file/d/1VVunOY9r6ZX4NBIl1JAFnFNDJowc1c0H/preview'},{title:'Mecha-Streisand',url:'https://drive.google.com/file/d/1fdd-3dWLCtcEQqfiTHswUlVTGT21ytD1/preview'},{title:"Cartman's Mom is a Dirty Slut",url:'https://drive.google.com/file/d/1y4LUMC8LCUPWPIzUr5LPxcSjehpC9wFL/preview'}]}]},{title:'Legends of Chamberlain Heights',img:'https://images.justwatch.com/backdrop/16476583/s640/legends-of-chamberlain-heights',seasons:[{name:'Season 1',img:'https://i.ytimg.com/vi/Arf_gU2eesg/maxresdefault.jpg',episodes:[{title:'Jamallies',url:'https://drive.google.com/file/d/1FjbFbW3QH4p57tJ9Ds3ASC6I5rQB3sKT/preview'},{title:'Child Please',url:'https://drive.google.com/file/d/1mq2P4tj_PP6LP3CZfoIuJCrTcdanCo9o/preview'},{title:'Come Out to Play',url:'https://drive.google.com/file/d/1J1tbb8lV28a62LM9I1iDkVtCC0dM2IKM/preview'},{title:'Inspired by Isis',url:'https://drive.google.com/file/d/1xYk8DkQxhP28Y0iTtCyxPI8n2-wmRzdZ/preview'},{title:'The Legend of Tupaquia',url:'https://drive.google.com/file/d/1J-vLP-3z8sz0I_X1Wyp8mMmTtdcr6VEi/preview'},{title:'Class President',url:'https://drive.google.com/file/d/12fhBFP3gyDB5wO-1-B5dpiuZJVMe5gDY/preview'},{title:'Cane and Disabled',url:'https://drive.google.com/file/d/10OFFm8E0P2FXWphbw2UqU5cA_S_T9AAv/preview'},{title:'End of Days',url:'https://drive.google.com/file/d/1h7weCXsQ78j4a22Uj2cYt-3fWUTm4v1z/preview'},{title:'More than a Videogame',url:'https://drive.google.com/file/d/1pPvoFgTlLrTqQttpuINMhzfRsdpoh14C/preview'},{title:'25th Hour',url:'https://drive.google.com/file/d/1WlolKpCcZXnrIZ3bzQwPMpZNPd5jeY58/preview'}]}]},{title:'Death Note',img:'https://m.media-amazon.com/images/I/61k3qe5zitL._AC_UF894,1000_QL80_.jpg',seasons:[{name:'Season 1',img:'https://m.media-amazon.com/images/I/61k3qe5zitL._AC_UF894,1000_QL80_.jpg',episodes:["1K105qCMt6ZfvmL5C93gVFqhIyTUOa-Pd","1WM8EsBaHfsPUX-dTJaWBWX36sB-TBSGh","1urqp5FB98tPtfwbHLm1uNKuQEkmARpJK","1m317hzYib_At1EFS30cI_KUEIVhvs4Kf","1QPyCQWXXD_fpLMvYMvJJaZyUqOD7Xp6_","1RjLVjMuoGMvchl3bH2ApeUMvD9g36syh","1G8ojkjTllEmQifBl6Sm9KgpuBv_jrs1x","1zcxf4GiC--tRE38SdVek92XNnh1yRrAb","1p6vaJjEJRLJvvKmNddymbPDHwzvtwkY3","1rwyQb5zpWNvgfLDVDrUuKn03aXqGmgS7","1sdus11t1EvVMv300QIfCMv6EtX2WxaRw","1RLEuL8aqVSgNryoy-tIATLF94WyYpqM5","1QwFnYn-m2t3QP44ztOH8vODm-NNk2gVy","1tbFLHq3sGTi79sJv77xMglzlLkWiVDF5","1OkdFJpDMd8iKzfBwtCW08DKEeHBM5F7A","1s4uYyO5Y7l7JoHn2NQttoDBUfvLQaaH0","1i76OExrUlztOWZdeCIuQTgMLjtTgXGDp","1B6OFquNnGZZIbJqBvbpqq3o2VzOOltlt","1CLjLog7ZJabUiILKS-KPzil0U5A1Hkui","1ZzH44zPaWlE5QsNlZ4dQeuwkG_l68u5k","1SogVvJoENVKskhgSFp7IdRUT5Q9Hdj0C","1SF7hZ_yOj-94V1Z_gOxmu5D5YgiAO-YB","1sSRMJWQz4W4hn2Iwf1GrtaNHJRtzWDge","14S1rJn0Tm4CAuV1_d-kZXhr3CiG4pAtE","1l1uucyr_IgGrzBU2C-2oTWhpb-l5RaXQ","1D6wIPLcB-icS8o7iJPXww4EqBd9E7m6O","1xc6AxJztA11JUH8vKxvDTD2TV8eCC1tv","1pNwQvCDs2Jda-fv4_d0dHQncX_MfvRpD","1uT3zoLTON-rAvyzPheDTxIIcep-Jx7Is","1UItK1v18ivuoicbxz-1VnbMi7Vh1IifI","1whMYOykC2se0PUyggrPmKd78NaD36EJU","1Gf6FdZR29AxRLL0-hBapITJv2jBgO0Ex","1iQpQaWZHzVuKkQpRvDnwdvGgqNPIOaWv","1kdZ7yWX1JSin3uFhHKT-kth38dws4J0B","1OG49KoxrL47vq5l55u95SKlQhazjQ6RY","1G32eo8AnULmkizmUz_6XERkEErXgiPF8","1Jd2eEtz2kK2jNwqwoiZyO_6USL0ibm9r"].map((id,i)=>({title:'Episode '+(i+1),url:`https://drive.google.com/file/d/${id}/preview`}))}]},{title:'Invincible',img:'https://m.media-amazon.com/images/I/71A4CV+GciL._AC_UF894,1000_QL80_.jpg',seasons:[{name:'Season 1',img:'https://m.media-amazon.com/images/I/71A4CV+GciL._AC_UF894,1000_QL80_.jpg',episodes:[{title:"It's About Time",url:'https://drive.google.com/file/d/19iBD4LWH0kL5kmdWz5HGMtQk9VUFCY0B/preview'},{title:'Here Goes Nothing',url:'https://drive.google.com/file/d/1NX4ggLN3xufKl1RTfJFqscXLQo28Sjoo/preview'},{title:"Who You Calling Ugly?",url:'https://drive.google.com/file/d/1k0XoE97ebTZQIxWSeIbUuukWGHRhgoLg/preview'},{title:"That Actually Hurt",url:'https://drive.google.com/file/d/1KONmjVdobgu6QEEHtgN8viDiTX9cxG5Y/preview'},{title:"We Need to Talk",url:'https://drive.google.com/file/d/1mlO3fFTvsmHeJ28kP79r28v_VpKj26Iz/preview'},{title:'Where I Really Come From',url:'https://drive.google.com/file/d/1GMXFaYwDC_QujDjOQVXLn3PQ2qLwVNXH/preview'}]},{name:'Season 2',img:'https://m.media-amazon.com/images/I/71A4CV+GciL._AC_UF894,1000_QL80_.jpg',episodes:[{title:'A Lesson For Your Next Life',url:'https://drive.google.com/file/d/1MVfbtAh0Uv-EKwyafE-hAU3nRvDGuJYS/preview'},{title:'In About Six Hours...',url:'https://drive.google.com/file/d/120WaQ6r2qGIcyycoGbFkneEffbFyPg9C/preview'},{title:"It's Been A While",url:'https://drive.google.com/file/d/1AVz5vwFbGXBcHDeB-PdcmOMh1YyfGFBx/preview'}]}]},{title:'Wednesday',img:'https://m.media-amazon.com/images/M/MV5BMDE1NjNmZjgtZTg0OC00NjkxLWEzYzItMDNkMTc3YjgxZWQyXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg',seasons:[{name:'Season 1',img:'https://m.media-amazon.com/images/M/MV5BMDE1NjNmZjgtZTg0OC00NjkxLWEzYzItMDNkMTc3YjgxZWQyXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg',episodes:[{title:"Wednesday's Child Is Full of Woe",url:'https://drive.google.com/file/d/1GD7dmbbwf0tgmc_0Bt6Rq4qXV7KSTCMD/preview'},{title:'Woe Is the Loneliest Number',url:'https://drive.google.com/file/d/1uq1jm6pM1e1QcAFVcepLeTEzUsSRaa9E/preview'},{title:'Friend or Woe',url:'https://drive.google.com/file/d/1Sv4hMQIoO3CZ7WbzuXOWa5c_NTv6wSLM/preview'},{title:'Woe What a Night',url:'https://drive.google.com/file/d/1uw2PCLsJ0DjfGi_-_VERVsqyY_hhkzQ6/preview'},{title:'You Reap What You Woe',url:'https://drive.google.com/file/d/1HbBi8TcyeRkBvqBk5xSO9PSL3l7ZqNwE/preview'},{title:'A Murder of Woes',url:'https://drive.google.com/file/d/13-JQKH6qDYi9tBMY1v_mHnfh_sMDDNxS/preview'}]}]},{title:'Sakamoto Days',img:'https://m.media-amazon.com/images/M/MV5BNTM4MmZiNjEtOGY0MC00MGM0LTkxZjEtODUxMmJmZWEwOWU3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg',seasons:[{name:'Season 1',img:'https://m.media-amazon.com/images/M/MV5BNTM4MmZiNjEtOGY0MC00MGM0LTkxZjEtODUxMmJmZWEwOWU3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg',episodes:[{title:'The Greatest Hitman',url:'https://drive.google.com/file/d/1iouyFvGPLQQG390X1yxpYOnfZCFlk5rI/preview'},{title:"Shin's Misfortune",url:'https://drive.google.com/file/d/1lAE_nJje_Mssglei0Hml1qlINGiTnETj/preview'},{title:'The Quiet Life',url:'https://drive.google.com/file/d/15xW8LtrA2Sf7nKWAmBfdPSY3dDNtdCx7/preview'},{title:'The Order',url:'https://drive.google.com/file/d/15KAJ3X2-YNXFEEY8mlqcG9Bt5bjldsFH/preview'}]}]},{title:'Cobra Kai',img:'https://m.media-amazon.com/images/M/MV5BMjQwNzM0ODcyNV5BMl5BanBnXkFtZTgwMTU5MDU2NzM@._V1_.jpg',seasons:[{name:'Season 1',img:'https://m.media-amazon.com/images/M/MV5BMjQwNzM0ODcyNV5BMl5BanBnXkFtZTgwMTU5MDU2NzM@._V1_.jpg',episodes:[{title:'Ace Degenerate',url:'https://drive.google.com/file/d/1creJ_0fa7pU0Y--FQEiJLMoAOjehXOGK/preview'},{title:'Strike First',url:'https://drive.google.com/file/d/1xFxMrl46i_e13CBHMiAiyhHtaj4_YiL_/preview'},{title:'Esqueleto',url:'https://drive.google.com/file/d/1iwEfqnbTiJWny1z5PGKfRwE7cvGPGE2w/preview'},{title:'Cobra Kai Never Dies',url:'https://drive.google.com/file/d/1P5eP81RSciD-ak0uo6yg1ENGF0CGpVJN/preview'},{title:'Mercy',url:'https://drive.google.com/file/d/19uOsaq1o7g_HR5Ige8sCE3O4Lq3zqFzp/preview'}]}]},{title:'One-Punch Man',img:'https://m.media-amazon.com/images/I/81s5qTz80SL._UF1000,1000_QL80_.jpg',seasons:[{name:'Season 1',img:'https://m.media-amazon.com/images/I/81s5qTz80SL._UF1000,1000_QL80_.jpg',episodes:[{title:'The Strongest Man',url:'https://drive.google.com/file/d/1DarTqiJ4GWvKnkuDGEixFjh3iFJjMJ7B/preview'},{title:'The Lone Cyborg',url:'https://drive.google.com/file/d/1LknLsS1zJMFiFHgIcnbFsFJaYtA_g0kE/preview'},{title:'The Obsessive Scientist',url:'https://drive.google.com/file/d/1IIFirlsBKtVs2XPGUiVlQc0wnSz0SaeK/preview'}]}]}];
-// ── DEVTOOLS BLOCK ───────────────────────────────────────────────
-(function(){
-  document.addEventListener('contextmenu',function(e){e.preventDefault();return false;},{capture:true});
-  document.addEventListener('keydown',function(e){
-    if(e.key==='F12'){e.preventDefault();e.stopPropagation();return false;}
-    if(e.ctrlKey&&e.shiftKey&&['I','i','J','j','C','c','K','k'].includes(e.key)){e.preventDefault();e.stopPropagation();return false;}
-    if(e.ctrlKey&&['U','u'].includes(e.key)){e.preventDefault();e.stopPropagation();return false;}
-  },{capture:true});
-})();
+// ── DEVTOOLS BLOCK (temporarily disabled for debugging) ─────────
+// (function(){
+//   document.addEventListener('contextmenu',function(e){e.preventDefault();return false;},{capture:true});
+//   document.addEventListener('keydown',function(e){
+//     if(e.key==='F12'){e.preventDefault();e.stopPropagation();return false;}
+//     if(e.ctrlKey&&e.shiftKey&&['I','i','J','j','C','c','K','k'].includes(e.key)){e.preventDefault();e.stopPropagation();return false;}
+//     if(e.ctrlKey&&['U','u'].includes(e.key)){e.preventDefault();e.stopPropagation();return false;}
+//   },{capture:true});
+// })();
 // ── SUPABASE CONFIG (obfuscated) ─────────────────────────────────
 const SB_URL=(function(){const b=[50,46,46,42,41,96,117,117,52,34,54,60,45,34,47,43,44,44,50,63,41,57,32,53,62,48,52,61,116,41,47,42,59,56,59,41,63,116,57,53];return b.map(x=>String.fromCharCode(x^0x5A)).join('');})();
 const SB_KEY=(function(){const b=[63,35,16,50,56,29,57,51,21,51,16,19,15,32,19,107,20,51,19,41,19,52,8,111,57,25,19,108,19,49,42,2,12,25,16,99,116,63,35,16,42,57,105,23,51,21,51,16,32,62,2,24,50,3,55,28,32,0,9,19,41,19,52,16,54,0,51,19,108,19,55,111,110,56,29,0,105,63,18,12,34,62,52,0,53,0,2,20,48,63,55,99,49,59,55,111,52,19,51,45,51,57,55,99,41,0,9,19,108,19,55,28,47,56,104,110,51,22,25,16,42,3,2,11,51,21,48,31,105,20,32,19,111,20,30,23,106,20,30,11,41,19,55,12,110,57,25,19,108,23,48,27,110,21,30,15,34,21,14,11,106,20,18,106,116,40,99,110,41,15,50,10,25,99,42,51,45,34,106,48,32,119,62,105,48,2,17,13,54,35,21,12,10,32,51,48,32,57,28,107,17,111,2,3,54,21,34,98];return b.map(x=>String.fromCharCode(x^0x5A)).join('');})();
@@ -2854,7 +3498,7 @@ async function lbSubmit(){
       if(rows[0].password_hash!==hash){err.textContent='Incorrect password.';btn.disabled=false;return;}
       if(rows[0].banned){err.textContent=`🚫 Account banned: ${rows[0].ban_reason||'Contact admin'}`;btn.disabled=false;return;}
       if(rows[0].suspended_until&&new Date(rows[0].suspended_until)>new Date()){err.textContent=`⏸ Account suspended until ${new Date(rows[0].suspended_until).toLocaleDateString()}`;btn.disabled=false;return;}
-      currentUser={id:rows[0].id,username:rows[0].username,avatar:rows[0].avatar,role:rows[0].role||'user',display_name:rows[0].display_name||null};
+      currentUser={id:rows[0].id,username:rows[0].username,avatar:rows[0].avatar,role:rows[0].role||'user',display_name:rows[0].display_name||null,tokens:rows[0].tokens||0};
       localStorage.setItem('adless_session',JSON.stringify(currentUser));
       await loadUserData();
       lbEnter();
@@ -2948,6 +3592,7 @@ function lbGuest(){
 function lbEnter(){
   document.getElementById('login-screen').classList.add('gone');
   updateUserChip();
+  fetchAndSetTokens();
   favs=loadFavs();
   applyStoredSettings();
   loadCloakSetting();
@@ -3533,6 +4178,12 @@ document.querySelectorAll('.nav').forEach(btn=>{
       else if(btn.dataset.view==='friends-view'){switchView('friends-view');loadFriendRequests();loadGroupsList();}
       else if(btn.dataset.view==='owner-view'){switchView('owner-view');loadOwnerPanel();}else if(btn.dataset.view==='tester-view'){switchView('tester-view');testerLoadResults();}
       else if(btn.dataset.view==='admin-view'){switchView('admin-view');loadAdminPanel();}
+      else if(btn.dataset.view==='worlds-view'){switchView('worlds-view');setWorldsTab('browse');loadWorldsBrowse();}
+      else if(btn.dataset.view==='worlds-studio-view'){switchView('worlds-studio-view');loadMyWorlds();}
+      else if(btn.dataset.view==='worlds-review-view'){switchView('worlds-review-view');loadWorldsReview('pending');loadWorldsAdminMgmt();}
+      else if(btn.dataset.view==='contact-view'){switchView('contact-view');}
+      else if(btn.dataset.view==='bugs-view'){switchView('bugs-view');loadBugsView();}
+      else if(btn.dataset.view==='blog-view'){switchView('blog-view');}
       else if(btn.dataset.view==='profile-view'){switchView('profile-view');loadProfilePage();}
       else if(btn.dataset.view==='people-view'){switchView('people-view');loadPeopleView();}
       else{switchView(btn.dataset.view);if(btn.dataset.view==='settings-view'){buildColorGrid();buildBgSwatches();buildBgGradients();buildCloakGrid();updateStats();updateAvatarDisplay();loadPfpGallery();loadCurrentEmail();loadGalleryForUser();loadCurrentBio();initDebugBadgesToggle();
@@ -5100,8 +5751,22 @@ function showOwnerNav(){
   if(tnav)tnav.style.display=isTesterRole()&&!isOwner()?'block':'none';
   const anav=document.getElementById('admin-nav');
   if(anav)anav.style.display=(currentUser&&currentUser.role==='mod')?'block':'none';
+  checkWorldsAdminNav();
 }
 
+async function fetchAndSetTokens(){
+  if(!currentUser||currentUser.guest)return;
+  try{
+    const r=await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=tokens`);
+    if(r&&r[0]){
+      currentUser.tokens=r[0].tokens||0;
+      const topTok=document.getElementById('topbar-tokens');
+      if(topTok)topTok.textContent='🪙 '+currentUser.tokens;
+      const balEl=document.getElementById('tok-balance-display');
+      if(balEl)balEl.textContent=currentUser.tokens;
+    }
+  }catch(e){}
+}
 function updateUserChip(){
   const chip=document.getElementById('user-chip');
   if(!chip||!currentUser)return;
@@ -5121,6 +5786,9 @@ function updateUserChip(){
     if(userBtn)userBtn.style.display='flex';
     if(topAv){const av=currentUser.avatar||'👤';topAv.innerHTML=av.startsWith('http')?`<img src="${av}" style="width:26px;height:26px;border-radius:50%;object-fit:cover">`:av;}
     if(topName)topName.textContent=currentUser.display_name||currentUser.username;
+    // Token count in topbar
+    const topTok=document.getElementById('topbar-tokens');
+    if(topTok)topTok.textContent='🪙 '+(currentUser.tokens||0);
   }
   const badge=isOwner()?'<span class="owner-badge">OWNER</span>':isAdmin()&&!isOwner()?'<span class="owner-badge" style="background:rgba(48,209,88,.15);color:#30d158;border-color:rgba(48,209,88,.3)">ADMIN</span>':currentUser&&currentUser.role==='mod'?'<span class="owner-badge" style="background:rgba(10,132,255,.15);color:#0a84ff;border-color:rgba(10,132,255,.3)">MOD</span>':'';
   document.getElementById('uc-name').innerHTML=displayName+badge;
@@ -5932,63 +6600,77 @@ async function checkUserStatus(uid){
 
 // TAB CLOAKER
 const CLOAKS=[
-  // Productivity
-  {name:'YouTube',title:'YouTube',icon:'https://www.youtube.com/favicon.ico'},
-  {name:'Google Classroom',title:'Google Classroom',icon:'https://ssl.gstatic.com/classroom/favicon.png'},
-  {name:'Google Docs',title:'Google Docs - Untitled document',icon:'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'},
-  {name:'Google Slides',title:'Google Slides - Untitled presentation',icon:'https://ssl.gstatic.com/docs/presentations/images/favicon5.ico'},
-  {name:'Google Drive',title:'My Drive - Google Drive',icon:'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png'},
-  {name:'Google Sheets',title:'Google Sheets - Untitled spreadsheet',icon:'https://ssl.gstatic.com/docs/spreadsheets/favicon3.ico'},
-  {name:'IXL',title:'IXL | Math & English',icon:'https://www.ixl.com/favicon.ico'},
-  {name:'Khan Academy',title:'Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
-  {name:'Quizlet',title:'Quizlet',icon:'https://quizlet.com/favicon.ico'},
-  {name:'Wikipedia',title:'Wikipedia, the free encyclopedia',icon:'https://en.wikipedia.org/favicon.ico'},
-  {name:'Desmos',title:'Desmos | Graphing Calculator',icon:'https://www.desmos.com/favicon.ico'},
-  {name:'Schoology',title:'Schoology',icon:'https://www.schoology.com/sites/default/themes/schoology_theme/favicon.ico'},
-  {name:'Canvas',title:'Dashboard - Canvas',icon:'https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico'},
-  {name:'Duolingo',title:'Duolingo - The world\'s best way to learn a language',icon:'https://www.duolingo.com/favicon.ico'},
+  // Apps & Sites
+  {name:'YouTube',title:'YouTube',icon:'https://lh3.googleusercontent.com/8gu4FBE2tDg7bvFcW6H8CPSdqJsMI5blxJJVq_ZFKQHdGTM9CJ1Rjm7kPQgj3VGzT3o=s180'},
+  {name:'Gmail',title:'Gmail',icon:'https://fonts.gstatic.com/s/i/productlogos/gmail/v14/192px.svg'},
+  {name:'Google Classroom',title:'Google Classroom',icon:'https://fonts.gstatic.com/s/i/productlogos/classroom/v7/192px.svg'},
+  {name:'Google Docs',title:'Google Docs - Untitled document',icon:'https://fonts.gstatic.com/s/i/productlogos/docs/v8/192px.svg'},
+  {name:'Google Slides',title:'Google Slides - Untitled presentation',icon:'https://fonts.gstatic.com/s/i/productlogos/slides/v8/192px.svg'},
+  {name:'Google Drive',title:'My Drive - Google Drive',icon:'https://fonts.gstatic.com/s/i/productlogos/drive/v2/192px.svg'},
+  {name:'Google Sheets',title:'Google Sheets - Untitled spreadsheet',icon:'https://fonts.gstatic.com/s/i/productlogos/sheets/v8/192px.svg'},
+  {name:'Google Forms',title:'Google Forms - New Form',icon:'https://fonts.gstatic.com/s/i/productlogos/forms/v8/192px.svg'},
+  {name:'Google Meet',title:'Google Meet',icon:'https://fonts.gstatic.com/s/i/productlogos/meet/v15/192px.svg'},
+  {name:'Google Calendar',title:'Google Calendar',icon:'https://fonts.gstatic.com/s/i/productlogos/calendar/v15/192px.svg'},
+  {name:'Google Keep',title:'Google Keep',icon:'https://fonts.gstatic.com/s/i/productlogos/keep/v8/192px.svg'},
+  {name:'IXL',title:'IXL | Math & English',icon:'https://www.google.com/s2/favicons?domain=ixl.com&sz=64'},
+  {name:'Khan Academy',title:'Khan Academy',icon:'https://www.google.com/s2/favicons?domain=khanacademy.org&sz=64'},
+  {name:'Quizlet',title:'Quizlet',icon:'https://www.google.com/s2/favicons?domain=quizlet.com&sz=64'},
+  {name:'Wikipedia',title:'Wikipedia, the free encyclopedia',icon:'https://www.google.com/s2/favicons?domain=wikipedia.org&sz=64'},
+  {name:'Desmos',title:'Desmos | Graphing Calculator',icon:'https://www.google.com/s2/favicons?domain=desmos.com&sz=64'},
+  {name:'Schoology',title:'Schoology',icon:'https://www.google.com/s2/favicons?domain=schoology.com&sz=64'},
+  {name:'Canvas',title:'Dashboard - Canvas',icon:'https://www.google.com/s2/favicons?domain=instructure.com&sz=64'},
+  {name:'Duolingo',title:'Duolingo - The world\'s best way to learn a language',icon:'https://www.google.com/s2/favicons?domain=duolingo.com&sz=64'},
+  {name:'Nearpod',title:'Nearpod',icon:'https://www.google.com/s2/favicons?domain=nearpod.com&sz=64'},
+  {name:'Gimkit',title:'Gimkit - Build your own',icon:'https://www.google.com/s2/favicons?domain=gimkit.com&sz=64'},
+  {name:'Kahoot',title:'Kahoot! | Learning games',icon:'https://www.google.com/s2/favicons?domain=kahoot.com&sz=64'},
+  {name:'Quizizz',title:'Quizizz | Fun Multiplayer Classroom Quizzes',icon:'https://www.google.com/s2/favicons?domain=quizizz.com&sz=64'},
+  {name:'Edpuzzle',title:'Edpuzzle',icon:'https://www.google.com/s2/favicons?domain=edpuzzle.com&sz=64'},
+  {name:'Newsela',title:'Newsela | Reading & Writing',icon:'https://www.google.com/s2/favicons?domain=newsela.com&sz=64'},
+  {name:'CommonLit',title:'CommonLit',icon:'https://www.google.com/s2/favicons?domain=commonlit.org&sz=64'},
   {name:'New Tab',title:'New Tab',icon:''},
   // Math
-  {name:'Algebra',title:'Algebra I - Unit 4 Review | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
-  {name:'Geometry',title:'Geometry - Proofs & Theorems | IXL',icon:'https://www.ixl.com/favicon.ico'},
-  {name:'Pre-Calc',title:'Precalculus - Functions & Graphs | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
-  {name:'Calculus',title:'AP Calculus AB - Derivatives | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
-  {name:'Statistics',title:'Statistics & Probability | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
+  {name:'Algebra',title:'Algebra I - Unit 4 Review | Khan Academy',icon:'https://www.google.com/s2/favicons?domain=khanacademy.org&sz=64'},
+  {name:'Geometry',title:'Geometry - Proofs & Theorems | IXL',icon:'https://www.google.com/s2/favicons?domain=ixl.com&sz=64'},
+  {name:'Pre-Calc',title:'Precalculus - Functions & Graphs | Khan Academy',icon:'https://www.google.com/s2/favicons?domain=khanacademy.org&sz=64'},
+  {name:'Calculus',title:'AP Calculus AB - Derivatives | Khan Academy',icon:'https://www.google.com/s2/favicons?domain=khanacademy.org&sz=64'},
+  {name:'Statistics',title:'Statistics & Probability | Khan Academy',icon:'https://www.google.com/s2/favicons?domain=khanacademy.org&sz=64'},
+  {name:'Desmos Calc',title:'Desmos | Graphing Calculator',icon:'https://www.google.com/s2/favicons?domain=desmos.com&sz=64'},
   // Science
-  {name:'Biology',title:'Biology - Cell Division Notes - Google Docs',icon:'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'},
-  {name:'Chemistry',title:'Chemistry - Periodic Table & Reactions | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
-  {name:'Physics',title:'AP Physics 1 - Forces & Motion | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
-  {name:'Earth Sci',title:'Earth Science - Plate Tectonics Notes - Google Docs',icon:'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'},
-  {name:'Anatomy',title:'Anatomy & Physiology - Unit 3 | IXL',icon:'https://www.ixl.com/favicon.ico'},
-  // History & Social Studies
-  {name:'World History',title:'World History - WWI & WWII Review - Google Docs',icon:'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'},
-  {name:'US History',title:'US History - Civil War Era Notes | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
-  {name:'Geography',title:'World Geography - Regions & Capitals | IXL',icon:'https://www.ixl.com/favicon.ico'},
-  {name:'Civics',title:'Civics - Government & Constitution Review - Google Docs',icon:'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'},
-  {name:'Econ',title:'Economics - Supply & Demand | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
-  // English
-  {name:'English',title:'English - Essay Draft - Google Docs',icon:'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'},
-  {name:'Lit',title:'AP Literature - The Great Gatsby Analysis - Google Docs',icon:'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'},
-  {name:'Grammar',title:'Grammar & Writing Skills | IXL',icon:'https://www.ixl.com/favicon.ico'},
-  {name:'Spanish',title:'Spanish II - Conjugation Practice | Duolingo',icon:'https://www.duolingo.com/favicon.ico'},
-  {name:'French',title:'French III - Vocabulary Review | Duolingo',icon:'https://www.duolingo.com/favicon.ico'},
+  {name:'Biology',title:'Biology - Cell Division Notes - Google Docs',icon:'https://fonts.gstatic.com/s/i/productlogos/docs/v8/192px.svg'},
+  {name:'Chemistry',title:'Chemistry - Periodic Table & Reactions | Khan Academy',icon:'https://www.google.com/s2/favicons?domain=khanacademy.org&sz=64'},
+  {name:'Physics',title:'AP Physics 1 - Forces & Motion | Khan Academy',icon:'https://www.google.com/s2/favicons?domain=khanacademy.org&sz=64'},
+  {name:'Earth Sci',title:'Earth Science - Plate Tectonics Notes - Google Docs',icon:'https://fonts.gstatic.com/s/i/productlogos/docs/v8/192px.svg'},
+  {name:'Anatomy',title:'Anatomy & Physiology - Unit 3 | IXL',icon:'https://www.google.com/s2/favicons?domain=ixl.com&sz=64'},
+  // History
+  {name:'World History',title:'World History - WWI & WWII Review - Google Docs',icon:'https://fonts.gstatic.com/s/i/productlogos/docs/v8/192px.svg'},
+  {name:'US History',title:'US History - Civil War Era Notes | Khan Academy',icon:'https://www.google.com/s2/favicons?domain=khanacademy.org&sz=64'},
+  {name:'Geography',title:'World Geography - Regions & Capitals | IXL',icon:'https://www.google.com/s2/favicons?domain=ixl.com&sz=64'},
+  {name:'Civics',title:'Civics - Government & Constitution Review - Google Docs',icon:'https://fonts.gstatic.com/s/i/productlogos/docs/v8/192px.svg'},
+  {name:'Econ',title:'Economics - Supply & Demand | Khan Academy',icon:'https://www.google.com/s2/favicons?domain=khanacademy.org&sz=64'},
+  // English & Languages
+  {name:'English',title:'English - Essay Draft - Google Docs',icon:'https://fonts.gstatic.com/s/i/productlogos/docs/v8/192px.svg'},
+  {name:'Lit',title:'AP Literature - The Great Gatsby Analysis - Google Docs',icon:'https://fonts.gstatic.com/s/i/productlogos/docs/v8/192px.svg'},
+  {name:'Grammar',title:'Grammar & Writing Skills | IXL',icon:'https://www.google.com/s2/favicons?domain=ixl.com&sz=64'},
+  {name:'Spanish',title:'Spanish II - Conjugation Practice | Duolingo',icon:'https://www.google.com/s2/favicons?domain=duolingo.com&sz=64'},
+  {name:'French',title:'French III - Vocabulary Review | Duolingo',icon:'https://www.google.com/s2/favicons?domain=duolingo.com&sz=64'},
   // Other
-  {name:'CS / Coding',title:'Intro to Computer Science - Python | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
-  {name:'Health',title:'Health - Nutrition & Wellness Notes - Google Docs',icon:'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'},
-  {name:'Art History',title:'Art History - Renaissance Period | Khan Academy',icon:'https://www.khanacademy.org/favicon.ico'},
-  {name:'Psychology',title:'AP Psychology - Memory & Cognition Notes - Google Docs',icon:'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'},
+  {name:'CS / Coding',title:'Intro to Computer Science - Python | Khan Academy',icon:'https://www.google.com/s2/favicons?domain=khanacademy.org&sz=64'},
+  {name:'Health',title:'Health - Nutrition & Wellness Notes - Google Docs',icon:'https://fonts.gstatic.com/s/i/productlogos/docs/v8/192px.svg'},
+  {name:'Art History',title:'Art History - Renaissance Period | Khan Academy',icon:'https://www.google.com/s2/favicons?domain=khanacademy.org&sz=64'},
+  {name:'Psychology',title:'AP Psychology - Memory & Cognition Notes - Google Docs',icon:'https://fonts.gstatic.com/s/i/productlogos/docs/v8/192px.svg'},
+  {name:'Library',title:'School Library - Research Database',icon:'https://www.google.com/s2/favicons?domain=overdrive.com&sz=64'},
 ];
 let activeCloakIdx=-1;
 function buildCloakGrid(){
   const grid=document.getElementById('cloak-grid');
   if(!grid)return;
   const sections=[
-    {label:'📱 Apps & Sites',items:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]},
-    {label:'🔢 Math',items:[15,16,17,18,19]},
-    {label:'🔬 Science',items:[20,21,22,23,24]},
-    {label:'🌍 History & Social Studies',items:[25,26,27,28,29]},
-    {label:'📝 English & Languages',items:[30,31,32,33,34]},
-    {label:'📚 Other Subjects',items:[35,36,37,38]},
+    {label:'📱 Apps & Sites',items:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26]},
+    {label:'🔢 Math',items:[27,28,29,30,31,32]},
+    {label:'🔬 Science',items:[33,34,35,36,37]},
+    {label:'🌍 History & Social Studies',items:[38,39,40,41,42]},
+    {label:'📝 English & Languages',items:[43,44,45,46,47]},
+    {label:'📚 Other Subjects',items:[48,49,50,51,52]},
   ];
   grid.innerHTML=sections.map(sec=>`
     <div style="width:100%;font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin:10px 0 6px;grid-column:1/-1">${sec.label}</div>
@@ -6019,11 +6701,21 @@ function applyCustomCloak(){
 function setTabCloak(title,icon){
   document.title=title;
   const link=document.getElementById('site-favicon');
-  if(link)link.href=icon||'data:,';
+  if(!link)return;
+  if(icon&&icon.endsWith('.svg')){
+    link.type='image/svg+xml';
+    link.href=icon;
+  } else if(icon){
+    link.type='image/x-icon';
+    link.href=icon;
+  } else {
+    link.removeAttribute('type');
+    link.href='data:,';
+  }
 }
 function resetCloak(){
   activeCloakIdx=-1;
-  document.title='Adless OS';
+  document.title='Adless Games';
   const link=document.getElementById('site-favicon');
   if(link)link.href='data:,';
   buildCloakGrid();
@@ -6500,7 +7192,7 @@ setTimeout(function(){bootStep('Ready!',100);setTimeout(bootDone,400);},3500);
       else{
         const rows=await sbReq(`/rest/v1/profiles?id=eq.${u.id}&select=id,username,avatar,role,banned,suspended_until,display_name`);
         if(rows&&rows.length&&!rows[0].banned&&!(rows[0].suspended_until&&new Date(rows[0].suspended_until)>new Date())){
-          currentUser={id:rows[0].id,username:rows[0].username,avatar:rows[0].avatar,role:rows[0].role||'user',display_name:rows[0].display_name||null};
+          currentUser={id:rows[0].id,username:rows[0].username,avatar:rows[0].avatar,role:rows[0].role||'user',display_name:rows[0].display_name||null,tokens:rows[0].tokens||0};
           localStorage.setItem('adless_session',JSON.stringify(currentUser));
           await loadUserData();
           lbEnter();
@@ -8713,13 +9405,18 @@ async function updPublish() {
   const body  = (document.getElementById('upd-compose-body').value  || '').trim();
   if (!title) { showToast('Enter an update title.'); return; }
   const entry = { id: 'upd_' + Date.now(), title, body, date: new Date().toISOString() };
-  updLog.unshift(entry);   // newest first
-  await updSave();
-  document.getElementById('upd-compose-title').value = '';
-  document.getElementById('upd-compose-body').value  = '';
-  showToast('📣 Update published!');
-  updRenderAdminList();
-  updCheckBanner();
+  updLog.unshift(entry);
+  try {
+    await updSave();
+    document.getElementById('upd-compose-title').value = '';
+    document.getElementById('upd-compose-body').value  = '';
+    showToast('📣 Update published!');
+    updRenderAdminList();
+    updCheckBanner();
+  } catch(e) {
+    showToast('Failed to save: ' + (e.message||'unknown error'));
+    updLog.shift(); // rollback
+  }
 }
 
 async function updDelete(id) {
@@ -10623,6 +11320,1741 @@ async function loadVerifiedEmails(){
       </div>`).join('');
   }catch(e){ el.innerHTML='<div class="fc-empty">Failed to load.</div>'; }
 }
+
+// ═══════════════════════════════════════════════════════════════
+//  ADLESS WORLDS — Full JS
+// ═══════════════════════════════════════════════════════════════
+
+// ── State ──────────────────────────────────────────────────────
+let worldsData = [];          // browse cache
+let worldsBrowseSort = 'new';
+let currentEditingWorldId = null;
+let editorScene = null;
+let editorObjects = [];       // {id, type, mesh, position, scale, rotation, color, script, name}
+let editorSelectedId = null;
+let editorTool = 'move';
+let editorGui = [];           // GUI elements array
+let editorCamera = null, editorRenderer = null, editorAnimId = null;
+let playerScene = null, playerRenderer = null, playerAnimId = null;
+let currentPlayingWorldId = null;
+let isWorldAdmin = false;
+
+// ── Worlds tab switching ───────────────────────────────────────
+function setWorldsTab(tab) {
+  ['browse','avatar','shop'].forEach(t => {
+    const panel = document.getElementById('worlds-tab-'+t);
+    if (panel) panel.style.display = t===tab ? 'block' : 'none';
+    const btn = document.getElementById('wtab-'+t);
+    if (btn) btn.classList.toggle('active', t===tab);
+  });
+  if (tab==='avatar') initAvatarTab();
+  if (tab==='shop') initShopTab();
+}
+
+// ── World Admin check ──────────────────────────────────────────
+async function checkWorldsAdminNav() {
+  const nav = document.getElementById('worlds-admin-nav');
+  if (!nav || !currentUser || currentUser.guest) { if(nav) nav.style.display='none'; return; }
+  if (isOwner() || isAdmin()) { nav.style.display='block'; isWorldAdmin=true; return; }
+  try {
+    const rows = await sbReq(`/rest/v1/world_admins?user_id=eq.${currentUser.id}&select=id`);
+    isWorldAdmin = !!(rows && rows.length);
+    nav.style.display = isWorldAdmin ? 'block' : 'none';
+    if (isWorldAdmin) loadWorldsPendingBadge();
+  } catch(e) { nav.style.display='none'; }
+}
+
+async function loadWorldsPendingBadge() {
+  try {
+    const rows = await sbReq('/rest/v1/worlds?status=eq.pending&select=id');
+    const badge = document.getElementById('worlds-pending-badge');
+    if (!badge) return;
+    const count = rows ? rows.length : 0;
+    badge.textContent = count;
+    badge.style.display = count > 0 ? 'inline' : 'none';
+  } catch(e) {}
+}
+
+// ── Browse Worlds ──────────────────────────────────────────────
+function setWorldSort(s) {
+  worldsBrowseSort = s;
+  ['new','pop','liked'].forEach(x => {
+    const b = document.getElementById('wsort-'+x);
+    if (b) { b.style.background=''; b.style.borderColor=''; b.style.color=''; }
+  });
+  const active = document.getElementById('wsort-'+s);
+  if (active) { active.style.background='rgba(10,132,255,.15)'; active.style.borderColor='rgba(10,132,255,.3)'; active.style.color='var(--blue)'; }
+  loadWorldsBrowse();
+}
+
+async function loadWorldsBrowse() {
+  const grid = document.getElementById('worlds-browse-grid');
+  if (!grid) return;
+  grid.innerHTML = '<div class="fc-empty">Loading worlds…</div>';
+  try {
+    let order = 'created_at.desc';
+    if (worldsBrowseSort === 'pop') order = 'play_count.desc';
+    if (worldsBrowseSort === 'liked') order = 'like_count.desc';
+    const rows = await sbReq(`/rest/v1/worlds?status=eq.approved&select=id,title,description,creator_name,genre,play_count,like_count,avg_rating,tags,thumbnail_url,created_at&order=${order}&limit=60`);
+    worldsData = rows || [];
+    renderWorldsBrowse();
+  } catch(e) {
+    grid.innerHTML = '<div class="fc-empty">Failed to load worlds.</div>';
+  }
+}
+
+function filterWorldsBrowse() {
+  renderWorldsBrowse();
+}
+
+function renderWorldsBrowse() {
+  const grid = document.getElementById('worlds-browse-grid');
+  if (!grid) return;
+  const q = (document.getElementById('worlds-search')?.value||'').toLowerCase();
+  const genre = document.getElementById('worlds-genre-filter')?.value||'all';
+  let filtered = worldsData.filter(w => {
+    const matchQ = !q || w.title.toLowerCase().includes(q) || (w.description||'').toLowerCase().includes(q) || w.creator_name.toLowerCase().includes(q);
+    const matchG = genre === 'all' || w.genre === genre;
+    return matchQ && matchG;
+  });
+  if (!filtered.length) { grid.innerHTML = '<div class="fc-empty">No worlds found.</div>'; return; }
+  grid.innerHTML = filtered.map(w => `
+    <div class="world-card" onclick="playWorld('${w.id}')">
+      <div class="world-card-thumb">${w.thumbnail_url?`<img src="${escHtml(w.thumbnail_url)}" style="width:100%;height:100%;object-fit:cover">`:worldEmoji(w.genre)}</div>
+      <div class="world-card-info">
+        <div style="font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(w.title)}</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:2px">by ${escHtml(w.creator_name)}</div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:5px;flex-wrap:wrap">
+          <span style="font-size:10px;color:var(--text2)">🎮 ${w.play_count||0}</span>
+          <span style="font-size:10px;color:var(--text2)">❤️ ${w.like_count||0}</span>
+          ${w.avg_rating?`<span style="font-size:10px;color:#ffd60a">★ ${parseFloat(w.avg_rating).toFixed(1)}</span>`:''}
+          <span style="font-size:10px;background:rgba(255,255,255,.07);padding:1px 6px;border-radius:4px;color:var(--text2)">${w.genre}</span>
+        </div>
+        ${w.tags&&w.tags.length?`<div style="margin-top:4px;display:flex;gap:3px;flex-wrap:wrap">${(w.tags||[]).slice(0,3).map(t=>`<span style="font-size:9px;background:rgba(10,132,255,.1);color:var(--blue);border-radius:4px;padding:1px 5px">${escHtml(t)}</span>`).join('')}</div>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function worldEmoji(genre) {
+  const m={Adventure:'🏔️',Puzzle:'🧩',Horror:'👻',Platformer:'🕹️',RPG:'⚔️',Showcase:'🎨',Other:'🌍'};
+  return m[genre]||'🌍';
+}
+
+// ── My Worlds / Studio ─────────────────────────────────────────
+function openWorldsStudio() {
+  if (!currentUser || currentUser.guest) { showToast('Login to create worlds'); return; }
+  document.querySelectorAll('aside .nav').forEach(n=>n.classList.remove('active'));
+  switchView('worlds-studio-view');
+  loadMyWorlds();
+}
+
+async function loadMyWorlds() {
+  if (!currentUser || currentUser.guest) { document.getElementById('my-worlds-list').innerHTML='<div class="fc-empty">Login to see your worlds.</div>'; return; }
+  const el = document.getElementById('my-worlds-list');
+  el.innerHTML = '<div class="fc-empty">Loading…</div>';
+  try {
+    const rows = await sbReq(`/rest/v1/worlds?creator_id=eq.${currentUser.id}&select=id,title,genre,status,play_count,like_count,reject_reason,created_at&order=created_at.desc`);
+    if (!rows || !rows.length) { el.innerHTML='<div class="fc-empty">You have no worlds yet. Create one!</div>'; return; }
+    el.innerHTML = rows.map(w => `
+      <div class="my-world-row">
+        <div class="my-world-thumb">${worldEmoji(w.genre)}</div>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px">${escHtml(w.title)}</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+            <span class="world-status-badge wsb-${w.status}">${statusLabel(w.status)}</span>
+            <span style="font-size:10px;color:var(--text2)">${w.genre}</span>
+          </div>
+          ${w.status==='rejected'&&w.reject_reason?`<div style="font-size:11px;color:#ff375f;margin-top:4px">Reason: ${escHtml(w.reject_reason)}</div>`:''}
+          <div style="font-size:10px;color:var(--text2);margin-top:4px">🎮 ${w.play_count||0} plays &nbsp;❤️ ${w.like_count||0} likes</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <button class="auc-btn" onclick="editWorld('${w.id}')">✏️ Edit</button>
+          ${w.status==='approved'?`<button class="auc-btn" onclick="unpublishWorld('${w.id}')">📤 Unpublish</button>`:''}
+          ${w.status==='rejected'||w.status==='unpublished'?`<button class="auc-btn green" onclick="resubmitWorld('${w.id}')">📨 Resubmit</button>`:''}
+          <button class="auc-btn red" onclick="deleteWorld('${w.id}')">🗑 Delete</button>
+        </div>
+      </div>`).join('');
+  } catch(e) { el.innerHTML='<div class="fc-empty">Failed to load.</div>'; }
+}
+
+function statusLabel(s){ return {pending:'⏳ Pending Review',approved:'✅ Live',rejected:'❌ Rejected',unpublished:'📦 Draft'}[s]||s; }
+
+async function createNewWorld() {
+  if (!currentUser||currentUser.guest){showToast('Login required');return;}
+  const title = prompt('World name:');
+  if (!title||!title.trim()) return;
+  try {
+    // Insert with return=minimal (more reliable than representation)
+    const insertResp = await fetch(SB_URL+'/rest/v1/worlds', {
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({
+        title:title.trim(), creator_id:currentUser.id,
+        creator_name:currentUser.display_name||currentUser.username,
+        status:'unpublished', world_data:{objects:[],gui:[],description:''}
+      })
+    });
+    if (!insertResp.ok) {
+      const err=await insertResp.text();
+      console.error('Insert failed:',insertResp.status, err);
+      showToast('Insert failed '+insertResp.status+' — check console');
+      return;
+    }
+    // Fetch the newly created world
+    await new Promise(r=>setTimeout(r,500));
+    console.log('[createNewWorld] currentUser.id:', currentUser.id, 'title:', title.trim());
+    const fetchResp = await fetch(SB_URL+`/rest/v1/worlds?creator_id=eq.${currentUser.id}&order=created_at.desc&limit=1&select=id,title,creator_id`, {
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Accept':'application/json'}
+    });
+    const fetchText = await fetchResp.text();
+    console.log('[createNewWorld] fetch result:', fetchResp.status, fetchText);
+    // Also try fetching without creator_id filter to see if the row exists at all
+    const fetchAll = await fetch(SB_URL+`/rest/v1/worlds?order=created_at.desc&limit=3&select=id,title,creator_id`, {
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Accept':'application/json'}
+    });
+    console.log('[createNewWorld] latest worlds:', await fetchAll.text());
+    let rows = [];
+    try { rows = JSON.parse(fetchText); } catch(e2) {}
+    if (rows && rows[0]) {
+      showToast('World created! 🎉');
+      editWorld(rows[0].id);
+    } else {
+      showToast('World saved! Opening My Worlds…');
+      switchView('worlds-studio-view');
+      loadMyWorlds();
+    }
+  } catch(e) { console.error('[createNewWorld] error:', e); showToast('Failed to create world — check console'); }
+}
+
+// ── Editor ─────────────────────────────────────────────────────
+async function editWorld(worldId) {
+  currentEditingWorldId = worldId;
+  // Load world data
+  let world = null;
+  try { const r=await sbReq(`/rest/v1/worlds?id=eq.${worldId}&select=*`); world=r&&r[0]; } catch(e){}
+  if (!world) { showToast('Failed to load world'); return; }
+
+  // Show editor as fixed fullscreen overlay
+  document.getElementById('worlds-editor-view').style.display='flex';
+
+  // Restore world meta
+  document.getElementById('we-title').value = world.title||'';
+  const genSel = document.getElementById('we-genre');
+  if(genSel) genSel.value = world.genre||'Adventure';
+  document.getElementById('we-desc').value = world.world_data?.description||'';
+  const skySel = document.getElementById('we-sky');
+  if(skySel) skySel.value = world.world_data?.sky||'day';
+  const ambSel = document.getElementById('we-ambient');
+  if(ambSel) ambSel.value = world.world_data?.ambient||'none';
+  const tagEl = document.getElementById('we-tags');
+  if(tagEl) tagEl.value = (world.tags||world.world_data?.tags||[]).map(t=>'#'+t).join(', ');
+
+  // Restore editor state
+  editorObjects = (world.world_data?.objects||[]).map(o=>({...o,mesh:null}));
+  editorGui = world.world_data?.gui||[];
+  editorSelectedId = null;
+
+  initEditor();
+  renderEditorGuiList();
+}
+
+function leaveEditor() {
+  stopEditor();
+  document.getElementById('worlds-editor-view').style.display='none';
+  switchView('worlds-studio-view');
+  loadMyWorlds();
+}
+
+function initEditor() {
+  const canvas = document.getElementById('we-canvas');
+  if (!canvas) return;
+
+  // Clean up previous
+  stopEditor();
+
+  // Three.js scene
+  const THREE = window.THREE;
+  if (!THREE) { showToast('3D engine not loaded'); return; }
+
+  editorScene = new THREE.Scene();
+  editorScene.background = new THREE.Color(0x000000);
+  editorScene.fog = new THREE.Fog(0x000000, 40, 100);
+
+  // Camera
+  editorCamera = new THREE.PerspectiveCamera(60, canvas.clientWidth/canvas.clientHeight, 0.1, 200);
+  editorCamera.position.set(8, 10, 14);
+  editorCamera.lookAt(0, 0, 0);
+
+  // Renderer
+  editorRenderer = new THREE.WebGLRenderer({canvas, antialias:true});
+  editorRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 3));
+  editorRenderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+  editorRenderer.shadowMap.enabled = true;
+  editorRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  // Lights
+  const amb = new THREE.AmbientLight(0xffffff, 0.5);
+  editorScene.add(amb);
+  const sun = new THREE.DirectionalLight(0xfff8dc, 1.2);
+  sun.position.set(10,20,10);
+  sun.castShadow = true;
+  editorScene.add(sun);
+
+  // Grid floor
+  const grid = new THREE.GridHelper(40, 40, 0x444466, 0x333355);
+  editorScene.add(grid);
+  const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(40,40),
+    new THREE.MeshLambertMaterial({color:0x11112a, side:THREE.DoubleSide})
+  );
+  floor.rotation.x = -Math.PI/2;
+  floor.receiveShadow = true;
+  editorScene.add(floor);
+
+  // Restore saved objects
+  editorObjects.forEach(obj => {
+    const mesh = createMeshForType(obj.type, obj.color||getDefaultColor(obj.type));
+    if (!mesh) return;
+    mesh.position.set(...(obj.position||[0,0.5,0]));
+    mesh.scale.set(...(obj.scale||[1,1,1]));
+    mesh.rotation.set(...(obj.rotation||[0,0,0]));
+    mesh.userData.objId = obj.id;
+    editorScene.add(mesh);
+    obj.mesh = mesh;
+  });
+
+  // Orbit controls (manual implementation)
+  setupEditorOrbit(canvas);
+
+  // Click to select
+  canvas.addEventListener('click', onEditorClick);
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', onEditorKey);
+
+  // Resize observer
+  const ro = new ResizeObserver(() => {
+    if (!editorRenderer) return;
+    editorCamera.aspect = canvas.clientWidth/canvas.clientHeight;
+    editorCamera.updateProjectionMatrix();
+    editorRenderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+  });
+  ro.observe(canvas);
+  canvas._ro = ro;
+
+  // Animate
+  function animate() {
+    editorAnimId = requestAnimationFrame(animate);
+    if (editorOrbitData) applyEditorOrbit();
+    editorRenderer.render(editorScene, editorCamera);
+  }
+  animate();
+}
+
+// ── Minimal orbit + transform control ─────────────────────────
+let editorOrbitData = {theta:0.8,phi:1.0,radius:20,target:{x:0,y:0,z:0},dragging:false,button:-1,lastX:0,lastY:0};
+let transformDragging = false;
+let transformStartMouse = {x:0,y:0};
+let transformStartVal = null;
+
+function setupEditorOrbit(canvas) {
+  canvas.addEventListener('mousedown', e=>{
+    // If an object is selected and tool is active and LMB, do transform drag
+    if (e.button===0 && editorSelectedId && editorTool !== 'select') {
+      const obj = editorObjects.find(o=>o.id===editorSelectedId);
+      if (obj) {
+        transformDragging = true;
+        transformStartMouse = {x:e.clientX, y:e.clientY};
+        transformStartVal = {
+          position:[...obj.position],
+          scale:[...obj.scale],
+          rotation:[...obj.rotation]
+        };
+        e.stopPropagation();
+        return;
+      }
+    }
+    editorOrbitData.dragging=true; editorOrbitData.button=e.button;
+    editorOrbitData.lastX=e.clientX; editorOrbitData.lastY=e.clientY;
+  });
+  window.addEventListener('mouseup', ()=>{
+    editorOrbitData.dragging=false;
+    if (transformDragging) {
+      transformDragging=false;
+      // Sync props panel after transform
+      const obj=editorObjects.find(o=>o.id===editorSelectedId);
+      if(obj) renderPropsPanel(obj);
+    }
+  });
+  window.addEventListener('mousemove', e=>{
+    if (transformDragging && editorSelectedId) {
+      const obj = editorObjects.find(o=>o.id===editorSelectedId);
+      if (!obj||!obj.mesh) return;
+      const dx = (e.clientX-transformStartMouse.x)*0.01;
+      const dy = (e.clientY-transformStartMouse.y)*0.01;
+      if (editorTool==='move') {
+        // Move on XZ plane (horizontal drag = X, vertical drag = Z)
+        obj.position[0] = transformStartVal.position[0] + dx*editorOrbitData.radius*0.3;
+        obj.position[2] = transformStartVal.position[2] + dy*editorOrbitData.radius*0.3;
+        obj.mesh.position.set(...obj.position);
+        // Update props panel X/Z inputs live
+        const inputs=document.querySelectorAll('.we-prop-input');
+        // We'll just re-render after mouseup
+      } else if (editorTool==='scale') {
+        // Scale uniformly with vertical drag
+        const factor = Math.max(0.05, 1 + (transformStartMouse.y - e.clientY)*0.008);
+        obj.scale = transformStartVal.scale.map(v=>Math.max(0.05,v*factor));
+        obj.mesh.scale.set(...obj.scale);
+      } else if (editorTool==='rotate') {
+        // Rotate around Y axis with horizontal drag
+        obj.rotation[1] = transformStartVal.rotation[1] + dx*3;
+        obj.mesh.rotation.set(...obj.rotation);
+      }
+      // Live update sel label
+      const lbl=document.getElementById('we-sel-label');
+      if(lbl){
+        if(editorTool==='move') lbl.textContent=`${obj.name} · x:${obj.position[0].toFixed(1)} z:${obj.position[2].toFixed(1)}`;
+        if(editorTool==='scale') lbl.textContent=`${obj.name} · scale:${obj.scale[0].toFixed(2)}`;
+        if(editorTool==='rotate') lbl.textContent=`${obj.name} · y:${(obj.rotation[1]*57.3).toFixed(0)}°`;
+      }
+      return;
+    }
+    if (!editorOrbitData.dragging) return;
+    const dx2=e.clientX-editorOrbitData.lastX, dy2=e.clientY-editorOrbitData.lastY;
+    editorOrbitData.lastX=e.clientX; editorOrbitData.lastY=e.clientY;
+    if (editorOrbitData.button===0) {
+      editorOrbitData.theta -= dx2*0.006;
+      editorOrbitData.phi = Math.max(0.15, Math.min(Math.PI-0.1, editorOrbitData.phi+dy2*0.006));
+    } else if (editorOrbitData.button===2) {
+      const s = editorOrbitData.radius*0.001;
+      editorOrbitData.target.x -= dx2*s; editorOrbitData.target.z -= dy2*s;
+    }
+  });
+  canvas.addEventListener('wheel', e=>{
+    editorOrbitData.radius = Math.max(2, Math.min(60, editorOrbitData.radius+e.deltaY*0.03));
+  });
+  canvas.addEventListener('contextmenu', e=>e.preventDefault());
+}
+
+function applyEditorOrbit() {
+  if (!editorCamera) return;
+  const {theta,phi,radius,target} = editorOrbitData;
+  editorCamera.position.set(
+    target.x + radius*Math.sin(phi)*Math.sin(theta),
+    target.y + radius*Math.cos(phi),
+    target.z + radius*Math.sin(phi)*Math.cos(theta)
+  );
+  editorCamera.lookAt(target.x, target.y, target.z);
+}
+
+// ── Mesh factory ───────────────────────────────────────────────
+function createMeshForType(type, color) {
+  const THREE = window.THREE;
+  if (!THREE) return null;
+  const c = color||0x4488ff;
+  let geo, mat;
+  const matProps = {color:c, roughness:0.7, metalness:0.1};
+
+  switch(type) {
+    case 'box': case 'wall': case 'platform':
+      geo = new THREE.BoxGeometry(1,1,1); break;
+    case 'sphere':
+      geo = new THREE.SphereGeometry(0.5,16,12); break;
+    case 'cylinder':
+      geo = new THREE.CylinderGeometry(0.5,0.5,1,16); break;
+    case 'ramp':
+      geo = new THREE.CylinderGeometry(0,0.7,1,4); break;
+    case 'spawn':
+      geo = new THREE.CylinderGeometry(0.3,0.3,0.1,16);
+      matProps.color=0x00ff88; matProps.emissive=0x004422; break;
+    case 'checkpoint':
+      geo = new THREE.TorusGeometry(0.5,0.1,8,20);
+      matProps.color=0xffd60a; matProps.emissive=0x332200; break;
+    case 'light':
+      geo = new THREE.SphereGeometry(0.2,8,6);
+      matProps.color=0xffee88; matProps.emissive=0xffcc00; matProps.emissiveIntensity=1; break;
+    case 'trigger':
+      geo = new THREE.BoxGeometry(1,1,1);
+      mat = new THREE.MeshBasicMaterial({color:0x8888ff, wireframe:true, transparent:true, opacity:0.6});
+      break;
+    case 'npc':
+      geo = new THREE.BoxGeometry(0.6,1.2,0.6); matProps.color=0xff9f0a; break;
+    case 'coin':
+      geo = new THREE.CylinderGeometry(0.3,0.3,0.1,16); matProps.color=0xffd60a; matProps.emissive=0x442200; matProps.emissiveIntensity=0.5; break;
+    case 'goal':
+      geo = new THREE.BoxGeometry(1,2,1); matProps.color=0x30d158; matProps.emissive=0x003311; matProps.emissiveIntensity=0.5; break;
+    case 'tree':
+      geo = new THREE.ConeGeometry(0.6,2,8); matProps.color=0x228822; break;
+    case 'rock':
+      geo = new THREE.DodecahedronGeometry(0.5); matProps.color=0x888888; break;
+    case 'water':
+      geo = new THREE.PlaneGeometry(2,2);
+      mat = new THREE.MeshBasicMaterial({color:0x2266ff, transparent:true, opacity:0.5, side:THREE.DoubleSide});
+      break;
+    default:
+      geo = new THREE.BoxGeometry(1,1,1);
+  }
+  if (!mat) mat = new THREE.MeshStandardMaterial(matProps);
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  return mesh;
+}
+
+function getDefaultColor(type) {
+  const m={box:0x4488ff,sphere:0xff6644,cylinder:0x44bb88,ramp:0xcc8844,platform:0x666688,wall:0x888888,tree:0x228822,rock:0x888888,water:0x2266ff};
+  return m[type]||0x888888;
+}
+
+// ── Object spawning ────────────────────────────────────────────
+function spawnObject(type) {
+  const THREE = window.THREE;
+  if (!THREE||!editorScene) { showToast('Editor not ready'); return; }
+  const id = 'obj_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
+  const color = getDefaultColor(type);
+  const mesh = createMeshForType(type, color);
+  if (!mesh) return;
+  const pos = [
+    (Math.random()-0.5)*4,
+    type==='water'?0.05:0.5,
+    (Math.random()-0.5)*4
+  ];
+  mesh.position.set(...pos);
+  mesh.userData.objId = id;
+  editorScene.add(mesh);
+  const obj = {id, type, mesh, position:pos, scale:[1,1,1], rotation:[0,0,0], color, script:'', name:type+'_'+Date.now()};
+  editorObjects.push(obj);
+  selectEditorObj(id);
+}
+
+function onEditorClick(e) {
+  // Don't select if we just finished a transform drag
+  if (transformDragging) return;
+  const THREE = window.THREE;
+  if (!THREE||!editorScene||!editorCamera) return;
+  const canvas = document.getElementById('we-canvas');
+  const rect = canvas.getBoundingClientRect();
+  const mouse = new THREE.Vector2(
+    ((e.clientX-rect.left)/rect.width)*2-1,
+    -((e.clientY-rect.top)/rect.height)*2+1
+  );
+  const ray = new THREE.Raycaster();
+  ray.setFromCamera(mouse, editorCamera);
+  const meshes = editorObjects.filter(o=>o.mesh).map(o=>o.mesh);
+  const hits = ray.intersectObjects(meshes, true);
+  if (hits.length) {
+    let obj = hits[0].object;
+    while (obj && !obj.userData.objId) obj = obj.parent;
+    if (obj?.userData?.objId) selectEditorObj(obj.userData.objId);
+  } else {
+    selectEditorObj(null);
+  }
+}
+
+function selectEditorObj(id) {
+  editorSelectedId = id;
+  // Highlight
+  editorObjects.forEach(o => {
+    if (!o.mesh) return;
+    if (o.mesh.material?.emissive) {
+      o.mesh.material.emissive.setHex(o.id===id ? 0x224488 : (o.mesh.material._origEmissive||0));
+    }
+  });
+  // Update selection label
+  const lbl = document.getElementById('we-sel-label');
+  if (id) {
+    const obj = editorObjects.find(o=>o.id===id);
+    lbl.textContent = obj ? `Selected: ${obj.type} — ${obj.name}` : '';
+    lbl.style.display='block';
+    renderPropsPanel(obj);
+  } else {
+    lbl.style.display='none';
+    document.getElementById('we-props-body').innerHTML='Select an object to edit its properties.';
+  }
+  const luaArea = document.getElementById('we-lua');
+  const obj = id ? editorObjects.find(o=>o.id===id) : null;
+  if (luaArea) luaArea.value = obj?.script||'';
+}
+
+function renderPropsPanel(obj) {
+  if (!obj) return;
+  const el = document.getElementById('we-props-body');
+  const colorHex = '#'+('000000'+(obj.color||0x4488ff).toString(16)).slice(-6);
+  el.innerHTML = `
+    <div class="we-prop-row"><span class="we-prop-label">Name</span><input class="we-prop-input" value="${escAttr(obj.name)}" onchange="updateObjProp('${obj.id}','name',this.value)"></div>
+    <div class="we-prop-row"><span class="we-prop-label">Color</span><input type="color" class="we-prop-input" style="padding:2px;height:28px" value="${colorHex}" onchange="updateObjColor('${obj.id}',this.value)"></div>
+    <div style="font-size:10px;color:var(--text2);margin:8px 0 4px;font-weight:700">Position</div>
+    ${['x','y','z'].map((ax,i)=>`<div class="we-prop-row"><span class="we-prop-label">${ax.toUpperCase()}</span><input type="number" class="we-prop-input" step="0.1" value="${(obj.position||[0,0,0])[i]}" onchange="updateObjAxis('${obj.id}','position',${i},this.value)"></div>`).join('')}
+    <div style="font-size:10px;color:var(--text2);margin:8px 0 4px;font-weight:700">Scale</div>
+    ${['x','y','z'].map((ax,i)=>`<div class="we-prop-row"><span class="we-prop-label">${ax.toUpperCase()}</span><input type="number" class="we-prop-input" step="0.05" min="0.05" value="${(obj.scale||[1,1,1])[i]}" onchange="updateObjAxis('${obj.id}','scale',${i},this.value)"></div>`).join('')}
+    <div style="font-size:10px;color:var(--text2);margin:8px 0 4px;font-weight:700">Rotation (rad)</div>
+    ${['x','y','z'].map((ax,i)=>`<div class="we-prop-row"><span class="we-prop-label">${ax.toUpperCase()}</span><input type="number" class="we-prop-input" step="0.1" value="${(obj.rotation||[0,0,0])[i]}" onchange="updateObjAxis('${obj.id}','rotation',${i},this.value)"></div>`).join('')}`;
+}
+
+function updateObjProp(id, prop, val) {
+  const obj = editorObjects.find(o=>o.id===id); if(!obj)return;
+  obj[prop]=val;
+}
+function updateObjColor(id, hexStr) {
+  const obj = editorObjects.find(o=>o.id===id); if(!obj)return;
+  const c = parseInt(hexStr.replace('#',''),16);
+  obj.color=c;
+  if (obj.mesh?.material?.color) obj.mesh.material.color.setHex(c);
+}
+function updateObjAxis(id, prop, axis, val) {
+  const obj = editorObjects.find(o=>o.id===id); if(!obj)return;
+  obj[prop][axis] = parseFloat(val)||0;
+  if (obj.mesh) obj.mesh[prop].setComponent ? obj.mesh[prop].setComponent(axis,obj[prop][axis]) : (()=>{
+    const v=obj.mesh[prop]; const keys=['x','y','z']; v[keys[axis]]=obj[prop][axis];
+  })();
+}
+
+function setEditorTool(t) {
+  editorTool=t;
+  ['move','scale','rotate'].forEach(x=>{
+    const b=document.getElementById('we-tool-'+x);
+    if(b){b.style.background='';b.style.borderColor='';b.style.color='';}
+  });
+  const ab=document.getElementById('we-tool-'+t);
+  if(ab){ab.style.background='rgba(10,132,255,.2)';ab.style.borderColor='var(--blue)';ab.style.color='var(--blue)';}
+}
+
+function deleteSelectedObj() {
+  if (!editorSelectedId) { showToast('Select an object first'); return; }
+  const idx = editorObjects.findIndex(o=>o.id===editorSelectedId);
+  if (idx<0) return;
+  const obj = editorObjects[idx];
+  if (obj.mesh) editorScene?.remove(obj.mesh);
+  editorObjects.splice(idx,1);
+  selectEditorObj(null);
+}
+
+function onEditorKey(e) {
+  if (document.activeElement && ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
+  if (e.key==='Delete'||e.key==='Backspace') deleteSelectedObj();
+  if (e.key.toLowerCase()==='w') setEditorTool('move');
+  if (e.key.toLowerCase()==='e') setEditorTool('scale');
+  if (e.key.toLowerCase()==='r') setEditorTool('rotate');
+}
+
+function saveObjScript() {
+  if (!editorSelectedId) { showToast('Select an object first'); return; }
+  const obj = editorObjects.find(o=>o.id===editorSelectedId); if(!obj)return;
+  obj.script = document.getElementById('we-lua')?.value||'';
+  showToast('Script saved ✓');
+}
+
+function stopEditor() {
+  if (editorAnimId) { cancelAnimationFrame(editorAnimId); editorAnimId=null; }
+  document.removeEventListener('keydown', onEditorKey);
+  const canvas = document.getElementById('we-canvas');
+  if (canvas) {
+    canvas.removeEventListener('click', onEditorClick);
+    if (canvas._ro) { canvas._ro.disconnect(); canvas._ro=null; }
+  }
+  editorObjects.forEach(o=>{ if(o.mesh)editorScene?.remove(o.mesh); });
+  editorScene=null; editorCamera=null; editorRenderer=null; editorObjects=[];
+}
+
+// ── GUI Builder ────────────────────────────────────────────────
+function addGuiElement(type) {
+  const id='gui_'+Date.now();
+  const labels={label:'New Label',button:'Click Me',healthbar:'Health Bar',timer:'Timer'};
+  editorGui.push({id,type,text:labels[type]||type,x:10,y:10,color:'#ffffff'});
+  renderEditorGuiList();
+}
+
+function renderEditorGuiList() {
+  const el=document.getElementById('we-gui-list'); if(!el)return;
+  if(!editorGui.length){el.innerHTML='No GUI elements yet.';return;}
+  el.innerHTML=editorGui.map(g=>`
+    <div style="background:rgba(255,255,255,.04);border-radius:8px;padding:7px 8px;margin-bottom:6px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:11px;color:#fff">${g.type}: ${escHtml(g.text)}</span>
+        <button class="auc-btn red" style="font-size:9px;padding:2px 6px" onclick="removeGuiEl('${g.id}')">✕</button>
+      </div>
+      <input class="we-prop-input" style="margin-top:5px" value="${escAttr(g.text)}" placeholder="Text" onchange="updateGuiEl('${g.id}','text',this.value)">
+    </div>`).join('');
+}
+
+function removeGuiEl(id){editorGui=editorGui.filter(g=>g.id!==id);renderEditorGuiList();}
+function updateGuiEl(id,prop,val){const g=editorGui.find(x=>x.id===id);if(g)g[prop]=val;}
+
+// ── Save & Submit ──────────────────────────────────────────────
+function buildWorldData() {
+  return {
+    objects: editorObjects.map(({id,type,position,scale,rotation,color,script,name,npcDialog})=>({id,type,position,scale,rotation,color,script,name,npcDialog})),
+    gui: editorGui,
+    description: document.getElementById('we-desc')?.value||'',
+    sky: document.getElementById('we-sky')?.value||'day',
+    ambient: document.getElementById('we-ambient')?.value||'none',
+    tags: (document.getElementById('we-tags')?.value||'').split(',').map(t=>t.trim().replace(/^#/,'')).filter(Boolean)
+  };
+}
+
+async function saveWorldDraft() {
+  if (!currentEditingWorldId) return;
+  const title = document.getElementById('we-title')?.value?.trim();
+  if (!title) { showToast('Add a title first'); return; }
+  const genre = document.getElementById('we-genre')?.value||'Adventure';
+  try {
+    const wdata = buildWorldData();
+    // Auto-screenshot thumbnail from editor canvas
+    const thumbUrl = captureEditorThumbnail();
+    const saveBody = {title, genre, world_data:wdata, tags:wdata.tags};
+    if (thumbUrl) saveBody.thumbnail_url = thumbUrl;
+    await fetch(SB_URL+`/rest/v1/worlds?id=eq.${currentEditingWorldId}`,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify(saveBody)
+    });
+    showToast('World saved ✓');
+  } catch(e){ showToast('Save failed'); }
+}
+
+function captureEditorThumbnail() {
+  try {
+    const canvas = document.getElementById('we-canvas');
+    if (!canvas || !editorRenderer) return null;
+    editorRenderer.render(editorScene, editorCamera);
+    return canvas.toDataURL('image/jpeg', 0.7);
+  } catch(e) { return null; }
+}
+
+async function submitWorldForReview() {
+  if (!currentEditingWorldId) return;
+  const title = document.getElementById('we-title')?.value?.trim();
+  if (!title) { showToast('Add a title first'); return; }
+  if (!editorObjects.length) { showToast('Add at least one object to your world'); return; }
+  if (!confirm(`Submit "${title}" for admin review?`)) return;
+  try {
+    await saveWorldDraft();
+    await fetch(SB_URL+`/rest/v1/worlds?id=eq.${currentEditingWorldId}`,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({status:'pending'})
+    });
+    showToast('Submitted for review! ✓');
+    loadWorldsPendingBadge();
+    leaveEditor();
+  } catch(e){ showToast('Submit failed'); }
+}
+
+async function resubmitWorld(worldId) {
+  if (!confirm('Resubmit this world for review?')) return;
+  try {
+    await fetch(SB_URL+`/rest/v1/worlds?id=eq.${worldId}`,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({status:'pending',reject_reason:''})
+    });
+    showToast('Resubmitted!'); loadMyWorlds();
+  } catch(e){ showToast('Failed'); }
+}
+
+async function unpublishWorld(worldId) {
+  if (!confirm('Unpublish this world?')) return;
+  try {
+    await fetch(SB_URL+`/rest/v1/worlds?id=eq.${worldId}`,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({status:'unpublished'})
+    });
+    showToast('World unpublished'); loadMyWorlds();
+  } catch(e){ showToast('Failed'); }
+}
+
+async function deleteWorld(worldId) {
+  if (!confirm('Delete this world? This cannot be undone.')) return;
+  try {
+    await fetch(SB_URL+`/rest/v1/worlds?id=eq.${worldId}`,{
+      method:'DELETE',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+    });
+    showToast('World deleted'); loadMyWorlds();
+  } catch(e){ showToast('Failed'); }
+}
+
+// ── World Player ───────────────────────────────────────────────
+async function playWorld(worldId) {
+  currentPlayingWorldId = worldId;
+  let world=null;
+  try{ const r=await sbReq(`/rest/v1/worlds?id=eq.${worldId}&select=*`); world=r&&r[0]; }catch(e){}
+  if(!world){showToast('Failed to load world');return;}
+
+  document.querySelectorAll('aside .nav').forEach(n=>n.classList.remove('active'));
+  document.getElementById('worlds-editor-view').style.display='none';
+  document.getElementById('worlds-player-view').style.display='block';
+
+  document.getElementById('wp-title').textContent = world.title;
+  document.getElementById('wp-creator').textContent = 'by '+world.creator_name;
+  document.getElementById('wp-like-count').textContent = world.like_count||0;
+
+  // Check if user liked this world
+  updateWpLikeBtn(worldId);
+
+  // Load comments
+  loadWorldComments(worldId);
+
+  // Increment plays (fire and forget)
+  sbReq(`/rest/v1/rpc/increment_world_plays`,'POST',{world_id_in:worldId}).catch(()=>{});
+
+  // Build player scene
+  initWorldPlayer(world);
+}
+
+
+
+
+function initWorldPlayer(world) {
+  const THREE = window.THREE;
+  if (!THREE) return;
+  stopWorldPlayer();
+
+  const canvas = document.getElementById('wp-canvas');
+  playerScene = new THREE.Scene();
+  playerScene.background = new THREE.Color(0x000000);
+  playerScene.fog = new THREE.Fog(0x000000, 40, 100);
+
+  const camera = new THREE.PerspectiveCamera(60, canvas.clientWidth/canvas.clientHeight, 0.1, 200);
+  camera.position.set(0, 8, 16);
+  camera.lookAt(0, 0, 0);
+
+  playerRenderer = new THREE.WebGLRenderer({canvas, antialias:true});
+  playerRenderer.setPixelRatio(Math.min(devicePixelRatio, 3));
+  playerRenderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+  playerRenderer.shadowMap.enabled = true;
+  playerRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  playerScene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  const sun = new THREE.DirectionalLight(0xfffbdc, 1.2);
+  sun.position.set(10, 20, 10); sun.castShadow = true;
+  playerScene.add(sun);
+
+  const grid = new THREE.GridHelper(40, 40, 0x444466, 0x333355);
+  playerScene.add(grid);
+  const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(40, 40),
+    new THREE.MeshLambertMaterial({color:0x111111})
+  );
+  floor.rotation.x = -Math.PI/2; floor.receiveShadow = true;
+  playerScene.add(floor);
+
+  // Build world objects
+  (world.world_data?.objects||[]).forEach(obj => {
+    const mesh = createMeshForType(obj.type, obj.color);
+    if (!mesh) return;
+    mesh.position.set(...(obj.position||[0,0.5,0]));
+    mesh.scale.set(...(obj.scale||[1,1,1]));
+    mesh.rotation.set(...(obj.rotation||[0,0,0]));
+    playerScene.add(mesh);
+  });
+
+  // Apply sky
+  if (world.world_data?.sky) applySkyToScene(playerScene, playerRenderer, world.world_data.sky);
+
+  // GUI overlay
+  const guiLayer = document.getElementById('wp-gui-layer');
+  if (guiLayer) {
+    guiLayer.innerHTML = (world.world_data?.gui||[]).map(g => {
+      const styles = `position:absolute;left:${g.x||10}px;top:${g.y||10}px;color:${g.color||'#fff'};font-weight:700;font-size:14px;pointer-events:none;`;
+      if (g.type==='healthbar') return `<div style="${styles}background:rgba(0,0,0,.5);border-radius:8px;padding:4px 10px">❤️ 100</div>`;
+      if (g.type==='timer') return `<div style="${styles}background:rgba(0,0,0,.5);border-radius:8px;padding:4px 10px">⏱ 0:00</div>`;
+      if (g.type==='score') return `<div style="${styles}background:rgba(0,0,0,.5);border-radius:8px;padding:4px 10px">🏆 0</div>`;
+      return `<div style="${styles}">${escHtml(g.text||'')}</div>`;
+    }).join('');
+  }
+
+  // Init score system
+  initPlayerScore(world);
+
+  // Orbit controls
+  editorOrbitData = {theta:0.4, phi:1.2, radius:20, target:{x:0,y:0,z:0}, dragging:false, button:-1, lastX:0, lastY:0};
+  setupEditorOrbit(canvas);
+
+  // Resize
+  const ro = new ResizeObserver(() => {
+    if (!playerRenderer) return;
+    camera.aspect = canvas.clientWidth/canvas.clientHeight;
+    camera.updateProjectionMatrix();
+    playerRenderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+  });
+  ro.observe(canvas);
+
+  function animate() {
+    playerAnimId = requestAnimationFrame(animate);
+    applyEditorOrbit();
+    playerRenderer.render(playerScene, camera);
+  }
+  animate();
+
+  // Start multiplayer for approved worlds
+  if (world && world.id && world.status === 'approved') {
+    setTimeout(() => startMultiplayer(world.id), 800);
+  }
+}
+
+function leaveWorldPlayer() {
+  stopMultiplayer();
+  _origLeaveWorldPlayer();
+}
+
+// ── Playtest ───────────────────────────────────────────────────
+function playtestWorld() {
+  // Save first, then open player with current world data
+  if (!currentEditingWorldId) { showToast('No world loaded'); return; }
+  const title = document.getElementById('we-title')?.value?.trim() || 'Untitled';
+  const fakeWorld = {
+    id: currentEditingWorldId,
+    title,
+    creator_name: currentUser?.display_name||currentUser?.username||'You',
+    world_data: buildWorldData(),
+    like_count: 0
+  };
+  // Store in memory for player
+  window._playtestWorld = fakeWorld;
+  // Switch to player view
+  document.getElementById('worlds-editor-view').style.display='none';
+  document.getElementById('worlds-player-view').style.display='block';
+  document.getElementById('wp-title').textContent = '▶ PLAYTEST: '+title;
+  document.getElementById('wp-creator').textContent = 'Draft — not published';
+  document.getElementById('wp-like-count').textContent = '—';
+  document.getElementById('wp-like-btn').style.display='none';
+  currentPlayingWorldId = null; // Don't increment plays
+  initWorldPlayer(fakeWorld);
+  // Add exit playtest button
+  const topbar = document.getElementById('wp-topbar');
+  if (topbar && !document.getElementById('wp-exit-playtest')) {
+    const btn = document.createElement('button');
+    btn.id = 'wp-exit-playtest';
+    btn.className = 'lb-btn';
+    btn.style.cssText = 'width:auto;padding:7px 14px;margin:0;background:rgba(255,159,10,.2);border-color:rgba(255,159,10,.4);color:#ff9f0a';
+    btn.textContent = '← Back to Editor';
+    btn.onclick = exitPlaytest;
+    topbar.appendChild(btn);
+  }
+}
+
+function exitPlaytest() {
+  stopAmbientSound();
+  stopWorldPlayer();
+  document.getElementById('worlds-player-view').style.display='none';
+  document.getElementById('wp-like-btn').style.display='';
+  const exitBtn = document.getElementById('wp-exit-playtest');
+  if (exitBtn) exitBtn.remove();
+  document.getElementById('worlds-editor-view').style.display='flex';
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+//  WORLDS — Sky, Sound, NPC, Coins, Leaderboard, Rating, Fork
+// ═══════════════════════════════════════════════════════════════
+
+// ── Sky environments ───────────────────────────────────────────
+const SKY_CONFIGS = {
+  day:    { bg:0x87ceeb, fog:0x87ceeb, fogNear:40, fogFar:120, ambientColor:0xffffff, ambientInt:0.8, sunColor:0xfff8dc, sunInt:1.4 },
+  night:  { bg:0x020818, fog:0x020818, fogNear:20, fogFar:80,  ambientColor:0x4466aa, ambientInt:0.3, sunColor:0x8899cc, sunInt:0.4 },
+  sunset: { bg:0xff6b35, fog:0xff9955, fogNear:30, fogFar:100, ambientColor:0xff9966, ambientInt:0.9, sunColor:0xff5500, sunInt:1.2 },
+  space:  { bg:0x000005, fog:0x000005, fogNear:50, fogFar:150, ambientColor:0x222244, ambientInt:0.4, sunColor:0xaabbff, sunInt:0.8 },
+  storm:  { bg:0x334455, fog:0x334455, fogNear:15, fogFar:60,  ambientColor:0x889999, ambientInt:0.5, sunColor:0xaabbcc, sunInt:0.5 },
+};
+
+function updateEditorSky() {
+  const val = document.getElementById('we-sky')?.value||'day';
+  applySkyToScene(editorScene, editorRenderer, val);
+}
+
+function applySkyToScene(scene, renderer, skyKey) {
+  if (!scene || !renderer || !window.THREE) return;
+  const THREE = window.THREE;
+  const cfg = SKY_CONFIGS[skyKey] || SKY_CONFIGS.day;
+  scene.background = new THREE.Color(cfg.bg);
+  scene.fog = new THREE.Fog(cfg.fog, cfg.fogNear, cfg.fogFar);
+  // Update lights
+  scene.children.filter(c=>c.isAmbientLight).forEach(l=>{ l.color.setHex(cfg.ambientColor); l.intensity=cfg.ambientInt; });
+  scene.children.filter(c=>c.isDirectionalLight).forEach(l=>{ l.color.setHex(cfg.sunColor); l.intensity=cfg.sunInt; });
+  // Add stars for night/space
+  const existingStars = scene.getObjectByName('starField');
+  if (existingStars) scene.remove(existingStars);
+  if (skyKey==='night'||skyKey==='space') {
+    const starGeo = new THREE.BufferGeometry();
+    const positions = [];
+    for (let i=0;i<600;i++) {
+      positions.push((Math.random()-0.5)*200, Math.random()*80+10, (Math.random()-0.5)*200);
+    }
+    starGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions,3));
+    const starMat = new THREE.PointsMaterial({color:0xffffff, size:skyKey==='space'?0.5:0.3});
+    const stars = new THREE.Points(starGeo, starMat);
+    stars.name='starField';
+    scene.add(stars);
+  }
+}
+
+// ── Ambient sound ──────────────────────────────────────────────
+let ambientAudio = null;
+const AMBIENT_URLS = {
+  nature:  'https://www.soundjay.com/nature/sounds/birds-1.mp3',
+  rain:    'https://www.soundjay.com/nature/sounds/rain-03.mp3',
+  wind:    'https://www.soundjay.com/nature/sounds/wind-1.mp3',
+  dungeon: 'https://www.soundjay.com/misc/sounds/cave-ambience-1.mp3',
+  space:   'https://www.soundjay.com/science/sounds/space-1.mp3',
+  upbeat:  'https://www.soundjay.com/button/sounds/button-1.mp3',
+};
+
+function startAmbientSound(key) {
+  stopAmbientSound();
+  if (!key||key==='none') return;
+  const url = AMBIENT_URLS[key]; if(!url)return;
+  try {
+    ambientAudio = new Audio(url);
+    ambientAudio.loop = true;
+    ambientAudio.volume = 0.25;
+    ambientAudio.play().catch(()=>{});
+  } catch(e){}
+}
+
+function stopAmbientSound() {
+  if (ambientAudio) { ambientAudio.pause(); ambientAudio.src=''; ambientAudio=null; }
+}
+
+// ── NPC dialog ─────────────────────────────────────────────────
+let npcDialog = {}; // objId -> dialog text
+
+function spawnNpcWithDialog() {
+  spawnObject('npc');
+  if (!editorSelectedId) return;
+  const dialog = prompt('NPC dialog text (what they say):','Hello, adventurer!');
+  if (dialog) {
+    const obj = editorObjects.find(o=>o.id===editorSelectedId);
+    if (obj) { obj.npcDialog = dialog; }
+  }
+}
+
+// ── Coin/score system in player ────────────────────────────────
+let playerScore = 0;
+let playerCoins = [];
+
+function initPlayerScore(world) {
+  playerScore = 0;
+  playerCoins = (world.world_data?.objects||[]).filter(o=>o.type==='coin'||o.type==='goal').map(o=>({...o, collected:false}));
+  const hud = document.getElementById('wp-score-hud');
+  if (hud) { hud.style.display = playerCoins.length ? 'block' : 'none'; }
+  updateScoreDisplay();
+}
+
+function updateScoreDisplay() {
+  const el = document.getElementById('wp-score-val');
+  if (el) el.textContent = playerScore;
+}
+
+// ── Rating system ──────────────────────────────────────────────
+async function rateWorld(stars) {
+  if (!currentUser||currentUser.guest) { showToast('Login to rate worlds'); return; }
+  if (!currentPlayingWorldId) return;
+  try {
+    // Upsert rating
+    await fetch(SB_URL+'/rest/v1/world_ratings', {
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify({world_id:currentPlayingWorldId, user_id:currentUser.id, stars})
+    });
+    // Update star display
+    document.querySelectorAll('.wp-star').forEach((s,i)=>{ s.textContent = i<stars?'★':'☆'; });
+    showToast(`Rated ${stars} star${stars>1?'s':''}! ⭐`);
+    // Refresh avg
+    loadWorldAvgRating(currentPlayingWorldId);
+  } catch(e){showToast('Rating failed');}
+}
+
+async function loadWorldAvgRating(worldId) {
+  try {
+    const rows = await sbReq(`/rest/v1/world_ratings?world_id=eq.${worldId}&select=stars`);
+    if (!rows||!rows.length) return;
+    const avg = (rows.reduce((s,r)=>s+r.stars,0)/rows.length).toFixed(1);
+    const el = document.getElementById('wp-avg-rating');
+    if (el) el.textContent = `(${avg} avg, ${rows.length} votes)`;
+    // Update column
+    await fetch(SB_URL+`/rest/v1/worlds?id=eq.${worldId}`,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({avg_rating:parseFloat(avg), rating_count:rows.length})
+    });
+  } catch(e){}
+}
+
+async function loadUserRating(worldId) {
+  if (!currentUser||currentUser.guest) return;
+  try {
+    const rows = await sbReq(`/rest/v1/world_ratings?world_id=eq.${worldId}&user_id=eq.${currentUser.id}&select=stars`);
+    if (rows&&rows[0]) {
+      const s=rows[0].stars;
+      document.querySelectorAll('.wp-star').forEach((el,i)=>{ el.textContent=i<s?'★':'☆'; });
+    }
+  } catch(e){}
+}
+
+// ── Leaderboard ────────────────────────────────────────────────
+function openWorldLeaderboard() {
+  const modal = document.getElementById('wp-leaderboard');
+  if (modal) { modal.style.display='block'; loadLeaderboard(currentPlayingWorldId); }
+}
+
+async function loadLeaderboard(worldId) {
+  const el = document.getElementById('wp-leaderboard-list'); if(!el)return;
+  el.innerHTML='<div class="fc-empty">Loading…</div>';
+  try {
+    const rows = await sbReq(`/rest/v1/world_scores?world_id=eq.${worldId}&select=username,score,created_at&order=score.desc&limit=10`);
+    if (!rows||!rows.length) { el.innerHTML='<div class="fc-empty">No scores yet. Be the first!</div>'; return; }
+    el.innerHTML = rows.map((r,i)=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+        <span style="font-size:16px;width:24px;text-align:center">${['🥇','🥈','🥉'][i]||`#${i+1}`}</span>
+        <span style="flex:1;font-weight:600">${escHtml(r.username)}</span>
+        <span style="color:#ffd60a;font-weight:800">${r.score}</span>
+      </div>`).join('');
+  } catch(e){ el.innerHTML='<div class="fc-empty">Failed to load.</div>'; }
+}
+
+async function submitWorldScore() {
+  if (!currentUser||currentUser.guest) { showToast('Login to submit scores'); return; }
+  const scoreVal = parseInt(document.getElementById('wp-score-submit-val')?.value||'0');
+  if (!scoreVal) { showToast('Enter a score first'); return; }
+  try {
+    await fetch(SB_URL+'/rest/v1/world_scores',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify({world_id:currentPlayingWorldId, user_id:currentUser.id, username:currentUser.display_name||currentUser.username, score:scoreVal})
+    });
+    showToast('Score submitted! 🏆');
+    loadLeaderboard(currentPlayingWorldId);
+  } catch(e){showToast('Submit failed');}
+}
+
+// ── World forking ──────────────────────────────────────────────
+async function forkWorld() {
+  if (!currentUser||currentUser.guest) { showToast('Login to remix worlds'); return; }
+  if (!currentPlayingWorldId) return;
+  try {
+    const rows = await sbReq(`/rest/v1/worlds?id=eq.${currentPlayingWorldId}&select=*`);
+    const original = rows&&rows[0]; if(!original){showToast('Could not load world');return;}
+    const newTitle = prompt(`Remix title:`, 'Remix of '+original.title);
+    if (!newTitle||!newTitle.trim()) return;
+    await fetch(SB_URL+'/rest/v1/worlds',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({
+        title:newTitle.trim(),
+        creator_id:currentUser.id,
+        creator_name:currentUser.display_name||currentUser.username,
+        status:'unpublished',
+        genre:original.genre,
+        world_data:{...original.world_data, description:'Remixed from: '+original.title},
+        tags:original.tags||[]
+      })
+    });
+    showToast('World remixed! Check My Worlds. 🍴');
+  } catch(e){showToast('Remix failed');}
+}
+
+// ── Patch playWorld to init score + rating + sky + sound ───────
+const _origPlayWorld2 = playWorld;
+playWorld = async function(worldId) {
+  await _origPlayWorld2(worldId);
+  // Load extra data
+  setTimeout(async ()=>{
+    const rows = await sbReq(`/rest/v1/worlds?id=eq.${worldId}&select=world_data,avg_rating,rating_count`).catch(()=>null);
+    if (rows&&rows[0]) {
+      const w = rows[0];
+      // Sky
+      if (w.world_data?.sky) applySkyToScene(playerScene, playerRenderer, w.world_data.sky);
+      // Sound
+      startAmbientSound(w.world_data?.ambient||'none');
+      // Score
+      initPlayerScore({world_data:w.world_data});
+      // Rating
+      const avgEl=document.getElementById('wp-avg-rating');
+      if(avgEl&&w.avg_rating) avgEl.textContent=`(${parseFloat(w.avg_rating).toFixed(1)} avg, ${w.rating_count||0} votes)`;
+      loadUserRating(worldId);
+      loadWorldAvgRating(worldId);
+    }
+  }, 1000);
+};
+
+const _origLeave2 = leaveWorldPlayer;
+leaveWorldPlayer = function() {
+  stopAmbientSound();
+  _origLeave2();
+};
+
+
+// ═══════════════════════════════════════════════════════════════
+//  ADLESS BUGS SYSTEM
+// ═══════════════════════════════════════════════════════════════
+
+let bugsData = [];
+let bugsSortMode = 'votes'; // 'votes' | 'new'
+
+async function loadBugsView() {
+  const list = document.getElementById('bugs-list');
+  if (!list) return;
+  list.innerHTML = '<div class="fc-empty">Loading bugs…</div>';
+  try {
+    const rows = await sbReq('/rest/v1/bug_reports?select=*&order=net_votes.desc,created_at.desc&limit=200');
+    bugsData = rows || [];
+    renderBugs();
+  } catch(e) {
+    list.innerHTML = '<div class="fc-empty">Failed to load bugs.</div>';
+  }
+}
+
+function setBugSort(mode) {
+  bugsSortMode = mode;
+  document.getElementById('bsort-votes').style.background = mode==='votes' ? 'rgba(10,132,255,.15)' : '';
+  document.getElementById('bsort-votes').style.borderColor = mode==='votes' ? 'rgba(10,132,255,.3)' : '';
+  document.getElementById('bsort-votes').style.color = mode==='votes' ? 'var(--blue)' : '';
+  document.getElementById('bsort-new').style.background = mode==='new' ? 'rgba(10,132,255,.15)' : '';
+  document.getElementById('bsort-new').style.borderColor = mode==='new' ? 'rgba(10,132,255,.3)' : '';
+  document.getElementById('bsort-new').style.color = mode==='new' ? 'var(--blue)' : '';
+  renderBugs();
+}
+
+function renderBugs() {
+  const list = document.getElementById('bugs-list');
+  if (!list) return;
+  const q = (document.getElementById('bug-search')?.value||'').toLowerCase();
+  const statusFilter = document.getElementById('bug-status-filter')?.value||'all';
+
+  let filtered = bugsData.filter(b => {
+    const matchQ = !q || b.title.toLowerCase().includes(q) || (b.description||'').toLowerCase().includes(q);
+    const matchS = statusFilter === 'all' || b.status === statusFilter;
+    return matchQ && matchS;
+  });
+
+  if (bugsSortMode === 'new') {
+    filtered.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+  } else {
+    filtered.sort((a,b) => (b.net_votes||0) - (a.net_votes||0));
+  }
+
+  if (!filtered.length) {
+    list.innerHTML = '<div class="fc-empty">No bugs found. 🎉</div>';
+    return;
+  }
+
+  const statusLabel = {
+    open: '<span style="background:rgba(255,59,48,.15);color:#ff3b30;border:1px solid rgba(255,59,48,.3);font-size:10px;font-weight:800;padding:2px 8px;border-radius:6px">🔴 Open</span>',
+    in_progress: '<span style="background:rgba(255,214,10,.12);color:#ffd60a;border:1px solid rgba(255,214,10,.3);font-size:10px;font-weight:800;padding:2px 8px;border-radius:6px">🟡 In Progress</span>',
+    fixed: '<span style="background:rgba(48,209,88,.12);color:#30d158;border:1px solid rgba(48,209,88,.3);font-size:10px;font-weight:800;padding:2px 8px;border-radius:6px">🟢 Fixed</span>',
+    wontfix: '<span style="background:rgba(255,255,255,.06);color:var(--text2);border:1px solid rgba(255,255,255,.12);font-size:10px;font-weight:800;padding:2px 8px;border-radius:6px">⚫ Won\'t Fix</span>',
+  };
+
+  list.innerHTML = filtered.map(b => {
+    const uid = currentUser&&!currentUser.guest ? currentUser.id : null;
+    const myVote = uid ? (b.upvoters||[]).includes(uid) ? 1 : (b.downvoters||[]).includes(uid) ? -1 : 0 : 0;
+    const net = b.net_votes || 0;
+    const canDelete = isOwner() || isAdmin();
+    return `
+    <div id="bug-row-${b.id}" style="background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;gap:14px;align-items:flex-start">
+      <!-- Vote column -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;min-width:36px">
+        <button onclick="voteBug('${b.id}',1)" style="background:${myVote===1?'rgba(48,209,88,.2)':'rgba(255,255,255,.06)'};border:1px solid ${myVote===1?'rgba(48,209,88,.4)':'rgba(255,255,255,.12)'};border-radius:8px;color:${myVote===1?'#30d158':'var(--text2)'};width:32px;height:28px;font-size:14px;cursor:none!important;transition:.15s">▲</button>
+        <div style="font-size:14px;font-weight:800;color:${net>0?'#30d158':net<0?'#ff3b30':'var(--text2)'};min-width:24px;text-align:center">${net}</div>
+        <button onclick="voteBug('${b.id}',-1)" style="background:${myVote===-1?'rgba(255,59,48,.2)':'rgba(255,255,255,.06)'};border:1px solid ${myVote===-1?'rgba(255,59,48,.4)':'rgba(255,255,255,.12)'};border-radius:8px;color:${myVote===-1?'#ff3b30':'var(--text2)'};width:32px;height:28px;font-size:14px;cursor:none!important;transition:.15s">▼</button>
+      </div>
+      <!-- Content -->
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:5px">
+          <div style="font-weight:700;font-size:14px">${escHtml(b.title)}</div>
+          ${statusLabel[b.status]||statusLabel.open}
+          <span style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);font-size:10px;padding:2px 7px;border-radius:6px;color:var(--text2)">${escHtml(b.category||'General')}</span>
+        </div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:7px;word-break:break-word">${escHtml(b.description||'')}</div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <span style="font-size:10px;color:rgba(255,255,255,.3)">by ${escHtml(b.reporter_name||'Anonymous')} · ${new Date(b.created_at).toLocaleDateString()}</span>
+          ${b.device ? `<span style="font-size:10px;color:rgba(255,255,255,.25)">📱 ${escHtml(b.device)}</span>` : ''}
+          ${canDelete ? `
+            <div style="margin-left:auto;display:flex;gap:6px">
+              <select onchange="setBugStatus('${b.id}',this.value)" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:var(--text);font-size:11px;padding:3px 8px;cursor:none">
+                <option value="open" ${b.status==='open'?'selected':''}>🔴 Open</option>
+                <option value="in_progress" ${b.status==='in_progress'?'selected':''}>🟡 In Progress</option>
+                <option value="fixed" ${b.status==='fixed'?'selected':''}>🟢 Fixed</option>
+                <option value="wontfix" ${b.status==='wontfix'?'selected':''}>⚫ Won't Fix</option>
+              </select>
+              <button onclick="deleteBug('${b.id}')" style="background:rgba(255,59,48,.12);border:1px solid rgba(255,59,48,.25);color:#ff3b30;border-radius:8px;padding:3px 10px;font-size:11px;cursor:none!important">🗑 Delete</button>
+            </div>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function voteBug(bugId, dir) {
+  if (!currentUser || currentUser.guest) { showToast('Login to vote on bugs'); return; }
+  const uid = currentUser.id;
+  const bug = bugsData.find(b => b.id === bugId);
+  if (!bug) return;
+
+  const upvoters = bug.upvoters || [];
+  const downvoters = bug.downvoters || [];
+  const alreadyUp = upvoters.includes(uid);
+  const alreadyDown = downvoters.includes(uid);
+
+  // Toggle off if same vote
+  let newUp = upvoters.filter(x => x !== uid);
+  let newDown = downvoters.filter(x => x !== uid);
+  if (dir === 1 && !alreadyUp) newUp.push(uid);
+  if (dir === -1 && !alreadyDown) newDown.push(uid);
+
+  const net = newUp.length - newDown.length;
+  try {
+    await fetch(SB_URL+`/rest/v1/bug_reports?id=eq.${bugId}`, {
+      method: 'PATCH',
+      headers: {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body: JSON.stringify({ upvoters: newUp, downvoters: newDown, net_votes: net })
+    });
+    bug.upvoters = newUp;
+    bug.downvoters = newDown;
+    bug.net_votes = net;
+    renderBugs();
+  } catch(e) { showToast('Vote failed'); }
+}
+
+async function setBugStatus(bugId, status) {
+  if (!isOwner() && !isAdmin()) return;
+  try {
+    await fetch(SB_URL+`/rest/v1/bug_reports?id=eq.${bugId}`, {
+      method: 'PATCH',
+      headers: {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body: JSON.stringify({ status })
+    });
+    const bug = bugsData.find(b => b.id === bugId);
+    if (bug) { bug.status = status; renderBugs(); }
+    showToast('Status updated');
+  } catch(e) { showToast('Failed to update status'); }
+}
+
+async function deleteBug(bugId) {
+  if (!isOwner() && !isAdmin()) return;
+  if (!confirm('Delete this bug report?')) return;
+  try {
+    await fetch(SB_URL+`/rest/v1/bug_reports?id=eq.${bugId}`, {
+      method: 'DELETE',
+      headers: {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+    });
+    bugsData = bugsData.filter(b => b.id !== bugId);
+    renderBugs();
+    showToast('Bug deleted');
+  } catch(e) { showToast('Delete failed'); }
+}
+
+function openBugReportModal() {
+  if (!currentUser || currentUser.guest) { showToast('Login to report bugs'); return; }
+  document.getElementById('bug-title-input').value = '';
+  document.getElementById('bug-desc-input').value = '';
+  document.getElementById('bug-device-input').value = '';
+  document.getElementById('bug-category-input').value = 'General';
+  const st = document.getElementById('bug-submit-status');
+  st.style.display = 'none'; st.textContent = '';
+  const m = document.getElementById('bug-report-modal');
+  m.style.display = 'flex';
+}
+
+function closeBugReportModal() {
+  document.getElementById('bug-report-modal').style.display = 'none';
+}
+
+async function submitBugReport() {
+  if (!currentUser || currentUser.guest) { showToast('Login to report bugs'); return; }
+  const title = document.getElementById('bug-title-input').value.trim();
+  const desc  = document.getElementById('bug-desc-input').value.trim();
+  const cat   = document.getElementById('bug-category-input').value;
+  const device = document.getElementById('bug-device-input').value.trim();
+  const st = document.getElementById('bug-submit-status');
+
+  if (!title) { st.style.display='block'; st.style.color='#ff3b30'; st.textContent='Please add a title.'; return; }
+  if (!desc)  { st.style.display='block'; st.style.color='#ff3b30'; st.textContent='Please describe the bug.'; return; }
+
+  st.style.display='block'; st.style.color='var(--text2)'; st.textContent='Submitting…';
+  try {
+    const res = await fetch(SB_URL+'/rest/v1/bug_reports', {
+      method: 'POST',
+      headers: {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
+      body: JSON.stringify({
+        title,
+        description: desc,
+        category: cat,
+        device: device||null,
+        reporter_id: currentUser.id,
+        reporter_name: currentUser.display_name || currentUser.username,
+        status: 'open',
+        net_votes: 0,
+        upvoters: [],
+        downvoters: []
+      })
+    });
+    const rows = await res.json();
+    if (!res.ok) throw new Error(rows?.message||res.status);
+    closeBugReportModal();
+    showToast('Bug reported! Thanks 🐛');
+    if (rows && rows[0]) { bugsData.unshift(rows[0]); renderBugs(); }
+  } catch(e) {
+    st.style.color='#ff3b30'; st.textContent='Failed to submit: '+e.message;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  TOKENS — Watch Ads System
+// ═══════════════════════════════════════════════════════════════
+
+const TOK_AD_DAILY_LIMIT = 10;       // max ads per day
+const TOK_AD_BASE = 30;              // first ad reward
+const TOK_AD_STEP = 45;             // each subsequent ad adds this
+const TOK_AD_DURATION = 30;         // seconds to watch
+
+let tokAdSession = {
+  count: 0,          // ads watched today
+  earning: false,    // currently watching
+  timer: null,
+  secondsLeft: TOK_AD_DURATION,
+  pendingReward: 0,
+};
+
+function tokAdStorageKey() { return userKey('tok_ad_day'); }
+
+function tokAdGetToday() {
+  try {
+    const raw = localStorage.getItem(tokAdStorageKey());
+    if (!raw) return { date: '', count: 0 };
+    return JSON.parse(raw);
+  } catch(e) { return { date: '', count: 0 }; }
+}
+
+function tokAdSaveToday(count) {
+  const today = new Date().toDateString();
+  localStorage.setItem(tokAdStorageKey(), JSON.stringify({ date: today, count }));
+}
+
+function tokAdGetCount() {
+  const d = tokAdGetToday();
+  if (d.date !== new Date().toDateString()) return 0; // new day
+  return d.count;
+}
+
+function tokAdNextReward(count) {
+  // 1st ad = 30, 2nd = 75, 3rd = 120... grows by 45 each time
+  return TOK_AD_BASE + count * TOK_AD_STEP;
+}
+
+function tokAdTotalEarnedToday(count) {
+  let total = 0;
+  for (let i = 0; i < count; i++) total += tokAdNextReward(i);
+  return total;
+}
+
+function renderAdLadder() {
+  const el = document.getElementById('tok-ad-ladder'); if (!el) return;
+  const watched = tokAdGetCount();
+  const steps = Math.min(TOK_AD_DAILY_LIMIT, Math.max(5, watched + 3));
+  let html = '';
+  for (let i = 0; i < steps; i++) {
+    const reward = tokAdNextReward(i);
+    const done = i < watched;
+    const current = i === watched;
+    html += `<div style="
+      background:${done ? 'rgba(48,209,88,.15)' : current ? 'rgba(255,159,10,.15)' : 'rgba(255,255,255,.05)'};
+      border:1px solid ${done ? 'rgba(48,209,88,.4)' : current ? 'rgba(255,159,10,.4)' : 'rgba(255,255,255,.1)'};
+      border-radius:10px;padding:8px 12px;text-align:center;min-width:60px;flex-shrink:0">
+      <div style="font-size:9px;color:var(--text2);font-weight:700">AD ${i+1}</div>
+      <div style="font-size:16px;font-weight:900;color:${done ? '#30d158' : current ? '#ff9f0a' : 'var(--text2)'}">${done ? '✅' : reward+'🪙'}</div>
+    </div>`;
+  }
+  el.innerHTML = html;
+}
+
+function updateAdUI() {
+  const watched = tokAdGetCount();
+  const limitEl = document.getElementById('tok-daily-limit');
+  const statusEl = document.getElementById('tok-ad-status');
+  const nextEl = document.getElementById('tok-next-reward');
+  const btn = document.getElementById('tok-watch-btn');
+
+  if (watched >= TOK_AD_DAILY_LIMIT) {
+    if (btn) { btn.disabled = true; btn.style.opacity = '.4'; }
+    if (statusEl) statusEl.textContent = '🎉 Daily limit reached! Come back tomorrow.';
+    if (limitEl) limitEl.textContent = `${watched}/${TOK_AD_DAILY_LIMIT} ads watched today`;
+  } else {
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+    const nextReward = tokAdNextReward(watched);
+    if (nextEl) nextEl.textContent = nextReward;
+    if (statusEl) statusEl.textContent = watched > 0 ? `${watched} ad${watched>1?'s':''} watched today · ${tokAdTotalEarnedToday(watched)} 🪙 earned` : 'Start watching to earn tokens!';
+    if (limitEl) limitEl.textContent = `${watched}/${TOK_AD_DAILY_LIMIT} ads available today`;
+  }
+  renderAdLadder();
+}
+
+function watchAdForTokens() {
+  if (!currentUser || currentUser.guest) { showToast('Login to earn tokens'); return; }
+  const watched = tokAdGetCount();
+  if (watched >= TOK_AD_DAILY_LIMIT) { showToast('Daily limit reached! Come back tomorrow.'); return; }
+  if (tokAdSession.earning) return;
+
+  const reward = tokAdNextReward(watched);
+  tokAdSession.earning = true;
+  tokAdSession.pendingReward = reward;
+  tokAdSession.secondsLeft = TOK_AD_DURATION;
+
+  // Show ad container
+  const container = document.getElementById('tok-ad-container');
+  const overlay = document.getElementById('tok-ad-overlay');
+  const timerEl = document.getElementById('tok-ad-timer');
+  const collectBtn = document.getElementById('tok-ad-collect-btn');
+  if (container) container.style.display = 'block';
+  if (overlay) overlay.style.display = 'flex';
+  if (collectBtn) collectBtn.style.display = 'none';
+
+  // Scroll to ad
+  container?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  // Load Adsterra ad in the inner div
+  const inner = document.getElementById('tok-ad-inner');
+  if (inner) {
+    inner.innerHTML = '';
+    // Adsterra interstitial/banner script
+    const s = document.createElement('script');
+    s.async = true;
+    s.setAttribute('data-cfasync', 'false');
+    s.src = '//pl25875551.profitableratecpm.com/6b1b6a1f9e2d3c4b5a6e7f8d9c0b1a2e/invoke.js';
+    inner.appendChild(s);
+  }
+
+  // Countdown timer
+  timerEl && (timerEl.textContent = tokAdSession.secondsLeft);
+  tokAdSession.timer = setInterval(() => {
+    tokAdSession.secondsLeft--;
+    if (timerEl) timerEl.textContent = tokAdSession.secondsLeft;
+    if (tokAdSession.secondsLeft <= 0) {
+      clearInterval(tokAdSession.timer);
+      // Show collect button
+      if (timerEl) timerEl.style.display = 'none';
+      if (collectBtn) collectBtn.style.display = 'block';
+      if (overlay) overlay.querySelector('div:first-child').textContent = '🎉';
+      if (overlay) overlay.querySelectorAll('div')[1].textContent = 'Ad complete!';
+      if (overlay) overlay.querySelectorAll('div')[2].textContent = `Claim your ${reward} 🪙`;
+    }
+  }, 1000);
+}
+
+async function collectAdTokens() {
+  if (!tokAdSession.earning) return;
+  clearInterval(tokAdSession.timer);
+  tokAdSession.earning = false;
+
+  const reward = tokAdSession.pendingReward;
+  const watched = tokAdGetCount();
+
+  // Award tokens
+  const newBal = (currentUser.tokens || 0) + reward;
+  try {
+    await fetch(SB_URL + `/rest/v1/profiles?id=eq.${currentUser.id}`, {
+      method: 'PATCH',
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tokens: newBal })
+    });
+    currentUser.tokens = newBal;
+
+    // Update all balance displays
+    const displays = ['tok-balance-display', 'shop-balance-display', 'shop-token-balance'];
+    displays.forEach(id => { const el = document.getElementById(id); if (el) el.textContent = newBal + (id === 'shop-token-balance' ? ' 🪙' : ''); });
+    const topTok = document.getElementById('topbar-tokens');
+    if (topTok) topTok.textContent = '🪙 ' + newBal;
+
+    // Save today's count
+    tokAdSaveToday(watched + 1);
+
+    // Add to history
+    addTokenHistory(`📺 Watched ad #${watched + 1}`, '+' + reward);
+
+    showToast(`+${reward} 🪙 tokens earned!`);
+  } catch(e) {
+    showToast('Failed to award tokens');
+  }
+
+  // Hide ad container
+  const container = document.getElementById('tok-ad-container');
+  if (container) container.style.display = 'none';
+  const timerEl = document.getElementById('tok-ad-timer');
+  if (timerEl) timerEl.style.display = 'block';
+
+  // Reset session
+  tokAdSession.pendingReward = 0;
+
+  // Update UI
+  updateAdUI();
+  renderAdLadder();
+}
+
+function addTokenHistory(label, amount) {
+  // Prepend to token history in localStorage
+  const key = userKey('tok_history');
+  let hist = [];
+  try { hist = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e) {}
+  hist.unshift({ label, amount, date: new Date().toISOString() });
+  hist = hist.slice(0, 50); // keep last 50
+  localStorage.setItem(key, JSON.stringify(hist));
+}
+
+// Hook into loadTokensView to init ad UI
+const _origLoadTokensView = loadTokensView;
+loadTokensView = async function() {
+  await _origLoadTokensView();
+  updateAdUI();
+};
+
+
+// ═══════════════════════════════════════════════════════════════
+//  CONTACT FORM + BLOG
+// ═══════════════════════════════════════════════════════════════
+
+async function submitContactForm() {
+  const name    = document.getElementById('contact-name')?.value?.trim();
+  const email   = document.getElementById('contact-email')?.value?.trim();
+  const subject = document.getElementById('contact-subject')?.value;
+  const message = document.getElementById('contact-message')?.value?.trim();
+  const status  = document.getElementById('contact-status');
+
+  if (!name || !email || !message) { showToast('Please fill in all fields'); return; }
+
+  // Save to Supabase contact_messages table
+  try {
+    await fetch(SB_URL+'/rest/v1/contact_messages', {
+      method: 'POST',
+      headers: {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body: JSON.stringify({ name, email, subject, message, created_at: new Date().toISOString() })
+    });
+    if (status) {
+      status.style.display = 'block';
+      status.style.color = '#30d158';
+      status.textContent = '✅ Message sent! We\'ll get back to you within 24–48 hours.';
+    }
+    document.getElementById('contact-name').value = '';
+    document.getElementById('contact-email').value = '';
+    document.getElementById('contact-message').value = '';
+    showToast('Message sent! ✓');
+  } catch(e) {
+    // Fallback: open mailto
+    const mailto = `mailto:x7wvmore@gmail.com?subject=${encodeURIComponent('[Adless Games] '+subject)}&body=${encodeURIComponent('Name: '+name+'\nEmail: '+email+'\n\n'+message)}`;
+    window.open(mailto);
+    showToast('Opening your email client…');
+  }
+}
+
+// ── Blog posts content ─────────────────────────────────────────
+const BLOG_POSTS = {
+  'worlds-guide': {
+    title: 'How to Build Your First World in AdlessWorlds',
+    date: 'May 2026', tag: '📖 GUIDE',
+    content: `<h2 style="font-size:22px;font-weight:900;margin-bottom:6px">How to Build Your First World in AdlessWorlds</h2>
+<p style="font-size:12px;color:var(--text2);margin-bottom:24px">📖 Guide · May 2026 · 5 min read</p>
+<p style="font-size:14px;color:var(--text2);line-height:1.9;margin-bottom:16px">AdlessWorlds is Adless Games' built-in 3D world builder — think Roblox, but right in your browser with no downloads. Anyone can create a world, publish it, and have the whole community play it. Here&#39;s how to get started.</p>
+<h3 style="font-size:16px;font-weight:800;margin:20px 0 8px">Step 1: Create a New World</h3>
+<p style="font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:14px">Go to the Worlds tab and click <strong>🔨 Create World</strong>. You'll be prompted to give your world a name. Pick something descriptive — it's what players will see in the browse lobby.</p>
+<h3 style="font-size:16px;font-weight:800;margin:20px 0 8px">Step 2: Place Objects</h3>
+<p style="font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:14px">The left panel has all your building blocks — cubes, spheres, platforms, ramps, trees, rocks, water, and more. Click any asset to spawn it in the centre of the scene. Then click to select it and drag to move it around.</p>
+<h3 style="font-size:16px;font-weight:800;margin:20px 0 8px">Step 3: Transform Your Objects</h3>
+<p style="font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:14px">Use the toolbar tools to transform selected objects: <strong>Move (W)</strong> drags on the ground plane, <strong>Scale (E)</strong> resizes, <strong>Rotate (R)</strong> spins around the Y axis. You can also type exact values in the Properties panel on the right.</p>
+<h3 style="font-size:16px;font-weight:800;margin:20px 0 8px">Step 4: Add Lua Scripts</h3>
+<p style="font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:14px">Select any object and write a Lua script in the right panel. For example, adding <code style="background:rgba(255,255,255,.08);padding:2px 6px;border-radius:4px">function onTouch(player) player.speed = player.speed + 5 end</code> to a platform makes it a speed boost pad.</p>
+<h3 style="font-size:16px;font-weight:800;margin:20px 0 8px">Step 5: Set the Sky and Atmosphere</h3>
+<p style="font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:14px">Choose a sky environment from the World Settings panel — Day, Night, Sunset, Space, or Storm. You can also add ambient sound like rain, wind, or dungeon ambience to set the mood.</p>
+<h3 style="font-size:16px;font-weight:800;margin:20px 0 8px">Step 6: Playtest and Publish</h3>
+<p style="font-size:13px;color:var(--text2);line-height:1.9">Hit <strong>▶ Playtest</strong> to experience your world in real time. When you\'re happy, click <strong>💾 Save</strong> then <strong>📤 Submit for Review</strong>. A moderator will review your world and approve it for the community within 24 hours.</p>`
+  },
+  'top-games': {
+    title: 'Top 10 Most Played Games on Adless Games',
+    date: 'May 2026', tag: '🎮 LIST',
+    content: `<h2 style="font-size:22px;font-weight:900;margin-bottom:6px">Top 10 Most Played Games on Adless Games Right Now</h2>
+<p style="font-size:12px;color:var(--text2);margin-bottom:24px">🎮 List · May 2026 · 4 min read</p>
+<p style="font-size:14px;color:var(--text2);line-height:1.9;margin-bottom:20px">Based on real play data from our community, here are the ten games Adless Games players can&#39;t stop playing this month. From lightning-fast reflexes to deep strategy, there&#39;s something for everyone.</p>
+${[['1','🏆','Slope','The king of browser games. Guide a ball down an endless slope at breakneck speed without falling off. Simple concept, impossible to master.'],['2','🥈','1v1.lol','Build, edit, and outshoot opponents in this competitive third-person battle game. Popular with Fortnite fans looking for a quick fix.'],['3','🥉','Smash Karts','Mario Kart meets browser gaming. Race and shoot your way to victory in chaotic multiplayer kart battles.'],['4','🎮','Drift Boss','Master the art of drift in this deceptively simple one-button driving game. Easy to start, hard to put down.'],['5','🎮','Geometry Dash Lite','Jump, fly, and flip through dangerous passages in this rhythm-based platformer. Every level is a new challenge.'],['6','🎮','Temple Run 2','The classic endless runner. Swipe to turn, jump over gaps, and slide under barriers while collecting coins.'],['7','🎮','Subway Surfers','Dash through subway tracks, dodge trains, and collect coins in this endless runner favourite.'],['8','🎮','Among Us Online','Play the social deduction phenomenon right in your browser. Find the impostor before it\'s too late.'],['9','🎮','Minecraft Classic','The original browser version of Minecraft. Build anything you can imagine with classic blocks.'],['10','🎮','Paper.io 2','Expand your territory by drawing loops on the map — but watch out for other players cutting your line.']].map(([n,medal,title,desc])=>`<div style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06);align-items:flex-start"><div style="font-size:24px;width:36px;flex-shrink:0;text-align:center">${medal}</div><div><div style="font-weight:800;font-size:15px;margin-bottom:4px">${title}</div><div style="font-size:13px;color:var(--text2);line-height:1.8">${desc}</div></div></div>`).join('')}`
+  },
+  'tokens-guide': {
+    title: 'How to Earn Tokens Fast on Adless Games',
+    date: 'May 2026', tag: '🪙 GUIDE',
+    content: `<h2 style="font-size:22px;font-weight:900;margin-bottom:6px">How to Earn Tokens Fast on Adless Games</h2>
+<p style="font-size:12px;color:var(--text2);margin-bottom:24px">🪙 Guide · May 2026 · 3 min read</p>
+<p style="font-size:14px;color:var(--text2);line-height:1.9;margin-bottom:20px">Tokens are Adless Games' virtual currency. Spend them in the Item Shop on avatar clothing, profile cosmetics, badge frames, and more. Here&#39;s every way to earn them.</p>
+<div style="display:flex;flex-direction:column;gap:12px">
+${[['📺 Watch Ads','The fastest way to earn. Watch up to 10 ads per day. Rewards grow with each ad: 30 tokens for the first, 75 for the second, 120 for the third, growing by 45 each time. Watching all 10 ads earns you 525 tokens in a single day.','#ff9f0a'],['✅ Daily Tasks','Complete daily tasks like logging in, playing 3 games, sending a chat message, or visiting a friend&#39;s profile. Each task rewards 10–50 tokens.','#30d158'],['🔗 Refer Friends','Share your referral code from the Tokens page. When a friend signs up using your code, you both earn 50 tokens. No limit on referrals.','var(--blue)'],['🏆 Leaderboard Rewards','Finish in the top 10 on the weekly leaderboard to earn bonus tokens. First place earns 500 tokens every Monday.','#ffd60a'],['🎖️ Badge Achievements','Unlock badges by hitting milestones — playing your 100th game, making 50 chat messages, and more. Most badges reward 25–100 tokens.','#bf5af2'],['🌍 World Plays','When you publish a world in AdlessWorlds and players play it, you earn 2 tokens per play. Popular worlds can earn hundreds of tokens passively.','#30d158']].map(([title,desc,color])=>`<div class="stat-box"><div style="font-size:15px;font-weight:800;margin-bottom:6px;color:${color}">${title}</div><p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">${desc}</p></div>`).join('')}
+</div>`
+  },
+  'tab-cloak': {
+    title: 'Tab Cloaking: How to Disguise Your Browser Tab',
+    date: 'April 2026', tag: '💡 TIP',
+    content: `<h2 style="font-size:22px;font-weight:900;margin-bottom:6px">Tab Cloaking: How to Make Your Browser Tab Look Like Google Classroom</h2>
+<p style="font-size:12px;color:var(--text2);margin-bottom:24px">💡 Tip · April 2026 · 2 min read</p>
+<p style="font-size:14px;color:var(--text2);line-height:1.9;margin-bottom:16px">Adless Games has a built-in Tab Cloak feature that instantly changes your browser tab's title and favicon icon to look like any popular school or productivity app — Google Classroom, Google Docs, Khan Academy, IXL, and many more.</p>
+<h3 style="font-size:16px;font-weight:800;margin:20px 0 8px">How to Use It</h3>
+<ol style="font-size:13px;color:var(--text2);line-height:2.2;padding-left:18px;margin-bottom:16px"><li>Click <strong style="color:var(--text)">Settings</strong> in the sidebar</li><li>Scroll to the <strong style="color:var(--text)">Tab Cloak</strong> section</li><li>Pick any app from the grid — Google Classroom, Docs, Slides, IXL, Khan Academy, and 40+ more</li><li>Your tab instantly changes its title and icon</li><li>Click <strong style="color:var(--text)">Reset Tab</strong> to go back to normal</li></ol>
+<h3 style="font-size:16px;font-weight:800;margin:20px 0 8px">Custom Cloaks</h3>
+<p style="font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:16px">You can also set a completely custom title and icon URL. Paste any website's favicon URL and type any title you want for a fully custom disguise.</p>
+<h3 style="font-size:16px;font-weight:800;margin:20px 0 8px">Panic Key</h3>
+<p style="font-size:13px;color:var(--text2);line-height:1.9">Enable the Panic Key in Settings and press a key of your choice to instantly open a blank Google tab. The perfect emergency exit.</p>`
+  },
+  'update-worlds': {
+    title: 'Introducing AdlessWorlds',
+    date: 'May 2026', tag: '📣 UPDATE',
+    content: `<h2 style="font-size:22px;font-weight:900;margin-bottom:6px">Introducing AdlessWorlds: Build and Play Community 3D Games</h2>
+<p style="font-size:12px;color:var(--text2);margin-bottom:24px">📣 Update · May 2026 · 6 min read</p>
+<p style="font-size:14px;color:var(--text2);line-height:1.9;margin-bottom:16px">This is the biggest update in Adless Games history. Today we're launching <strong>AdlessWorlds</strong> — a fully browser-based 3D world builder and game platform, built right into Adless Games. Think Roblox, but free, instant, and community-owned.</p>
+<h3 style="font-size:16px;font-weight:800;margin:20px 0 8px">What Is AdlessWorlds?</h3>
+<p style="font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:14px">AdlessWorlds lets any registered Adless Games user build their own 3D games using a drag-and-drop world editor powered by Three.js. Place objects, write Lua scripts, design GUIs, set skies and ambient sounds, and publish your creation for the whole community to explore.</p>
+<h3 style="font-size:16px;font-weight:800;margin:20px 0 8px">Key Features</h3>
+<ul style="font-size:13px;color:var(--text2);line-height:2.2;padding-left:18px;margin-bottom:14px"><li>Full 3D editor with Move, Scale, and Rotate tools</li><li>30+ asset types including primitives, decorations, NPCs, coins, and goals</li><li>Lua scripting per object</li><li>5 sky environments and 7 ambient sound options</li><li>Real-time multiplayer using Supabase Presence</li><li>3D Roblox-style avatar with pixel art clothing editor</li><li>Item Shop — buy and sell avatar items with Tokens</li><li>Admin review system for quality control</li><li>World ratings, leaderboards, and remix (fork) feature</li><li>Auto-screenshot thumbnails on save</li></ul>
+<p style="font-size:13px;color:var(--text2);line-height:1.9">AdlessWorlds is available now. Click the <strong>🌍 Worlds</strong> tab to start exploring — or hit <strong>🔨 Create World</strong> to build your own.</p>`
+  },
+  'browser-games': {
+    title: 'Why Browser Games Are Making a Comeback in 2026',
+    date: 'April 2026', tag: '📖 ARTICLE',
+    content: `<h2 style="font-size:22px;font-weight:900;margin-bottom:6px">Why Browser Games Are Making a Comeback in 2026</h2>
+<p style="font-size:12px;color:var(--text2);margin-bottom:24px">📖 Article · April 2026 · 7 min read</p>
+<p style="font-size:14px;color:var(--text2);line-height:1.9;margin-bottom:16px">For a few years after Flash died in 2020, browser gaming looked like it might disappear entirely. But in 2024 and 2025, something unexpected happened: browser games came roaring back. Here&#39;s why.</p>
+<h3 style="font-size:16px;font-weight:800;margin:20px 0 8px">The Death of Flash Was a New Beginning</h3>
+<p style="font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:14px">When Adobe Flash ended support on December 31, 2020, millions of classic browser games went dark overnight. But the void didn&#39;t stay empty for long. Developers began remaking their games in HTML5, WebGL, and JavaScript — technologies that are faster, more secure, and work on mobile without plugins.</p>
+<h3 style="font-size:16px;font-weight:800;margin:20px 0 8px">WebGL Changed Everything</h3>
+<p style="font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:14px">Modern browsers can now run 3D games that would have required a downloaded client just five years ago. Libraries like Three.js, Babylon.js, and Phaser have made it possible for indie developers to build beautiful, playable experiences that load in seconds. The gap between browser games and native apps has never been smaller.</p>
+<h3 style="font-size:16px;font-weight:800;margin:20px 0 8px">Instant Play Wins</h3>
+<p style="font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:14px">App stores require downloads, accounts, and storage space. Browser games require nothing. Click a link and you\'re playing in under three seconds. In an era of shrinking attention spans and cluttered app stores, that frictionless experience is a massive advantage.</p>
+<h3 style="font-size:16px;font-weight:800;margin:20px 0 8px">The School Factor</h3>
+<p style="font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:14px">Millions of students play browser games at school on Chromebooks where app installs are restricted. Platforms like Adless Games exist specifically to serve this audience — offering hundreds of games accessible from any browser with zero installation.</p>
+<h3 style="font-size:16px;font-weight:800;margin:20px 0 8px">What&#39;s Next</h3>
+<p style="font-size:13px;color:var(--text2);line-height:1.9">With WebGPU rolling out across browsers in 2025–2026, the next generation of browser games will be indistinguishable from desktop titles. The browser is becoming the world's most powerful gaming platform — and it\'s only getting started.</p>`
+  }
+};
+
+function openBlogPost(id) {
+  const post = BLOG_POSTS[id]; if (!post) return;
+  const modal = document.getElementById('blog-modal');
+  const content = document.getElementById('blog-modal-content');
+  if (!modal || !content) return;
+  content.innerHTML = post.content;
+  modal.style.display = 'block';
+  modal.scrollTop = 0;
+}
+
+function closeBlogPost() {
+  const modal = document.getElementById('blog-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+// ── Three.js loader ────────────────────────────────────────────
+(function loadThreeJS(){
+  if(window.THREE)return;
+  const s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+  s.onload=()=>console.log('[AdlessWorlds] Three.js r128 loaded');
+  s.onerror=()=>console.warn('[AdlessWorlds] Failed to load Three.js');
+  document.head.appendChild(s);
+})();
+
 </script>
 
 <!-- NOTIFICATION PANEL (CrazyGames style) -->
@@ -10744,4 +13176,12 @@ async function loadVerifiedEmails(){
     <div id="ss-viewer-verdict" style="display:none;background:rgba(0,0,0,.85);border:1px solid rgba(255,255,255,.12);border-radius:0 0 16px 16px;padding:12px 18px;display:none;align-items:center;gap:10px;flex-wrap:wrap">
       <div id="ss-viewer-comment" style="flex:1;font-size:12px;color:rgba(255,255,255,.5);font-style:italic"></div>
       <div style="display:flex;gap:8px">
-        <button id="ss-approve-btn" style="backgr
+        <button id="ss-approve-btn" style="background:rgba(48,209,88,.15);border:1px solid rgba(48,209,88,.3);color:#30d158;border-radius:8px;padding:6px 14px;font-size:12px;cursor:pointer!important;font-weight:600" onclick="reviewScoreFromViewer('approved')">✅ Approve</button>
+        <button id="ss-reject-btn" style="background:rgba(255,59,48,.15);border:1px solid rgba(255,59,48,.3);color:#ff3b30;border-radius:8px;padding:6px 14px;font-size:12px;cursor:pointer!important;font-weight:600" onclick="reviewScoreFromViewer('rejected')">❌ Reject</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
