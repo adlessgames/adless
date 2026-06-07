@@ -12586,28 +12586,17 @@ async function removeWorldAdmin(userId) {
 
 // ── Avatar + Shop tab init ─────────────────────────────────────
 function initAvatarTab() {
-  if (!currentUser || currentUser.guest) {
-    document.getElementById('avatar-coming-soon').style.display = 'block';
-    document.getElementById('avatar-editor-wrap').style.display = 'none';
-    return;
-  }
   document.getElementById('avatar-coming-soon').style.display = 'none';
   document.getElementById('avatar-editor-wrap').style.display = 'block';
   initPixelCanvas();
-  initAvatarCanvas3D();
+  // Give layout time to paint before measuring canvas size
+  setTimeout(initAvatarCanvas3D, 80);
 }
 
 function initShopTab() {
-  if (!currentUser || currentUser.guest) {
-    document.getElementById('shop-coming-soon').style.display = 'block';
-    document.getElementById('worlds-shop-wrap').style.display = 'none';
-    return;
-  }
-  document.getElementById('shop-coming-soon').style.display = 'none';
-  document.getElementById('worlds-shop-wrap').style.display = 'block';
-  var bal = document.getElementById('shop-token-balance');
-  if (bal) bal.textContent = (currentUser.tokens || 0) + ' 🪙';
-  loadShopItems('all');
+  // Item shop is still in development — always show the coming-soon banner
+  document.getElementById('shop-coming-soon').style.display = 'block';
+  document.getElementById('worlds-shop-wrap').style.display = 'none';
 }
 
 // ── Avatar slot switching ──────────────────────────────────────
@@ -12745,68 +12734,273 @@ function setAvatarSkinColor(hex) {
   ctx.fillStyle = hex;
   ctx.fillRect(0,0,512,512);
   _avatarSlotData['skin'] = canvas.toDataURL('image/png');
-  updateAvatarPreview3D();
+  // Update 3D character skin directly
+  _avColors['skin'] = _hexToInt(hex);
+  _avRebuildCharacter();
   showToast('Skin colour applied');
 }
 
 // ── 3D avatar preview (simple placeholder) ────────────────────
+// ── Roblox-accurate 3D avatar ──────────────────────────────────
+// Proportions based on classic R6 Roblox rig
+var _avScene, _avCamera, _avRenderer, _avAnimId;
+var _avParts = {};
+var _avOrbit = { dragging:false, yaw:0.3, pitch:0.15, lastX:0, lastY:0 };
+var _avColors = {
+  skin:   0xFFCBA4,
+  shirt:  0x1a6bbf,
+  pants:  0x1a6bbf,
+  hair:   0x3d2314
+};
+
+function _hexToInt(h){ return parseInt(h.replace('#',''),16); }
+function _intToHex(n){ return '#'+n.toString(16).padStart(6,'0'); }
+
+// ── Face texture ──────────────────────────────────────────────
+function _makeFaceTex(skinHex) {
+  var T=window.THREE; var S=256;
+  var c=document.createElement('canvas'); c.width=c.height=S;
+  var x=c.getContext('2d');
+  // Skin
+  x.fillStyle=skinHex||'#FFCBA4'; x.fillRect(0,0,S,S);
+  // --- Eyes ---
+  // White sclera
+  x.fillStyle='#fff';
+  _roundRect(x, 54, 88, 52, 40, 8);
+  _roundRect(x, 150, 88, 52, 40, 8);
+  // Iris (blue)
+  x.fillStyle='#3a78d4';
+  _roundRect(x, 62, 94, 36, 30, 6);
+  _roundRect(x, 158, 94, 36, 30, 6);
+  // Pupil
+  x.fillStyle='#111';
+  _roundRect(x, 70, 100, 20, 20, 4);
+  _roundRect(x, 166, 100, 20, 20, 4);
+  // Shine
+  x.fillStyle='#fff';
+  x.fillRect(74,102,6,6); x.fillRect(170,102,6,6);
+  // Eyebrows
+  x.fillStyle='#3d2314'; x.lineWidth=0;
+  _roundRect(x, 52, 74, 56, 10, 5);
+  _roundRect(x, 148, 74, 56, 10, 5);
+  // Smile
+  x.strokeStyle='#8B4513'; x.lineWidth=7; x.lineCap='round';
+  x.beginPath(); x.arc(128,168,34,0.2,Math.PI-0.2); x.stroke();
+  // Cheeks
+  x.globalAlpha=0.22; x.fillStyle='#ff6688';
+  x.beginPath(); x.ellipse(38,162,22,14,0,0,Math.PI*2); x.fill();
+  x.beginPath(); x.ellipse(218,162,22,14,0,0,Math.PI*2); x.fill();
+  x.globalAlpha=1;
+  return new T.CanvasTexture(c);
+}
+function _roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r);
+  ctx.closePath(); ctx.fill();
+}
+
+// ── Roblox R6 proportions (world units) ───────────────────────
+// Head: 2×2×2 cube  (large relative to body — very Roblox)
+// Torso: 2×2×1
+// Upper Arm: 1×2×1   Lower Arm(hand): 1×1×1
+// Upper Leg: 1×2×1   Lower Leg(foot): 1×1×1
+// All parts are pure BoxGeometry — no cylinders
+
+function _avMat(color, extra) {
+  var T=window.THREE;
+  return new T.MeshLambertMaterial(Object.assign({color:color},extra||{}));
+}
+
+function _avRebuildCharacter() {
+  var T=window.THREE; if(!_avScene||!T) return;
+  // Remove old
+  Object.values(_avParts).forEach(function(p){ if(p) _avScene.remove(p); });
+  _avParts={};
+
+  var sk  = _avColors.skin;
+  var sh  = _avColors.shirt;
+  var pa  = _avColors.pants;
+  var ha  = _avColors.hair;
+
+  var skinMat  = _avMat(sk);
+  var shirtMat = _avMat(sh);
+  var pantsMat = _avMat(pa);
+  var hairMat  = _avMat(ha);
+  var faceTex  = _makeFaceTex(_intToHex(sk));
+
+  // 6-face material array: +x,-x,+y,-y,+z(front),-z
+  function headMats() {
+    var s=skinMat;
+    return [s, s, s, s, new T.MeshLambertMaterial({map:faceTex}), s];
+  }
+
+  function add(geo, mat, x, y, z) {
+    var m=new T.Mesh(geo, mat);
+    m.position.set(x,y,z);
+    m.castShadow=true; m.receiveShadow=true;
+    _avScene.add(m);
+    return m;
+  }
+  function box(w,h,d){ return new T.BoxGeometry(w,h,d); }
+
+  // Y positions (standing, feet at y=0)
+  // Feet bottom = 0, top of head ≈ 7.2
+  // Lower leg: 0→1, Upper leg: 1→3, Torso: 3→5, Head: 5→7 (+ hair)
+  // Arms alongside torso 3→5
+
+  // HEAD (2×2×2) — centred at y=6
+  _avParts.head = add(box(2,2,2), headMats(), 0, 6, 0);
+
+  // HAIR — flat slab on top, thin sides
+  _avParts.hairTop  = add(box(2.1,0.35,2.1), hairMat,  0, 7.17, 0);
+  _avParts.hairBack = add(box(2.1,1.2, 0.2), hairMat,  0, 6.2, -1.05);
+  _avParts.hairL    = add(box(0.2, 0.9, 1.8), hairMat,-1.05, 6.35, -0.1);
+  _avParts.hairR    = add(box(0.2, 0.9, 1.8), hairMat, 1.05, 6.35, -0.1);
+  // Fringe (front overhang)
+  _avParts.hairFront= add(box(2.1,0.35,0.5), hairMat, 0, 6.82, 1.0);
+
+  // TORSO (2×2×1) — y 3→5, centred y=4
+  _avParts.torso = add(box(2,2,1), shirtMat, 0, 4, 0);
+
+  // UPPER ARMS (1×2×1) — same height as torso, beside it
+  _avParts.lUpperArm = add(box(1,2,1), shirtMat, -1.5, 4, 0);
+  _avParts.rUpperArm = add(box(1,2,1), shirtMat,  1.5, 4, 0);
+
+  // LOWER ARMS / HANDS (1×1×1) — below upper arms
+  _avParts.lLowerArm = add(box(1,1,1), skinMat, -1.5, 2.5, 0);
+  _avParts.rLowerArm = add(box(1,1,1), skinMat,  1.5, 2.5, 0);
+
+  // UPPER LEGS (1×2×1) — y 1→3, split left/right
+  _avParts.lUpperLeg = add(box(1,2,1), pantsMat, -0.55, 2, 0);
+  _avParts.rUpperLeg = add(box(1,2,1), pantsMat,  0.55, 2, 0);
+
+  // LOWER LEGS / FEET (1×1×1) — y 0→1
+  _avParts.lLowerLeg = add(box(1,1,1), pantsMat, -0.55, 0.5, 0);
+  _avParts.rLowerLeg = add(box(1,1,1), pantsMat,  0.55, 0.5, 0);
+}
+
+// ── Scene setup ───────────────────────────────────────────────
 function initAvatarCanvas3D() {
-  var canvas = document.getElementById('av-canvas');
-  if (!canvas || canvas._av3dInited) return;
-  canvas._av3dInited = true;
-  // Simple 2D placeholder until a real 3D model is wired up
-  var ctx = canvas.getContext('2d');
-  canvas.width = canvas.offsetWidth || 400;
-  canvas.height = canvas.offsetHeight || 420;
-  drawAvatarPreview2D(ctx, canvas.width, canvas.height);
+  var canvas=document.getElementById('av-canvas');
+  if(!canvas) return;
+  if(canvas._avInited){ _avRebuildCharacter(); return; }
+  canvas._avInited=true;
+
+  var T=window.THREE;
+  if(!T){ setTimeout(initAvatarCanvas3D,400); return; }
+
+  var W=canvas.clientWidth||640, H=canvas.clientHeight||420;
+
+  _avScene=new T.Scene();
+  _avScene.background=new T.Color(0x0d0d1a);
+
+  // Floor
+  var fl=new T.Mesh(new T.PlaneGeometry(16,16),new T.MeshLambertMaterial({color:0x111122}));
+  fl.rotation.x=-Math.PI/2; fl.position.y=-0.01; fl.receiveShadow=true;
+  _avScene.add(fl);
+  _avScene.add(new T.GridHelper(16,16,0x1e1e3a,0x171726));
+
+  // Lights
+  _avScene.add(new T.AmbientLight(0xffffff,0.5));
+  var sun=new T.DirectionalLight(0xfff8e8,1.0);
+  sun.position.set(5,10,8); sun.castShadow=true; _avScene.add(sun);
+  var fill=new T.DirectionalLight(0xaaccff,0.3);
+  fill.position.set(-5,3,-5); _avScene.add(fill);
+
+  _avCamera=new T.PerspectiveCamera(38, W/H, 0.1, 100);
+  _avCamera.position.set(0,4,11);
+  _avCamera.lookAt(0,3.5,0);
+
+  _avRenderer=new T.WebGLRenderer({canvas:canvas,antialias:true});
+  _avRenderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  _avRenderer.setSize(W,H,false);
+  _avRenderer.shadowMap.enabled=true;
+  _avRenderer.shadowMap.type=T.PCFSoftShadowMap;
+
+  _avRebuildCharacter();
+  _avInitOrbit(canvas);
+  _avTick();
+}
+
+function _avInitOrbit(canvas) {
+  canvas.addEventListener('mousedown',function(e){_avOrbit.dragging=true;_avOrbit.lastX=e.clientX;_avOrbit.lastY=e.clientY;});
+  window.addEventListener('mousemove',function(e){
+    if(!_avOrbit.dragging)return;
+    _avOrbit.yaw  +=(e.clientX-_avOrbit.lastX)*0.013;
+    _avOrbit.pitch+=(e.clientY-_avOrbit.lastY)*0.007;
+    _avOrbit.pitch=Math.max(-0.3,Math.min(0.55,_avOrbit.pitch));
+    _avOrbit.lastX=e.clientX; _avOrbit.lastY=e.clientY;
+  });
+  window.addEventListener('mouseup',function(){_avOrbit.dragging=false;});
+  canvas.addEventListener('touchstart',function(e){var t=e.touches[0];_avOrbit.dragging=true;_avOrbit.lastX=t.clientX;_avOrbit.lastY=t.clientY;},{passive:true});
+  canvas.addEventListener('touchmove',function(e){if(!_avOrbit.dragging)return;var t=e.touches[0];_avOrbit.yaw+=(t.clientX-_avOrbit.lastX)*0.013;_avOrbit.lastX=t.clientX;_avOrbit.lastY=t.clientY;},{passive:true});
+  canvas.addEventListener('touchend',function(){_avOrbit.dragging=false;});
+}
+
+function _avTick(ts) {
+  requestAnimationFrame(_avTick);
+  if(!_avRenderer||!_avScene||!_avCamera)return;
+  var t=(ts||0)*0.001;
+
+  // Idle: gentle bob (whole character moves up/down)
+  var bob=Math.sin(t*2)*0.06;
+  ['head','hairTop','hairBack','hairL','hairR','hairFront','torso',
+   'lUpperArm','rUpperArm','lLowerArm','rLowerArm'].forEach(function(k){
+    if(_avParts[k]) _avParts[k].position.y = _avParts[k].position.y + 0; // handled below
+  });
+
+  // Easier: move everything by storing base Y and offsetting
+  // Instead use a root group — but we'll just set positions each frame
+  var baseY={
+    head:6, hairTop:7.17, hairBack:6.2, hairL:6.35, hairR:6.35, hairFront:6.82,
+    torso:4, lUpperArm:4, rUpperArm:4, lLowerArm:2.5, rLowerArm:2.5,
+    lUpperLeg:2, rUpperLeg:2, lLowerLeg:0.5, rLowerLeg:0.5
+  };
+  Object.keys(baseY).forEach(function(k){
+    if(_avParts[k]) _avParts[k].position.y=baseY[k]+bob;
+  });
+
+  // Arm swing
+  var swing=Math.sin(t*2)*0.22;
+  if(_avParts.lUpperArm) _avParts.lUpperArm.rotation.x= swing;
+  if(_avParts.lLowerArm) _avParts.lLowerArm.rotation.x= swing;
+  if(_avParts.rUpperArm) _avParts.rUpperArm.rotation.x=-swing;
+  if(_avParts.rLowerArm) _avParts.rLowerArm.rotation.x=-swing;
+  // Leg swing (subtle)
+  if(_avParts.lUpperLeg) _avParts.lUpperLeg.rotation.x=-swing*0.4;
+  if(_avParts.rUpperLeg) _avParts.rUpperLeg.rotation.x= swing*0.4;
+  // Head tilt
+  if(_avParts.head) _avParts.head.rotation.y=Math.sin(t*0.7)*0.07;
+
+  // Orbit camera around character
+  var r=11;
+  _avCamera.position.x=Math.sin(_avOrbit.yaw)*r;
+  _avCamera.position.z=Math.cos(_avOrbit.yaw)*r;
+  _avCamera.position.y=3.5+_avOrbit.pitch*5;
+  _avCamera.lookAt(0,3.5,0);
+
+  _avRenderer.render(_avScene,_avCamera);
 }
 
 function updateAvatarPreview3D() {
-  var canvas = document.getElementById('av-canvas');
-  if (!canvas) return;
-  var ctx = canvas.getContext('2d');
-  drawAvatarPreview2D(ctx, canvas.width || 400, canvas.height || 420);
-}
-
-function drawAvatarPreview2D(ctx, w, h) {
-  ctx.clearRect(0,0,w,h);
-  ctx.fillStyle = '#111';
-  ctx.fillRect(0,0,w,h);
-  // Body silhouette
-  var cx = w/2, cy = h/2 - 20;
-  // Skin base
-  var skinData = _avatarSlotData['skin'];
-  ctx.fillStyle = '#FDDBB4';
-  // Head
-  ctx.beginPath(); ctx.arc(cx, cy-80, 40, 0, Math.PI*2); ctx.fill();
-  // Torso
-  ctx.fillRect(cx-35, cy-40, 70, 90);
-  // Legs
-  ctx.fillRect(cx-30, cy+50, 25, 80);
-  ctx.fillRect(cx+5,  cy+50, 25, 80);
-  // Overlay clothing textures
-  var slots = ['shirt','tshirt','pants','hair'];
-  slots.forEach(function(slot) {
-    if (!_avatarSlotData[slot]) return;
-    var img = new Image();
-    img.onload = function() {
-      ctx.save();
-      if (slot === 'hair') {
-        ctx.drawImage(img, cx-42, cy-120, 84, 50);
-      } else if (slot === 'pants') {
-        ctx.drawImage(img, cx-32, cy+48, 64, 84);
-      } else {
-        ctx.drawImage(img, cx-37, cy-42, 74, 92);
-      }
-      ctx.restore();
+  var slots=['skin','shirt','pants','hair'];
+  slots.forEach(function(slot){
+    var d=_avatarSlotData[slot]; if(!d)return;
+    var tmp=document.createElement('canvas'); tmp.width=tmp.height=8;
+    var ctx=tmp.getContext('2d');
+    var img=new Image();
+    img.onload=function(){
+      ctx.drawImage(img,0,0,8,8);
+      var px=ctx.getImageData(0,0,8,8).data,r=0,g=0,b=0,n=0;
+      for(var i=0;i<px.length;i+=4){if(px[i+3]<128)continue;r+=px[i];g+=px[i+1];b+=px[i+2];n++;}
+      if(n>0){_avColors[slot]=((r/n|0)<<16)|((g/n|0)<<8)|(b/n|0);_avRebuildCharacter();}
     };
-    img.src = _avatarSlotData[slot];
+    img.src=d;
   });
-  // Label
-  ctx.fillStyle = 'rgba(255,255,255,.2)';
-  ctx.font = '11px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('Preview', cx, h-12);
 }
 
 // ── Save avatar to profile ─────────────────────────────────────
