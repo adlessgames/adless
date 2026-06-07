@@ -12455,6 +12455,488 @@ async function forkWorld() {
   } catch(e){showToast('Remix failed');}
 }
 
+// WORLDS_REVIEW_INJECT_START
+let _wrCurrentTab = 'pending';
+
+async function loadWorldsReview(status) {
+  if (!status) status = 'pending';
+  _wrCurrentTab = status;
+  ['pending','approved','rejected'].forEach(function(s) {
+    var btn = document.getElementById('wr-tab-'+s);
+    if (!btn) return;
+    if (s === status) {
+      btn.style.background = s==='pending'?'rgba(255,159,10,.15)':s==='approved'?'rgba(48,209,88,.15)':'rgba(255,59,48,.15)';
+      btn.style.borderColor = s==='pending'?'rgba(255,159,10,.3)':s==='approved'?'rgba(48,209,88,.3)':'rgba(255,59,48,.3)';
+      btn.style.color = s==='pending'?'#ff9f0a':s==='approved'?'#30d158':'#ff3b30';
+    } else { btn.style.background=''; btn.style.borderColor=''; btn.style.color=''; }
+  });
+  var list = document.getElementById('worlds-review-list');
+  if (!list) return;
+  list.innerHTML = '<div class="fc-empty">Loading...</div>';
+  try {
+    var rows = await sbReq('/rest/v1/worlds?status=eq.'+status+'&select=id,title,creator_name,genre,description,tags,thumbnail_url,created_at,reject_reason,play_count,like_count&order=created_at.desc&limit=100');
+    if (!rows || !rows.length) { list.innerHTML = '<div class="fc-empty">No '+status+' worlds.</div>'; return; }
+    list.innerHTML = rows.map(function(w) {
+      var thumb = w.thumbnail_url
+        ? '<img src="'+escHtml(w.thumbnail_url)+'" style="width:88px;height:66px;border-radius:10px;object-fit:cover;flex-shrink:0">'
+        : '<div style="width:88px;height:66px;border-radius:10px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0">\uD83C\uDF0D</div>';
+      var tags = (w.tags&&w.tags.length) ? ' \xB7 '+w.tags.map(function(t){return '<span style="background:rgba(255,255,255,.07);padding:1px 6px;border-radius:6px">'+escHtml(t)+'</span>';}).join(' ') : '';
+      var rejectNote = w.reject_reason ? '<div style="font-size:11px;color:#ff3b30;margin-bottom:8px">\u274C Rejection reason: '+escHtml(w.reject_reason)+'</div>' : '';
+      var approveBtn = status!=='approved' ? '<button class="lb-btn" style="width:auto;padding:7px 16px;margin:0;background:rgba(48,209,88,.15);border-color:rgba(48,209,88,.3);color:#30d158" onclick="reviewWorldAction(\''+w.id+'\',\'approve\')">\u2705 Approve</button>' : '';
+      var rejectBtn  = status!=='rejected' ? '<button class="auc-btn" style="background:rgba(255,59,48,.12);border-color:rgba(255,59,48,.3);color:#ff3b30" onclick="reviewWorldAction(\''+w.id+'\',\'reject\')">\u274C Reject</button>' : '';
+      var pendingBtn = status!=='pending'  ? '<button class="auc-btn" onclick="reviewWorldAction(\''+w.id+'\',\'pending\')">\u23F3 Pending</button>' : '';
+      var deleteBtn  = '<button class="auc-btn" style="background:rgba(255,59,48,.08);border-color:rgba(255,59,48,.2);color:#ff3b30" onclick="reviewWorldDelete(\''+w.id+'\')">\uD83D\uDDD1 Delete</button>';
+      return '<div id="wr-card-'+w.id+'" style="background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:16px;display:flex;gap:14px;align-items:flex-start">'+thumb+'<div style="flex:1;min-width:0"><div style="font-weight:800;font-size:15px;margin-bottom:3px">'+escHtml(w.title)+'</div><div style="font-size:11px;color:var(--text2);margin-bottom:6px">by <b>'+escHtml(w.creator_name)+'</b> \xB7 '+escHtml(w.genre||'Adventure')+tags+'</div>'+(w.description?'<div style="font-size:12px;color:var(--text2);margin-bottom:8px;line-height:1.5">'+escHtml(w.description)+'</div>':'')+rejectNote+'<div style="font-size:10px;color:rgba(255,255,255,.25);margin-bottom:10px">Submitted '+new Date(w.created_at).toLocaleDateString()+' \xB7 '+(w.play_count||0)+' plays \xB7 '+(w.like_count||0)+' likes</div><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">'+approveBtn+rejectBtn+pendingBtn+deleteBtn+'</div></div></div>';
+    }).join('');
+  } catch(e) { list.innerHTML = '<div class="fc-empty">Failed to load: '+e.message+'</div>'; }
+}
+
+async function reviewWorldAction(worldId, action) {
+  var body = {};
+  if (action==='approve') { body = {status:'approved',reject_reason:null}; }
+  else if (action==='reject') {
+    var reason = prompt('Rejection reason (shown to creator):');
+    if (reason===null) return;
+    body = {status:'rejected', reject_reason: reason.trim()||'Does not meet guidelines.'};
+  } else if (action==='pending') { body = {status:'pending',reject_reason:null}; }
+  try {
+    var res = await fetch(SB_URL+'/rest/v1/worlds?id=eq.'+worldId, {
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error(await res.text());
+    var card = document.getElementById('wr-card-'+worldId);
+    if (card) card.remove();
+    showToast(action==='approve'?'World approved \u2705':action==='reject'?'World rejected \u274C':'Moved to pending');
+    loadWorldsPendingBadge();
+  } catch(e) { showToast('Action failed: '+e.message); }
+}
+
+async function reviewWorldDelete(worldId) {
+  if (!confirm('Permanently delete this world? Cannot be undone.')) return;
+  try {
+    var res = await fetch(SB_URL+'/rest/v1/worlds?id=eq.'+worldId, {
+      method:'DELETE', headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+    });
+    if (!res.ok) throw new Error(await res.text());
+    var card = document.getElementById('wr-card-'+worldId);
+    if (card) card.remove();
+    showToast('World deleted');
+  } catch(e) { showToast('Delete failed: '+e.message); }
+}
+
+async function loadWorldsAdminMgmt() {
+  var wrap = document.getElementById('wr-admin-mgmt');
+  if (!wrap) return;
+  if (!isOwner()) { wrap.style.display='none'; return; }
+  wrap.style.display='block';
+  var listEl = document.getElementById('wr-admin-list');
+  if (!listEl) return;
+  try {
+    var rows = await sbReq('/rest/v1/world_admins?select=user_id,granted_at,profiles(username)&order=granted_at.desc');
+    if (!rows||!rows.length) { listEl.textContent='No reviewers yet.'; return; }
+    listEl.innerHTML = rows.map(function(r) {
+      return '<span style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:4px 10px;margin:3px;font-size:12px">\uD83D\uDC64 '+escHtml(r.profiles&&r.profiles.username||r.user_id)+'<button onclick="removeWorldAdmin(\''+r.user_id+'\')" style="background:none;border:none;color:#ff3b30;cursor:none!important;font-size:12px;padding:0">\u2715</button></span>';
+    }).join('');
+  } catch(e) { listEl.textContent='Could not load reviewers.'; }
+}
+
+async function promoteWorldAdmin() {
+  var input = document.getElementById('wr-promote-input');
+  var username = (input&&input.value||'').trim();
+  if (!username) { showToast('Enter a username'); return; }
+  try {
+    var rows = await sbReq('/rest/v1/profiles?username=eq.'+encodeURIComponent(username)+'&select=id');
+    if (!rows||!rows.length) { showToast('User not found'); return; }
+    await sbReq('/rest/v1/world_admins','POST',{user_id:rows[0].id});
+    showToast(username+' can now review worlds \u2705');
+    if (input) input.value='';
+    loadWorldsAdminMgmt();
+  } catch(e) { showToast('Failed: '+(e.message||e)); }
+}
+
+async function demoteWorldAdmin() {
+  var input = document.getElementById('wr-promote-input');
+  var username = (input&&input.value||'').trim();
+  if (!username) { showToast('Enter a username'); return; }
+  try {
+    var rows = await sbReq('/rest/v1/profiles?username=eq.'+encodeURIComponent(username)+'&select=id');
+    if (!rows||!rows.length) { showToast('User not found'); return; }
+    await fetch(SB_URL+'/rest/v1/world_admins?user_id=eq.'+rows[0].id,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    showToast(username+' removed from reviewers');
+    if (input) input.value='';
+    loadWorldsAdminMgmt();
+  } catch(e) { showToast('Failed: '+(e.message||e)); }
+}
+
+async function removeWorldAdmin(userId) {
+  if (!confirm('Remove this reviewer?')) return;
+  try {
+    await fetch(SB_URL+'/rest/v1/world_admins?user_id=eq.'+userId,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    showToast('Reviewer removed');
+    loadWorldsAdminMgmt();
+  } catch(e) { showToast('Failed'); }
+}
+// WORLDS_REVIEW_INJECT_END
+
+// ═══════════════════════════════════════════════════════════════
+//  MISSING FUNCTIONS — Avatar Editor, Shop, Score Review
+// ═══════════════════════════════════════════════════════════════
+
+// ── Avatar + Shop tab init ─────────────────────────────────────
+function initAvatarTab() {
+  if (!currentUser || currentUser.guest) {
+    document.getElementById('avatar-coming-soon').style.display = 'block';
+    document.getElementById('avatar-editor-wrap').style.display = 'none';
+    return;
+  }
+  document.getElementById('avatar-coming-soon').style.display = 'none';
+  document.getElementById('avatar-editor-wrap').style.display = 'block';
+  initPixelCanvas();
+  initAvatarCanvas3D();
+}
+
+function initShopTab() {
+  if (!currentUser || currentUser.guest) {
+    document.getElementById('shop-coming-soon').style.display = 'block';
+    document.getElementById('worlds-shop-wrap').style.display = 'none';
+    return;
+  }
+  document.getElementById('shop-coming-soon').style.display = 'none';
+  document.getElementById('worlds-shop-wrap').style.display = 'block';
+  var bal = document.getElementById('shop-token-balance');
+  if (bal) bal.textContent = (currentUser.tokens || 0) + ' 🪙';
+  loadShopItems('all');
+}
+
+// ── Avatar slot switching ──────────────────────────────────────
+var _currentAvatarSlot = 'shirt';
+var _avatarSlotData = {};   // slot -> imageDataURL
+var _drawTool = 'draw';
+
+function setAvatarSlot(slot) {
+  _currentAvatarSlot = slot;
+  // Update button highlight
+  ['shirt','tshirt','pants','hair','skin'].forEach(function(s) {
+    var btn = document.getElementById('av-slot-'+s);
+    if (!btn) return;
+    if (s === slot) {
+      btn.style.background = 'rgba(10,132,255,.15)';
+      btn.style.borderColor = 'rgba(10,132,255,.3)';
+      btn.style.color = 'var(--blue)';
+    } else { btn.style.background=''; btn.style.borderColor=''; btn.style.color=''; }
+  });
+  var label = document.getElementById('av-editor-label');
+  var names = {shirt:'Shirt',tshirt:'T-Shirt',pants:'Pants',hair:'Hair',skin:'Skin'};
+  if (label) label.textContent = '✏️ Drawing: ' + (names[slot]||slot);
+  // Show/hide skin colour row
+  var skinRow = document.getElementById('av-skin-row');
+  if (skinRow) skinRow.style.display = slot==='skin' ? 'block' : 'none';
+  // Show/hide publish button (only non-skin slots)
+  var pubBtn = document.getElementById('av-publish-btn');
+  if (pubBtn) pubBtn.style.display = (slot!=='skin') ? 'inline-flex' : 'none';
+  // Restore saved pixel data for this slot
+  var canvas = document.getElementById('av-pixel-canvas');
+  if (canvas && _avatarSlotData[slot]) {
+    var ctx = canvas.getContext('2d');
+    var img = new Image();
+    img.onload = function() { ctx.clearRect(0,0,512,512); ctx.drawImage(img,0,0,512,512); };
+    img.src = _avatarSlotData[slot];
+  } else if (canvas) {
+    canvas.getContext('2d').clearRect(0,0,512,512);
+  }
+}
+
+function setDrawTool(tool) {
+  _drawTool = tool;
+  ['draw','fill','erase'].forEach(function(t) {
+    var btn = document.getElementById('av-tool-'+t);
+    if (!btn) return;
+    if (t === tool) {
+      btn.style.background = 'rgba(10,132,255,.15)';
+      btn.style.borderColor = 'rgba(10,132,255,.3)';
+      btn.style.color = 'var(--blue)';
+    } else { btn.style.background=''; btn.style.borderColor=''; btn.style.color=''; }
+  });
+}
+
+// ── Pixel canvas ───────────────────────────────────────────────
+var _pixelSize = 16; // 512/16 = 32x32 grid
+function initPixelCanvas() {
+  var canvas = document.getElementById('av-pixel-canvas');
+  if (!canvas || canvas._inited) return;
+  canvas._inited = true;
+  var ctx = canvas.getContext('2d');
+  var drawing = false;
+
+  function getPixel(e) {
+    var rect = canvas.getBoundingClientRect();
+    var scaleX = 512 / rect.width;
+    var scaleY = 512 / rect.height;
+    var x = Math.floor(((e.clientX - rect.left) * scaleX) / _pixelSize) * _pixelSize;
+    var y = Math.floor(((e.clientY - rect.top)  * scaleY) / _pixelSize) * _pixelSize;
+    return {x:x, y:y};
+  }
+
+  function paint(e) {
+    var p = getPixel(e);
+    var color = document.getElementById('av-color-pick').value || '#ff0000';
+    if (_drawTool === 'erase') {
+      ctx.clearRect(p.x, p.y, _pixelSize, _pixelSize);
+    } else if (_drawTool === 'fill') {
+      ctx.fillStyle = color;
+      ctx.fillRect(0, 0, 512, 512);
+    } else {
+      ctx.fillStyle = color;
+      ctx.fillRect(p.x, p.y, _pixelSize, _pixelSize);
+    }
+  }
+
+  canvas.addEventListener('mousedown', function(e) { drawing=true; paint(e); });
+  canvas.addEventListener('mousemove', function(e) { if(drawing) paint(e); });
+  canvas.addEventListener('mouseup',   function()  { drawing=false; });
+  canvas.addEventListener('mouseleave',function()  { drawing=false; });
+  // Touch
+  canvas.addEventListener('touchstart', function(e) { e.preventDefault(); drawing=true; paint(e.touches[0]); }, {passive:false});
+  canvas.addEventListener('touchmove',  function(e) { e.preventDefault(); if(drawing) paint(e.touches[0]); }, {passive:false});
+  canvas.addEventListener('touchend',   function()  { drawing=false; });
+}
+
+function clearPixelCanvas() {
+  var canvas = document.getElementById('av-pixel-canvas');
+  if (!canvas) return;
+  canvas.getContext('2d').clearRect(0,0,512,512);
+  delete _avatarSlotData[_currentAvatarSlot];
+}
+
+function applyPixelToAvatar() {
+  var canvas = document.getElementById('av-pixel-canvas');
+  if (!canvas) return;
+  _avatarSlotData[_currentAvatarSlot] = canvas.toDataURL('image/png');
+  updateAvatarPreview3D();
+  showToast('Applied to avatar ✅');
+}
+
+function uploadClothingImage(input) {
+  if (!input || !input.files || !input.files[0]) return;
+  var file = input.files[0];
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var canvas = document.getElementById('av-pixel-canvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var img = new Image();
+    img.onload = function() {
+      ctx.clearRect(0,0,512,512);
+      ctx.drawImage(img,0,0,512,512);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+
+// ── Skin colour ────────────────────────────────────────────────
+function setAvatarSkinColor(hex) {
+  var canvas = document.getElementById('av-pixel-canvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  ctx.fillStyle = hex;
+  ctx.fillRect(0,0,512,512);
+  _avatarSlotData['skin'] = canvas.toDataURL('image/png');
+  updateAvatarPreview3D();
+  showToast('Skin colour applied');
+}
+
+// ── 3D avatar preview (simple placeholder) ────────────────────
+function initAvatarCanvas3D() {
+  var canvas = document.getElementById('av-canvas');
+  if (!canvas || canvas._av3dInited) return;
+  canvas._av3dInited = true;
+  // Simple 2D placeholder until a real 3D model is wired up
+  var ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth || 400;
+  canvas.height = canvas.offsetHeight || 420;
+  drawAvatarPreview2D(ctx, canvas.width, canvas.height);
+}
+
+function updateAvatarPreview3D() {
+  var canvas = document.getElementById('av-canvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  drawAvatarPreview2D(ctx, canvas.width || 400, canvas.height || 420);
+}
+
+function drawAvatarPreview2D(ctx, w, h) {
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle = '#111';
+  ctx.fillRect(0,0,w,h);
+  // Body silhouette
+  var cx = w/2, cy = h/2 - 20;
+  // Skin base
+  var skinData = _avatarSlotData['skin'];
+  ctx.fillStyle = '#FDDBB4';
+  // Head
+  ctx.beginPath(); ctx.arc(cx, cy-80, 40, 0, Math.PI*2); ctx.fill();
+  // Torso
+  ctx.fillRect(cx-35, cy-40, 70, 90);
+  // Legs
+  ctx.fillRect(cx-30, cy+50, 25, 80);
+  ctx.fillRect(cx+5,  cy+50, 25, 80);
+  // Overlay clothing textures
+  var slots = ['shirt','tshirt','pants','hair'];
+  slots.forEach(function(slot) {
+    if (!_avatarSlotData[slot]) return;
+    var img = new Image();
+    img.onload = function() {
+      ctx.save();
+      if (slot === 'hair') {
+        ctx.drawImage(img, cx-42, cy-120, 84, 50);
+      } else if (slot === 'pants') {
+        ctx.drawImage(img, cx-32, cy+48, 64, 84);
+      } else {
+        ctx.drawImage(img, cx-37, cy-42, 74, 92);
+      }
+      ctx.restore();
+    };
+    img.src = _avatarSlotData[slot];
+  });
+  // Label
+  ctx.fillStyle = 'rgba(255,255,255,.2)';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Preview', cx, h-12);
+}
+
+// ── Save avatar to profile ─────────────────────────────────────
+async function saveAvatarToProfile() {
+  if (!currentUser || currentUser.guest) { showToast('Login to save your avatar'); return; }
+  var canvas = document.getElementById('av-canvas');
+  var avatarImg = canvas ? canvas.toDataURL('image/jpeg', 0.7) : null;
+  try {
+    await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+currentUser.id, {
+      method: 'PATCH',
+      headers: {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body: JSON.stringify({avatar_data: _avatarSlotData, avatar_preview: avatarImg})
+    });
+    showToast('Avatar saved! 💾');
+  } catch(e) { showToast('Save failed: '+e.message); }
+}
+
+// ── Publish clothing item to shop ─────────────────────────────
+async function publishClothingItem() {
+  if (!currentUser || currentUser.guest) { showToast('Login to publish items'); return; }
+  var slot = _currentAvatarSlot;
+  var imgData = _avatarSlotData[slot];
+  if (!imgData) { showToast('Draw something first!'); return; }
+  var name = prompt('Item name:');
+  if (!name || !name.trim()) return;
+  var price = parseInt(prompt('Token price (e.g. 50):') || '50');
+  if (isNaN(price) || price < 1) { showToast('Invalid price'); return; }
+  try {
+    await fetch(SB_URL+'/rest/v1/clothing_items', {
+      method: 'POST',
+      headers: {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body: JSON.stringify({
+        name: name.trim(),
+        slot: slot,
+        image_data: imgData,
+        price: price,
+        creator_id: currentUser.id,
+        creator_name: currentUser.display_name || currentUser.username,
+        status: 'pending'
+      })
+    });
+    showToast('Submitted to shop! Awaiting review 📤');
+  } catch(e) { showToast('Publish failed: '+e.message); }
+}
+
+// ── Shop filter + load ─────────────────────────────────────────
+var _shopFilter = 'all';
+var _shopItems  = [];
+
+function setShopFilter(filter) {
+  _shopFilter = filter;
+  ['all','shirt','tshirt','pants','hair'].forEach(function(f) {
+    var btn = document.getElementById('wshop-'+f);
+    if (!btn) return;
+    if (f === filter) {
+      btn.style.background = 'rgba(10,132,255,.15)';
+      btn.style.borderColor = 'rgba(10,132,255,.3)';
+      btn.style.color = 'var(--blue)';
+    } else { btn.style.background=''; btn.style.borderColor=''; btn.style.color=''; }
+  });
+  renderShopItems();
+}
+
+async function loadShopItems(filter) {
+  var grid = document.getElementById('worlds-shop-grid');
+  if (!grid) return;
+  grid.innerHTML = '<div class="fc-empty">Loading items…</div>';
+  try {
+    var rows = await sbReq('/rest/v1/clothing_items?status=eq.approved&order=created_at.desc&limit=100');
+    _shopItems = rows || [];
+    _shopFilter = filter || 'all';
+    renderShopItems();
+  } catch(e) {
+    grid.innerHTML = '<div class="fc-empty">Could not load shop.</div>';
+  }
+}
+
+function renderShopItems() {
+  var grid = document.getElementById('worlds-shop-grid');
+  if (!grid) return;
+  var items = _shopFilter === 'all' ? _shopItems : _shopItems.filter(function(i) { return i.slot === _shopFilter; });
+  if (!items.length) { grid.innerHTML = '<div class="fc-empty">No items here yet.</div>'; return; }
+  var bal = currentUser ? (currentUser.tokens || 0) : 0;
+  grid.innerHTML = items.map(function(item) {
+    var canAfford = bal >= item.price;
+    return '<div style="background:var(--glass);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column">'
+      + '<div style="height:140px;background:#111;display:flex;align-items:center;justify-content:center">'
+      + (item.image_data ? '<img src="'+item.image_data+'" style="width:100%;height:100%;object-fit:contain;image-rendering:pixelated">' : '<div style="font-size:40px">👕</div>')
+      + '</div>'
+      + '<div style="padding:10px 12px;flex:1;display:flex;flex-direction:column;gap:4px">'
+      + '<div style="font-weight:700;font-size:13px">'+escHtml(item.name)+'</div>'
+      + '<div style="font-size:10px;color:var(--text2)">by '+escHtml(item.creator_name||'Unknown')+' · '+escHtml(item.slot)+'</div>'
+      + '<div style="margin-top:auto;display:flex;align-items:center;justify-content:space-between;padding-top:8px">'
+      + '<span style="font-weight:800;color:#ffd60a">'+item.price+' 🪙</span>'
+      + '<button class="auc-btn" style="padding:5px 12px;font-size:11px'+(canAfford?';background:rgba(48,209,88,.15);border-color:rgba(48,209,88,.3);color:#30d158':'') + '" onclick="buyShopItem(\''+item.id+'\','+item.price+')">'+(canAfford?'Buy':'Not enough 🪙')+'</button>'
+      + '</div></div></div>';
+  }).join('');
+}
+
+async function buyShopItem(itemId, price) {
+  if (!currentUser || currentUser.guest) { showToast('Login to buy items'); return; }
+  if ((currentUser.tokens||0) < price) { showToast('Not enough tokens'); return; }
+  if (!confirm('Buy this item for '+price+' 🪙?')) return;
+  try {
+    // Deduct tokens + add to wardrobe
+    await Promise.all([
+      fetch(SB_URL+'/rest/v1/profiles?id=eq.'+currentUser.id, {
+        method:'PATCH',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({tokens: (currentUser.tokens||0) - price})
+      }),
+      fetch(SB_URL+'/rest/v1/wardrobe', {
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({user_id:currentUser.id, item_id:itemId})
+      })
+    ]);
+    currentUser.tokens = (currentUser.tokens||0) - price;
+    var bal = document.getElementById('shop-token-balance');
+    if (bal) bal.textContent = currentUser.tokens + ' 🪙';
+    showToast('Purchased! Check your avatar editor 🎉');
+    renderShopItems();
+  } catch(e) { showToast('Purchase failed: '+e.message); }
+}
+
+// ── Score review from screenshot viewer ───────────────────────
+function reviewScoreFromViewer(status) {
+  ssViewerVerdict(status);
+}
+
 // ── Patch playWorld to init score + rating + sky + sound ───────
 const _origPlayWorld2 = playWorld;
 playWorld = async function(worldId) {
