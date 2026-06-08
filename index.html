@@ -80,7 +80,7 @@ aside{position:relative;background:rgba(0,0,0,.3);backdrop-filter:blur(30px);bor
 .nav.active{background:var(--blue);color:#fff;}
 .rand-btn{background:rgba(10,132,255,.15);color:var(--blue);border:1px solid rgba(10,132,255,.3);padding:11px;border-radius:12px;font-weight:700;text-align:center;font-size:12px;transition:.15s;flex-shrink:0;margin-top:12px;}
 .rand-btn:hover{background:var(--blue);color:#fff;}
-.view{display:none;height:100vh;overflow-y:auto;padding:22px;}
+.view{display:none;height:100vh;overflow-y:auto;padding:60px 22px 22px 22px;}
 .view.active{display:block;}
 header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border);}
 header h1{margin:0;font-size:20px;font-weight:800;}
@@ -702,22 +702,20 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 </div>
 <div id="app">
   <!-- TOP-RIGHT HEADER BAR (CrazyGames style) -->
-  <div id="topbar" style="position:fixed;top:0;right:0;z-index:99999;display:flex;align-items:center;gap:6px;padding:8px 12px;pointer-events:none">
-    <div style="pointer-events:all;display:flex;align-items:center;gap:6px">
+  <div id="topbar" style="position:fixed;top:0;right:0;z-index:99999;display:flex;align-items:center;gap:4px;padding:6px 10px;pointer-events:none;max-width:100vw;box-sizing:border-box">
+    <div style="pointer-events:all;display:flex;align-items:center;gap:4px;flex-wrap:nowrap">
       <!-- Bell -->
-      <button id="topbar-bell" onclick="toggleNotifPanel()" style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:none;position:relative;transition:.15s" title="Notifications">
-        🔔<span id="notif-badge" style="display:none;position:absolute;top:-2px;right:-2px;background:#ff375f;color:#fff;font-size:8px;font-weight:900;min-width:14px;height:14px;border-radius:7px;display:none;align-items:center;justify-content:center;padding:0 3px;line-height:1"></span>
+      <button id="topbar-bell" onclick="toggleNotifPanel()" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center;cursor:none;position:relative;transition:.15s;flex-shrink:0" title="Notifications">
+        🔔<span id="notif-badge" style="display:none;position:absolute;top:-2px;right:-2px;background:#ff375f;color:#fff;font-size:8px;font-weight:900;min-width:14px;height:14px;border-radius:7px;align-items:center;justify-content:center;padding:0 3px;line-height:1"></span>
       </button>
       <!-- Favourites shortcut -->
-      <button onclick="switchView('games-view');currentCat='favs';buildList();renderPage();" style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:none;transition:.15s" title="Favorites">❤️</button>
-      <!-- Friends shortcut -->
-      <button onclick="switchView('friends-view');loadFriendRequests();loadGroupsList();" style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:none;transition:.15s" title="Friends">👥</button>
+      <button onclick="switchView('games-view');currentCat='favs';buildList();renderPage();" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center;cursor:none;transition:.15s;flex-shrink:0" title="Favorites">❤️</button>
       <!-- Log In / avatar -->
-      <div id="topbar-login-btn" onclick="openLoginModal()" style="display:flex;align-items:center;gap:8px;background:#7c3aed;border:none;border-radius:20px;padding:8px 16px;color:#fff;font-size:13px;font-weight:700;cursor:none;transition:.15s" title="Log In">Log in</div>
-      <div id="topbar-user-btn" style="display:none;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:6px 12px 6px 6px;cursor:none" onclick="switchView('profile-view');loadProfilePage()">
-        <span id="topbar-av" style="font-size:20px">👤</span>
-        <span id="topbar-name" style="font-size:12px;font-weight:700;color:#fff;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
-        <span id="topbar-tokens" style="font-size:11px;font-weight:700;color:#ffd60a;background:rgba(255,214,10,.1);border-radius:10px;padding:2px 7px">🪙 —</span>
+      <div id="topbar-login-btn" onclick="openLoginModal()" style="display:flex;align-items:center;gap:6px;background:#7c3aed;border:none;border-radius:20px;padding:7px 14px;color:#fff;font-size:13px;font-weight:700;cursor:none;transition:.15s;flex-shrink:0;white-space:nowrap" title="Log In">Log in</div>
+      <div id="topbar-user-btn" style="display:none;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:5px 10px 5px 6px;cursor:none;flex-shrink:0;max-width:240px;overflow:hidden" onclick="switchView('profile-view');loadProfilePage()">
+        <span id="topbar-av" style="font-size:18px;flex-shrink:0">👤</span>
+        <span id="topbar-name" style="font-size:12px;font-weight:700;color:#fff;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:1"></span>
+        <span id="topbar-tokens" style="font-size:11px;font-weight:700;color:#ffd60a;background:rgba(255,214,10,.1);border-radius:10px;padding:2px 6px;flex-shrink:0;white-space:nowrap">🪙 —</span>
       </div>
     </div>
   </div>
@@ -2253,9 +2251,9 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
   <!-- ═══════════════════════════════════════════════════════════
        ADLESS WORLDS — Editor
   ════════════════════════════════════════════════════════════ -->
-  <div id="worlds-editor-view" style="display:none;position:fixed;inset:0;z-index:99998;background:#000;flex-direction:column;">
+  <div id="worlds-editor-view" style="display:none;position:fixed;inset:0;z-index:99999;background:#000;flex-direction:column;">
     <!-- Toolbar -->
-    <div id="we-toolbar" style="position:absolute;top:0;left:0;right:0;z-index:10000;background:rgba(0,0,0,.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.1);">
+    <div id="we-toolbar" style="position:absolute;top:0;left:0;right:0;z-index:100001;background:rgba(0,0,0,.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.1);">
       <!-- Row 1: back, title, genre, save, submit -->
       <div style="display:flex;align-items:center;gap:8px;padding:7px 14px;border-bottom:1px solid rgba(255,255,255,.06);flex-wrap:nowrap;overflow:hidden">
         <button class="auc-btn" onclick="leaveEditor()" style="flex-shrink:0">← Back</button>
@@ -2367,8 +2365,8 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
   <!-- ═══════════════════════════════════════════════════════════
        ADLESS WORLDS — World Player (fullscreen)
   ════════════════════════════════════════════════════════════ -->
-  <div id="worlds-player-view" style="display:none;position:fixed;inset:0;z-index:99998;background:#000;">
-    <div id="wp-topbar" style="position:absolute;top:0;left:0;right:0;z-index:100;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,.08)">
+  <div id="worlds-player-view" style="display:none;position:fixed;inset:0;z-index:99999;background:#000;">
+    <div id="wp-topbar" style="position:absolute;top:0;left:0;right:0;z-index:100001;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,.08)">
       <button class="auc-btn" onclick="leaveWorldPlayer()">← Back</button>
       <div id="wp-title" style="font-weight:800;font-size:14px;flex:1"></div>
       <button class="auc-btn" id="wp-like-btn" onclick="toggleWorldLike()">❤️ <span id="wp-like-count">0</span></button>
@@ -11480,50 +11478,55 @@ async function loadMyWorlds() {
 function statusLabel(s){ return {pending:'⏳ Pending Review',approved:'✅ Live',rejected:'❌ Rejected',unpublished:'📦 Draft'}[s]||s; }
 
 async function createNewWorld() {
-  if (!currentUser||currentUser.guest){showToast('Login required');return;}
+  if (!currentUser || currentUser.guest) { showToast('Login required'); return; }
   const title = prompt('World name:');
-  if (!title||!title.trim()) return;
+  if (!title || !title.trim()) { showToast('No title entered'); return; }
+  showToast('Creating world…');
   try {
-    // Insert with return=minimal (more reliable than representation)
-    const insertResp = await fetch(SB_URL+'/rest/v1/worlds', {
-      method:'POST',
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body:JSON.stringify({
-        title:title.trim(), creator_id:currentUser.id,
-        creator_name:currentUser.display_name||currentUser.username,
-        status:'unpublished', world_data:{objects:[],gui:[],description:''}
+    const res = await fetch(SB_URL + '/rest/v1/worlds', {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': 'Bearer ' + SB_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify({
+        title: title.trim(),
+        creator_id: currentUser.id,
+        creator_name: currentUser.display_name || currentUser.username,
+        status: 'unpublished',
+        world_data: { objects: [], gui: [], description: '' }
       })
     });
-    if (!insertResp.ok) {
-      const err=await insertResp.text();
-      console.error('Insert failed:',insertResp.status, err);
-      showToast('Insert failed '+insertResp.status+' — check console');
+
+    const text = await res.text();
+    showToast('Insert: ' + res.status);
+    console.log('[createNewWorld]', res.status, text);
+
+    if (!res.ok) {
+      showToast('Create failed (' + res.status + ') — check console');
       return;
     }
-    // Fetch the newly created world
-    await new Promise(r=>setTimeout(r,500));
-    console.log('[createNewWorld] currentUser.id:', currentUser.id, 'title:', title.trim());
-    const fetchResp = await fetch(SB_URL+`/rest/v1/worlds?creator_id=eq.${currentUser.id}&order=created_at.desc&limit=1&select=id,title,creator_id`, {
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Accept':'application/json'}
-    });
-    const fetchText = await fetchResp.text();
-    console.log('[createNewWorld] fetch result:', fetchResp.status, fetchText);
-    // Also try fetching without creator_id filter to see if the row exists at all
-    const fetchAll = await fetch(SB_URL+`/rest/v1/worlds?order=created_at.desc&limit=3&select=id,title,creator_id`, {
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Accept':'application/json'}
-    });
-    console.log('[createNewWorld] latest worlds:', await fetchAll.text());
+
     let rows = [];
-    try { rows = JSON.parse(fetchText); } catch(e2) {}
-    if (rows && rows[0]) {
-      showToast('World created! 🎉');
-      editWorld(rows[0].id);
-    } else {
-      showToast('World saved! Opening My Worlds…');
+    try { rows = JSON.parse(text); } catch(e) {}
+    const world = Array.isArray(rows) ? rows[0] : rows;
+
+    if (!world || !world.id) {
+      showToast('Created but no ID returned — check My Worlds');
+      console.error('[createNewWorld] no id in response:', text);
       switchView('worlds-studio-view');
       loadMyWorlds();
+      return;
     }
-  } catch(e) { console.error('[createNewWorld] error:', e); showToast('Failed to create world — check console'); }
+
+    showToast('World created! Opening editor…');
+    editWorld(world.id);
+  } catch(e) {
+    console.error('[createNewWorld] error:', e);
+    showToast('Failed: ' + e.message);
+  }
 }
 
 // ── Editor ─────────────────────────────────────────────────────
@@ -11654,16 +11657,17 @@ function initEditor() {
 // ── Minimal orbit + transform control ─────────────────────────
 let editorOrbitData = {theta:0.8,phi:1.0,radius:20,target:{x:0,y:0,z:0},dragging:false,button:-1,lastX:0,lastY:0};
 let transformDragging = false;
+let transformDidDrag = false; // true if mouse moved enough to count as drag vs click
 let transformStartMouse = {x:0,y:0};
 let transformStartVal = null;
 
 function setupEditorOrbit(canvas) {
   canvas.addEventListener('mousedown', e=>{
-    // If an object is selected and tool is active and LMB, do transform drag
     if (e.button===0 && editorSelectedId && editorTool !== 'select') {
       const obj = editorObjects.find(o=>o.id===editorSelectedId);
       if (obj) {
         transformDragging = true;
+        transformDidDrag = false;
         transformStartMouse = {x:e.clientX, y:e.clientY};
         transformStartVal = {
           position:[...obj.position],
@@ -11677,48 +11681,58 @@ function setupEditorOrbit(canvas) {
     editorOrbitData.dragging=true; editorOrbitData.button=e.button;
     editorOrbitData.lastX=e.clientX; editorOrbitData.lastY=e.clientY;
   });
+
   window.addEventListener('mouseup', ()=>{
     editorOrbitData.dragging=false;
     if (transformDragging) {
       transformDragging=false;
-      // Sync props panel after transform
       const obj=editorObjects.find(o=>o.id===editorSelectedId);
       if(obj) renderPropsPanel(obj);
+      // Don't reset transformDidDrag here — click handler checks it
+      setTimeout(()=>{ transformDidDrag=false; }, 50);
     }
   });
+
   window.addEventListener('mousemove', e=>{
     if (transformDragging && editorSelectedId) {
       const obj = editorObjects.find(o=>o.id===editorSelectedId);
       if (!obj||!obj.mesh) return;
-      const dx = (e.clientX-transformStartMouse.x)*0.01;
-      const dy = (e.clientY-transformStartMouse.y)*0.01;
+      const dx = e.clientX - transformStartMouse.x;
+      const dy = e.clientY - transformStartMouse.y;
+
+      // Only count as drag if moved more than 3px
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) transformDidDrag = true;
+      if (!transformDidDrag) return;
+
+      const dxN = dx * 0.01;
+      const dyN = dy * 0.01;
+
       if (editorTool==='move') {
-        // Move on XZ plane (horizontal drag = X, vertical drag = Z)
-        obj.position[0] = transformStartVal.position[0] + dx*editorOrbitData.radius*0.3;
-        obj.position[2] = transformStartVal.position[2] + dy*editorOrbitData.radius*0.3;
+        // Move relative to camera angle on XZ plane
+        const cos = Math.cos(editorOrbitData.theta);
+        const sin = Math.sin(editorOrbitData.theta);
+        obj.position[0] = transformStartVal.position[0] + (dxN*cos - dyN*sin) * editorOrbitData.radius * 0.25;
+        obj.position[2] = transformStartVal.position[2] + (dxN*sin + dyN*cos) * editorOrbitData.radius * 0.25;
         obj.mesh.position.set(...obj.position);
-        // Update props panel X/Z inputs live
-        const inputs=document.querySelectorAll('.we-prop-input');
-        // We'll just re-render after mouseup
       } else if (editorTool==='scale') {
-        // Scale uniformly with vertical drag
-        const factor = Math.max(0.05, 1 + (transformStartMouse.y - e.clientY)*0.008);
-        obj.scale = transformStartVal.scale.map(v=>Math.max(0.05,v*factor));
+        const factor = Math.max(0.05, 1 - dyN * 1.5);
+        obj.scale = transformStartVal.scale.map(v=>Math.max(0.05, v*factor));
         obj.mesh.scale.set(...obj.scale);
       } else if (editorTool==='rotate') {
-        // Rotate around Y axis with horizontal drag
-        obj.rotation[1] = transformStartVal.rotation[1] + dx*3;
+        obj.rotation[1] = transformStartVal.rotation[1] + dxN * 3;
         obj.mesh.rotation.set(...obj.rotation);
       }
-      // Live update sel label
+
+      // Live update label
       const lbl=document.getElementById('we-sel-label');
       if(lbl){
-        if(editorTool==='move') lbl.textContent=`${obj.name} · x:${obj.position[0].toFixed(1)} z:${obj.position[2].toFixed(1)}`;
+        if(editorTool==='move') lbl.textContent=`${obj.name} · x:${obj.position[0].toFixed(2)} z:${obj.position[2].toFixed(2)}`;
         if(editorTool==='scale') lbl.textContent=`${obj.name} · scale:${obj.scale[0].toFixed(2)}`;
         if(editorTool==='rotate') lbl.textContent=`${obj.name} · y:${(obj.rotation[1]*57.3).toFixed(0)}°`;
       }
       return;
     }
+
     if (!editorOrbitData.dragging) return;
     const dx2=e.clientX-editorOrbitData.lastX, dy2=e.clientY-editorOrbitData.lastY;
     editorOrbitData.lastX=e.clientX; editorOrbitData.lastY=e.clientY;
@@ -11730,6 +11744,7 @@ function setupEditorOrbit(canvas) {
       editorOrbitData.target.x -= dx2*s; editorOrbitData.target.z -= dy2*s;
     }
   });
+
   canvas.addEventListener('wheel', e=>{
     editorOrbitData.radius = Math.max(2, Math.min(60, editorOrbitData.radius+e.deltaY*0.03));
   });
@@ -11829,7 +11844,7 @@ function spawnObject(type) {
 
 function onEditorClick(e) {
   // Don't select if we just finished a transform drag
-  if (transformDragging) return;
+  if (transformDidDrag) return;
   const THREE = window.THREE;
   if (!THREE||!editorScene||!editorCamera) return;
   const canvas = document.getElementById('we-canvas');
@@ -11953,7 +11968,9 @@ function stopEditor() {
     if (canvas._ro) { canvas._ro.disconnect(); canvas._ro=null; }
   }
   editorObjects.forEach(o=>{ if(o.mesh)editorScene?.remove(o.mesh); });
-  editorScene=null; editorCamera=null; editorRenderer=null; editorObjects=[];
+  // Reset meshes but keep object data so initEditor can restore them
+  editorObjects = editorObjects.map(o => ({...o, mesh: null}));
+  editorScene=null; editorCamera=null; editorRenderer=null;
 }
 
 // ── GUI Builder ────────────────────────────────────────────────
@@ -11993,23 +12010,52 @@ function buildWorldData() {
 }
 
 async function saveWorldDraft() {
-  if (!currentEditingWorldId) return;
+  if (!currentEditingWorldId) { showToast('No world loaded'); return; }
   const title = document.getElementById('we-title')?.value?.trim();
   if (!title) { showToast('Add a title first'); return; }
-  const genre = document.getElementById('we-genre')?.value||'Adventure';
+  const genre = document.getElementById('we-genre')?.value || 'Adventure';
+
+  const saveBtn = document.querySelector('[onclick="saveWorldDraft()"]');
+  if (saveBtn) { saveBtn.textContent = '⏳ Saving…'; saveBtn.disabled = true; }
+
   try {
     const wdata = buildWorldData();
-    // Auto-screenshot thumbnail from editor canvas
-    const thumbUrl = captureEditorThumbnail();
-    const saveBody = {title, genre, world_data:wdata, tags:wdata.tags};
-    if (thumbUrl) saveBody.thumbnail_url = thumbUrl;
-    await fetch(SB_URL+`/rest/v1/worlds?id=eq.${currentEditingWorldId}`,{
-      method:'PATCH',
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
-      body:JSON.stringify(saveBody)
+    const saveBody = { title, genre, world_data: wdata, tags: wdata.tags };
+
+    // Only include thumbnail if it's small enough (<80KB)
+    let thumbUrl = null;
+    try {
+      thumbUrl = captureEditorThumbnail();
+    } catch(e) {
+      console.warn('[Save] thumbnail failed:', e);
+    }
+    if (thumbUrl && thumbUrl.length < 80000) saveBody.thumbnail_url = thumbUrl;
+
+    const res = await fetch(SB_URL + `/rest/v1/worlds?id=eq.${currentEditingWorldId}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': 'Bearer ' + SB_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(saveBody)
     });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error('[Save] HTTP', res.status, errText);
+      showToast('Save failed (' + res.status + ') — check console');
+      return;
+    }
+
     showToast('World saved ✓');
-  } catch(e){ showToast('Save failed'); }
+  } catch(e) {
+    console.error('[Save] Error:', e);
+    showToast('Save failed: ' + e.message);
+  } finally {
+    if (saveBtn) { saveBtn.textContent = '💾 Save'; saveBtn.disabled = false; }
+  }
 }
 
 function captureEditorThumbnail() {
@@ -12106,91 +12152,269 @@ async function playWorld(worldId) {
 
 
 
+// ── First-person player state ──────────────────────────────────
+var _fp = {
+  yaw: 0, pitch: 0,
+  vx: 0, vy: 0, vz: 0,
+  onGround: false,
+  keys: {},
+  locked: false,
+  camera: null,
+  collidables: [],
+  lastTime: 0
+};
+
 function initWorldPlayer(world) {
-  const THREE = window.THREE;
-  if (!THREE) return;
+  var THREE = window.THREE;
+  if (!THREE) { showToast('3D engine not loaded'); return; }
   stopWorldPlayer();
 
-  const canvas = document.getElementById('wp-canvas');
+  var canvas = document.getElementById('wp-canvas');
   playerScene = new THREE.Scene();
-  playerScene.background = new THREE.Color(0x000000);
-  playerScene.fog = new THREE.Fog(0x000000, 40, 100);
+  playerScene.background = new THREE.Color(0x87CEEB);
+  playerScene.fog = new THREE.Fog(0x87CEEB, 50, 120);
 
-  const camera = new THREE.PerspectiveCamera(60, canvas.clientWidth/canvas.clientHeight, 0.1, 200);
-  camera.position.set(0, 8, 16);
-  camera.lookAt(0, 0, 0);
+  var camera = new THREE.PerspectiveCamera(75, canvas.clientWidth/canvas.clientHeight, 0.1, 200);
+  camera.position.set(0, 2, 0);
+  _fp.camera = camera;
+  _fp.yaw = 0; _fp.pitch = 0;
+  _fp.vx = 0; _fp.vy = 0; _fp.vz = 0;
+  _fp.onGround = false;
+  _fp.keys = {};
+  _fp.collidables = [];
 
-  playerRenderer = new THREE.WebGLRenderer({canvas, antialias:true});
-  playerRenderer.setPixelRatio(Math.min(devicePixelRatio, 3));
+  playerRenderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
+  playerRenderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   playerRenderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
   playerRenderer.shadowMap.enabled = true;
   playerRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
+  // Lights
   playerScene.add(new THREE.AmbientLight(0xffffff, 0.6));
-  const sun = new THREE.DirectionalLight(0xfffbdc, 1.2);
-  sun.position.set(10, 20, 10); sun.castShadow = true;
+  var sun = new THREE.DirectionalLight(0xfffbdc, 1.2);
+  sun.position.set(20, 40, 20); sun.castShadow = true;
   playerScene.add(sun);
 
-  const grid = new THREE.GridHelper(40, 40, 0x444466, 0x333355);
-  playerScene.add(grid);
-  const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(40, 40),
-    new THREE.MeshLambertMaterial({color:0x111111})
+  // Floor
+  var floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(80, 80),
+    new THREE.MeshLambertMaterial({color: 0x3a7d44})
   );
   floor.rotation.x = -Math.PI/2; floor.receiveShadow = true;
   playerScene.add(floor);
+  var grid = new THREE.GridHelper(80, 80, 0x2d6338, 0x2d6338);
+  grid.position.y = 0.01;
+  playerScene.add(grid);
 
-  // Build world objects
-  (world.world_data?.objects||[]).forEach(obj => {
-    const mesh = createMeshForType(obj.type, obj.color);
+  // Build world objects + collect collidables
+  (world.world_data && world.world_data.objects || []).forEach(function(obj) {
+    var mesh = createMeshForType(obj.type, obj.color);
     if (!mesh) return;
-    mesh.position.set(...(obj.position||[0,0.5,0]));
-    mesh.scale.set(...(obj.scale||[1,1,1]));
-    mesh.rotation.set(...(obj.rotation||[0,0,0]));
+    mesh.position.set.apply(mesh.position, obj.position || [0, 0.5, 0]);
+    mesh.scale.set.apply(mesh.scale, obj.scale || [1, 1, 1]);
+    mesh.rotation.set.apply(mesh.rotation, obj.rotation || [0, 0, 0]);
+    mesh.receiveShadow = true; mesh.castShadow = true;
     playerScene.add(mesh);
+    // Add to collidables (everything except NPCs/decorations)
+    if (obj.type !== 'npc' && obj.type !== 'particle' && obj.type !== 'light') {
+      _fp.collidables.push(mesh);
+    }
   });
 
-  // Apply sky
-  if (world.world_data?.sky) applySkyToScene(playerScene, playerRenderer, world.world_data.sky);
+  // Sky + ambient sound
+  if (world.world_data && world.world_data.sky) applySkyToScene(playerScene, playerRenderer, world.world_data.sky);
+  startAmbientSound(world.world_data && world.world_data.ambient || 'none');
 
   // GUI overlay
-  const guiLayer = document.getElementById('wp-gui-layer');
+  var guiLayer = document.getElementById('wp-gui-layer');
   if (guiLayer) {
-    guiLayer.innerHTML = (world.world_data?.gui||[]).map(g => {
-      const styles = `position:absolute;left:${g.x||10}px;top:${g.y||10}px;color:${g.color||'#fff'};font-weight:700;font-size:14px;pointer-events:none;`;
-      if (g.type==='healthbar') return `<div style="${styles}background:rgba(0,0,0,.5);border-radius:8px;padding:4px 10px">❤️ 100</div>`;
-      if (g.type==='timer') return `<div style="${styles}background:rgba(0,0,0,.5);border-radius:8px;padding:4px 10px">⏱ 0:00</div>`;
-      if (g.type==='score') return `<div style="${styles}background:rgba(0,0,0,.5);border-radius:8px;padding:4px 10px">🏆 0</div>`;
-      return `<div style="${styles}">${escHtml(g.text||'')}</div>`;
+    guiLayer.innerHTML = (world.world_data && world.world_data.gui || []).map(function(g) {
+      var s = 'position:absolute;left:'+(g.x||10)+'px;top:'+(g.y||10)+'px;color:'+(g.color||'#fff')+';font-weight:700;font-size:14px;pointer-events:none;background:rgba(0,0,0,.5);border-radius:8px;padding:4px 10px;';
+      if (g.type==='healthbar') return '<div style="'+s+'">❤️ 100</div>';
+      if (g.type==='timer')     return '<div style="'+s+'">⏱ 0:00</div>';
+      if (g.type==='score')     return '<div style="'+s+'">🏆 0</div>';
+      return '<div style="'+s+'">'+escHtml(g.text||'')+'</div>';
     }).join('');
   }
 
-  // Init score system
-  initPlayerScore(world);
+  // Crosshair
+  var xhair = document.getElementById('wp-crosshair');
+  if (!xhair) {
+    xhair = document.createElement('div');
+    xhair.id = 'wp-crosshair';
+    xhair.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:18px;height:18px;pointer-events:none;z-index:60';
+    xhair.innerHTML = '<svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="9" y1="0" x2="9" y2="18" stroke="white" stroke-width="1.5" stroke-opacity="0.8"/><line x1="0" y1="9" x2="18" y2="9" stroke="white" stroke-width="1.5" stroke-opacity="0.8"/><circle cx="9" cy="9" r="1.5" fill="white" fill-opacity="0.8"/></svg>';
+    document.getElementById('worlds-player-view').appendChild(xhair);
+  }
 
-  // Orbit controls
-  editorOrbitData = {theta:0.4, phi:1.2, radius:20, target:{x:0,y:0,z:0}, dragging:false, button:-1, lastX:0, lastY:0};
-  setupEditorOrbit(canvas);
+  // Click-to-lock instructions
+  var hint = document.getElementById('wp-lock-hint');
+  if (!hint) {
+    hint = document.createElement('div');
+    hint.id = 'wp-lock-hint';
+    hint.style.cssText = 'position:absolute;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);color:#fff;border-radius:10px;padding:8px 18px;font-size:13px;font-weight:600;pointer-events:none;z-index:60;transition:opacity .4s';
+    hint.textContent = 'Click to play — WASD to move, mouse to look, Space to jump';
+    document.getElementById('worlds-player-view').appendChild(hint);
+  }
+  hint.style.opacity = '1';
 
-  // Resize
-  const ro = new ResizeObserver(() => {
+  // ── Pointer lock ──────────────────────────────────────────────
+  canvas.addEventListener('click', function() {
+    if (!_fp.locked) canvas.requestPointerLock();
+  });
+  document.addEventListener('pointerlockchange', function() {
+    _fp.locked = (document.pointerLockElement === canvas);
+    if (hint) hint.style.opacity = _fp.locked ? '0' : '1';
+  });
+  document.addEventListener('mousemove', function(e) {
+    if (!_fp.locked) return;
+    _fp.yaw   -= e.movementX * 0.002;
+    _fp.pitch -= e.movementY * 0.002;
+    _fp.pitch  = Math.max(-Math.PI/2.2, Math.min(Math.PI/2.2, _fp.pitch));
+  });
+
+  // ── Keyboard ──────────────────────────────────────────────────
+  function onKey(e, down) {
+    // Only capture if pointer is locked
+    if (!_fp.locked) return;
+    _fp.keys[e.code] = down;
+    if (down && (e.code === 'Space' || e.code === 'ArrowUp') && _fp.onGround) {
+      _fp.vy = 8;
+      _fp.onGround = false;
+    }
+    if (down) e.preventDefault();
+  }
+  document.addEventListener('keydown', function(e){ onKey(e,true); });
+  document.addEventListener('keyup',   function(e){ onKey(e,false); });
+  canvas._wpKeyDown = function(e){ onKey(e,true); };
+  canvas._wpKeyUp   = function(e){ onKey(e,false); };
+
+  // ── Resize ────────────────────────────────────────────────────
+  var ro = new ResizeObserver(function() {
     if (!playerRenderer) return;
-    camera.aspect = canvas.clientWidth/canvas.clientHeight;
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
     camera.updateProjectionMatrix();
     playerRenderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
   });
   ro.observe(canvas);
+  canvas._wpRo = ro;
 
-  function animate() {
+  // ── Physics + render loop ─────────────────────────────────────
+  var SPEED = 8, GRAVITY = -22, PLAYER_HEIGHT = 1.7, PLAYER_RADIUS = 0.35;
+  var tmpVec = new THREE.Vector3();
+  var boxA   = new THREE.Box3();
+  var boxB   = new THREE.Box3();
+
+  _fp.lastTime = performance.now();
+
+  function animate(now) {
     playerAnimId = requestAnimationFrame(animate);
-    applyEditorOrbit();
+    if (!playerRenderer) return;
+
+    var dt = Math.min((now - _fp.lastTime) / 1000, 0.05);
+    _fp.lastTime = now;
+
+    if (_fp.locked) {
+      // ── Movement direction from yaw only ──
+      var moveX = 0, moveZ = 0;
+      if (_fp.keys['KeyW']     || _fp.keys['ArrowUp'])    { moveX -= Math.sin(_fp.yaw); moveZ -= Math.cos(_fp.yaw); }
+      if (_fp.keys['KeyS']     || _fp.keys['ArrowDown'])  { moveX += Math.sin(_fp.yaw); moveZ += Math.cos(_fp.yaw); }
+      if (_fp.keys['KeyA']     || _fp.keys['ArrowLeft'])  { moveX -= Math.cos(_fp.yaw); moveZ += Math.sin(_fp.yaw); }
+      if (_fp.keys['KeyD']     || _fp.keys['ArrowRight']) { moveX += Math.cos(_fp.yaw); moveZ -= Math.sin(_fp.yaw); }
+      var len = Math.sqrt(moveX*moveX + moveZ*moveZ);
+      if (len > 0) { moveX /= len; moveZ /= len; }
+
+      _fp.vx = moveX * SPEED;
+      _fp.vz = moveZ * SPEED;
+
+      // Gravity
+      _fp.vy += GRAVITY * dt;
+
+      // Move
+      camera.position.x += _fp.vx * dt;
+      camera.position.y += _fp.vy * dt;
+      camera.position.z += _fp.vz * dt;
+
+      // Floor collision
+      if (camera.position.y < PLAYER_HEIGHT) {
+        camera.position.y = PLAYER_HEIGHT;
+        _fp.vy = 0;
+        _fp.onGround = true;
+      }
+
+      // Simple AABB collision with world objects
+      boxA.setFromCenterAndSize(
+        camera.position,
+        new THREE.Vector3(PLAYER_RADIUS*2, PLAYER_HEIGHT, PLAYER_RADIUS*2)
+      );
+      for (var i = 0; i < _fp.collidables.length; i++) {
+        var obj = _fp.collidables[i];
+        if (!obj.geometry) continue;
+        obj.geometry.computeBoundingBox();
+        boxB.copy(obj.geometry.boundingBox).applyMatrix4(obj.matrixWorld);
+        if (boxA.intersectsBox(boxB)) {
+          // Push player out — find smallest overlap axis
+          var cA = new THREE.Vector3(), cB = new THREE.Vector3();
+          boxA.getCenter(cA); boxB.getCenter(cB);
+          var dx = cA.x - cB.x, dz = cA.z - cB.z, dy = cA.y - cB.y;
+          var sA = new THREE.Vector3(), sB = new THREE.Vector3();
+          boxA.getSize(sA); boxB.getSize(sB);
+          var overlapX = (sA.x+sB.x)/2 - Math.abs(dx);
+          var overlapY = (sA.y+sB.y)/2 - Math.abs(dy);
+          var overlapZ = (sA.z+sB.z)/2 - Math.abs(dz);
+          if (overlapX < overlapY && overlapX < overlapZ) {
+            camera.position.x += dx > 0 ? overlapX : -overlapX;
+          } else if (overlapY < overlapZ) {
+            if (dy > 0) { camera.position.y += overlapY; _fp.vy = 0; _fp.onGround = true; }
+            else { camera.position.y -= overlapY; _fp.vy = 0; }
+          } else {
+            camera.position.z += dz > 0 ? overlapZ : -overlapZ;
+          }
+        }
+      }
+
+      // World boundary
+      camera.position.x = Math.max(-38, Math.min(38, camera.position.x));
+      camera.position.z = Math.max(-38, Math.min(38, camera.position.z));
+    }
+
+    // Apply look rotation
+    camera.rotation.order = 'YXZ';
+    camera.rotation.y = _fp.yaw;
+    camera.rotation.x = _fp.pitch;
+
+    // Broadcast position to multiplayer
+    if (_mpChannel && _fp.locked) {
+      _mpBroadcastThrottle++;
+      if (_mpBroadcastThrottle % 3 === 0) {
+        _mpChannel.send({type:'broadcast', event:'move', payload:{
+          id: currentUser && currentUser.id,
+          name: currentUser && (currentUser.display_name || currentUser.username) || 'Player',
+          x: +camera.position.x.toFixed(2),
+          y: +camera.position.y.toFixed(2),
+          z: +camera.position.z.toFixed(2),
+          yaw: +_fp.yaw.toFixed(3)
+        }}).catch(function(){});
+      }
+    }
+
+    // Animate other players
+    Object.keys(_mpPlayers).forEach(function(pid) {
+      var p = _mpPlayers[pid];
+      if (p.mesh) {
+        p.mesh.position.lerp(p.target, 0.2);
+        p.mesh.rotation.y = p.yaw || 0;
+      }
+    });
+
     playerRenderer.render(playerScene, camera);
   }
-  animate();
+  animate(performance.now());
 
-  // Start multiplayer for approved worlds
-  if (world && world.id && world.status === 'approved') {
-    setTimeout(() => startMultiplayer(world.id), 800);
+  // Init score + multiplayer
+  initPlayerScore(world);
+  if (world && world.id) {
+    setTimeout(function(){ startMultiplayer(world.id, playerScene); }, 600);
   }
 }
 
@@ -13131,6 +13355,198 @@ function reviewScoreFromViewer(status) {
   ssViewerVerdict(status);
 }
 
+// ── World Player — missing core functions ──────────────────────
+
+function stopWorldPlayer() {
+  // Release pointer lock
+  if (document.pointerLockElement) document.exitPointerLock();
+  _fp.locked = false;
+  _fp.keys = {};
+
+  if (playerAnimId) { cancelAnimationFrame(playerAnimId); playerAnimId = null; }
+  if (playerRenderer) { playerRenderer.dispose(); playerRenderer = null; }
+  if (playerScene) {
+    playerScene.traverse(function(obj) {
+      if (obj.geometry) obj.geometry.dispose();
+      if (obj.material) {
+        if (Array.isArray(obj.material)) obj.material.forEach(function(m){ m.dispose(); });
+        else obj.material.dispose();
+      }
+    });
+    playerScene = null;
+  }
+
+  // Remove injected UI elements
+  var xhair = document.getElementById('wp-crosshair');
+  if (xhair) xhair.remove();
+  var hint = document.getElementById('wp-lock-hint');
+  if (hint) hint.remove();
+
+  // Clear GUI layer
+  var gui = document.getElementById('wp-gui-layer');
+  if (gui) gui.innerHTML = '';
+
+  stopAmbientSound();
+  stopMultiplayer();
+}
+
+// _origLeaveWorldPlayer — hides player, returns to worlds browse
+function _origLeaveWorldPlayer() {
+  document.getElementById('worlds-player-view').style.display = 'none';
+  // Show sidebar nav active state
+  document.querySelectorAll('aside .nav').forEach(function(n) {
+    if (n.dataset.view === 'worlds-view') n.classList.add('active');
+    else n.classList.remove('active');
+  });
+  switchView('worlds-view');
+  setWorldsTab('browse');
+  loadWorldsBrowse();
+  currentPlayingWorldId = null;
+}
+
+// ── Real Supabase Realtime multiplayer ─────────────────────────
+var _mpChannel = null;
+var _mpPlayers = {};      // uid -> { mesh, target (Vector3), yaw }
+var _mpBroadcastThrottle = 0;
+
+function startMultiplayer(worldId, scene) {
+  stopMultiplayer();
+  if (!window.supabase) return; // supabase-js not loaded
+
+  var uid = currentUser && currentUser.id;
+  var name = currentUser && (currentUser.display_name || currentUser.username) || 'Player';
+
+  _mpChannel = window.supabase.channel('world:' + worldId, {
+    config: { broadcast: { self: false } }
+  });
+
+  _mpChannel
+    .on('broadcast', { event: 'move' }, function(payload) {
+      var d = payload.payload;
+      if (!d || d.id === uid) return;
+      var THREE = window.THREE;
+      if (!THREE || !scene) return;
+
+      if (!_mpPlayers[d.id]) {
+        // Spawn a ghost player capsule
+        var geo = new THREE.CapsuleGeometry(0.3, 1.2, 4, 8);
+        var mat = new THREE.MeshLambertMaterial({ color: 0x00aaff, transparent: true, opacity: 0.75 });
+        var mesh = new THREE.Mesh(geo, mat);
+        mesh.castShadow = true;
+        scene.add(mesh);
+
+        // Nametag
+        var canvas2d = document.createElement('canvas');
+        canvas2d.width = 256; canvas2d.height = 64;
+        var ctx2 = canvas2d.getContext('2d');
+        ctx2.fillStyle = 'rgba(0,0,0,.6)';
+        ctx2.roundRect(0, 8, 256, 48, 12);
+        ctx2.fill();
+        ctx2.fillStyle = '#fff';
+        ctx2.font = 'bold 22px sans-serif';
+        ctx2.textAlign = 'center';
+        ctx2.fillText(d.name || 'Player', 128, 42);
+        var tex = new THREE.CanvasTexture(canvas2d);
+        var label = new THREE.Mesh(
+          new THREE.PlaneGeometry(1.4, 0.35),
+          new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false })
+        );
+        label.position.y = 1.6;
+        mesh.add(label);
+
+        _mpPlayers[d.id] = {
+          mesh: mesh,
+          target: new THREE.Vector3(d.x, d.y, d.z),
+          yaw: d.yaw || 0
+        };
+      } else {
+        _mpPlayers[d.id].target.set(d.x, d.y, d.z);
+        _mpPlayers[d.id].yaw = d.yaw || 0;
+      }
+    })
+    .on('broadcast', { event: 'leave' }, function(payload) {
+      var d = payload.payload;
+      if (!d || !_mpPlayers[d.id]) return;
+      if (_mpPlayers[d.id].mesh && scene) scene.remove(_mpPlayers[d.id].mesh);
+      delete _mpPlayers[d.id];
+    })
+    .subscribe(function(status) {
+      if (status === 'SUBSCRIBED') {
+        console.log('[Multiplayer] Joined world:', worldId);
+      }
+    });
+}
+
+function stopMultiplayer() {
+  // Broadcast leave
+  if (_mpChannel) {
+    var uid = currentUser && currentUser.id;
+    if (uid) _mpChannel.send({ type: 'broadcast', event: 'leave', payload: { id: uid } }).catch(function(){});
+    window.supabase && window.supabase.removeChannel(_mpChannel);
+    _mpChannel = null;
+  }
+  // Remove ghost meshes
+  Object.keys(_mpPlayers).forEach(function(pid) {
+    var p = _mpPlayers[pid];
+    if (p.mesh && playerScene) playerScene.remove(p.mesh);
+  });
+  _mpPlayers = {};
+  _mpBroadcastThrottle = 0;
+}
+
+// Ambient sound
+var _ambientAudio = null;
+var _ambientSounds = {
+  forest:  'https://www.soundjay.com/nature/sounds/forest-ambience-1.mp3',
+  ocean:   'https://www.soundjay.com/nature/sounds/ocean-wave-1.mp3',
+  rain:    'https://www.soundjay.com/nature/sounds/rain-02.mp3',
+  wind:    'https://www.soundjay.com/nature/sounds/wind-01.mp3',
+  space:   null,
+  none:    null
+};
+
+function startAmbientSound(key) {
+  stopAmbientSound();
+  var url = _ambientSounds[key];
+  if (!url) return;
+  try {
+    ambientAudio = new Audio(url);
+    ambientAudio.loop = true;
+    ambientAudio.volume = 0.25;
+    ambientAudio.play().catch(function(){});
+  } catch(e) {}
+}
+
+// Rating helpers
+async function loadUserRating(worldId) {
+  if (!currentUser || currentUser.guest) return;
+  try {
+    var rows = await sbReq('/rest/v1/world_ratings?world_id=eq.'+worldId+'&user_id=eq.'+currentUser.id+'&select=stars');
+    if (rows && rows[0]) {
+      highlightStars(rows[0].stars);
+    }
+  } catch(e) {}
+}
+
+async function loadWorldAvgRating(worldId) {
+  try {
+    var rows = await sbReq('/rest/v1/worlds?id=eq.'+worldId+'&select=avg_rating,rating_count');
+    if (rows && rows[0]) {
+      var el = document.getElementById('wp-avg-rating');
+      if (el && rows[0].avg_rating) {
+        el.textContent = '(' + parseFloat(rows[0].avg_rating).toFixed(1) + ' avg, ' + (rows[0].rating_count||0) + ' votes)';
+      }
+    }
+  } catch(e) {}
+}
+
+function highlightStars(n) {
+  for (var i = 1; i <= 5; i++) {
+    var el = document.getElementById('wp-star-' + i);
+    if (el) el.style.opacity = i <= n ? '1' : '0.35';
+  }
+}
+
 // ── Patch playWorld to init score + rating + sky + sound ───────
 const _origPlayWorld2 = playWorld;
 playWorld = async function(worldId) {
@@ -13728,6 +14144,23 @@ function closeBlogPost() {
   s.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
   s.onload=()=>console.log('[AdlessWorlds] Three.js r128 loaded');
   s.onerror=()=>console.warn('[AdlessWorlds] Failed to load Three.js');
+  document.head.appendChild(s);
+})();
+
+// Load Supabase JS for Realtime multiplayer
+(function loadSupabaseJS(){
+  if(window.supabase)return;
+  var s=document.createElement('script');
+  s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+  s.onload=function(){
+    // Decode credentials and init client
+    try {
+      window.supabase = window.supabase.createClient(SB_URL, SB_KEY, {
+        realtime: { params: { eventsPerSecond: 20 } }
+      });
+      console.log('[AdlessWorlds] Supabase Realtime ready');
+    } catch(e) { console.warn('[AdlessWorlds] Supabase init failed', e); }
+  };
   document.head.appendChild(s);
 })();
 
