@@ -573,6 +573,88 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 </style>
 </head>
 <body>
+  <!-- ═══════════════ MIGRATION NOTICE — self-contained ═══════════════ -->
+<div id="migrate-screen" style="display:none">
+  <div class="mg-box">
+    <div class="mg-icon">⚠️</div>
+    <div class="mg-title">We're Moving!</div>
+    <div class="mg-body">
+      <p>The <strong>Adless Games database is shutting down permanently.</strong> Accounts, scores, chat, badges and Worlds data will no longer be saved or synced.</p>
+      <p>We're moving back to <strong>Google Sites</strong>, where the game library will keep being updated.</p>
+      <p class="mg-note">You can still use this version — games will work, but anything account-related will break once the database goes offline.</p>
+    </div>
+    <div class="mg-btns">
+      <button class="mg-btn mg-new" onclick="goToNewSite()">
+        <span class="mg-btn-icon">🚀</span>
+        <span class="mg-btn-label">Go to New Site</span>
+        <span class="mg-btn-sub">sites.google.com/view/adless-games</span>
+      </button>
+      <button class="mg-btn mg-stay" onclick="dismissMigrate()">
+        <span class="mg-btn-icon">⏳</span>
+        <span class="mg-btn-label">Stay Here</span>
+        <span class="mg-btn-sub">Use the old version anyway</span>
+      </button>
+    </div>
+    <div class="mg-footer">
+      <label class="mg-check">
+        <input type="checkbox" id="mg-dont-show">
+        <span>Don't show this again</span>
+      </label>
+    </div>
+  </div>
+</div>
+
+<style>
+#migrate-screen{position:fixed;inset:0;z-index:9999999;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);align-items:center;justify-content:center;padding:20px;transition:opacity .4s}
+#migrate-screen.show{display:flex!important}
+#migrate-screen.gone{opacity:0;pointer-events:none}
+#migrate-screen *{cursor:auto!important}
+#migrate-screen button,#migrate-screen label,#migrate-screen input{cursor:pointer!important}
+.mg-box{background:linear-gradient(160deg,#1a1a1f,#141418);border:1px solid rgba(255,159,10,.28);border-radius:24px;padding:34px 30px 26px;max-width:480px;width:100%;max-height:92vh;overflow-y:auto;text-align:center;box-shadow:0 20px 70px rgba(0,0,0,.7);font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:#f5f5f7}
+.mg-icon{font-size:46px;line-height:1;margin-bottom:14px;filter:drop-shadow(0 0 22px rgba(255,159,10,.5))}
+.mg-title{font-size:26px;font-weight:900;letter-spacing:-.5px;margin-bottom:16px;background:linear-gradient(135deg,#ff9f0a,#ffd60a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.mg-body{text-align:left;margin-bottom:24px}
+.mg-body p{font-size:13.5px;line-height:1.75;color:rgba(255,255,255,.72);margin:0 0 12px}
+.mg-body strong{color:#fff;font-weight:700}
+.mg-note{background:rgba(255,159,10,.07);border-left:3px solid rgba(255,159,10,.45);border-radius:0 8px 8px 0;padding:10px 14px!important;font-size:12.5px!important;color:rgba(255,255,255,.6)!important;margin-bottom:0!important}
+.mg-btns{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.mg-btn{border:1px solid;border-radius:16px;padding:14px 18px;display:flex;flex-direction:column;align-items:center;gap:3px;transition:.18s;font-family:inherit}
+.mg-btn:hover{transform:translateY(-2px)}
+.mg-btn:active{transform:translateY(0)}
+.mg-btn-icon{font-size:22px;line-height:1;margin-bottom:2px}
+.mg-btn-label{font-size:15px;font-weight:800;letter-spacing:-.2px}
+.mg-btn-sub{font-size:11px;opacity:.65;font-weight:500}
+.mg-new{background:linear-gradient(135deg,rgba(255,214,10,.16),rgba(255,159,10,.12));border-color:rgba(255,214,10,.45);color:#ffd60a}
+.mg-new:hover{background:linear-gradient(135deg,rgba(255,214,10,.26),rgba(255,159,10,.2));border-color:rgba(255,214,10,.7);box-shadow:0 8px 26px rgba(255,214,10,.18)}
+.mg-stay{background:rgba(255,59,48,.09);border-color:rgba(255,59,48,.32);color:#ff5c52}
+.mg-stay:hover{background:rgba(255,59,48,.17);border-color:rgba(255,59,48,.5);box-shadow:0 8px 26px rgba(255,59,48,.14)}
+.mg-footer{border-top:1px solid rgba(255,255,255,.07);padding-top:14px}
+.mg-check{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,.42);user-select:none;transition:color .15s}
+.mg-check:hover{color:rgba(255,255,255,.68)}
+.mg-check input{width:15px;height:15px;accent-color:#ff9f0a}
+@media(max-width:520px){.mg-box{padding:28px 22px 22px;border-radius:20px}.mg-title{font-size:22px}.mg-icon{font-size:40px}.mg-body p{font-size:13px}}
+</style>
+
+<script>
+var NEW_SITE_URL='https://sites.google.com/view/adless-games';
+var MIGRATE_KEY='adless_migrate_dismissed_v1';
+function goToNewSite(){window.location.href=NEW_SITE_URL;}
+function dismissMigrate(){
+  var cb=document.getElementById('mg-dont-show');
+  if(cb&&cb.checked)try{localStorage.setItem(MIGRATE_KEY,'1');}catch(e){}
+  var el=document.getElementById('migrate-screen');
+  if(el){el.classList.add('gone');setTimeout(function(){el.remove();},450);}
+}
+(function(){
+  var el=document.getElementById('migrate-screen');
+  if(!el)return;
+  var done=false;
+  try{done=localStorage.getItem(MIGRATE_KEY)==='1';}catch(e){}
+  if(done){el.remove();return;}
+  el.classList.add('show');
+})();
+</script>
+<!-- ═══════════════ END MIGRATION NOTICE ═══════════════ -->
 <div id="cur"></div>
 <canvas id="bgCanvas"></canvas>
 <div id="bgLayer"></div>
