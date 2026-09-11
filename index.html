@@ -573,88 +573,7 @@ body.mobile-mode #game-frame{height:calc(100vh - 40px);width:calc((100vh - 40px)
 </style>
 </head>
 <body>
-  <!-- ═══════════════ MIGRATION NOTICE — self-contained ═══════════════ -->
-<div id="migrate-screen" style="display:none">
-  <div class="mg-box">
-    <div class="mg-icon">⚠️</div>
-    <div class="mg-title">We're Moving!</div>
-    <div class="mg-body">
-      <p>The <strong>Adless Games database is shutting down permanently SOON.</strong> Accounts, scores, chat, badges and Worlds data will no longer be saved or synced.</p>
-      <p>We're moving back to <strong>Google Sites</strong>, where the game library will keep being updated.</p>
-      <p class="mg-note">You can still use this version — games will work, but anything account-related will break once the database goes offline.</p>
-    </div>
-    <div class="mg-btns">
-      <button class="mg-btn mg-new" onclick="goToNewSite()">
-        <span class="mg-btn-icon">🚀</span>
-        <span class="mg-btn-label">Go to New Site</span>
-        <span class="mg-btn-sub">sites.google.com/view/adless-games</span>
-      </button>
-      <button class="mg-btn mg-stay" onclick="dismissMigrate()">
-        <span class="mg-btn-icon">⏳</span>
-        <span class="mg-btn-label">Stay Here</span>
-        <span class="mg-btn-sub">Use the old version anyway</span>
-      </button>
-    </div>
-    <div class="mg-footer">
-      <label class="mg-check">
-        <input type="checkbox" id="mg-dont-show">
-        <span>Don't show this again</span>
-      </label>
-    </div>
-  </div>
-</div>
-
-<style>
-#migrate-screen{position:fixed;inset:0;z-index:9999999;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);align-items:center;justify-content:center;padding:20px;transition:opacity .4s}
-#migrate-screen.show{display:flex!important}
-#migrate-screen.gone{opacity:0;pointer-events:none}
-#migrate-screen *{cursor:auto!important}
-#migrate-screen button,#migrate-screen label,#migrate-screen input{cursor:pointer!important}
-.mg-box{background:linear-gradient(160deg,#1a1a1f,#141418);border:1px solid rgba(255,159,10,.28);border-radius:24px;padding:34px 30px 26px;max-width:480px;width:100%;max-height:92vh;overflow-y:auto;text-align:center;box-shadow:0 20px 70px rgba(0,0,0,.7);font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:#f5f5f7}
-.mg-icon{font-size:46px;line-height:1;margin-bottom:14px;filter:drop-shadow(0 0 22px rgba(255,159,10,.5))}
-.mg-title{font-size:26px;font-weight:900;letter-spacing:-.5px;margin-bottom:16px;background:linear-gradient(135deg,#ff9f0a,#ffd60a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.mg-body{text-align:left;margin-bottom:24px}
-.mg-body p{font-size:13.5px;line-height:1.75;color:rgba(255,255,255,.72);margin:0 0 12px}
-.mg-body strong{color:#fff;font-weight:700}
-.mg-note{background:rgba(255,159,10,.07);border-left:3px solid rgba(255,159,10,.45);border-radius:0 8px 8px 0;padding:10px 14px!important;font-size:12.5px!important;color:rgba(255,255,255,.6)!important;margin-bottom:0!important}
-.mg-btns{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
-.mg-btn{border:1px solid;border-radius:16px;padding:14px 18px;display:flex;flex-direction:column;align-items:center;gap:3px;transition:.18s;font-family:inherit}
-.mg-btn:hover{transform:translateY(-2px)}
-.mg-btn:active{transform:translateY(0)}
-.mg-btn-icon{font-size:22px;line-height:1;margin-bottom:2px}
-.mg-btn-label{font-size:15px;font-weight:800;letter-spacing:-.2px}
-.mg-btn-sub{font-size:11px;opacity:.65;font-weight:500}
-.mg-new{background:linear-gradient(135deg,rgba(255,214,10,.16),rgba(255,159,10,.12));border-color:rgba(255,214,10,.45);color:#ffd60a}
-.mg-new:hover{background:linear-gradient(135deg,rgba(255,214,10,.26),rgba(255,159,10,.2));border-color:rgba(255,214,10,.7);box-shadow:0 8px 26px rgba(255,214,10,.18)}
-.mg-stay{background:rgba(255,59,48,.09);border-color:rgba(255,59,48,.32);color:#ff5c52}
-.mg-stay:hover{background:rgba(255,59,48,.17);border-color:rgba(255,59,48,.5);box-shadow:0 8px 26px rgba(255,59,48,.14)}
-.mg-footer{border-top:1px solid rgba(255,255,255,.07);padding-top:14px}
-.mg-check{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,.42);user-select:none;transition:color .15s}
-.mg-check:hover{color:rgba(255,255,255,.68)}
-.mg-check input{width:15px;height:15px;accent-color:#ff9f0a}
-@media(max-width:520px){.mg-box{padding:28px 22px 22px;border-radius:20px}.mg-title{font-size:22px}.mg-icon{font-size:40px}.mg-body p{font-size:13px}}
-</style>
-
-<script>
-var NEW_SITE_URL='https://sites.google.com/view/adless-games';
-var MIGRATE_KEY='adless_migrate_dismissed_v1';
-function goToNewSite(){window.location.href=NEW_SITE_URL;}
-function dismissMigrate(){
-  var cb=document.getElementById('mg-dont-show');
-  if(cb&&cb.checked)try{localStorage.setItem(MIGRATE_KEY,'1');}catch(e){}
-  var el=document.getElementById('migrate-screen');
-  if(el){el.classList.add('gone');setTimeout(function(){el.remove();},450);}
-}
-(function(){
-  var el=document.getElementById('migrate-screen');
-  if(!el)return;
-  var done=false;
-  try{done=localStorage.getItem(MIGRATE_KEY)==='1';}catch(e){}
-  if(done){el.remove();return;}
-  el.classList.add('show');
-})();
-</script>
-<!-- ═══════════════ END MIGRATION NOTICE ═══════════════ -->
+  
 <div id="cur"></div>
 <canvas id="bgCanvas"></canvas>
 <div id="bgLayer"></div>
@@ -664,54 +583,48 @@ function dismissMigrate(){
 <div id="login-screen" class="gone">
   <div class="lb">
     <div class="lb-logo">Ad<span>less</span></div>
-    <div class="lb-sub">Sign in to save your progress across devices</div>
+    <div class="lb-sub">Local profile — saved on this device</div>
     <div class="lb-tabs">
-      <button class="lb-tab active" onclick="lbTab('login')">Login</button>
-      <button class="lb-tab" onclick="lbTab('signup')">Sign Up</button>
+      <button class="lb-tab active" id="lbt-login"  onclick="lbTab('login')">Login</button>
+      <button class="lb-tab"        id="lbt-signup" onclick="lbTab('signup')">Sign Up</button>
+      <button class="lb-tab"        id="lbt-admin"  onclick="lbTab('admin')">🔑 Admin</button>
     </div>
     <div id="lb-err" class="lb-err"></div>
-    <input id="lb-user" class="lb-field" placeholder="Username" maxlength="20" autocomplete="off" spellcheck="false">
-    <input id="lb-pass" class="lb-field" type="password" placeholder="Password" autocomplete="off">
-    <div id="lb-email-wrap" style="display:none">
-      <input id="lb-email" class="lb-field" type="email" placeholder="Email address (optional)" autocomplete="off" style="margin-bottom:4px">
-      <div style="font-size:10px;color:var(--text2);margin-top:2px;padding:0 2px;line-height:1.5">🔒 Used only for password recovery &amp; bot prevention. Never shown publicly.</div>
-      <input id="lb-referral" class="lb-field" type="text" placeholder="Referral code (optional — earn 50 tokens!)" autocomplete="off" style="margin-top:8px;margin-bottom:0">
+
+    <!-- username / password -->
+    <div id="lb-creds">
+      <input id="lb-user" class="lb-field" placeholder="Username" maxlength="20" autocomplete="off" spellcheck="false">
+      <input id="lb-pass" class="lb-field" type="password" placeholder="Password" autocomplete="off">
     </div>
-    <!-- Email verification step -->
-    <div id="lb-verify-wrap" style="display:none;margin-top:8px;background:rgba(10,132,255,.08);border:1px solid rgba(10,132,255,.2);border-radius:12px;padding:12px">
-      <div style="font-size:13px;font-weight:700;margin-bottom:6px">📧 Verify your email</div>
-      <div style="font-size:11px;color:var(--text2);margin-bottom:10px">A 6-digit code was sent to your email. Enter it below to complete sign-up.</div>
-      <input id="lb-verify-code" class="lb-field" type="text" placeholder="6-digit code" maxlength="6" autocomplete="off" style="margin-bottom:0;letter-spacing:4px;text-align:center;font-size:18px;font-weight:700">
-      <div id="lb-verify-err" style="font-size:11px;color:#ff375f;min-height:14px;margin-top:4px"></div>
-      <button class="lb-btn" style="margin-top:8px" onclick="lbVerifyCode()">✅ Verify &amp; Create Account</button>
-      <div style="font-size:11px;color:var(--text2);margin-top:8px;text-align:center"><span style="cursor:pointer;text-decoration:underline;opacity:.7" onclick="lbResendCode()">Resend code</span></div>
+
+    <!-- signup-only: access code -->
+    <div id="lb-code-wrap" style="display:none">
+      <input id="lb-code" class="lb-field" type="password" placeholder="Sign-up access code" autocomplete="off" style="margin-bottom:4px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:8px;padding:0 2px;line-height:1.5">
+        🔒 New accounts require the access code. Ask the site owner if you don't have it.
+      </div>
     </div>
+
+    <!-- admin-only -->
+    <div id="lb-admin-wrap" style="display:none">
+      <input id="lb-admin-pass" class="lb-field" type="password" placeholder="Admin password" autocomplete="off" style="margin-bottom:4px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:8px;padding:0 2px;line-height:1.5">
+        👑 Admin unlocks game editing, the game debugger and custom tags.
+      </div>
+    </div>
+
     <div id="lb-av-wrap" style="display:none">
       <div style="font-size:11px;color:var(--text2);margin-bottom:8px;">Pick an avatar</div>
       <div class="lb-av-row" id="lb-av-row"></div>
     </div>
+
     <button class="lb-btn" id="lb-submit" onclick="lbSubmit()">Login</button>
+
     <div style="margin-top:12px;background:rgba(255,193,7,.08);border:1px solid rgba(255,193,7,.2);border-radius:10px;padding:8px 12px;font-size:11px;color:rgba(255,193,7,.8);line-height:1.5;">
-      ⚠️ In-game progress (e.g. GunSpin levels) cannot be saved across devices due to browser security rules. Favorites, settings, and watch progress do sync.
+      ⚠️ Profiles are stored <strong>on this device only</strong>. Clearing your browser data will remove your account, favourites and settings.
     </div>
-    <div style="margin-top:10px;font-size:11px;color:var(--text2);display:flex;justify-content:space-between">
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);text-align:center">
       <span style="cursor:none;text-decoration:underline;opacity:.6" onclick="lbGuest()">Continue as guest</span>
-      <span style="cursor:none;text-decoration:underline;opacity:.6" onclick="showForgotPw()" id="forgot-pw-link">Forgot password?</span>
-    </div>
-    <!-- Forgot Password Panel -->
-    <div id="forgot-pw-panel" style="display:none;margin-top:14px;padding:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px">
-      <div style="font-size:13px;font-weight:700;margin-bottom:10px">🔑 Reset Password</div>
-      <div style="font-size:11px;color:var(--text2);margin-bottom:10px">Enter your username and the email you signed up with. If they match, you can set a new password.</div>
-      <input id="fp-username" class="lb-field" placeholder="Your username" maxlength="20" style="margin-bottom:8px">
-      <input id="fp-email" class="lb-field" type="email" placeholder="Your email address" style="margin-bottom:8px">
-      <div id="fp-new-wrap" style="display:none">
-        <input id="fp-new-pass" class="lb-field" type="password" placeholder="New password (min 4 chars)" style="margin-bottom:8px">
-      </div>
-      <div id="fp-msg" style="font-size:11px;min-height:14px;margin-bottom:8px;color:#ff9f0a"></div>
-      <div style="display:flex;gap:8px">
-        <button class="lb-btn" style="flex:1;margin:0;font-size:12px;padding:9px" onclick="submitForgotPw()">Verify</button>
-        <button class="auc-btn" onclick="hideForgotPw()">Cancel</button>
-      </div>
     </div>
   </div>
 </div>
@@ -787,7 +700,7 @@ function dismissMigrate(){
   <div id="topbar" style="position:fixed;top:0;right:0;z-index:99999;display:flex;align-items:center;gap:4px;padding:6px 10px;pointer-events:none;max-width:100vw;box-sizing:border-box">
     <div style="pointer-events:all;display:flex;align-items:center;gap:4px;flex-wrap:nowrap">
       <!-- Bell -->
-      <button id="topbar-bell" onclick="toggleNotifPanel()" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center;cursor:none;position:relative;transition:.15s;flex-shrink:0" title="Notifications">
+      <button id="topbar-bell" style="display:none" onclick="return false" data-x=" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center;cursor:none;position:relative;transition:.15s;flex-shrink:0" title="Notifications">
         🔔<span id="notif-badge" style="display:none;position:absolute;top:-2px;right:-2px;background:#ff375f;color:#fff;font-size:8px;font-weight:900;min-width:14px;height:14px;border-radius:7px;align-items:center;justify-content:center;padding:0 3px;line-height:1"></span>
       </button>
       <!-- Favourites shortcut -->
@@ -830,19 +743,10 @@ function dismissMigrate(){
     <div class="nav active" data-view="games-view">🎮 Games</div>
     <div class="nav" data-view="movies-view">🎬 Movies</div>
     <div class="nav" data-view="shows-view">📺 Shows &amp; Anime</div>
-    <div class="nav" data-view="worlds-view">🌍 Worlds</div>
-    <div class="nav" data-view="worlds-studio-view">🔨 My Worlds</div>
-    <div class="nav" data-view="chat-view">💬 Live Chat</div>
-    <div class="nav" data-view="bugs-view" style="color:#ff453a;background:rgba(255,69,58,.1);border:1px solid rgba(255,69,58,.3);font-weight:700">🐛 Adless Bugs <span style="background:#ff453a;color:#fff;font-size:9px;font-weight:800;padding:1px 6px;border-radius:8px;margin-left:2px;vertical-align:middle">REPORT</span></div>
-    <div class="nav" data-view="friends-view">👥 Friends <span id="group-unread-badge" style="display:none;background:#ff375f;color:#fff;font-size:10px;font-weight:800;padding:1px 6px;border-radius:10px;margin-left:2px"></span></div>
-    <div class="nav" data-view="leaderboard-view">🏆 Leaderboard</div>
-    <div class="nav" data-view="badges-view">🎖️ Badges</div>
-    <div class="nav" data-view="tokens-view">🪙 Tokens &amp; Tasks</div>
-    <div class="nav" data-view="shop-view">🛍️ Shop</div>
+    <div class="nav" data-view="leaderboard-view">🏆 My Scores</div>
     <div class="nav" data-view="settings-view">⚙️ Settings</div>
     <div class="sec-label">Account</div>
     <div class="nav" data-view="profile-view">👤 My Profile</div>
-    <div class="nav" data-view="people-view">🔍 Find People</div>
     <div class="sec-label">Info</div>
     <div class="nav" data-view="about-view">ℹ️ About</div>
     <div class="nav" data-view="contact-view">📬 Contact</div>
@@ -850,10 +754,10 @@ function dismissMigrate(){
     <div class="nav" data-view="dmca-view">⚖️ DMCA</div>
     <div class="nav" data-action="random" style="color:#bf5af2;background:rgba(191,90,242,.08);border:1px solid rgba(191,90,242,.2)">🎲 Random Game</div>
     <div class="nav discord-btn" onclick="window.open('https://discord.gg/gAe83DUFNT','_blank')">🎮 Join Discord</div>
-    <div class="nav owner-btn" id="owner-nav" data-view="owner-view" style="display:none">👑 Owner Panel</div>
-    <div class="nav" id="tester-nav" data-view="tester-view" style="display:none;color:#ffd60a;background:rgba(255,214,10,.08);border:1px solid rgba(255,214,10,.2)">🧪 Tester Panel</div>
-    <div class="nav" id="admin-nav" data-view="admin-view" style="display:none;color:#30d158;background:rgba(48,209,88,.08);border:1px solid rgba(48,209,88,.2)">🛡️ WinterAG Panel</div>
-    <div class="nav" id="worlds-admin-nav" data-view="worlds-review-view" style="display:none;color:#ff9f0a;background:rgba(255,159,10,.08);border:1px solid rgba(255,159,10,.2)">🌍 Worlds Review <span id="worlds-pending-badge" style="display:none;background:#ff375f;color:#fff;font-size:10px;font-weight:800;padding:1px 6px;border-radius:10px;margin-left:2px"></span></div>
+    <div class="nav owner-btn" id="owner-nav" data-view="owner-view" style="display:none">👑 Admin Panel <span id="score-review-badge" style="display:none;background:#ff375f;color:#fff;font-size:10px;font-weight:800;padding:1px 6px;border-radius:10px;margin-left:2px"></span></div>
+    <div class="nav" id="tester-nav" data-view="tester-view" style="display:none"></div>
+    <div class="nav" id="admin-nav" data-view="admin-view" style="display:none"></div>
+    <div class="nav" id="worlds-admin-nav" data-view="worlds-review-view" style="display:none"></div>
     <div id="game-filters">
       <div class="sec-label">Categories</div>
       <div class="nav" data-cat="all">🏠 All Games</div>
@@ -881,7 +785,7 @@ function dismissMigrate(){
       <div class="nav" data-cat="flash">⚡ Flash</div>
     </div>
     <button class="rand-btn" onclick="playRandom()">🎲 RANDOM GAME</button>
-    <button onclick="openBugReport()" style="background:rgba(255,55,95,.1);color:#ff375f;border:1px solid rgba(255,55,95,.3);padding:10px;border-radius:12px;font-weight:700;text-align:center;font-size:11px;transition:.15s;flex-shrink:0;margin-top:6px;cursor:pointer!important" onmouseover="this.style.background='rgba(255,55,95,.25)'" onmouseout="this.style.background='rgba(255,55,95,.1)'">🐛 Report a Bug</button>
+    
   </aside>
   <div id="games-view" class="view active">
     <header>
@@ -1135,47 +1039,6 @@ function dismissMigrate(){
   <div id="owner-view" class="view">
     <header><h1>👑 Owner Panel</h1></header>
 
-    <!-- Reports -->
-    <div class="s-section">
-      <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
-        <span>🚨 Reports <span id="report-count-badge" style="display:none;background:#ff375f;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;margin-left:6px"></span></span>
-        <div style="display:flex;gap:6px">
-          <button class="auc-btn" onclick="loadReports('open')" id="rep-tab-open" style="background:rgba(255,55,95,.15);border-color:rgba(255,55,95,.3);color:#ff375f">🔴 Open</button>
-          <button class="auc-btn" onclick="loadReports('resolved')" id="rep-tab-resolved">✅ Resolved</button>
-          <button class="auc-btn" onclick="loadReports('dismissed')" id="rep-tab-dismissed">🗑 Dismissed</button>
-        </div>
-      </div>
-      <div id="reports-list" style="margin-top:10px"></div>
-    </div>
-
-    <!-- Bug Reports -->
-    <div class="s-section">
-      <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
-        <span>🐛 Bug Reports <span id="bug-count-badge" style="display:none;background:#ff9f0a;color:#000;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;margin-left:6px"></span></span>
-        <button class="auc-btn" onclick="loadBugReports()">↻ Refresh</button>
-      </div>
-      <div id="bug-reports-list" style="margin-top:10px"></div>
-    </div>
-
-    <!-- Analytics -->
-    <div class="s-section">
-      <div class="s-sec">📊 Analytics</div>
-      <div class="stats-grid" id="owner-stats">
-        <div class="stat-box"><div class="stat-label">Total Users</div><div class="stat-val" id="ow-users">—</div></div>
-        <div class="stat-box"><div class="stat-label">Messages Today</div><div class="stat-val" id="ow-msgs">—</div></div>
-        <div class="stat-box"><div class="stat-label">Banned</div><div class="stat-val" id="ow-banned">—</div></div>
-        <div class="stat-box"><div class="stat-label">Active DMs</div><div class="stat-val" id="ow-dms">—</div></div>
-      </div>
-      <div style="margin-top:10px">
-        <div class="s-lbl" style="margin-bottom:6px">🏆 Most Played Games</div>
-        <div id="ow-top-games"></div>
-      </div>
-      <div style="margin-top:10px">
-        <div class="s-lbl" style="margin-bottom:6px">💬 Most Active Chatters</div>
-        <div id="ow-top-chatters"></div>
-      </div>
-    </div>
-
     <!-- Game of Week/Month + Featured -->
     <div class="s-section">
       <div class="s-sec">🎮 Game Spotlight</div>
@@ -1207,56 +1070,6 @@ function dismissMigrate(){
       </div>
     </div>
 
-    <!-- Chat Moderation -->
-    <div class="s-section">
-      <div class="s-sec">💬 Chat Moderation</div>
-      <div class="s-row">
-        <div><div class="s-lbl">Slowmode</div><div class="s-desc">Seconds between messages per user</div></div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <input id="slowmode-val" class="lb-field" type="number" min="0" max="300" style="margin:0;width:70px;text-align:center" placeholder="0">
-          <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0" onclick="saveSlowmode()">Set</button>
-        </div>
-      </div>
-      <div class="s-row" style="flex-direction:column;align-items:flex-start;gap:8px;margin-top:4px">
-        <div><div class="s-lbl">Word Blacklist</div><div class="s-desc">Messages containing these words are auto-blocked</div></div>
-        <div style="display:flex;gap:8px;width:100%">
-          <input id="blacklist-add-input" class="lb-field" style="margin:0;flex:1" placeholder="Add a word or phrase…" onkeydown="if(event.key==='Enter')addBlacklistWord()">
-          <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0" onclick="addBlacklistWord()">+ Add</button>
-          <button class="auc-btn" onclick="loadBlacklistPreset()" title="Load default slur list">⚡ Preset</button>
-        </div>
-        <div id="blacklist-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;max-height:160px;overflow-y:auto;width:100%"></div>
-        <input id="blacklist-input" type="hidden">
-      </div>
-      <div style="margin-top:10px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-          <div class="s-lbl">Recent Messages</div>
-          <button class="auc-btn" onclick="loadAdminChatLog()">↻ Refresh</button>
-        </div>
-        <div id="admin-chat-log"></div>
-      </div>
-    </div>
-
-    <!-- Announcement -->
-    <div class="s-section">
-      <div class="s-sec">📢 Broadcast Announcement</div>
-      <textarea id="ann-text" class="lb-field" style="height:70px;resize:none" placeholder="Message to all users…" maxlength="300"></textarea>
-      <button class="lb-btn" style="margin-top:8px" onclick="sendAnnouncement()">📢 Send Announcement</button>
-      <div style="margin-top:10px"><div class="s-lbl" style="margin-bottom:6px">📋 Past Announcements</div><div id="ann-history"></div></div>
-    </div>
-
-    <!-- User Management -->
-    <div class="s-section">
-      <div class="s-sec">👤 User Management</div>
-      <div style="display:flex;gap:8px;margin-bottom:10px">
-        <input id="admin-search" class="lb-field" style="margin:0;flex:1" placeholder="Search username…" onkeydown="if(event.key==='Enter')adminSearchUser()">
-        <button class="lb-btn" style="width:auto;padding:12px 18px;margin:0" onclick="adminSearchUser()">Search</button>
-      </div>
-      <div id="admin-user-result2"></div>
-    </div>
-    <div class="s-section">
-      <div class="s-sec">👥 All Users <span id="user-count" style="color:var(--text2);font-weight:400"></span></div>
-      <div id="admin-all-users"></div>
-    </div>
     <!-- Score Review -->
     <div class="s-section">
       <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
@@ -1269,58 +1082,6 @@ function dismissMigrate(){
       </div>
       <div id="score-review-list" style="margin-top:10px"></div>
     </div>
-    <!-- Badge Manager -->
-    <div class="s-section">
-      <div class="s-sec">🎖️ Badge Manager</div>
-      <div style="display:flex;gap:8px;margin-bottom:10px">
-        <input id="badge-mgr-search" class="lb-field" style="margin:0;flex:1" placeholder="Search username..." onkeydown="if(event.key==='Enter')loadBadgeMgr()">
-        <button class="lb-btn" style="width:auto;padding:12px 18px;margin:0" onclick="loadBadgeMgr()">Search</button>
-      </div>
-      <div id="badge-mgr-result"></div>
-    </div>
-
-    <!-- Online Now -->
-    <div class="s-section">
-      <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
-        <span>🟢 Online Now <span id="online-count-badge" style="background:rgba(48,209,88,.2);color:#30d158;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;margin-left:6px">0</span></span>
-        <button class="auc-btn" onclick="loadOnlineUsers()">↻ Refresh</button>
-      </div>
-      <div id="online-users-list" style="margin-top:10px"></div>
-    </div>
-
-    <!-- Clear Chat -->
-    <div class="s-section">
-      <div class="s-sec">🗑️ Chat Tools</div>
-      <div class="s-row">
-        <div><div class="s-lbl">Clear All Chat</div><div class="s-desc">Permanently deletes all messages from global chat</div></div>
-        <button class="s-danger" onclick="askConfirm('Clear all chat messages?','This cannot be undone.',clearAllChat)">🗑️ Clear</button>
-      </div>
-      <div class="s-row" style="margin-top:4px">
-        <div><div class="s-lbl">DM a User</div><div class="s-desc">Send a direct message as owner</div></div>
-        <div style="display:flex;gap:8px">
-          <input id="owner-dm-user" class="lb-field" style="margin:0;width:140px" placeholder="Username…">
-          <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0" onclick="ownerOpenDm()">DM</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Mute Manager -->
-    <div class="s-section">
-      <div class="s-sec">🔇 Mute a User</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-        <input id="mute-user-search" class="lb-field" style="margin:0;flex:1;min-width:120px" placeholder="Username…">
-        <select id="mute-duration" class="lb-field" style="margin:0;width:auto;padding:8px 12px;font-size:12px">
-          <option value="5">5 min</option>
-          <option value="15">15 min</option>
-          <option value="60">1 hour</option>
-          <option value="1440">24 hours</option>
-          <option value="10080">7 days</option>
-        </select>
-        <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0;background:rgba(255,159,10,.15);border-color:rgba(255,159,10,.3);color:#ff9f0a" onclick="muteUser()">🔇 Mute</button>
-      </div>
-      <div id="mute-result" style="margin-top:8px;font-size:12px;color:var(--text2)"></div>
-    </div>
-
     <!-- Game Tags Manager -->
     <div class="s-section">
       <div class="s-sec">🏷️ Game Tags</div>
@@ -1343,64 +1104,6 @@ function dismissMigrate(){
         <div id="tag-save-msg" style="font-size:11px;color:var(--text2);min-height:14px;margin-top:6px"></div>
       </div>
     </div>
-    <!-- Verified Emails -->
-    <div class="s-section">
-      <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
-        <span>📧 Registered Emails</span>
-        <button class="auc-btn" onclick="loadVerifiedEmails()">↻ Refresh</button>
-      </div>
-      <div class="s-desc" style="margin-bottom:10px">All users who signed up with an email address, their verification status, and token balance.</div>
-      <div id="owner-emails-list"></div>
-    </div>
-
-    <!-- PFP / Background Gallery -->
-    <div class="s-section">
-      <div class="s-sec">🖼️ PFP & Background Gallery</div>
-      <div class="s-desc" style="margin-bottom:12px">Upload images users can set as profile picture or background</div>
-      <!-- Tab toggle -->
-      <div style="display:flex;gap:8px;margin-bottom:12px">
-        <button class="auc-btn blue" id="gal-tab-upload" onclick="switchGalTab('upload')">⬆️ Upload</button>
-        <button class="auc-btn" id="gal-tab-url" onclick="switchGalTab('url')">🔗 URL</button>
-      </div>
-      <!-- File upload -->
-      <div id="gal-panel-upload">
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px">
-          <select id="gallery-upload-type" class="lb-field" style="margin:0;width:auto;padding:8px 12px;font-size:12px">
-            <option value="pfp">Profile Picture (PFP)</option>
-            <option value="bg">Background</option>
-          </select>
-          <input type="file" id="gallery-file-input" accept="image/*" style="display:none" onchange="onGalleryFileSelect(event)">
-          <button class="auc-btn blue" onclick="document.getElementById('gallery-file-input').click()">📁 Choose File</button>
-          <input id="gallery-upload-label" class="lb-field" style="margin:0;flex:1;min-width:100px" placeholder="Label (optional)">
-          <button class="auc-btn green" onclick="uploadGalleryImage()">⬆️ Upload & Publish</button>
-        </div>
-        <div id="gallery-upload-preview" style="display:none;align-items:center;gap:10px;margin-bottom:8px">
-          <img id="gallery-upload-img" style="width:80px;height:60px;border-radius:8px;object-fit:cover;border:2px solid rgba(255,255,255,.15)">
-          <span id="gallery-upload-name" style="font-size:11px;color:var(--text2)"></span>
-        </div>
-        <div id="gallery-upload-status" style="font-size:12px;min-height:16px;margin-bottom:8px"></div>
-      </div>
-      <!-- URL publish -->
-      <div id="gal-panel-url" style="display:none">
-        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-          <input id="pfp-pub-url" class="lb-field" style="margin:0;flex:1;min-width:180px" placeholder="Image URL…">
-          <input id="pfp-pub-label" class="lb-field" style="margin:0;width:130px" placeholder="Label (optional)">
-          <select id="pfp-pub-type" class="lb-field" style="margin:0;width:auto;padding:8px 12px;font-size:12px">
-            <option value="pfp">PFP</option>
-            <option value="bg">Background</option>
-            <option value="both">Both</option>
-          </select>
-          <button class="lb-btn" style="width:auto;padding:8px 14px;margin:0" onclick="publishPfpImage()">📤 Publish</button>
-        </div>
-      </div>
-      <!-- Published items -->
-      <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px">📸 Published PFPs</div>
-      <div id="gallery-pfp-admin" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><div style="font-size:11px;color:var(--text2)">None yet</div></div>
-      <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px">🌅 Published Backgrounds</div>
-      <div id="gallery-bg-admin" style="display:flex;gap:8px;flex-wrap:wrap"><div style="font-size:11px;color:var(--text2)">None yet</div></div>
-      <div id="owner-gallery-list" style="display:none"></div>
-    </div>
-
     <!-- Update Log -->
     <div class="s-section">
       <div class="s-sec" style="display:flex;align-items:center;justify-content:space-between">
@@ -3384,29 +3087,451 @@ const SHOWS=[{title:'South Park',img:'https://upload.wikimedia.org/wikipedia/en/
 //     if(e.ctrlKey&&['U','u'].includes(e.key)){e.preventDefault();e.stopPropagation();return false;}
 //   },{capture:true});
 // })();
-// ── SUPABASE CONFIG (obfuscated) ─────────────────────────────────
-const SB_URL=(function(){const b=[50,46,46,42,41,96,117,117,52,34,54,60,45,34,47,43,44,44,50,63,41,57,32,53,62,48,52,61,116,41,47,42,59,56,59,41,63,116,57,53];return b.map(x=>String.fromCharCode(x^0x5A)).join('');})();
-const SB_KEY=(function(){const b=[63,35,16,50,56,29,57,51,21,51,16,19,15,32,19,107,20,51,19,41,19,52,8,111,57,25,19,108,19,49,42,2,12,25,16,99,116,63,35,16,42,57,105,23,51,21,51,16,32,62,2,24,50,3,55,28,32,0,9,19,41,19,52,16,54,0,51,19,108,19,55,111,110,56,29,0,105,63,18,12,34,62,52,0,53,0,2,20,48,63,55,99,49,59,55,111,52,19,51,45,51,57,55,99,41,0,9,19,108,19,55,28,47,56,104,110,51,22,25,16,42,3,2,11,51,21,48,31,105,20,32,19,111,20,30,23,106,20,30,11,41,19,55,12,110,57,25,19,108,23,48,27,110,21,30,15,34,21,14,11,106,20,18,106,116,40,99,110,41,15,50,10,25,99,42,51,45,34,106,48,32,119,62,105,48,2,17,13,54,35,21,12,10,32,51,48,32,57,28,107,17,111,2,3,54,21,34,98];return b.map(x=>String.fromCharCode(x^0x5A)).join('');})();
-async function sbReq(path,method='GET',body=null,extra={}){
-  const opts={method,headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Accept':'application/json',...(extra.headers||{})}};
-  if(body)opts.body=JSON.stringify(body);
-  const r=await fetch(SB_URL+path,opts);
-  const t=await r.text();
-  if(!r.ok){
-    // Supabase "no rows" on single item queries isn't really an error
-    if(r.status===406||t.includes('JSON object requested'))return null;
-    throw new Error(t);
-  }
-  return t?JSON.parse(t):null;
+// ══════════════════════════════════════════════════════════════════
+// LOCAL BACKEND SHIM — no database, everything lives in localStorage
+// ══════════════════════════════════════════════════════════════════
+// The original build talked to a hosted database. That backend is gone.
+// Everything below emulates just enough of it, locally, so the parts we
+// still want (game edits, game fixes, custom tags, debug results, the
+// update log) keep working with zero network calls.
+
+const SB_URL = 'local://disabled/';   // sentinel — never actually fetched
+const SB_KEY = 'local-disabled';
+
+// ── localStorage-backed "site_settings" table ────────────────────
+const LS_SETTINGS_KEY = 'adless_settings_table_v1';
+
+function lsSettingsAll(){
+  try { return JSON.parse(localStorage.getItem(LS_SETTINGS_KEY) || '{}'); }
+  catch(e){ return {}; }
 }
-async function sha256(str){
-  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+function lsSettingsSave(obj){
+  try { localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify(obj)); }
+  catch(e){ console.warn('[local] settings save failed (quota?)', e); }
+}
+function lsSettingGet(key){
+  const all = lsSettingsAll();
+  return Object.prototype.hasOwnProperty.call(all, key) ? all[key] : null;
+}
+function lsSettingSet(key, value){
+  const all = lsSettingsAll();
+  all[key] = value;
+  lsSettingsSave(all);
+}
+function lsSettingDelete(key){
+  const all = lsSettingsAll();
+  delete all[key];
+  lsSettingsSave(all);
+}
+function lsSettingsByPrefix(prefix){
+  const all = lsSettingsAll();
+  return Object.keys(all)
+    .filter(k => k.indexOf(prefix) === 0)
+    .sort()
+    .map(k => ({ key:k, value:all[k] }));
 }
 
-// ── AUTH STATE ───────────────────────────────────────────────────
-let currentUser=null;
-const AVATARS=['🎮','🕹️','👾','🦊','🐉','🔥','⚡','🌙','🦄','💀','🤖','🎯','🏆','🦁','🐺'];
+// ── localStorage-backed "scores" table ───────────────────────────
+const LS_SCORES_KEY = 'adless_scores_v1';
+
+function lsScoresAll(){
+  try { return JSON.parse(localStorage.getItem(LS_SCORES_KEY) || '[]'); }
+  catch(e){ return []; }
+}
+function lsScoresSave(list){
+  try { localStorage.setItem(LS_SCORES_KEY, JSON.stringify(list)); return true; }
+  catch(e){ console.warn('[local] score save failed (storage full?)', e); return false; }
+}
+function lsScoreAdd(row){
+  const list = lsScoresAll();
+  row.id = 'sc_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+  row.created_at = new Date().toISOString();
+  list.push(row);
+  return lsScoresSave(list) ? row : null;
+}
+function lsScoreUpdate(id, patch){
+  const list = lsScoresAll();
+  const i = list.findIndex(r => r.id === id);
+  if (i === -1) return false;
+  Object.assign(list[i], patch);
+  return lsScoresSave(list);
+}
+function lsScoreDelete(id){
+  return lsScoresSave(lsScoresAll().filter(r => r.id !== id));
+}
+
+// Tiny PostgREST-ish query engine over an in-memory array.
+// Understands: col=eq.x, col=neq.x, col=gte.x, col=lte.x, order=col.dir,
+// limit=n — which covers every scores query the app actually makes.
+function lsQuery(rows, qs){
+  let out = rows.slice();
+  const params = (qs || '').split('&').filter(Boolean);
+  let order = null, limit = null;
+
+  params.forEach(pair => {
+    const eq = pair.indexOf('=');
+    if (eq === -1) return;
+    const col = decodeURIComponent(pair.slice(0, eq));
+    const raw = pair.slice(eq + 1);
+
+    if (col === 'select') return;
+    if (col === 'limit'){ limit = parseInt(raw) || null; return; }
+    if (col === 'order'){ order = decodeURIComponent(raw); return; }
+
+    const dot = raw.indexOf('.');
+    if (dot === -1) return;
+    const op  = raw.slice(0, dot);
+    const val = decodeURIComponent(raw.slice(dot + 1));
+
+    out = out.filter(r => {
+      const v = r[col];
+      switch(op){
+        case 'eq':  return String(v) === val;
+        case 'neq': return String(v) !== val;
+        case 'gte': return v != null && String(v) >= val;
+        case 'lte': return v != null && String(v) <= val;
+        case 'gt':  return v != null && String(v) >  val;
+        case 'lt':  return v != null && String(v) <  val;
+        case 'in': {
+          const set = val.replace(/^\(|\)$/g,'').split(',').map(x => x.replace(/^"|"$/g,''));
+          return set.indexOf(String(v)) !== -1;
+        }
+        default: return true;
+      }
+    });
+  });
+
+  if (order){
+    // supports multi-key: "game_name.asc,score.desc"
+    const keys = order.split(',').map(k => {
+      const bits = k.split('.');
+      return { col: bits[0], desc: (bits[1] || 'asc') === 'desc' };
+    });
+    out.sort((a, b) => {
+      for (const k of keys){
+        let av = a[k.col], bv = b[k.col];
+        if (typeof av === 'number' || typeof bv === 'number'){
+          av = Number(av) || 0; bv = Number(bv) || 0;
+        } else {
+          av = String(av == null ? '' : av); bv = String(bv == null ? '' : bv);
+        }
+        if (av < bv) return k.desc ?  1 : -1;
+        if (av > bv) return k.desc ? -1 :  1;
+      }
+      return 0;
+    });
+  }
+
+  if (limit) out = out.slice(0, limit);
+  return out;
+}
+
+// ── sbReq: emulates the handful of reads we still need ───────────
+// Anything it doesn't understand resolves to an empty list, so every
+// removed feature silently does nothing instead of throwing.
+async function sbReq(path, method='GET', body=null, extra={}){
+  try {
+    if (typeof path !== 'string') return [];
+
+    // Writes to site_settings (POST with {key,value} body)
+    if (path.indexOf('/rest/v1/site_settings') === 0 && method === 'POST' && body && body.key){
+      lsSettingSet(body.key, body.value);
+      return [];
+    }
+
+    // Reads from site_settings
+    if (path.indexOf('/rest/v1/site_settings') === 0 && method === 'GET'){
+      // key=like.prefix% / key=like.prefix%25 / key=like.prefix*
+      let m = path.match(/key=like\.([^&*%]+)(?:%25|%|\*)/);
+      if (m) return lsSettingsByPrefix(decodeURIComponent(m[1]));
+      // key=eq.exactkey
+      m = path.match(/key=eq\.([^&]+)/);
+      if (m){
+        const k = decodeURIComponent(m[1]);
+        const v = lsSettingGet(k);
+        return v === null ? [] : [{ key:k, value:v }];
+      }
+      // bare select of everything
+      const all = lsSettingsAll();
+      return Object.keys(all).map(k => ({ key:k, value:all[k] }));
+    }
+
+    // scores table
+    if (path.indexOf('/rest/v1/scores') === 0){
+      const qs = path.indexOf('?') === -1 ? '' : path.slice(path.indexOf('?') + 1);
+      if (method === 'GET')    return lsQuery(lsScoresAll(), qs);
+      if (method === 'DELETE'){
+        const m = qs.match(/id=eq\.([^&]+)/);
+        if (m) lsScoreDelete(decodeURIComponent(m[1]));
+        return [];
+      }
+      if (method === 'PATCH' && body){
+        const m = qs.match(/id=eq\.([^&]+)/);
+        if (m) lsScoreUpdate(decodeURIComponent(m[1]), body);
+        return [];
+      }
+      if (method === 'POST' && body){ lsScoreAdd(body); return []; }
+      return [];
+    }
+
+    // Everything else (profiles, chat, scores, badges, worlds, …) is gone.
+    return [];
+  } catch(e){
+    console.warn('[local] sbReq error', e);
+    return [];
+  }
+}
+
+// ── fetch guard ──────────────────────────────────────────────────
+// A lot of legacy code calls fetch(SB_URL + '/rest/v1/...') directly.
+// Intercept those so they resolve harmlessly instead of erroring.
+(function(){
+  const _realFetch = window.fetch.bind(window);
+  window.fetch = function(url, opts){
+    try {
+      const u = typeof url === 'string' ? url : (url && url.url) || '';
+      if (u.indexOf('local://disabled/') === 0){
+        // Mirror site_settings writes/deletes into localStorage
+        const o = opts || {};
+        const path = u.slice('local://disabled/'.length);
+        if (path.indexOf('rest/v1/scores') === 0){
+          const qs = path.indexOf('?') === -1 ? '' : path.slice(path.indexOf('?') + 1);
+          const mth = (o.method || 'GET').toUpperCase();
+          const m = qs.match(/id=eq\.([^&]+)/);
+          if (mth === 'DELETE' && m) lsScoreDelete(decodeURIComponent(m[1]));
+          else if (mth === 'PATCH' && m && o.body){
+            try { lsScoreUpdate(decodeURIComponent(m[1]), JSON.parse(o.body)); } catch(e){}
+          } else if (mth === 'POST' && o.body){
+            try { lsScoreAdd(JSON.parse(o.body)); } catch(e){}
+          }
+          return Promise.resolve(new Response('[]', {
+            status: 200, headers: { 'Content-Type':'application/json' }
+          }));
+        }
+        if (path.indexOf('rest/v1/site_settings') === 0){
+          if ((o.method || 'GET').toUpperCase() === 'DELETE'){
+            const m = path.match(/key=eq\.([^&]+)/);
+            if (m) lsSettingDelete(decodeURIComponent(m[1]));
+          } else if (o.body){
+            try {
+              const b = JSON.parse(o.body);
+              if (b && b.key !== undefined) lsSettingSet(b.key, b.value);
+            } catch(e){}
+          }
+        }
+        return Promise.resolve(new Response('[]', {
+          status: 200, headers: { 'Content-Type':'application/json' }
+        }));
+      }
+    } catch(e){}
+    return _realFetch(url, opts);
+  };
+})();
+
+async function sha256(str){
+  // Preferred: Web Crypto. Only exists in a secure context (https / localhost).
+  try{
+    if(typeof crypto!=='undefined'&&crypto.subtle&&crypto.subtle.digest){
+      const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+  }catch(e){}
+  // Fallback so login still works over file:// and plain http://
+  return fallbackHash(str);
+}
+
+// Dependency-free hash, used only when Web Crypto is unavailable.
+function fallbackHash(str){
+  let h1=0x9e3779b9,h2=0x85ebca6b,h3=0xc2b2ae35,h4=0x27d4eb2f;
+  for(let i=0;i<str.length;i++){
+    const c=str.charCodeAt(i);
+    h1=Math.imul(h1^c,2654435761)>>>0;
+    h2=Math.imul(h2+c,1597334677)>>>0;
+    h3=Math.imul(h3^(c+i),2246822519)>>>0;
+    h4=Math.imul(h4+(c*(i+1)),3266489917)>>>0;
+  }
+  const hex=n=>(n>>>0).toString(16).padStart(8,'0');
+  return 'fb'+hex(h1)+hex(h2)+hex(h3)+hex(h4);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// LOCAL AUTH — accounts live in localStorage, no server involved
+// ══════════════════════════════════════════════════════════════════
+
+// ▼▼▼ CHANGE THESE TWO VALUES TO CONTROL ACCESS ▼▼▼
+const SIGNUP_CODE    = 'Adless2027!';   // required to create an account
+const ADMIN_PASSWORD = 'Adless2027!';   // required for the Admin tab
+// ▲▲▲ ------------------------------------------- ▲▲▲
+
+const ACCOUNTS_KEY = 'adless_accounts_v1';
+const SESSION_KEY  = 'adless_session';
+
+let currentUser = null;
+const AVATARS = ['🎮','🕹️','👾','🦊','🐉','🔥','⚡','🌙','🦄','💀','🤖','🎯','🏆','🦁','🐺'];
+
+function loadAccounts(){
+  try { return JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || '[]'); }
+  catch(e){ return []; }
+}
+function saveAccounts(list){
+  try { localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(list)); }
+  catch(e){ console.warn('account save failed', e); }
+}
+function findAccount(username){
+  const u = (username || '').toLowerCase();
+  return loadAccounts().find(a => (a.username || '').toLowerCase() === u) || null;
+}
+
+// ── Login screen UI ──────────────────────────────────────────────
+let lbMode = 'login';
+let lbSelAv = AVATARS[0];
+
+function lbTab(mode){
+  lbMode = mode;
+  ['login','signup','admin'].forEach(m => {
+    const btn = document.getElementById('lbt-' + m);
+    if (btn) btn.classList.toggle('active', m === mode);
+  });
+  const show = (id, on) => { const el = document.getElementById(id); if (el) el.style.display = on ? 'block' : 'none'; };
+  show('lb-creds',      mode !== 'admin');
+  show('lb-code-wrap',  mode === 'signup');
+  show('lb-av-wrap',    mode === 'signup');
+  show('lb-admin-wrap', mode === 'admin');
+  const btn = document.getElementById('lb-submit');
+  if (btn) btn.textContent = mode === 'login' ? 'Login' : mode === 'signup' ? 'Create Account' : '🔑 Enter Admin Mode';
+  const err = document.getElementById('lb-err');
+  if (err) err.textContent = '';
+}
+
+function lbInitAvatars(){
+  const row = document.getElementById('lb-av-row');
+  if (!row) return;
+  row.innerHTML = AVATARS.map((a, i) =>
+    `<div class="lb-av${i === 0 ? ' sel' : ''}" onclick="lbPickAv(this,'${a}')">${a}</div>`).join('');
+}
+function lbPickAv(el, av){
+  document.querySelectorAll('.lb-av').forEach(e => e.classList.remove('sel'));
+  el.classList.add('sel');
+  lbSelAv = av;
+}
+
+async function lbSubmit(){
+  const err = document.getElementById('lb-err');
+  const setErr = t => { if (err) err.textContent = t; };
+
+  // ── Admin mode ──
+  if (lbMode === 'admin'){
+    const pw = (document.getElementById('lb-admin-pass') || {}).value || '';
+    if (pw !== ADMIN_PASSWORD){ setErr('Incorrect admin password.'); return; }
+    currentUser = { id:'admin', username:'Admin', display_name:'Admin',
+                    avatar:'👑', role:'owner', guest:false, admin:true };
+    localStorage.setItem(SESSION_KEY, JSON.stringify(currentUser));
+    showToast('👑 Admin mode active');
+    lbEnter();
+    return;
+  }
+
+  const un = ((document.getElementById('lb-user') || {}).value || '').trim();
+  const pw = (document.getElementById('lb-pass') || {}).value || '';
+
+  if (!un || !pw){ setErr('Please fill in all fields.'); return; }
+  if (un.length < 3){ setErr('Username must be at least 3 characters.'); return; }
+  if (pw.length < 4){ setErr('Password must be at least 4 characters.'); return; }
+
+  const hash = await sha256(pw + un.toLowerCase());
+
+  // ── Sign up ──
+  if (lbMode === 'signup'){
+    const code = (document.getElementById('lb-code') || {}).value || '';
+    if (code !== SIGNUP_CODE){ setErr('Incorrect sign-up access code.'); return; }
+    if (!/^[a-zA-Z0-9_]+$/.test(un)){ setErr('Username: letters, numbers and underscores only.'); return; }
+    if (['admin','owner','adless','system','moderator','staff'].includes(un.toLowerCase())){
+      setErr('That username is reserved.'); return;
+    }
+    if (findAccount(un)){ setErr('Username already taken.'); return; }
+
+    const acct = { id:'u_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7),
+                   username:un, display_name:un, avatar:lbSelAv, hash, created:Date.now() };
+    const list = loadAccounts();
+    list.push(acct);
+    saveAccounts(list);
+
+    currentUser = { id:acct.id, username:un, display_name:un, avatar:lbSelAv, role:'user', guest:false };
+    localStorage.setItem(SESSION_KEY, JSON.stringify(currentUser));
+    showToast('🎉 Account created — welcome, ' + un + '!');
+    lbEnter();
+    return;
+  }
+
+  // ── Login ──
+  const acct = findAccount(un);
+  if (!acct){ setErr('Username not found on this device.'); return; }
+  if (acct.hash !== hash){ setErr('Incorrect password.'); return; }
+
+  currentUser = { id:acct.id, username:acct.username,
+                  display_name:acct.display_name || acct.username,
+                  avatar:acct.avatar || '👤', role:'user', guest:false };
+  localStorage.setItem(SESSION_KEY, JSON.stringify(currentUser));
+  lbEnter();
+}
+
+function openLoginModal(){
+  const el = document.getElementById('login-screen');
+  if (el) el.classList.remove('gone');
+  lbTab('login');
+}
+
+function lbGuest(){
+  currentUser = { id:'guest', username:'Guest', avatar:'👤', guest:true, role:'user' };
+  loadCustomGameTags();
+  lbEnter();
+}
+
+function lbEnter(){
+  const ls = document.getElementById('login-screen');
+  if (ls) ls.classList.add('gone');
+  updateUserChip();
+  favs = loadFavs();
+  applyStoredSettings();
+  loadCloakSetting();
+  cardCache.clear(); buildList(); renderPage(); updateStats();
+  loadCustomGameTags();
+  setTimeout(updCheckBanner, 600);
+  adsOptedOut = false;
+  loadAdsOptOut();
+}
+
+function logout(){
+  localStorage.removeItem(SESSION_KEY);
+  currentUser = null;
+  favs = [];
+  adsOptedOut = false;
+  applyAdsState();
+  const chip = document.getElementById('user-chip');
+  if (chip) chip.style.display = 'none';
+  const ls = document.getElementById('login-screen');
+  if (ls) ls.classList.remove('gone');
+  ['lb-user','lb-pass','lb-code','lb-admin-pass'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  lbTab('login');
+  cardCache.clear();
+  showOwnerNav();
+}
+
+// Legacy no-ops kept so old call sites don't throw
+function fetchAndSetTokens(){}
+function syncUserData(){}
+async function loadUserData(){}
+function startNotifPoll(){}
+function stopNotifPoll(){}
+function postLoginBadgeCheck(){}
+function bootstrapOwner(){ showOwnerNav(); }
+function checkAutoTasks(){}
+function applyCosmetics(){}
+function stopDmPoll(){}
+function stopGrpPoll(){}
+function stopChatSub(){}
 
 // ── RECENTLY PLAYED ──────────────────────────────────────────────
 const RP_MAX=20;
@@ -3495,228 +3620,6 @@ async function loadUserData(){
   }catch(e){}
 }
 
-// ── LOGIN UI ─────────────────────────────────────────────────────
-let lbMode='login',lbSelAv=AVATARS[0];
-let _pendingSignup=null; // holds signup data while waiting for email verify
-let _verifyCode=null;
-function lbTab(mode){
-  lbMode=mode;
-  document.querySelectorAll('.lb-tab').forEach((t,i)=>t.classList.toggle('active',(mode==='login'?i===0:i===1)));
-  document.getElementById('lb-submit').textContent=mode==='login'?'Login':'Create Account';
-  document.getElementById('lb-submit').style.display='';
-  document.getElementById('lb-av-wrap').style.display=mode==='signup'?'block':'none';
-  document.getElementById('lb-email-wrap').style.display=mode==='signup'?'block':'none';
-  document.getElementById('lb-verify-wrap').style.display='none';
-  document.getElementById('lb-err').textContent='';
-}
-function lbInitAvatars(){
-  const row=document.getElementById('lb-av-row');
-  row.innerHTML=AVATARS.map((a,i)=>`<div class="lb-av${i===0?' sel':''}" onclick="lbPickAv(this,'${a}')">${a}</div>`).join('');
-}
-function lbPickAv(el,av){
-  document.querySelectorAll('.lb-av').forEach(e=>e.classList.remove('sel'));
-  el.classList.add('sel');lbSelAv=av;
-}
-async function lbSubmit(){
-  const un=document.getElementById('lb-user').value.trim();
-  const pw=document.getElementById('lb-pass').value;
-  const err=document.getElementById('lb-err');
-  const btn=document.getElementById('lb-submit');
-  if(!un||!pw){err.textContent='Please fill in all fields.';return;}
-  if(un.length<3){err.textContent='Username must be at least 3 characters.';return;}
-  if(lbMode==='signup'&&!/^[a-zA-Z0-9_]+$/.test(un)){err.textContent='Username can only contain letters, numbers and underscores.';return;}
-  if(pw.length<4){err.textContent='Password must be at least 4 characters.';return;}
-  btn.disabled=true;err.textContent='Loading…';
-  try{
-    const hash=await sha256(pw+un);
-    if(lbMode==='signup'){
-      // Email optional
-      const emailVal=document.getElementById('lb-email')?.value.trim()||'';
-      if(emailVal&&!/^[^@]+@[^@]+\.[^@]+$/.test(emailVal)){err.textContent='Please enter a valid email address (or leave it blank).';btn.disabled=false;return;}
-      // Check username taken
-      const existing=await sbReq(`/rest/v1/profiles?username=ilike.${encodeURIComponent(un)}&select=id`);
-      if(existing&&existing.length){err.textContent='Username already taken.';btn.disabled=false;return;}
-      // Check email taken (only if email provided)
-      if(emailVal){const emailCheck=await sbReq(`/rest/v1/profiles?email=ilike.${encodeURIComponent(emailVal)}&select=id`);if(emailCheck&&emailCheck.length){err.textContent='An account with that email already exists.';btn.disabled=false;return;}}
-      const reserved=['adless','adless_owner','admin','administrator','system','mod','moderator','staff','owner','winterag'];
-      if(reserved.includes(un.toLowerCase())){err.textContent='That username is reserved.';btn.disabled=false;return;}
-      // Referral code
-      const refCode=document.getElementById('lb-referral')?.value.trim()||'';
-      // Create account directly — email is optional, verification skipped
-      try{
-        const myRefCode='ADL-'+Math.random().toString(36).substr(2,6).toUpperCase();
-        const signupBody={username:un,password_hash:hash,avatar:lbSelAv,tokens:10,referral_code:myRefCode,email_verified:false};
-        if(emailVal)signupBody.email=emailVal;
-        const res=await fetch(SB_URL+'/rest/v1/profiles',{
-          method:'POST',
-          headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
-          body:JSON.stringify(signupBody)
-        });
-        const rows=await res.json();
-        if(!res.ok||!rows||!rows.length){err.textContent='Signup failed: '+(rows?.message||res.status);btn.disabled=false;return;}
-        currentUser={id:rows[0].id,username:un,avatar:lbSelAv,role:'user',tokens:10};
-        if(refCode){
-          try{
-            const refRows=await sbReq(`/rest/v1/profiles?referral_code=eq.${encodeURIComponent(refCode)}&select=id,tokens`);
-            if(refRows&&refRows.length){
-              const referrer=refRows[0];
-              await fetch(SB_URL+`/rest/v1/profiles?id=eq.${referrer.id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({tokens:(referrer.tokens||0)+50})});
-              await fetch(SB_URL+`/rest/v1/profiles?id=eq.${rows[0].id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({tokens:60,referred_by:refCode})});
-              currentUser.tokens=60;
-            }
-          }catch(re){console.warn('Referral error',re);}
-        }
-        localStorage.setItem('adless_session',JSON.stringify(currentUser));
-        await loadUserData();
-        lbEnter();
-      }catch(e){err.textContent='Connection error. Try again.';console.error(e);}
-      btn.disabled=false;
-      return;
-    }else{
-      const rows=await sbReq(`/rest/v1/profiles?username=ilike.${encodeURIComponent(un)}&select=id,username,avatar,password_hash,role,banned,suspended_until,ban_reason,display_name`);
-      if(!rows||!rows.length){err.textContent='Username not found.';btn.disabled=false;return;}
-      if(rows[0].password_hash!==hash){err.textContent='Incorrect password.';btn.disabled=false;return;}
-      if(rows[0].banned){err.textContent=`🚫 Account banned: ${rows[0].ban_reason||'Contact admin'}`;btn.disabled=false;return;}
-      if(rows[0].suspended_until&&new Date(rows[0].suspended_until)>new Date()){err.textContent=`⏸ Account suspended until ${new Date(rows[0].suspended_until).toLocaleDateString()}`;btn.disabled=false;return;}
-      currentUser={id:rows[0].id,username:rows[0].username,avatar:rows[0].avatar,role:rows[0].role||'user',display_name:rows[0].display_name||null,tokens:rows[0].tokens||0};
-      localStorage.setItem('adless_session',JSON.stringify(currentUser));
-      await loadUserData();
-      lbEnter();
-    }
-  }catch(e){err.textContent='Connection error. Try again.';console.error(e);}
-  btn.disabled=false;
-}
-
-// ── EMAIL VERIFICATION ────────────────────────────────────────────
-// ⚠️ SETUP: Create a free account at emailjs.com, make a service + template,
-// then replace the three values below with your own credentials.
-// Template variables needed: {{to_email}}, {{to_name}}, {{verify_code}}
-const EMAILJS_SERVICE='service_axtpvvs';
-const EMAILJS_TEMPLATE='FNG5AY4zYmlnpqutY';
-const EMAILJS_KEY='FNG5AY4zYmlnpqutY';
-function _genCode(){return String(Math.floor(100000+Math.random()*900000));}
-async function sendVerifyEmail(email,username){
-  _verifyCode=_genCode();
-  try{
-    await emailjs.init(EMAILJS_KEY);
-    await emailjs.send(EMAILJS_SERVICE,EMAILJS_TEMPLATE,{
-      to_email:email,
-      to_name:username,
-      verify_code:_verifyCode
-    });
-    return true;
-  }catch(e){
-    console.warn('EmailJS error:',e);
-    // DEV FALLBACK: if EmailJS not configured, auto-fill code in console so you can test
-    console.log('%c[DEV] Verify code: '+_verifyCode,'background:#30d158;color:#000;padding:4px 8px;border-radius:4px;font-weight:900;font-size:16px');
-    // Return true in dev so signup flow still works without EmailJS configured
-    return true;
-  }
-}
-async function lbVerifyCode(){
-  const input=document.getElementById('lb-verify-code').value.trim();
-  const verr=document.getElementById('lb-verify-err');
-  if(!input){verr.textContent='Please enter the code.';return;}
-  if(input!==_verifyCode){verr.textContent='Incorrect code. Try again.';return;}
-  if(!_pendingSignup){verr.textContent='Session expired. Please start over.';return;}
-  verr.textContent='Creating account…';
-  try{
-    const {un,hash,emailVal,avatar,refCode}=_pendingSignup;
-    // Generate a unique referral code for this new user
-    const myRefCode='ADL-'+Math.random().toString(36).substr(2,6).toUpperCase();
-    const signupBody={username:un,password_hash:hash,avatar,email:emailVal,tokens:10,referral_code:myRefCode,email_verified:true};
-    const res=await fetch(SB_URL+'/rest/v1/profiles',{
-      method:'POST',
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
-      body:JSON.stringify(signupBody)
-    });
-    const rows=await res.json();
-    if(!res.ok||!rows||!rows.length){verr.textContent='Signup failed: '+(rows?.message||res.status);return;}
-    currentUser={id:rows[0].id,username:un,avatar,role:'user',tokens:10};
-    // Handle referral bonus
-    if(refCode){
-      try{
-        const refRows=await sbReq(`/rest/v1/profiles?referral_code=eq.${encodeURIComponent(refCode)}&select=id,tokens`);
-        if(refRows&&refRows.length){
-          const refUser=refRows[0];
-          const newTok=(refUser.tokens||0)+50;
-          await fetch(SB_URL+`/rest/v1/profiles?id=eq.${refUser.id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({tokens:newTok})});
-          // Give new user 50 bonus tokens too
-          await fetch(SB_URL+`/rest/v1/profiles?id=eq.${rows[0].id}`,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({tokens:60})});
-          currentUser.tokens=60;
-          showToast('🎉 Referral bonus! You and your friend each got 50 tokens!');
-        }
-      }catch(re){console.warn('Referral error',re);}
-    }
-    _pendingSignup=null;_verifyCode=null;
-    localStorage.setItem('adless_session',JSON.stringify(currentUser));
-    await loadUserData();
-    lbEnter();
-    showToast('🎉 Welcome to Adless OS! You got 10 welcome tokens!');
-  }catch(e){verr.textContent='Connection error. Try again.';console.error(e);}
-}
-async function lbResendCode(){
-  if(!_pendingSignup){return;}
-  const sent=await sendVerifyEmail(_pendingSignup.emailVal,_pendingSignup.un);
-  if(sent)showToast('📧 New code sent!');
-  else showToast('Failed to resend. Check your email.');
-}
-function openLoginModal(){
-  document.getElementById('login-screen').classList.remove('gone');
-}
-function lbGuest(){
-  currentUser={id:'guest',username:'Guest',avatar:'👤',guest:true};
-  loadCustomGameTags();
-  lbEnter();
-}
-function lbEnter(){
-  document.getElementById('login-screen').classList.add('gone');
-  updateUserChip();
-  fetchAndSetTokens();
-  favs=loadFavs();
-  applyStoredSettings();
-  loadCloakSetting();
-  cardCache.clear();buildList();renderPage();updateStats();
-  bootstrapOwner();
-  startNotifPoll();
-  postLoginBadgeCheck();
-  loadCustomGameTags();
-  // Re-check update banner with user's seen state
-  setTimeout(updCheckBanner, 600);
-  // Apply equipped cosmetics
-  setTimeout(applyCosmetics, 800);
-  // Check auto-completable tasks
-  setTimeout(checkAutoTasks, 1500);
-  // Load ads opt-out state
-  if(!currentUser.guest){
-    loadAdsOptOut();
-  } else {
-    adsOptedOut=false;
-    applyAdsState();
-  }
-}
-function logout(){
-  stopNotifPoll();
-  stopDmPoll();
-  stopGrpPoll();
-  stopChatSub();
-  notifPanelOpen=false;
-  const panel=document.getElementById('notif-panel');
-  if(panel)panel.style.display='none';
-  lastNotifCount=0;
-  localStorage.removeItem('adless_session');
-  currentUser=null;
-  favs=[];
-  adsOptedOut=false;
-  applyAdsState();
-  document.getElementById('user-chip').style.display='none';
-  document.getElementById('login-screen').classList.remove('gone');
-  document.getElementById('lb-user').value='';
-  document.getElementById('lb-pass').value='';
-  document.getElementById('lb-err').textContent='';
-  lbTab('login');
-  cardCache.clear();
-}
 // DEDUP
 function nt(t){return t.toLowerCase().replace(/[^a-z0-9]/g,'');}
 let kTitles=new Set(),kUrls=new Set();
@@ -4241,49 +4144,50 @@ function switchView(id){trackViewExplored(id);
   if(noNameActive)setTimeout(applyNoName,50);
   if(typeof loadAllAds==='function'&&!adsOptedOut)setTimeout(loadAllAds,200);
 }
+const DEAD_VIEWS = new Set(['worlds-view','worlds-studio-view','chat-view','bugs-view',
+  'friends-view','badges-view','tokens-view','shop-view','people-view',
+  'admin-view','tester-view','worlds-review-view','dm-view','group-view']);
+
 document.querySelectorAll('.nav').forEach(btn=>{
   if(btn.classList.contains('discord-btn'))return;
   btn.onclick=()=>{
     if(btn.dataset.view){
+      if(DEAD_VIEWS.has(btn.dataset.view)){
+        showToast('That feature needed the old server and is no longer available.');
+        return;
+      }
       document.querySelectorAll('aside .nav').forEach(n=>n.classList.remove('active'));
       btn.classList.add('active');
-      if(btn.dataset.view==='games-view'){switchView('games-view');buildList();renderPage();}
-      else if(btn.dataset.view==='shows-view'){selectedShow=null;selectedSeason=null;switchView('shows-view');renderShows();}
-      else if(btn.dataset.view==='movies-view'){switchView('movies-view');renderMovies();}
-      else if(btn.dataset.view==='chat-view'){switchView('chat-view');onChatViewOpen();}
-      else if(btn.dataset.view==='leaderboard-view'){switchView('leaderboard-view');setLbTab('global');}
-      else if(btn.dataset.view==='badges-view'){switchView('badges-view');setBadgeTab('earned');}
-      else if(btn.dataset.view==='tokens-view'){switchView('tokens-view');loadTokensView();}
-      else if(btn.dataset.view==='shop-view'){switchView('shop-view');loadShopView();}
-      else if(btn.dataset.view==='friends-view'){switchView('friends-view');loadFriendRequests();loadGroupsList();}
-      else if(btn.dataset.view==='owner-view'){switchView('owner-view');loadOwnerPanel();}else if(btn.dataset.view==='tester-view'){switchView('tester-view');testerLoadResults();}
-      else if(btn.dataset.view==='admin-view'){switchView('admin-view');loadAdminPanel();}
-      else if(btn.dataset.view==='worlds-view'){switchView('worlds-view');setWorldsTab('browse');loadWorldsBrowse();}
-      else if(btn.dataset.view==='worlds-studio-view'){switchView('worlds-studio-view');loadMyWorlds();}
-      else if(btn.dataset.view==='worlds-review-view'){switchView('worlds-review-view');loadWorldsReview('pending');loadWorldsAdminMgmt();}
-      else if(btn.dataset.view==='contact-view'){switchView('contact-view');}
-      else if(btn.dataset.view==='bugs-view'){switchView('bugs-view');loadBugsView();}
-      else if(btn.dataset.view==='blog-view'){switchView('blog-view');}
-      else if(btn.dataset.view==='profile-view'){switchView('profile-view');loadProfilePage();}
-      else if(btn.dataset.view==='people-view'){switchView('people-view');loadPeopleView();}
-      else{switchView(btn.dataset.view);if(btn.dataset.view==='settings-view'){buildColorGrid();buildBgSwatches();buildBgGradients();buildCloakGrid();updateStats();updateAvatarDisplay();loadPfpGallery();loadCurrentEmail();loadGalleryForUser();loadCurrentBio();initDebugBadgesToggle();
-        const accSec=document.getElementById('account-section');
-        if(accSec)accSec.style.display=(!currentUser||currentUser.guest)?'none':'block';
-        loadAccountCooldowns();
-        // Sync ads toggle
-        const adsToggle=document.getElementById('ads-opt-out');
-        const adsWrap=document.getElementById('ads-toggle-wrap');
-        if(adsToggle){
-          const isGuest=!currentUser||currentUser.guest;
-          adsToggle.checked=adsOptedOut&&!isGuest;
-          adsToggle.disabled=isGuest;
-          const desc=document.getElementById('ads-toggle-desc');
-          if(desc)desc.textContent=isGuest?'Login to remove ads':adsOptedOut?'Ads are hidden on your account ✓':'Tap to hide all ads on your account';
+      const v=btn.dataset.view;
+      if(v==='games-view'){switchView('games-view');buildList();renderPage();}
+      else if(v==='shows-view'){selectedShow=null;selectedSeason=null;switchView('shows-view');renderShows();}
+      else if(v==='movies-view'){switchView('movies-view');renderMovies();}
+      else if(v==='leaderboard-view'){switchView('leaderboard-view');setLbTab('mine');}
+      else if(v==='owner-view'){switchView('owner-view');loadOwnerPanel();}
+      else if(v==='profile-view'){switchView('profile-view');loadProfilePage();}
+      else if(v==='contact-view'){switchView('contact-view');}
+      else if(v==='blog-view'){switchView('blog-view');}
+      else{
+        switchView(v);
+        if(v==='settings-view'){
+          buildColorGrid();buildBgSwatches();buildBgGradients();buildCloakGrid();
+          updateStats();updateAvatarDisplay();loadCurrentBio();initDebugBadgesToggle();
+          const accSec=document.getElementById('account-section');
+          if(accSec)accSec.style.display=(!currentUser||currentUser.guest)?'none':'block';
+          const adsToggle=document.getElementById('ads-opt-out');
+          if(adsToggle){
+            const isGuest=!currentUser||currentUser.guest;
+            adsToggle.checked=adsOptedOut&&!isGuest;
+            adsToggle.disabled=isGuest;
+            const desc=document.getElementById('ads-toggle-desc');
+            if(desc)desc.textContent=isGuest?'Login to remove ads':adsOptedOut?'Ads are hidden on your account ✓':'Tap to hide all ads on your account';
+          }
         }
-      }}
+      }
     }else if(btn.dataset.cat){
       document.querySelectorAll('#game-filters .nav').forEach(n=>n.classList.remove('active'));
-      btn.classList.add('active');currentCat=btn.dataset.cat;currentPage=1;switchView('games-view');buildList();renderPage();
+      btn.classList.add('active');currentCat=btn.dataset.cat;currentPage=1;
+      switchView('games-view');buildList();renderPage();
     }else if(btn.dataset.action==='random'){
       playRandom();
     }
@@ -5772,81 +5676,21 @@ async function quickWarnFromReport(uid,uname,reportId){
 const OWNER_NAME='ADLESS_OWNER';
 const OWNER_LOGO='data:image/png;base64,'; // set at runtime
 
-async function bootstrapOwner(){
-  // Check if owner account exists
-  try{
-    const existing=await sbReq(`/rest/v1/profiles?username=eq.ADLESS_OWNER&select=id,role`);
-    if(!existing||!existing.length){
-      // Create owner account
-      const hash=await sha256('Adless2025!ADLESS_OWNER');
-      const res=await fetch(SB_URL+'/rest/v1/profiles',{
-        method:'POST',
-        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
-        body:JSON.stringify({username:'ADLESS_OWNER',password_hash:hash,avatar:'👑',role:'owner'})
-      });
-      console.log('Owner account created');
-    } else if(existing[0].role!=='owner'){
-      // Ensure role is owner
-      await fetch(SB_URL+`/rest/v1/profiles?id=eq.${existing[0].id}`,{
-        method:'PATCH',
-        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-        body:JSON.stringify({role:'owner'})
-      });
-    }
-  }catch(e){console.warn('Owner bootstrap failed',e);}
-  // Bootstrap WinterAG admin account
-  bootstrapAdmin();
-}
-
-async function bootstrapAdmin(){
-  try{
-    const existing=await sbReq(`/rest/v1/profiles?username=eq.WinterAG&select=id,role`);
-    if(!existing||!existing.length){
-      const hash=await sha256('WinterAG2025!WinterAG');
-      await fetch(SB_URL+'/rest/v1/profiles',{
-        method:'POST',
-        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-        body:JSON.stringify({username:'WinterAG',password_hash:hash,avatar:'🛡️',role:'mod'})
-      });
-      console.log('WinterAG admin account created');
-    } else if(existing[0].role!=='admin'&&existing[0].role!=='owner'&&existing[0].role!=='mod'){
-      await fetch(SB_URL+`/rest/v1/profiles?id=eq.${existing[0].id}`,{
-        method:'PATCH',
-        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-        body:JSON.stringify({role:'mod'})
-      });
-    }
-  }catch(e){console.warn('Admin bootstrap failed',e);}
-}
-
-function isOwner(){return currentUser&&currentUser.role==='owner';}
-function isAdmin(){return currentUser&&(currentUser.role==='admin'||currentUser.role==='owner');}
-function isMod(){return currentUser&&(currentUser.role==='mod'||currentUser.role==='admin'||currentUser.role==='owner');}
-function isTesterRole(){return currentUser&&(currentUser.role==='tester'||currentUser.role==='owner');}
-
+function isOwner(){ return !!(currentUser && (currentUser.admin || currentUser.role === 'owner')); }
+function isAdmin(){ return isOwner(); }
+function isMod(){ return isOwner(); }
+function isTesterRole(){ return isOwner(); }
 function showOwnerNav(){
-  const nav=document.getElementById('owner-nav');
-  if(nav)nav.style.display=isOwner()?'block':'none';
-  const tnav=document.getElementById('tester-nav');
-  if(tnav)tnav.style.display=isTesterRole()&&!isOwner()?'block':'none';
-  const anav=document.getElementById('admin-nav');
-  if(anav)anav.style.display=(currentUser&&currentUser.role==='mod')?'block':'none';
-  checkWorldsAdminNav();
+  const on = isOwner();
+  const nav = document.getElementById('owner-nav');
+  if (nav) nav.style.display = on ? 'block' : 'none';
+  ['tester-nav','admin-nav','worlds-admin-nav'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  if (on) updateScoreReviewBadge();
 }
-
-async function fetchAndSetTokens(){
-  if(!currentUser||currentUser.guest)return;
-  try{
-    const r=await sbReq(`/rest/v1/profiles?id=eq.${currentUser.id}&select=tokens`);
-    if(r&&r[0]){
-      currentUser.tokens=r[0].tokens||0;
-      const topTok=document.getElementById('topbar-tokens');
-      if(topTok)topTok.textContent='🪙 '+currentUser.tokens;
-      const balEl=document.getElementById('tok-balance-display');
-      if(balEl)balEl.textContent=currentUser.tokens;
-    }
-  }catch(e){}
-}
+async function fetchAndSetTokens(){}
 function updateUserChip(){
   const chip=document.getElementById('user-chip');
   if(!chip||!currentUser)return;
@@ -6108,11 +5952,6 @@ let lastMsgTime={};
 
 async function loadOwnerPanel(){
   if(!isOwner())return;
-  loadReports('open');
-  loadBugReports();
-  loadOwnerAnalytics();
-  loadAllUsers();
-  loadAdminChatLog();
   loadSpotlight();
   loadSiteSettings();
   dbgLoad();
@@ -6120,11 +5959,8 @@ async function loadOwnerPanel(){
   updRenderAdminList();
   loadGameEdits();
   loadOwnerFeatured();
-  loadAnnouncementHistory();
-  loadScoreReview("pending");
-  loadOnlineUsers();
-  loadOwnerGallery();
-  loadVerifiedEmails();
+  loadScoreReview('pending');
+  updateScoreReviewBadge();
 }
 async function loadBugReports(){
   const el=document.getElementById('bug-reports-list');
@@ -6423,17 +6259,7 @@ async function loadSiteSettings(){
 }
 
 async function upsertSiteSetting(key,value){
-  // Single upsert via POST with merge-duplicates — works whether row exists or not
-  const res=await fetch(SB_URL+'/rest/v1/site_settings',{
-    method:'POST',
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal,resolution=merge-duplicates'},
-    body:JSON.stringify({key,value})
-  });
-  if(!res.ok){
-    const err=await res.text();
-    console.error('upsertSiteSetting failed:',res.status,err);
-    throw new Error('upsertSiteSetting failed: '+err);
-  }
+  lsSettingSet(key, value);
 }
 async function saveSlowmode(){
   const val=parseInt(document.getElementById('slowmode-val').value)||0;
@@ -7257,30 +7083,38 @@ if(savedDevice){
 }
 // Init avatar picker
 lbInitAvatars();
-// Check saved session — auto login if valid
+// Restore local session (no network involved)
 bootStep('Loading games…',20);
 buildList();renderPage();updateStats();
 bootStep('Fetching game library…',40);
-loadZones();loadHydraGames();loadSpotlightPublic();loadSiteSettings();dbgLoadFixes();dbgLoad();updLoad();loadGameEdits();renderAdBanners();initAdsBanner();setTimeout(loadAllAds,500);
-setTimeout(function(){bootStep('Ready!',100);setTimeout(bootDone,400);},3500);
-(async()=>{
-  const sess=localStorage.getItem('adless_session');
-  if(sess){
-    try{
-      const u=JSON.parse(sess);
-      if(u.guest){currentUser=u;lbEnter();}
-      else{
-        const rows=await sbReq(`/rest/v1/profiles?id=eq.${u.id}&select=id,username,avatar,role,banned,suspended_until,display_name`);
-        if(rows&&rows.length&&!rows[0].banned&&!(rows[0].suspended_until&&new Date(rows[0].suspended_until)>new Date())){
-          currentUser={id:rows[0].id,username:rows[0].username,avatar:rows[0].avatar,role:rows[0].role||'user',display_name:rows[0].display_name||null,tokens:rows[0].tokens||0};
-          localStorage.setItem('adless_session',JSON.stringify(currentUser));
-          await loadUserData();
-          lbEnter();
-        }else{localStorage.removeItem('adless_session');}
-      }
-    }catch(e){localStorage.removeItem('adless_session');}
-  }
-})();
+// Deferred: several of these read consts declared later in this script,
+// so they must not run until the whole file has finished parsing.
+setTimeout(function(){
+  loadZones();loadHydraGames();loadSpotlightPublic();loadSiteSettings();
+  dbgLoadFixes();dbgLoad();updLoad();loadGameEdits();
+  renderAdBanners();initAdsBanner();setTimeout(loadAllAds,500);
+},0);
+setTimeout(function(){bootStep('Ready!',100);setTimeout(bootDone,400);},2500);
+
+setTimeout(function(){
+  const sess = localStorage.getItem(SESSION_KEY);
+  if (!sess) return;
+  try {
+    const u = JSON.parse(sess);
+    if (u.guest){ currentUser = u; lbEnter(); return; }
+    if (u.admin){ currentUser = u; lbEnter(); return; }
+    // Confirm the account still exists on this device
+    const acct = findAccount(u.username);
+    if (acct){
+      currentUser = { id:acct.id, username:acct.username,
+                      display_name:acct.display_name || acct.username,
+                      avatar:acct.avatar || '👤', role:'user', guest:false };
+      lbEnter();
+    } else {
+      localStorage.removeItem(SESSION_KEY);
+    }
+  } catch(e){ localStorage.removeItem(SESSION_KEY); }
+},0);
 
 // ── ADS BANNER ────────────────────────────────────────────────────
 function initAdsBanner(){
@@ -7688,7 +7522,7 @@ const SLUR_PRESET = [
 // ══════════════════════════════════════════════════════════════════
 function openScoreSubmit(){
   if(!currentUser||currentUser.guest){showToast('Login to submit scores');return;}
-  if(!currentGameTitle||currentView!=='games-view'){showToast('Play a game first to submit a score');return;}
+  if(!currentGameTitle){showToast('Play a game first to submit a score');return;}
   document.getElementById('score-game-name').textContent='Game: '+currentGameTitle;
   document.getElementById('score-value').value='';
   document.getElementById('score-comment').value='';
@@ -7721,57 +7555,72 @@ async function submitScore(){
   const scoreVal=parseInt(document.getElementById('score-value').value);
   if(isNaN(scoreVal)||scoreVal<0){showToast('Enter a valid score');return;}
   if(!scoreFile){showToast('Screenshot required');return;}
+  if(!currentUser||currentUser.guest){showToast('Login to submit scores');return;}
   const status=document.getElementById('score-submit-status');
-  status.textContent='Uploading screenshot…';
+  status.textContent='Processing screenshot…';
   status.style.color='var(--text2)';
   try{
-    // Upload screenshot to Supabase storage
-    const ext=scoreFile.name.split('.').pop()||'png';
-    const path=`${currentUser.id}/${Date.now()}.${ext}`;
-    const uploadRes=await fetch(`${SB_URL}/storage/v1/object/screenshots/${path}`,{
-      method:'POST',
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':scoreFile.type,'x-upsert':'true'},
-      body:scoreFile
-    });
-    if(!uploadRes.ok){
-      const uploadErr=await uploadRes.text();
-      console.error('Upload failed:',uploadRes.status,uploadErr);
-      throw new Error('Screenshot upload failed: '+uploadRes.status+' '+uploadErr);
-    }
-    const ssUrl=`${SB_URL}/storage/v1/object/public/screenshots/${path}`;
-    status.textContent='Submitting score…';
+    // Screenshots are stored as compressed data URLs in localStorage.
+    // Downscale hard — browser storage is only a few MB in total.
+    const ssUrl=await compressImage(scoreFile,700,0.55);
+    status.textContent='Saving score…';
     const comment=document.getElementById('score-comment').value.trim();
-    const scoreRes=await fetch(SB_URL+'/rest/v1/scores',{
-      method:'POST',
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body:JSON.stringify({
-        user_id:currentUser.id,
-        username:currentUser.display_name||currentUser.username,
-        game_id:currentGameId||'unknown',
-        game_name:currentGameTitle||'Unknown Game',
-        score:scoreVal,
-        screenshot_url:ssUrl,
-        status:'pending',
-        comment:comment||null
-      })
+    const row=lsScoreAdd({
+      user_id:currentUser.id,
+      username:currentUser.display_name||currentUser.username,
+      avatar:currentUser.avatar||'👤',
+      game_id:currentGameId||'unknown',
+      game_name:currentGameTitle||'Unknown Game',
+      score:scoreVal,
+      screenshot_url:ssUrl,
+      status:'pending',
+      comment:comment||null
     });
-    if(!scoreRes.ok){const err=await scoreRes.text();throw new Error('Score insert failed: '+err);}
-    status.textContent='✅ Submitted! Pending owner review.';
+    if(!row)throw new Error('Storage full — delete some old scores in the Admin panel.');
+    status.textContent='✅ Saved! Pending admin review.';
     status.style.color='#30d158';
     setTimeout(closeScoreModal,2000);
-    // Check badges
-    checkScoreBadges();
-    // Lucky badge
-    if(String(scoreVal).endsWith('777'))awardBadge('lucky');
-    // Token task
-    onScoreSubmitted();
+    updateScoreReviewBadge();
   }catch(e){
-    const msg=e?.message||String(e)||'Unknown error';
+    const msg=e&&e.message?e.message:String(e);
     status.textContent='❌ '+msg;
     status.style.color='#ff3b30';
     console.error('Score submit error:',e);
   }
 }
+
+// Downscale + re-encode an image file to a small JPEG data URL
+function compressImage(file,maxDim,quality){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onerror=()=>reject(new Error('Could not read image'));
+    reader.onload=ev=>{
+      const img=new Image();
+      img.onerror=()=>reject(new Error('Invalid image file'));
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        if(w>h&&w>maxDim){h=Math.round(h*maxDim/w);w=maxDim;}
+        else if(h>maxDim){w=Math.round(w*maxDim/h);h=maxDim;}
+        const c=document.createElement('canvas');
+        c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        resolve(c.toDataURL('image/jpeg',quality));
+      };
+      img.src=ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// Show a count of pending scores on the Admin nav item
+function updateScoreReviewBadge(){
+  try{
+    const pending=lsScoresAll().filter(r=>r.status==='pending').length;
+    const b=document.getElementById('score-review-badge');
+    if(b){b.textContent=pending;b.style.display=pending?'inline':'none';}
+  }catch(e){}
+}
+
 
 // ══════════════════════════════════════════════════════════════════
 // LEADERBOARD
@@ -7954,11 +7803,11 @@ async function loadLeaderboard(){
     const profiles=await sbReq(`/rest/v1/profiles?id=in.(${uids.map(id=>`"${id}"`).join(',')})&select=id,avatar,username`);
     const profMap=Object.fromEntries((profiles||[]).map(p=>[p.id,p]));
     window._lbScoreCache={};
-    rows.forEach(r=>{const p=profMap[r.user_id]||{};window._lbScoreCache[r.id]={id:r.id,user_id:r.user_id,username:r.username,avatar:p.avatar||'👤',game_name:r.game_name,score:r.score,created_at:r.created_at,comment:r.comment,status:r.status,game_id:r.game_id,screenshot_url:r.screenshot_url};});
+    rows.forEach(r=>{const p=profMap[r.user_id]||{};window._lbScoreCache[r.id]={id:r.id,user_id:r.user_id,username:r.username,avatar:r.avatar||p.avatar||'👤',game_name:r.game_name,score:r.score,created_at:r.created_at,comment:r.comment,status:r.status,game_id:r.game_id,screenshot_url:r.screenshot_url};});
     const makeRow=(r,rank,showGame)=>{
       const rankClass=rank===1?'gold':rank===2?'silver':rank===3?'bronze':'';
       const rankDisplay=rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':rank;
-      const p=profMap[r.user_id]||{};const av=p.avatar||'👤';
+      const p=profMap[r.user_id]||{};const av=r.avatar||p.avatar||'👤';
       const isMine=currentUser&&!currentUser.guest&&r.user_id===currentUser.id;
       return`<div class="lb-row" style="${isMine?'border-color:rgba(10,132,255,.4);background:rgba(10,132,255,.06)':''}" data-score-id="${r.id}" onclick="openSsViewerById(this.dataset.scoreId)">
         <div class="lb-rank ${rankClass}">${rankDisplay}</div>
@@ -8788,7 +8637,7 @@ async function loadScoreReview(tab){
     }
     if(!rows||!rows.length){list.innerHTML='<div style="color:var(--text2);text-align:center;padding:20px">No '+srTab+' scores</div>';return;}
     window._srScoreCache=window._srScoreCache||{};
-    rows.forEach(r=>{window._srScoreCache[r.id]={id:r.id,user_id:r.user_id,username:r.username,avatar:'👤',game_name:r.game_name,score:r.score,created_at:r.created_at,comment:r.comment,status:r.status,game_id:r.game_id,screenshot_url:r.screenshot_url};});
+    rows.forEach(r=>{window._srScoreCache[r.id]={id:r.id,user_id:r.user_id,username:r.username,avatar:r.avatar||'👤',game_name:r.game_name,score:r.score,created_at:r.created_at,comment:r.comment,status:r.status,game_id:r.game_id,screenshot_url:r.screenshot_url};});
     list.innerHTML=rows.map(r=>`
       <div class="sr-card" id="sr-${r.id}">
         <div class="sr-top">
@@ -8806,7 +8655,7 @@ async function loadScoreReview(tab){
             <button class="lb-btn" style="margin:0;padding:8px 16px;font-size:12px;background:rgba(255,59,48,.15);border-color:rgba(255,59,48,.3);color:#ff3b30" onclick="promptRejectScore('${r.id}')">❌ Reject</button>
           `:''}
           ${srTab==='approved'?`<button class="lb-btn" style="margin:0;padding:8px 16px;font-size:12px;background:rgba(255,59,48,.15);border-color:rgba(255,59,48,.3);color:#ff3b30" onclick="reviewScore('${r.id}','rejected','${r.user_id}','','0')">Revoke</button>`:''}
-          <button class="auc-btn" onclick="openProfile('${r.user_id}')">👤 Profile</button>
+          <button class="auc-btn red" onclick="deleteScoreRow('${r.id}')">🗑 Delete</button>
         </div>
         <div id="sr-reject-form-${r.id}" style="display:none;margin-top:10px">
           <input class="lb-field" style="margin:0 0 8px" placeholder="Rejection reason…" id="sr-reason-${r.id}" maxlength="200">
@@ -8828,26 +8677,28 @@ async function confirmRejectScore(id,userId){
 }
 async function reviewScore(id,status,userId,gameId,score,reason){
   try{
-    await fetch(SB_URL+`/rest/v1/scores?id=eq.${id}`,{
-      method:'PATCH',
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body:JSON.stringify({status,reject_reason:reason||null})
-    });
-    if(status==='approved'){
-      // Check leaderboard position badges
-      checkLeaderboardBadges(userId,gameId,parseInt(score)||0);
-      // Check approved score count badges (bronze/silver/gold)
-      checkApprovedScoreBadgesForUser(userId);
-      createNotif(userId,'system','✅ Score Approved!',`Your score was approved and added to the leaderboard!`,'leaderboard',null);
-    } else if(status==='rejected'){
-      createNotif(userId,'system','❌ Score Rejected',reason?`Reason: ${reason}`:'Your score submission was rejected.','leaderboard',null);
-      if(gameId)recalcGameRankBadges(gameId);
-    }
-    document.getElementById('sr-'+id)?.remove();
+    lsScoreUpdate(id,{status,reject_reason:reason||null,
+                      reviewed_at:new Date().toISOString(),
+                      reviewed_by:(currentUser&&currentUser.username)||'Admin'});
+    const card=document.getElementById('sr-'+id);
+    if(card)card.remove();
     showToast(status==='approved'?'✅ Score approved!':'❌ Score rejected');
+    updateScoreReviewBadge();
     loadScoreReview(srTab);
   }catch(e){showToast('Failed to update score');}
 }
+
+// Permanently delete a score row (admin only)
+function deleteScoreRow(id){
+  if(!isOwner())return;
+  if(!confirm('Delete this score permanently?'))return;
+  lsScoreDelete(id);
+  const card=document.getElementById('sr-'+id);
+  if(card)card.remove();
+  updateScoreReviewBadge();
+  showToast('🗑 Score deleted');
+}
+
 // Dynamic rank badge helpers
 async function checkApprovedScoreBadgesForUser(userId){
   // Recalculate who holds the most #1/#2/#3 spots across all games globally
@@ -12702,10 +12553,10 @@ async function loadUserRating(worldId) {
 // ── Leaderboard ────────────────────────────────────────────────
 function openWorldLeaderboard() {
   const modal = document.getElementById('wp-leaderboard');
-  if (modal) { modal.style.display='block'; loadLeaderboard(currentPlayingWorldId); }
+  if (modal) { modal.style.display='block'; loadWorldLeaderboard(currentPlayingWorldId); }
 }
 
-async function loadLeaderboard(worldId) {
+async function loadWorldLeaderboard(worldId) {
   const el = document.getElementById('wp-leaderboard-list'); if(!el)return;
   el.innerHTML='<div class="fc-empty">Loading…</div>';
   try {
@@ -12731,7 +12582,7 @@ async function submitWorldScore() {
       body:JSON.stringify({world_id:currentPlayingWorldId, user_id:currentUser.id, username:currentUser.display_name||currentUser.username, score:scoreVal})
     });
     showToast('Score submitted! 🏆');
-    loadLeaderboard(currentPlayingWorldId);
+    loadWorldLeaderboard(currentPlayingWorldId);
   } catch(e){showToast('Submit failed');}
 }
 
@@ -14088,37 +13939,15 @@ loadTokensView = async function() {
 //  CONTACT FORM + BLOG
 // ═══════════════════════════════════════════════════════════════
 
-async function submitContactForm() {
-  const name    = document.getElementById('contact-name')?.value?.trim();
-  const email   = document.getElementById('contact-email')?.value?.trim();
-  const subject = document.getElementById('contact-subject')?.value;
-  const message = document.getElementById('contact-message')?.value?.trim();
-  const status  = document.getElementById('contact-status');
-
-  if (!name || !email || !message) { showToast('Please fill in all fields'); return; }
-
-  // Save to Supabase contact_messages table
-  try {
-    await fetch(SB_URL+'/rest/v1/contact_messages', {
-      method: 'POST',
-      headers: {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body: JSON.stringify({ name, email, subject, message, created_at: new Date().toISOString() })
-    });
-    if (status) {
-      status.style.display = 'block';
-      status.style.color = '#30d158';
-      status.textContent = '✅ Message sent! We\'ll get back to you within 24–48 hours.';
-    }
-    document.getElementById('contact-name').value = '';
-    document.getElementById('contact-email').value = '';
-    document.getElementById('contact-message').value = '';
-    showToast('Message sent! ✓');
-  } catch(e) {
-    // Fallback: open mailto
-    const mailto = `mailto:x7wvmore@gmail.com?subject=${encodeURIComponent('[Adless Games] '+subject)}&body=${encodeURIComponent('Name: '+name+'\nEmail: '+email+'\n\n'+message)}`;
-    window.open(mailto);
-    showToast('Opening your email client…');
-  }
+function submitContactForm(){
+  const g=id=>((document.getElementById(id)||{}).value||'');
+  const name=g('contact-name').trim(), email=g('contact-email').trim();
+  const subject=g('contact-subject'), message=g('contact-message').trim();
+  const status=document.getElementById('contact-status');
+  if(!name||!email||!message){showToast('Please fill in all fields');return;}
+  const body='Name: '+name+'\nEmail: '+email+'\n\n'+message;
+  window.location.href='mailto:x7wvmore@gmail.com?subject='+encodeURIComponent('[Adless Games] '+subject)+'&body='+encodeURIComponent(body);
+  if(status){status.style.display='block';status.style.color='#30d158';status.textContent='✅ Opening your email app…';}
 }
 
 // ── Blog posts content ─────────────────────────────────────────
